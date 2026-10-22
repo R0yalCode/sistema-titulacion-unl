@@ -22,6 +22,26 @@ DENY = "deny"
 
 
 RBAC_MATRIX = {
+    "notificaciones": {
+        "GET": {
+            "ESTUDIANTE": SCOPE_OWN,
+            "SECRETARIA_CARRERA": SCOPE_CARRERA,
+            "SECRETARIO_ABOGADO": SCOPE_FACULTAD,
+            "ANALISTA_APOYO": SCOPE_FACULTAD,
+            "DECANO": SCOPE_FACULTAD,
+            "DIRECTOR_CARRERA": SCOPE_CARRERA,
+            "ADMINISTRADOR": ALLOW,
+        },
+        "PATCH": {
+            "ESTUDIANTE": SCOPE_OWN,
+            "SECRETARIA_CARRERA": SCOPE_CARRERA,
+            "SECRETARIO_ABOGADO": SCOPE_FACULTAD,
+            "ANALISTA_APOYO": SCOPE_FACULTAD,
+            "DECANO": SCOPE_FACULTAD,
+            "DIRECTOR_CARRERA": SCOPE_CARRERA,
+            "ADMINISTRADOR": ALLOW,
+        },
+    },
     "expedientes": {
         "POST": {"ESTUDIANTE": ALLOW, "ADMINISTRADOR": ALLOW},
         "GET": {
@@ -44,6 +64,14 @@ RBAC_MATRIX = {
             "ANALISTA_APOYO": SCOPE_ASIGNADO,
             "DIRECTOR_CARRERA": SCOPE_ASIGNADO,
             "ADMINISTRADOR": ALLOW,
+        },
+        "GET": {
+            "ESTUDIANTE": SCOPE_OWN,
+            "SECRETARIA_CARRERA": SCOPE_ASIGNADO,
+            "SECRETARIO_ABOGADO": SCOPE_ASIGNADO,
+            "ANALISTA_APOYO": SCOPE_ASIGNADO,
+            "DIRECTOR_CARRERA": SCOPE_ASIGNADO,
+            "ADMINISTRADOR": ALLOW,
         }
     },
     "checklist": {
@@ -57,6 +85,11 @@ RBAC_MATRIX = {
             "ANALISTA_APOYO": SCOPE_BORRADOR,
             "ADMINISTRADOR": ALLOW,
         },
+        "POST": {
+            "ESTUDIANTE": SCOPE_OWN,
+            "SECRETARIA_CARRERA": SCOPE_CARRERA,
+            "ADMINISTRADOR": ALLOW,
+        },
     },
     "expedientes:observar": {"POST": {"SECRETARIO_ABOGADO": ALLOW}},
     "informes": {
@@ -66,7 +99,7 @@ RBAC_MATRIX = {
         }
     },
     "declaratorias": {
-        "POST": {"DECANO": ALLOW},
+        "POST": {"DECANO": ALLOW, "ANALISTA_APOYO": SCOPE_FACULTAD},
         "PUT": {"DECANO": ALLOW},
         "PATCH": {"DECANO": ALLOW},
     },
@@ -118,7 +151,10 @@ class HasRolePermission(permissions.BasePermission):
     )
 
     def has_permission(self, request, view) -> bool:
-        resource = getattr(view, "rbac_resource", None)
+        getter = getattr(view, "get_rbac_resource", None)
+        resource = (
+            getter() if getter is not None else getattr(view, "rbac_resource", None)
+        )
         if resource is None:
             return False
         return bool(get_granted_scopes(request.user, resource, request.method))

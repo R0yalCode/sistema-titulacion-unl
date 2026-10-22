@@ -5,3 +5,7 @@ class NotificacionesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.notificaciones.adapters"
     label = "notificaciones"
+
+    def ready(self):
+        # Importar señales para registrar los receivers
+        import apps.notificaciones.adapters.signals  # noqa: F401

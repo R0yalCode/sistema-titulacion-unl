@@ -31,12 +31,20 @@ class ExpedienteTitulacion(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     numero_expediente = models.CharField(max_length=64, unique=True)
+    numero_providencia = models.CharField(
+        max_length=64,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
     estudiante = models.ForeignKey(
         "authentication.User",
         on_delete=models.PROTECT,
         related_name="expedientes",
     )
     carrera_id = models.UUIDField(null=True, blank=True)
+    facultad_id = models.UUIDField(null=True, blank=True, db_index=True)
     estado = models.CharField(
         max_length=32,
         choices=ESTADOS_CHOICES,
@@ -48,6 +56,7 @@ class ExpedienteTitulacion(models.Model):
     fecha_limite_atencion = models.DateTimeField(null=True, blank=True)
     dias_laborables_acumulados = models.IntegerField(default=0)
     fecha_ultima_pausa = models.DateTimeField(null=True, blank=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
     activa = models.BooleanField(default=True)
 
     class Meta:
