@@ -714,8 +714,8 @@ class TestDeclaratoriaEndpoint:
         assert response.status_code == 201
         assert response.data["numero_memorando"] == "MEM-162-2026-CUSTOM-001"
 
-    def test_endpoint_analista_apoyo_puede_registrar(self, api_client, analista_apoyo, expediente_con_informe):
-        """ANALISTA_APOYO puede registrar declaratoria via endpoint."""
+    def test_endpoint_analista_apoyo_denegado(self, api_client, analista_apoyo, expediente_con_informe):
+        """ANALISTA_APOYO es denegado para registrar declaratoria (matriz 6.2 spec)."""
         api_client.force_authenticate(user=analista_apoyo)
         url = "/api/v1/declaratorias/"
         archivo = io.BytesIO(PDF_VALIDO)
@@ -726,9 +726,7 @@ class TestDeclaratoriaEndpoint:
             "archivo_memorando": archivo,
         }, format="multipart")
 
-        assert response.status_code == 201
-        # DRF serializa UUID como string
-        assert str(response.data["decano"]) == str(analista_apoyo.pk)
+        assert response.status_code == 403
 
 
 class TestFlujoCompletoInformeDeclaratoria:

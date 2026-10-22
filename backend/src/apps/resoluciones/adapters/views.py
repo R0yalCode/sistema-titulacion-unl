@@ -14,6 +14,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.authentication.adapters.permissions import HasRolePermission
 from apps.resoluciones.adapters.models import InformeAptitud, DeclaratoriaAptitud
+from apps.resoluciones.adapters.serializers import InformeAptitudSerializer, DeclaratoriaAptitudSerializer
 from apps.resoluciones.services import (
     emitir_informe,
     declarar_aptitud,
@@ -65,6 +66,19 @@ class InformeViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, HasRolePermission]
     rbac_resource = "informes"
     queryset = InformeAptitud.objects.select_related("expediente", "emisor")
+    serializer_class = InformeAptitudSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            from rest_framework import serializers
+
+            class InformeCreateSerializer(serializers.Serializer):
+                expediente_id = serializers.UUIDField()
+                dictamen = serializers.ChoiceField(choices=["APTO", "NO APTO"])
+                fundamentacion = serializers.CharField(required=False, allow_blank=True)
+
+            return InformeCreateSerializer
+        return InformeAptitudSerializer
 
     def get_rbac_resource(self):
         return "informes"
@@ -119,7 +133,6 @@ class InformeViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
             raise ValidationError(str(error))
 
         # Serializer de salida
-        from apps.resoluciones.adapters.serializers import InformeAptitudSerializer
         serializer_out = InformeAptitudSerializer(
             informe,
             context={"request": request},
@@ -134,7 +147,20 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, HasRolePermission]
     rbac_resource = "declaratorias"
     queryset = DeclaratoriaAptitud.objects.select_related("expediente", "decano")
+    serializer_class = DeclaratoriaAptitudSerializer
     parser_classes = [MultiPartParser, FormParser]
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            from rest_framework import serializers
+
+            class DeclaratoriaCreateSerializer(serializers.Serializer):
+                expediente_id = serializers.UUIDField()
+                archivo_memorando = serializers.FileField()
+                numero_memorando = serializers.CharField(required=False, allow_blank=True)
+
+            return DeclaratoriaCreateSerializer
+        return DeclaratoriaAptitudSerializer
 
     def get_rbac_resource(self):
         return "declaratorias"
@@ -187,7 +213,6 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
             raise ValidationError(str(error))
 
         # Serializer de salida
-        from apps.resoluciones.adapters.serializers import DeclaratoriaAptitudSerializer
         serializer_out = DeclaratoriaAptitudSerializer(
             declaratoria,
             context={"request": request},
@@ -195,5 +220,5 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
         return Response(serializer_out.data, status=status.HTTP_201_CREATED)
 
 
-# Import aquí para evitar import circular
+# Import para validación de checklist
 from apps.verificacion.services import validar_checklist_completo

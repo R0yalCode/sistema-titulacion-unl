@@ -58,9 +58,22 @@ class ExpedienteViewSet(
     permission_classes = [IsAuthenticated, HasRolePermission]
     rbac_resource = "expedientes"
     queryset = ExpedienteTitulacion.objects.select_related("estudiante")
+    serializer_class = ExpedienteDetalleSerializer
     scope_owner_field = "estudiante_id"
     scope_carrera_field = "carrera_id"
     scope_facultad_field = "facultad_id"
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return CrearExpedienteSerializer
+        if self.action == "enviar":
+            return ExpedienteEnviadoSerializer
+        if self.action == "retrieve":
+            return ExpedienteDetalleSerializer
+        if self.action == "observar":
+            from apps.verificacion.adapters.serializers import ObservacionRegistroSerializer
+            return ObservacionRegistroSerializer
+        return ExpedienteDetalleSerializer
 
     def get_rbac_resource(self):
         """Celda de la matriz RBAC 6.2 segun la accion invocada."""

@@ -16,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.authentication.adapters.permissions import HasRolePermission
+from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.verificacion.adapters.models import ChecklistVerification
 from apps.verificacion.services import evaluar_checklist, subsanar_requisito
 from core.adapters.scope_filter import ScopeFilterMixin
@@ -66,10 +67,18 @@ class ChecklistViewSet(
     queryset = ChecklistVerification.objects.select_related(
         "expediente", "requisito", "evaluado_por"
     )
+    serializer_class = ChecklistVerificationSerializer
     scope_owner_field = "expediente__estudiante_id"
     scope_carrera_field = "expediente__carrera_id"
     scope_facultad_field = "expediente__facultad_id"
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_serializer_class(self):
+        if self.action == "update":
+            return ChecklistEvaluationSerializer
+        if self.action == "subsanar":
+            return SubsanacionSerializer
+        return ChecklistVerificationSerializer
 
     def get_rbac_resource(self):
         return "checklist"
@@ -169,9 +178,15 @@ class ObservacionViewSet(
     queryset = ChecklistVerification.objects.select_related(
         "expediente", "requisito"
     )
+    serializer_class = ObservacionRegistroSerializer
     scope_owner_field = "expediente__estudiante_id"
     scope_carrera_field = "expediente__carrera_id"
     scope_facultad_field = "expediente__facultad_id"
+
+    def get_serializer_class(self):
+        if self.action == "crear_observacion":
+            return ObservacionRegistroSerializer
+        return ObservacionRegistroSerializer
 
     def get_rbac_resource(self):
         return "observaciones"

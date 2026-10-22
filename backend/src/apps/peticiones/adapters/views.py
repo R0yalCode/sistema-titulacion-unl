@@ -73,10 +73,20 @@ class PeticionViewSet(
     queryset = PeticionDocumental.objects.select_related(
         "expediente", "requisito"
     )
+    serializer_class = PeticionDocumentalSerializer
     scope_owner_field = "expediente__estudiante_id"
     scope_carrera_field = "expediente__carrera_id"
     scope_facultad_field = "expediente__facultad_id"
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_serializer_class(self):
+        if self.action == "solicitar_emision":
+            return SolicitarEmisionSerializer
+        if self.action == "cargar_documento":
+            return CargarDocumentoSerializer
+        if self.action == "descargar_documento":
+            return DocumentoEntregadoSerializer
+        return PeticionDocumentalSerializer
 
     def get_parser_classes(self):
         if self.action == "cargar_documento":

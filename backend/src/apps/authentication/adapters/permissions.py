@@ -99,7 +99,7 @@ RBAC_MATRIX = {
         }
     },
     "declaratorias": {
-        "POST": {"DECANO": ALLOW, "ANALISTA_APOYO": SCOPE_FACULTAD},
+        "POST": {"DECANO": ALLOW},
         "PUT": {"DECANO": ALLOW},
         "PATCH": {"DECANO": ALLOW},
     },

@@ -1,4 +1,9 @@
 from django.urls import path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularRedocView,
+)
 
 from apps.authentication.adapters.views import TokenPairView
 from apps.expedientes.adapters.views import (
@@ -93,5 +98,21 @@ urlpatterns = [
         "api/v1/peticiones/<uuid:pk>/documento/<int:version>/",
         PeticionViewSet.as_view({"get": "descargar_documento"}),
         name="peticiones-descargar-documento",
+    ),
+    # OpenAPI Schema endpoints
+    path(
+        "api/v1/schema/",
+        SpectacularAPIView.as_view(),
+        name="schema",
+    ),
+    path(
+        "api/v1/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/v1/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
     ),
 ]

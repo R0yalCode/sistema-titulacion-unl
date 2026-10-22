@@ -1,0 +1,1224 @@
+openapi: 3.0.3
+info:
+  title: SGT-SIAAF API
+  version: 1.0.0
+  description: Sistema de Gestión del Trámite de Titulación integrado al SIAAF
+  contact:
+    name: UNL - FEIRNNR
+    email: soporte@unl.edu.ec
+  license:
+    name: Proprietary
+paths:
+  /api/v1/auth/token/:
+    post:
+      operationId: auth_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/checklist/{id}/:
+    put:
+      operationId: checklist_update
+      description: |-
+        PUT /api/v1/checklist/{id}/ (T027).
+
+        Evalúa un requisito del checklist (VERIFICADO / OBSERVADO)
+        con bloqueo pesimista select_for_update() (ADR-007 / AP-06).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChecklistEvaluationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChecklistEvaluationRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistEvaluationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistEvaluation'
+          description: ''
+  /api/v1/checklist/{id}/subsanar/:
+    post:
+      operationId: checklist_subsanar_create
+      description: |-
+        POST /api/v1/checklist/{id}/subsanar/ (T030).
+
+        Subsana un requisito observado: carga un nuevo PDF, incrementa versión N+1,
+        marca observación como resuelta, reanuda plazo y retorna a EN_VERIFICACION.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - checklist
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubsanacionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubsanacionRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubsanacionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subsanacion'
+          description: ''
+  /api/v1/declaratorias/:
+    post:
+      operationId: declaratorias_create
+      description: |-
+        POST /api/v1/declaratorias/ (T035).
+
+        Registra la declaratoria de aptitud legal (Memorando N° 162):
+        - Valida que el expediente esté en INFORME_EMITIDO
+        - Valida que exista InformeAptitud (Providencia N° 590)
+        - Valida el PDF del memorando firmado (FirmaEC) - T022
+        - Crea registro DeclaratoriaAptitud con número de memorando
+        - Cambia expediente a DECLARADA_APTA
+        - Notifica con copia a autoridades y estudiante (DEC-04)
+      tags:
+      - declaratorias
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeclaratoriaCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeclaratoriaCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeclaratoriaCreate'
+          description: ''
+  /api/v1/expedientes/:
+    post:
+      operationId: expedientes_create
+      description: Registro, envio y consulta de expedientes (T015/T016/T018).
+      tags:
+      - expedientes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearExpedienteRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CrearExpedienteRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CrearExpedienteRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrearExpediente'
+          description: ''
+  /api/v1/expedientes/{expediente_id}/checklist/:
+    get:
+      operationId: expedientes_checklist_list
+      description: Consulta de checklist de un expediente (GET /api/v1/expedientes/{id}/checklist/).
+      parameters:
+      - in: path
+        name: expediente_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChecklistVerification'
+          description: ''
+  /api/v1/expedientes/{id}/:
+    get:
+      operationId: expedientes_retrieve
+      description: Detalle del expediente con aislamiento por ambito (T018; EX-003,
+        CA-008).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpedienteDetalle'
+          description: ''
+  /api/v1/expedientes/{id}/enviar/:
+    post:
+      operationId: expedientes_enviar_create
+      description: 'Accion ENDPOINT `enviar`: alcance `own` (EX-003 via get_object_or_404).'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - expedientes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpedienteEnviadoRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ExpedienteEnviadoRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExpedienteEnviadoRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpedienteEnviado'
+          description: ''
+  /api/v1/expedientes/{id}/observar/:
+    post:
+      operationId: expedientes_observar_create
+      description: |-
+        POST /api/v1/expedientes/{id}/observar/ (T028).
+
+        Registra observación accionable, pausa plazo de 8 días hábiles (AP-01),
+        cambia estados a OBSERVADO/OBSERVADA y notifica al estudiante (DEC-01).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - expedientes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObservacionRegistroRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ObservacionRegistroRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ObservacionRegistroRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservacionRegistro'
+          description: ''
+  /api/v1/expedientes/bandeja/:
+    get:
+      operationId: expedientes_bandeja_list
+      description: Bandeja operativa filtrada por rol, estado y ambito (HU-005).
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Un número de página dentro del conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a devolver por página.
+        schema:
+          type: integer
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBandejaExpedienteList'
+          description: ''
+  /api/v1/informes/:
+    post:
+      operationId: informes_create
+      description: |-
+        POST /api/v1/informes/ (T034).
+
+        Emite el informe legal de aptitud (Providencia N° 590):
+        - Valida que el checklist esté 100% VERIFICADO (RN-003, T029)
+        - Genera PDF de la Providencia N° 590 (T033)
+        - Inmutabiliza el registro InformeAptitud
+        - Cambia expediente a INFORME_EMITIDO
+        - Notifica al Decano/a (DEC-01)
+      tags:
+      - informes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InformeCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/InformeCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/InformeCreateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InformeCreate'
+          description: ''
+  /api/v1/notificaciones/:
+    get:
+      operationId: notificaciones_list
+      description: |-
+        GET /api/v1/notificaciones/ (T038).
+
+        Retorna lista de notificaciones del usuario autenticado,
+        con estado leida=False por defecto.
+      tags:
+      - notificaciones
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificacionInterna'
+          description: ''
+  /api/v1/notificaciones/{id}/marcar-leida/:
+    patch:
+      operationId: notificaciones_marcar_leida_partial_update
+      description: |-
+        PATCH /api/v1/notificaciones/{id}/marcar-leida/ (T038).
+
+        Marca una notificación como leída.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - notificaciones
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificacionInterna'
+          description: ''
+  /api/v1/peticiones/{id}/documento/:
+    get:
+      operationId: peticiones_documento_retrieve
+      description: |-
+        GET /api/v1/peticiones/{id}/documento/{version}/ (T024).
+
+        Descarga segura de archivo PDF desde almacenamiento privado.
+        Requiere autenticación JWT y permisos RBAC/IDOR (RNF-016).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - peticiones
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentoEntregado'
+          description: ''
+    post:
+      operationId: peticiones_documento_create
+      description: |-
+        POST /api/v1/peticiones/{id}/documento/ (T023; HU-003).
+
+        Carga archivo PDF, valida magic bytes/SHA-256, registra subido_por
+        y cambia estado a CARGADO (DEC-02).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - peticiones
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CargarDocumentoRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CargarDocumentoRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CargarDocumentoRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CargarDocumento'
+          description: ''
+  /api/v1/peticiones/{id}/documento/{version}/:
+    get:
+      operationId: peticiones_documento_retrieve_2
+      description: |-
+        GET /api/v1/peticiones/{id}/documento/{version}/ (T024).
+
+        Descarga segura de archivo PDF desde almacenamiento privado.
+        Requiere autenticación JWT y permisos RBAC/IDOR (RNF-016).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: version
+        schema:
+          type: integer
+        required: true
+      tags:
+      - peticiones
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentoEntregado'
+          description: ''
+  /api/v1/peticiones/{id}/solicitar-emision/:
+    post:
+      operationId: peticiones_solicitar_emision_create
+      description: |-
+        POST /api/v1/peticiones/{id}/solicitar-emision/ (T021; HU-002).
+
+        Cambia estado de PENDIENTE a SOLICITADO y genera NotificacionInterna
+        a la dependencia emisora (DEC-01).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - peticiones
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    BandejaExpediente:
+      type: object
+      description: Item de la bandeja operativa (T017; HU-005, RF-012).
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        numero_expediente:
+          type: string
+          readOnly: true
+        estudiante_id:
+          type: string
+          format: uuid
+        carrera_id:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        facultad_id:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/EstadoEnum'
+          readOnly: true
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_recepcion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        numero_providencia:
+          type: string
+          readOnly: true
+          nullable: true
+        fecha_limite_atencion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - carrera_id
+      - estado
+      - estudiante_id
+      - facultad_id
+      - fecha_creacion
+      - fecha_limite_atencion
+      - fecha_recepcion
+      - id
+      - numero_expediente
+      - numero_providencia
+    CargarDocumento:
+      type: object
+      description: Entrada multipart para POST /api/v1/peticiones/{id}/documento/
+        (T023).
+      properties:
+        archivo:
+          type: string
+          format: uri
+      required:
+      - archivo
+    CargarDocumentoRequest:
+      type: object
+      description: Entrada multipart para POST /api/v1/peticiones/{id}/documento/
+        (T023).
+      properties:
+        archivo:
+          type: string
+          format: binary
+      required:
+      - archivo
+    ChecklistEvaluation:
+      type: object
+      description: Entrada para PUT /api/v1/checklist/{id}/ (T027).
+      properties:
+        estado_verificacion:
+          allOf:
+          - $ref: '#/components/schemas/ChecklistEvaluationEstadoVerificacionEnum'
+          description: |-
+            Estado de la verificación: VERIFICADO u OBSERVADO
+
+            * `VERIFICADO` - VERIFICADO
+            * `OBSERVADO` - OBSERVADO
+        motivo_observacion:
+          type: string
+          description: Obligatorio si estado_verificacion es OBSERVADO
+      required:
+      - estado_verificacion
+    ChecklistEvaluationEstadoVerificacionEnum:
+      enum:
+      - VERIFICADO
+      - OBSERVADO
+      type: string
+      description: |-
+        * `VERIFICADO` - VERIFICADO
+        * `OBSERVADO` - OBSERVADO
+    ChecklistEvaluationRequest:
+      type: object
+      description: Entrada para PUT /api/v1/checklist/{id}/ (T027).
+      properties:
+        estado_verificacion:
+          allOf:
+          - $ref: '#/components/schemas/ChecklistEvaluationEstadoVerificacionEnum'
+          description: |-
+            Estado de la verificación: VERIFICADO u OBSERVADO
+
+            * `VERIFICADO` - VERIFICADO
+            * `OBSERVADO` - OBSERVADO
+        motivo_observacion:
+          type: string
+          minLength: 1
+          description: Obligatorio si estado_verificacion es OBSERVADO
+      required:
+      - estado_verificacion
+    ChecklistVerification:
+      type: object
+      description: Serializador de verificación de checklist.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        expediente:
+          type: string
+          format: uuid
+          readOnly: true
+        requisito:
+          type: integer
+          readOnly: true
+        requisito_codigo:
+          type: string
+          readOnly: true
+        requisito_nombre:
+          type: string
+          readOnly: true
+        estado_verificacion:
+          allOf:
+          - $ref: '#/components/schemas/ChecklistVerificationEstadoVerificacionEnum'
+          readOnly: true
+        evaluado_por:
+          type: string
+          readOnly: true
+        evaluado_por_username:
+          type: string
+          readOnly: true
+          nullable: true
+        fecha_evaluacion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_actualizacion:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - estado_verificacion
+      - evaluado_por
+      - evaluado_por_username
+      - expediente
+      - fecha_actualizacion
+      - fecha_creacion
+      - fecha_evaluacion
+      - id
+      - requisito
+      - requisito_codigo
+      - requisito_nombre
+    ChecklistVerificationEstadoVerificacionEnum:
+      enum:
+      - PENDIENTE
+      - VERIFICADO
+      - OBSERVADO
+      type: string
+      description: |-
+        * `PENDIENTE` - PENDIENTE
+        * `VERIFICADO` - VERIFICADO
+        * `OBSERVADO` - OBSERVADO
+    CrearExpediente:
+      type: object
+      description: 'Entrada del caso de uso: `carrera_id` (UUID), HU-001/RF-001.'
+      properties:
+        carrera_id:
+          type: string
+          format: uuid
+        estudiante_id:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - carrera_id
+      - estudiante_id
+    CrearExpedienteRequest:
+      type: object
+      description: 'Entrada del caso de uso: `carrera_id` (UUID), HU-001/RF-001.'
+      properties:
+        carrera_id:
+          type: string
+          format: uuid
+      required:
+      - carrera_id
+    DeclaratoriaCreate:
+      type: object
+      properties:
+        expediente_id:
+          type: string
+          format: uuid
+        archivo_memorando:
+          type: string
+          format: uri
+        numero_memorando:
+          type: string
+      required:
+      - archivo_memorando
+      - expediente_id
+    DeclaratoriaCreateRequest:
+      type: object
+      properties:
+        expediente_id:
+          type: string
+          format: uuid
+        archivo_memorando:
+          type: string
+          format: binary
+        numero_memorando:
+          type: string
+      required:
+      - archivo_memorando
+      - expediente_id
+    DependenciaEmisoraEnum:
+      enum:
+      - ESTUDIANTE
+      - SECRETARIA_CARRERA
+      - SECRETARIO_ABOGADO
+      - ANALISTA_APOYO
+      - DECANO
+      - DIRECTOR_CARRERA
+      - RESPONSABLE_DEPENDENCIA
+      - ADMINISTRADOR
+      type: string
+      description: |-
+        * `ESTUDIANTE` - Estudiante
+        * `SECRETARIA_CARRERA` - Secretaria de Carrera
+        * `SECRETARIO_ABOGADO` - Secretario/a-Abogado/a
+        * `ANALISTA_APOYO` - Analista de Apoyo
+        * `DECANO` - Decano/a
+        * `DIRECTOR_CARRERA` - Director de Carrera
+        * `RESPONSABLE_DEPENDENCIA` - Responsable de Dependencia
+        * `ADMINISTRADOR` - Administrador
+    DictamenEnum:
+      enum:
+      - APTO
+      - NO APTO
+      type: string
+      description: |-
+        * `APTO` - APTO
+        * `NO APTO` - NO APTO
+    DocumentoEntregado:
+      type: object
+      description: Serializador de documento entregado (T023).
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        peticion:
+          type: string
+          format: uuid
+          readOnly: true
+        version:
+          type: integer
+          readOnly: true
+        archivo_path:
+          type: string
+          readOnly: true
+        nombre_original:
+          type: string
+          readOnly: true
+        tamanio_bytes:
+          type: integer
+          readOnly: true
+        hash_sha256:
+          type: string
+          readOnly: true
+        tipo_mime:
+          type: string
+          readOnly: true
+        subido_por:
+          type: string
+          format: uuid
+          readOnly: true
+        subido_por_username:
+          type: string
+          readOnly: true
+        fecha_carga:
+          type: string
+          format: date-time
+          readOnly: true
+        es_vigente:
+          type: boolean
+          readOnly: true
+      required:
+      - archivo_path
+      - es_vigente
+      - fecha_carga
+      - hash_sha256
+      - id
+      - nombre_original
+      - peticion
+      - subido_por
+      - subido_por_username
+      - tamanio_bytes
+      - tipo_mime
+      - version
+    EstadoEnum:
+      enum:
+      - BORRADOR
+      - ENVIADA
+      - EN_VERIFICACION
+      - OBSERVADA
+      - INFORME_EMITIDO
+      - DECLARADA_APTA
+      - CANCELADA
+      type: string
+      description: |-
+        * `BORRADOR` - BORRADOR
+        * `ENVIADA` - ENVIADA
+        * `EN_VERIFICACION` - EN_VERIFICACION
+        * `OBSERVADA` - OBSERVADA
+        * `INFORME_EMITIDO` - INFORME_EMITIDO
+        * `DECLARADA_APTA` - DECLARADA_APTA
+        * `CANCELADA` - CANCELADA
+    EstadoPeticionEnum:
+      enum:
+      - PENDIENTE
+      - SOLICITADO
+      - CARGADO
+      - LEGALIZADO
+      - VERIFICADO
+      - OBSERVADO
+      type: string
+      description: |-
+        * `PENDIENTE` - PENDIENTE
+        * `SOLICITADO` - SOLICITADO
+        * `CARGADO` - CARGADO
+        * `LEGALIZADO` - LEGALIZADO
+        * `VERIFICADO` - VERIFICADO
+        * `OBSERVADO` - OBSERVADO
+    ExpedienteDetalle:
+      type: object
+      description: Detalle completo del expediente para GET /api/v1/expedientes/{id}/
+        (T018; EX-003, CA-008).
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        numero_expediente:
+          type: string
+          readOnly: true
+        estudiante_id:
+          type: string
+          format: uuid
+        carrera_id:
+          type: string
+          format: uuid
+        facultad_id:
+          type: string
+          format: uuid
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/EstadoEnum'
+          readOnly: true
+        activa:
+          type: boolean
+          readOnly: true
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_recepcion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        numero_providencia:
+          type: string
+          readOnly: true
+          nullable: true
+        fecha_limite_atencion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        dias_laborables_acumulados:
+          type: integer
+          readOnly: true
+        peticiones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PeticionInicializada'
+          readOnly: true
+      required:
+      - activa
+      - carrera_id
+      - dias_laborables_acumulados
+      - estado
+      - estudiante_id
+      - facultad_id
+      - fecha_creacion
+      - fecha_limite_atencion
+      - fecha_recepcion
+      - id
+      - numero_expediente
+      - numero_providencia
+      - peticiones
+    ExpedienteEnviado:
+      type: object
+      description: Salida 200 de `POST /api/v1/expedientes/{id}/enviar/` (CA-001).
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        numero_expediente:
+          type: string
+          readOnly: true
+        estudiante_id:
+          type: string
+          format: uuid
+        carrera_id:
+          type: string
+          format: uuid
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/EstadoEnum'
+          readOnly: true
+        activa:
+          type: boolean
+          readOnly: true
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_recepcion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        numero_providencia:
+          type: string
+          readOnly: true
+          nullable: true
+        fecha_limite_atencion:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        dias_laborables_acumulados:
+          type: integer
+          readOnly: true
+        peticiones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PeticionInicializada'
+          readOnly: true
+      required:
+      - activa
+      - carrera_id
+      - dias_laborables_acumulados
+      - estado
+      - estudiante_id
+      - fecha_creacion
+      - fecha_limite_atencion
+      - fecha_recepcion
+      - id
+      - numero_expediente
+      - numero_providencia
+      - peticiones
+    ExpedienteEnviadoRequest:
+      type: object
+      description: Salida 200 de `POST /api/v1/expedientes/{id}/enviar/` (CA-001).
+      properties:
+        estudiante_id:
+          type: string
+          format: uuid
+        carrera_id:
+          type: string
+          format: uuid
+      required:
+      - carrera_id
+      - estudiante_id
+    InformeCreate:
+      type: object
+      properties:
+        expediente_id:
+          type: string
+          format: uuid
+        dictamen:
+          $ref: '#/components/schemas/DictamenEnum'
+        fundamentacion:
+          type: string
+      required:
+      - dictamen
+      - expediente_id
+    InformeCreateRequest:
+      type: object
+      properties:
+        expediente_id:
+          type: string
+          format: uuid
+        dictamen:
+          $ref: '#/components/schemas/DictamenEnum'
+        fundamentacion:
+          type: string
+      required:
+      - dictamen
+      - expediente_id
+    NotificacionInterna:
+      type: object
+      description: Serializador de notificación interna.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        expediente:
+          type: string
+          format: uuid
+          readOnly: true
+        expediente_numero:
+          type: string
+          readOnly: true
+        peticion:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        peticion_requisito_nombre:
+          type: string
+          readOnly: true
+          nullable: true
+        titulo:
+          type: string
+          readOnly: true
+        mensaje:
+          type: string
+          readOnly: true
+        leida:
+          type: boolean
+          readOnly: true
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - expediente
+      - expediente_numero
+      - fecha_creacion
+      - id
+      - leida
+      - mensaje
+      - peticion
+      - peticion_requisito_nombre
+      - titulo
+    ObservacionRegistro:
+      type: object
+      description: Entrada para POST /api/v1/expedientes/{id}/observar/ (T028).
+      properties:
+        motivo_observacion:
+          type: string
+          description: Motivo de la observación (obligatorio)
+      required:
+      - motivo_observacion
+    ObservacionRegistroRequest:
+      type: object
+      description: Entrada para POST /api/v1/expedientes/{id}/observar/ (T028).
+      properties:
+        motivo_observacion:
+          type: string
+          minLength: 1
+          description: Motivo de la observación (obligatorio)
+      required:
+      - motivo_observacion
+    PaginatedBandejaExpedienteList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BandejaExpediente'
+    PeticionInicializada:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        requisito_codigo:
+          type: string
+        requisito_nombre:
+          type: string
+        estado_peticion:
+          $ref: '#/components/schemas/EstadoPeticionEnum'
+        dependencia_emisora:
+          $ref: '#/components/schemas/DependenciaEmisoraEnum'
+      required:
+      - dependencia_emisora
+      - id
+      - requisito_codigo
+      - requisito_nombre
+    PeticionInicializadaRequest:
+      type: object
+      properties:
+        requisito_codigo:
+          type: string
+          minLength: 1
+        requisito_nombre:
+          type: string
+          minLength: 1
+        estado_peticion:
+          $ref: '#/components/schemas/EstadoPeticionEnum'
+        dependencia_emisora:
+          $ref: '#/components/schemas/DependenciaEmisoraEnum'
+      required:
+      - dependencia_emisora
+      - requisito_codigo
+      - requisito_nombre
+    Subsanacion:
+      type: object
+      description: Entrada para POST /api/v1/checklist/{id}/subsanar/ (T030).
+      properties:
+        archivo:
+          type: string
+          format: uri
+      required:
+      - archivo
+    SubsanacionRequest:
+      type: object
+      description: Entrada para POST /api/v1/checklist/{id}/subsanar/ (T030).
+      properties:
+        archivo:
+          type: string
+          format: binary
+      required:
+      - archivo
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

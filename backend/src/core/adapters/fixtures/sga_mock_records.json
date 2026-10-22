@@ -1,0 +1,392 @@
+{
+  "records": [
+    {
+      "cedula": "1712345678",
+      "estudiante_nombre": "PEREZ GARCIA, JUAN CARLOS",
+      "carrera": "COMPUTACION",
+      "facultad": "FEIRNNR",
+      "asignaturas": [
+        {
+          "codigo": "INF-101",
+          "nombre": "INTRODUCCION A LA PROGRAMACION",
+          "creditos": 4,
+          "calificacion": 8.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-02-15"
+        },
+        {
+          "codigo": "INF-102",
+          "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS",
+          "creditos": 4,
+          "calificacion": 7.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-08-20"
+        },
+        {
+          "codigo": "INF-201",
+          "nombre": "PROGRAMACION ORIENTADA A OBJETOS",
+          "creditos": 4,
+          "calificacion": 9.2,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-02-10"
+        },
+        {
+          "codigo": "INF-202",
+          "nombre": "BASE DE DATOS I",
+          "creditos": 3,
+          "calificacion": 8.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-08-25"
+        },
+        {
+          "codigo": "INF-301",
+          "nombre": "ARQUITECTURA DE SOFTWARE",
+          "creditos": 4,
+          "calificacion": 8.7,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-02-18"
+        },
+        {
+          "codigo": "INF-302",
+          "nombre": "REDES DE COMPUTADORAS",
+          "creditos": 3,
+          "calificacion": 7.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-08-30"
+        },
+        {
+          "codigo": "INF-401",
+          "nombre": "INTELIGENCIA ARTIFICIAL",
+          "creditos": 4,
+          "calificacion": 9.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-02-12"
+        },
+        {
+          "codigo": "INF-402",
+          "nombre": "PROYECTO DE TITULACION I",
+          "creditos": 6,
+          "calificacion": 8.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-08-15"
+        }
+      ],
+      "promedio_final": 8.44,
+      "total_creditos": 32,
+      "creditos_aprobados": 32,
+      "fecha_emision": "2026-10-01"
+    },
+    {
+      "cedula": "1723456789",
+      "estudiante_nombre": "LOPEZ MARTINEZ, MARIA FERNANDA",
+      "carrera": "COMPUTACION",
+      "facultad": "FEIRNNR",
+      "asignaturas": [
+        {
+          "codigo": "INF-101",
+          "nombre": "INTRODUCCION A LA PROGRAMACION",
+          "creditos": 4,
+          "calificacion": 9.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-02-15"
+        },
+        {
+          "codigo": "INF-102",
+          "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS",
+          "creditos": 4,
+          "calificacion": 9.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-08-20"
+        },
+        {
+          "codigo": "INF-201",
+          "nombre": "PROGRAMACION ORIENTADA A OBJETOS",
+          "creditos": 4,
+          "calificacion": 9.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-02-10"
+        },
+        {
+          "codigo": "INF-202",
+          "nombre": "BASE DE DATOS I",
+          "creditos": 3,
+          "calificacion": 9.3,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-08-25"
+        },
+        {
+          "codigo": "INF-301",
+          "nombre": "ARQUITECTURA DE SOFTWARE",
+          "creditos": 4,
+          "calificacion": 9.6,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-02-18"
+        },
+        {
+          "codigo": "INF-302",
+          "nombre": "REDES DE COMPUTADORAS",
+          "creditos": 3,
+          "calificacion": 9.1,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-08-30"
+        },
+        {
+          "codigo": "INF-401",
+          "nombre": "INTELIGENCIA ARTIFICIAL",
+          "creditos": 4,
+          "calificacion": 9.7,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-02-12"
+        },
+        {
+          "codigo": "INF-402",
+          "nombre": "PROYECTO DE TITULACION I",
+          "creditos": 6,
+          "calificacion": 9.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-08-15"
+        }
+      ],
+      "promedio_final": 9.41,
+      "total_creditos": 32,
+      "creditos_aprobados": 32,
+      "fecha_emision": "2026-10-01"
+    },
+    {
+      "cedula": "1734567890",
+      "estudiante_nombre": "GONZALEZ RODRIGUEZ, CARLOS ANDRES",
+      "carrera": "COMPUTACION",
+      "facultad": "FEIRNNR",
+      "asignaturas": [
+        {
+          "codigo": "INF-101",
+          "nombre": "INTRODUCCION A LA PROGRAMACION",
+          "creditos": 4,
+          "calificacion": 7.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-02-15"
+        },
+        {
+          "codigo": "INF-102",
+          "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS",
+          "creditos": 4,
+          "calificacion": 6.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-08-20"
+        },
+        {
+          "codigo": "INF-201",
+          "nombre": "PROGRAMACION ORIENTADA A OBJETOS",
+          "creditos": 4,
+          "calificacion": 7.2,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-02-10"
+        },
+        {
+          "codigo": "INF-202",
+          "nombre": "BASE DE DATOS I",
+          "creditos": 3,
+          "calificacion": 6.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-08-25"
+        },
+        {
+          "codigo": "INF-301",
+          "nombre": "ARQUITECTURA DE SOFTWARE",
+          "creditos": 4,
+          "calificacion": 7.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-02-18"
+        },
+        {
+          "codigo": "INF-302",
+          "nombre": "REDES DE COMPUTADORAS",
+          "creditos": 3,
+          "calificacion": 7.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-08-30"
+        },
+        {
+          "codigo": "INF-401",
+          "nombre": "INTELIGENCIA ARTIFICIAL",
+          "creditos": 4,
+          "calificacion": 8.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-02-12"
+        },
+        {
+          "codigo": "INF-402",
+          "nombre": "PROYECTO DE TITULACION I",
+          "creditos": 6,
+          "calificacion": 7.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-08-15"
+        }
+      ],
+      "promedio_final": 7.19,
+      "total_creditos": 32,
+      "creditos_aprobados": 32,
+      "fecha_emision": "2026-10-01"
+    },
+    {
+      "cedula": "1745678901",
+      "estudiante_nombre": "RAMIREZ SOTO, ANA LUCIA",
+      "carrera": "COMPUTACION",
+      "facultad": "FEIRNNR",
+      "asignaturas": [
+        {
+          "codigo": "INF-101",
+          "nombre": "INTRODUCCION A LA PROGRAMACION",
+          "creditos": 4,
+          "calificacion": 8.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-02-15"
+        },
+        {
+          "codigo": "INF-102",
+          "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS",
+          "creditos": 4,
+          "calificacion": 8.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-08-20"
+        },
+        {
+          "codigo": "INF-201",
+          "nombre": "PROGRAMACION ORIENTADA A OBJETOS",
+          "creditos": 4,
+          "calificacion": 8.2,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-02-10"
+        },
+        {
+          "codigo": "INF-202",
+          "nombre": "BASE DE DATOS I",
+          "creditos": 3,
+          "calificacion": 9.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-08-25"
+        },
+        {
+          "codigo": "INF-301",
+          "nombre": "ARQUITECTURA DE SOFTWARE",
+          "creditos": 4,
+          "calificacion": 8.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-02-18"
+        },
+        {
+          "codigo": "INF-302",
+          "nombre": "REDES DE COMPUTADORAS",
+          "creditos": 3,
+          "calificacion": 8.3,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-08-30"
+        },
+        {
+          "codigo": "INF-401",
+          "nombre": "INTELIGENCIA ARTIFICIAL",
+          "creditos": 4,
+          "calificacion": 9.2,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-02-12"
+        },
+        {
+          "codigo": "INF-402",
+          "nombre": "PROYECTO DE TITULACION I",
+          "creditos": 6,
+          "calificacion": 8.9,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-08-15"
+        }
+      ],
+      "promedio_final": 8.58,
+      "total_creditos": 32,
+      "creditos_aprobados": 32,
+      "fecha_emision": "2026-10-01"
+    },
+    {
+      "cedula": "1756789012",
+      "estudiante_nombre": "TORRES VARGAS, LUIS MIGUEL",
+      "carrera": "COMPUTACION",
+      "facultad": "FEIRNNR",
+      "asignaturas": [
+        {
+          "codigo": "INF-101",
+          "nombre": "INTRODUCCION A LA PROGRAMACION",
+          "creditos": 4,
+          "calificacion": 6.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2023-02-15"
+        },
+        {
+          "codigo": "INF-102",
+          "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS",
+          "creditos": 4,
+          "calificacion": 5.5,
+          "estado": "REPROBADA",
+          "fecha_aprobacion": null
+        },
+        {
+          "codigo": "INF-102",
+          "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS (RECUPERACION)",
+          "creditos": 4,
+          "calificacion": 7.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-02-10"
+        },
+        {
+          "codigo": "INF-201",
+          "nombre": "PROGRAMACION ORIENTADA A OBJETOS",
+          "creditos": 4,
+          "calificacion": 6.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2024-08-25"
+        },
+        {
+          "codigo": "INF-202",
+          "nombre": "BASE DE DATOS I",
+          "creditos": 3,
+          "calificacion": 6.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-02-18"
+        },
+        {
+          "codigo": "INF-301",
+          "nombre": "ARQUITECTURA DE SOFTWARE",
+          "creditos": 4,
+          "calificacion": 7.2,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2025-08-30"
+        },
+        {
+          "codigo": "INF-302",
+          "nombre": "REDES DE COMPUTADORAS",
+          "creditos": 3,
+          "calificacion": 6.8,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-02-12"
+        },
+        {
+          "codigo": "INF-401",
+          "nombre": "INTELIGENCIA ARTIFICIAL",
+          "creditos": 4,
+          "calificacion": 7.5,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-08-15"
+        },
+        {
+          "codigo": "INF-402",
+          "nombre": "PROYECTO DE TITULACION I",
+          "creditos": 6,
+          "calificacion": 7.0,
+          "estado": "APROBADA",
+          "fecha_aprobacion": "2026-10-01"
+        }
+      ],
+      "promedio_final": 6.83,
+      "total_creditos": 36,
+      "creditos_aprobados": 32,
+      "fecha_emision": "2026-10-01"
+    }
+  ]
+}

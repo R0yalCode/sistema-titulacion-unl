@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
     "apps.authentication.adapters",
     "apps.expedientes.adapters",
     "apps.peticiones.adapters",
@@ -93,6 +94,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
@@ -101,4 +103,41 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "SGT-SIAAF API",
+    "DESCRIPTION": "Sistema de Gestión del Trámite de Titulación integrado al SIAAF",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SCHEMA_PATH_PREFIX": "/api/v1",
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
+    "SERVE_AUTHENTICATION": ["rest_framework_simplejwt.authentication.JWTAuthentication"],
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
+    "REDOC_SETTINGS": {
+        "hideDownloadButton": False,
+        "expandResponses": "200,201",
+    },
+    "CONTACT": {
+        "name": "UNL - FEIRNNR",
+        "email": "soporte@unl.edu.ec",
+    },
+    "LICENSE": {
+        "name": "Proprietary",
+    },
+    "SECURITY": [{"BearerAuth": []}],
+    "COMPONENTS": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            }
+        }
+    },
 }

@@ -1,0 +1,25 @@
+# gitleaks ignore file
+# Exclude test files with test password patterns
+
+# Test password patterns in test files
+(test_.*)\.py
+(test_jwt\.py)
+(test_rbac_permissions\.py)
+(test_.*\.py)
+
+# Specific test files with test passwords
+*test_jwt.py
+*test_rbac_permissions.py
+*test_bandeja_expedientes.py
+*test_crear_expediente.py
+*test_enviar_expediente.py
+*test_expediente_state_machine.py
+*test_idor_isolation_expediente.py
+*test_plazo_calculator.py
+
+# Also exclude any file with "test_" prefix in name
+**/test_*.py
+
+# Exclude test constants
+# These are test constants, not real secrets
+# PASSWORD = "pwd_seguro_t012" etc.
