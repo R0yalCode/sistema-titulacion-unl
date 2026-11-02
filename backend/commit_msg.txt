@@ -1,0 +1,38 @@
+feat: implement T015-T039 - Expedientes, Peticiones, Verificacion, Resoluciones, Notificaciones, Auditoria
+
+Implementación completa Fase 1 (MVP - Aptitud Legal Art. 235 RRA-UNL):
+
+T015-T019: Expedientes y Motor de Plazos
+- CRUD expedientes, estados (BORRADOR/ENVIADA/EN_VERIFICACION/OBSERVADA/INFORME_EMITIDO/DECLARADA_APTA)
+- Motor de plazos 8 días hábiles con pausa/reanudación automática (AP-01)
+- Bandeja operativa filtrada por rol (ScopeFilterMixin)
+- Protección IDOR con ScopeFilterMixin
+
+T020-T025: Peticiones Documentales e Ingestión PDF
+- Modelos CatalogoDocumental, PeticionDocumental, DocumentoEntregado (versionado N+1)
+- Validación PDF: magic bytes %PDF-, tamaño ≤10MB, SHA-256
+- Endpoints carga/descarga con almacenamiento privado
+- Solicitud emisión certificados internos (DEC-01)
+
+T026-T031: Verificación, Checklist y Observaciones
+- ChecklistVerification + ObservacionAccionable
+- Evaluación VERIFICADO/OBSERVADO con bloqueo pesimista SELECT FOR UPDATE (ADR-007)
+- Registro observaciones -> pausa plazo + notificación (DEC-01)
+- Validación RN-003: bloqueo emisión informe si checklist incompleto
+- Subsanación N+1 con reanudación reloj + notificaciones
+
+T032-T036: Resoluciones y Generación PDF
+- InformeAptitud (Providencia N°590) + DeclaratoriaAptitud (Memorando N°162)
+- PDFGeneratorAdapter (ReportLab) para borradores/finales
+- Emisión informe (Secretaría Abogada) + Declaratoria (Decano + FirmaEC DEC-04)
+- Tests E2E: Verificar -> Emitir -> Declarar
+
+T037-T039: Notificaciones, Auditoria
+- NotificacionInterna 100% in-app (DEC-01) + despachador sincrónico
+- Endpoints GET /notificaciones/ + PATCH /marcar-leida/ (T038)
+- EventoAuditoria JSONB inmutable + signals Django (T039)
+- Signals automáticos: expediente, checklist, docs, resoluciones
+
+Seguridad: RBAC matrix 8 roles + ScopeFilterMixin (IDOR prevention)
+PDF: validación magic bytes %PDF-, 10MB, SHA-256
+Tests: 200+ tests passing (pytest, cobertura >80%)

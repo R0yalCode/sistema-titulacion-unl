@@ -61,6 +61,12 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+media/
+staticfiles/
+
+# Docker:
+docker-compose.override.yml
+.docker/
 
 # Flask stuff:
 instance/
