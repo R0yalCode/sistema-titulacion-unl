@@ -1,0 +1,26 @@
+# gitleaks config file
+# Exclude test files with test password patterns
+
+[allowlist]
+# Test password patterns in test files - these are test constants, not real secrets
+files = [
+    "**/test_*.py",
+    "**/*test*.py",
+]
+
+# Specific test files with test passwords
+paths = [
+    "backend/src/apps/expedientes/tests/test_bandeja_expedientes.py",
+    "backend/src/apps/expedientes/tests/test_crear_expediente.py",
+    "backend/src/apps/expedientes/tests/test_enviar_expediente.py",
+    "backend/src/apps/expedientes/tests/test_expediente_state_machine.py",
+    "backend/src/apps/expedientes/tests/test_idor_isolation_expediente.py",
+    "backend/src/apps/expedientes/tests/test_plazo_calculator.py",
+    "backend/src/apps/authentication/tests/test_jwt.py",
+    "backend/src/apps/authentication/tests/test_rbac_permissions.py",
+]
+
+# Exclude test constants like PASSWORD = "pwd_seguro_t012" etc.
+rules = [
+    {id = "generic-api-key", description = "Test password constants in test files"},
+]
