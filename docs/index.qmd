@@ -1,0 +1,44 @@
+---
+title: "SGT-SIAAF — Documentación Técnica"
+---
+
+# SGT-SIAAF
+
+**Sistema de Gestión del Trámite de Titulación** de la Universidad Nacional de Loja (UNL), Facultad FEIRNNR.
+
+SGT-SIAAF automatiza el trámite de **Declaratoria de Aptitud Legal (Art. 235 del Reglamento de Régimen Académico)**: el estudiante inicia una solicitud, adjunta los documentos requeridos, Secretaría-Abogacía verifica el checklist, registra observaciones de ser necesarias, emite el Informe de Aptitud (Providencia N.º 590) y el Decanato firma la Declaratoria (Memorando N.º 162).
+
+## Estado del sistema (verificado 05-11-2026)
+
+| Componente | Estado |
+|---|---|
+| Backend Django/DRF | MVP funcional verificado — 17 operaciones API, 526 pruebas verdes, 93 % de cobertura |
+| Base de datos PostgreSQL | 14 modelos, migraciones consistentes |
+| Contrato OpenAPI | Válido y sincronizado con el código |
+| Frontend React | Andamiaje completo; vistas de negocio pendientes |
+| Seguridad operacional | RBAC e IDOR verificados; endurecimiento de producción pendiente |
+
+Detalles: [Informe de auditoría técnica](auditoria/INFORME_AUDITORIA_TECNICA.md).
+
+## Cómo navegar esta documentación
+
+- **Introducción**: propósito, objetivos, alcance, actores y glosario.
+- **Arquitectura**: decisiones y modelo C4 (contexto → contenedores → componentes → código).
+- **Módulos**: documentación de cada aplicación del backend.
+- **API**: convenciones, autenticación y referencia por grupos de endpoints.
+- **Base de datos**: modelo entidad-relación y diccionario de datos.
+- **Seguridad**: autenticación, autorización y matriz de roles.
+- **Indicadores**: diseño de KPI y dashboards por rol (propuesta).
+- **Infraestructura**: entornos, Docker y despliegue.
+- **Calidad**: estrategia de pruebas y resultados verificados.
+- **Auditoría**: informe técnico integral, plan de mejora y matriz de trazabilidad.
+
+## Construir el sitio
+
+```bash
+cd docs
+quarto render          # genera _site/
+quarto preview         # servidor local de previsualización
+```
+
+Requisito: [Quarto](https://quarto.org) ≥ 1.4. No se requieren dependencias adicionales.

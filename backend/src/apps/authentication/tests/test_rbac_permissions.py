@@ -88,6 +88,15 @@ MATRIZ_62_LITERALS = {
         }
     },
     "checklist": {
+        "GET": {
+            "ESTUDIANTE": DENY,
+            "SECRETARIA_CARRERA": DENY,
+            "SECRETARIO_ABOGADO": "facultad",
+            "ANALISTA_APOYO": "facultad",
+            "DECANO": DENY,
+            "DIRECTOR_CARRERA": DENY,
+            "ADMINISTRADOR": "allow",
+        },
         "PUT": {
             "ESTUDIANTE": DENY,
             "SECRETARIA_CARRERA": DENY,
@@ -198,6 +207,11 @@ PARAMETROS_CELDAS = [
     ("peticiones:documento", "POST", "SECRETARIA_CARRERA", "asignado"),
     ("peticiones:documento", "POST", "DECANO", DENY),
     ("peticiones:documento", "POST", "DIRECTOR_CARRERA", "asignado"),
+    ("checklist", "GET", "SECRETARIO_ABOGADO", "facultad"),
+    ("checklist", "GET", "ANALISTA_APOYO", "facultad"),
+    ("checklist", "GET", "ESTUDIANTE", DENY),
+    ("checklist", "GET", "DECANO", DENY),
+    ("checklist", "GET", "ADMINISTRADOR", "allow"),
     ("checklist", "PUT", "SECRETARIO_ABOGADO", "allow"),
     ("checklist", "PUT", "ANALISTA_APOYO", "borrador"),
     ("checklist", "PUT", "DECANO", DENY),
@@ -222,6 +236,7 @@ def test_rol_fuera_de_matriz_denegado_mundo_cerrado(usuarios):
     assert get_scope(responsable, "expedientes", "GET") == DENY
     assert get_scope(responsable, "declaratorias", "POST") == DENY
     assert get_scope(responsable, "checklist", "PUT") == DENY
+    assert get_scope(responsable, "checklist", "GET") == DENY
 
 
 def test_anonimo_sin_token_denegado(db):

@@ -1,0 +1,215 @@
+{
+  "security_report.md": {
+    "security_report.html": "8271970a"
+  },
+  "05-base-datos/modelo-entidad-relacion.md": {
+    "modelo-entidad-relacion.html": "ebef93f4"
+  },
+  "05-base-datos/relaciones.md": {
+    "relaciones.html": "9225440d"
+  },
+  "05-base-datos/diccionario-datos.md": {
+    "diccionario-datos.html": "5f84f936"
+  },
+  "indicadores/INFORME_DISENO_KPI.md": {
+    "INFORME_DISENO_KPI.html": "9d0c3069"
+  },
+  "07-indicadores/dashboards-por-rol.md": {
+    "dashboards-por-rol.html": "a2ff1a06"
+  },
+  "07-indicadores/informe-kpi.md": {
+    "informe-kpi.html": "3d4bf3a2"
+  },
+  "07-indicadores/apis-indicadores.md": {
+    "apis-indicadores.html": "03a220c3"
+  },
+  "07-indicadores/catalogo-indicadores.md": {
+    "catalogo-indicadores.html": "94276d29"
+  },
+  "index.qmd": {
+    "index.html": "580f161a"
+  },
+  "09-calidad/estrategia-pruebas.md": {
+    "estrategia-pruebas.html": "f184bf14"
+  },
+  "09-calidad/resultados-validacion.md": {
+    "resultados-validacion.html": "45161c40"
+  },
+  "09-calidad/cobertura.md": {
+    "cobertura.html": "9cd0cde2"
+  },
+  "sprint-S1/S1_INFORME_IMPLEMENTACION.md": {
+    "S1_INFORME_IMPLEMENTACION.html": "e260a6f8"
+  },
+  "sprint-S1/S1_03_DIAGNOSTICO_DJANGO_ADMIN.md": {
+    "S1_03_DIAGNOSTICO_DJANGO_ADMIN.html": "018a7e2e"
+  },
+  "sprint-S1/S1_06_RIESGOS_Y_DEPENDENCIAS.md": {
+    "S1_06_RIESGOS_Y_DEPENDENCIAS.html": "48dd5357"
+  },
+  "sprint-S1/S1_02_DIAGNOSTICO_PRUEBAS.md": {
+    "S1_02_DIAGNOSTICO_PRUEBAS.html": "cdb9aa6f"
+  },
+  "sprint-S1/S1_05_CRITERIOS_ACEPTACION_S1.md": {
+    "S1_05_CRITERIOS_ACEPTACION_S1.html": "bd232e0e"
+  },
+  "sprint-S1/S1_04_MATRIZ_TAREAS_S1.md": {
+    "S1_04_MATRIZ_TAREAS_S1.html": "331ef7af"
+  },
+  "sprint-S1/S1_01_VALIDACION_HALLAZGOS.md": {
+    "S1_01_VALIDACION_HALLAZGOS.html": "df8cdc78"
+  },
+  "04-api/introduccion.md": {
+    "introduccion.html": "ecc0d9d8"
+  },
+  "04-api/convenciones.md": {
+    "convenciones.html": "a6321e25"
+  },
+  "04-api/endpoints/resoluciones.md": {
+    "resoluciones.html": "4c242b5a"
+  },
+  "04-api/endpoints/checklist.md": {
+    "checklist.html": "22bee2ca"
+  },
+  "04-api/endpoints/peticiones.md": {
+    "peticiones.html": "e4687412"
+  },
+  "04-api/endpoints/expedientes.md": {
+    "expedientes.html": "188440ca"
+  },
+  "04-api/endpoints/auth.md": {
+    "auth.html": "2c5b5791"
+  },
+  "04-api/endpoints/notificaciones.md": {
+    "notificaciones.html": "39fec28e"
+  },
+  "04-api/autenticacion.md": {
+    "autenticacion.html": "fc532b27"
+  },
+  "frontend/FRONTEND_IMPLEMENTATION_PLAN.md": {
+    "FRONTEND_IMPLEMENTATION_PLAN.html": "2819e08f"
+  },
+  "frontend/GUIA_VISTAS_TITULACION.md": {
+    "GUIA_VISTAS_TITULACION.html": "a624519c"
+  },
+  "06-seguridad/autorizacion.md": {
+    "autorizacion.html": "2a950758"
+  },
+  "06-seguridad/roles-permisos.md": {
+    "roles-permisos.html": "42715071"
+  },
+  "06-seguridad/consideraciones-seguridad.md": {
+    "consideraciones-seguridad.html": "1e8fbdc0"
+  },
+  "06-seguridad/autenticacion.md": {
+    "autenticacion.html": "9efd5f36"
+  },
+  "03-modulos/modulo-authentication.md": {
+    "modulo-authentication.html": "50695d43"
+  },
+  "03-modulos/modulo-notificaciones.md": {
+    "modulo-notificaciones.html": "79fbbccd"
+  },
+  "03-modulos/modulo-expedientes.md": {
+    "modulo-expedientes.html": "2294598d"
+  },
+  "03-modulos/inventario-modulos.md": {
+    "inventario-modulos.html": "4b8748c1"
+  },
+  "03-modulos/modulo-peticiones.md": {
+    "modulo-peticiones.html": "94239536"
+  },
+  "03-modulos/modulo-core.md": {
+    "modulo-core.html": "50044aa1"
+  },
+  "03-modulos/modulo-verificacion.md": {
+    "modulo-verificacion.html": "0ba36802"
+  },
+  "03-modulos/modulo-resoluciones.md": {
+    "modulo-resoluciones.html": "04e5a7e4"
+  },
+  "RESUMEN_EJECUTIVO.md": {
+    "RESUMEN_EJECUTIVO.html": "09ceae0a"
+  },
+  "anexos/decisiones.md": {
+    "decisiones.html": "505043d8"
+  },
+  "anexos/referencias.md": {
+    "referencias.html": "f29aa621"
+  },
+  "01-introduccion/introduccion.md": {
+    "introduccion.html": "d9be7da3"
+  },
+  "01-introduccion/alcance.md": {
+    "alcance.html": "ba50ac11"
+  },
+  "01-introduccion/glosario.md": {
+    "glosario.html": "365cb548"
+  },
+  "01-introduccion/objetivos.md": {
+    "objetivos.html": "adaee38f"
+  },
+  "01-introduccion/actores.md": {
+    "actores.html": "abbb2533"
+  },
+  "08-infraestructura/entorno-desarrollo.md": {
+    "entorno-desarrollo.html": "75cb6a52"
+  },
+  "08-infraestructura/mantenimiento.md": {
+    "mantenimiento.html": "687d6235"
+  },
+  "08-infraestructura/despliegue.md": {
+    "despliegue.html": "a84de5fa"
+  },
+  "08-infraestructura/docker.md": {
+    "docker.html": "1fde6219"
+  },
+  "08-infraestructura/configuracion.md": {
+    "configuracion.html": "5daac388"
+  },
+  "auditoria/PLAN_MEJORA_TECNICA.md": {
+    "PLAN_MEJORA_TECNICA.html": "a77f4bb3"
+  },
+  "auditoria/INFORME_AUDITORIA_TECNICA.md": {
+    "INFORME_AUDITORIA_TECNICA.html": "c3bb686b"
+  },
+  "auditoria/matriz-trazabilidad.md": {
+    "matriz-trazabilidad.html": "80c6b6b5"
+  },
+  "adr/0001-arquitectura-hexagonal-monolito-modular.md": {
+    "0001-arquitectura-hexagonal-monolito-modular.html": "11f28d06"
+  },
+  "adr/0002-stack-django-drf-postgresql.md": {
+    "0002-stack-django-drf-postgresql.html": "903aeb6b"
+  },
+  "02-arquitectura/arquitectura-frontend.md": {
+    "arquitectura-frontend.html": "a7c729e5"
+  },
+  "02-arquitectura/decisiones-arquitectonicas.md": {
+    "decisiones-arquitectonicas.html": "1cfe100b"
+  },
+  "02-arquitectura/arquitectura-general.md": {
+    "arquitectura-general.html": "cda3aa75"
+  },
+  "02-arquitectura/c4/componentes.md": {
+    "componentes.html": "84d9186a"
+  },
+  "02-arquitectura/c4/contexto.md": {
+    "contexto.html": "94fe286f"
+  },
+  "02-arquitectura/c4/codigo.md": {
+    "codigo.html": "46a36256"
+  },
+  "02-arquitectura/c4/contenedores.md": {
+    "contenedores.html": "dcf3202a"
+  },
+  "02-arquitectura/arquitectura-base-datos.md": {
+    "arquitectura-base-datos.html": "afcc8843"
+  },
+  "02-arquitectura/arquitectura-backend.md": {
+    "arquitectura-backend.html": "09913399"
+  },
+  "ENTORNO_DESARROLLO.md": {
+    "ENTORNO_DESARROLLO.html": "c0cceea2"
+  }
+}
