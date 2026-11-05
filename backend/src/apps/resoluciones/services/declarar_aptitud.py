@@ -10,6 +10,7 @@ from django.utils import timezone
 from apps.resoluciones.adapters.models import DeclaratoriaAptitud, InformeAptitud
 from apps.expedientes.adapters.models import ExpedienteTitulacion, HistorialEstado
 from apps.notificaciones.adapters.models import NotificacionInterna
+from core.adapters.local_storage import guardar_archivo_privado
 from core.adapters.pdf_validation import validar_pdf_completo, PDFValidationError
 
 
@@ -172,12 +173,30 @@ def execute(usuario, expediente_id, archivo_memorando, numero_memorando=None):
         if not numero_memorando:
             numero_memorando = _generar_numero_memorando(expediente)
 
+        # Persistir físicamente el memorando firmado en el almacenamiento
+        # privado (P-09, ADR-005). Si el guardado falla, la transacción
+        # completa hace rollback: no queda un registro BD sin archivo.
+        nombre_almacenamiento = (
+            f"memorando_162_{numero_memorando.replace('/', '-').replace(' ', '_')}.pdf"
+        )
+        try:
+            archivo_path = guardar_archivo_privado(
+                archivo_memorando,
+                str(expediente.id),
+                nombre_original=nombre_almacenamiento,
+            )
+        except OSError as error:
+            raise PDFInvalidoError(
+                "No se pudo almacenar el memorando firmado en el almacenamiento privado.",
+                code="storage_error",
+            ) from error
+
         # Crear registro DeclaratoriaAptitud
         declaratoria = DeclaratoriaAptitud.objects.create(
             expediente=expediente,
             numero_memorando=numero_memorando,
             decano=usuario,
-            archivo_memorando_firmado_path=f"expedientes/{timezone.now().year}/{expediente.id}/memorando_162_{numero_memorando.replace('/', '-').replace(' ', '_')}.pdf",
+            archivo_memorando_firmado_path=archivo_path,
         )
 
         # Actualizar expediente a DECLARADA_APTA

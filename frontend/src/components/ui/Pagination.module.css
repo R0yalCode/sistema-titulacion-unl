@@ -1,0 +1,12 @@
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.status {
+  margin: 0;
+  font-size: var(--font-size-label);
+  color: var(--color-text-secondary);
+}
