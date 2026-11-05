@@ -14,6 +14,7 @@ COPY backend/requirements-dev.txt .
 RUN pip install --no-cache-dir -r requirements-dev.txt
 
 COPY backend/manage.py ./
+COPY backend/pyproject.toml ./
 COPY backend/src ./src
 
 RUN mkdir -p media staticfiles && chown -R django:django /app/backend

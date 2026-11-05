@@ -75,6 +75,11 @@ RBAC_MATRIX = {
         }
     },
     "checklist": {
+        "GET": {
+            "SECRETARIO_ABOGADO": SCOPE_FACULTAD,
+            "ANALISTA_APOYO": SCOPE_FACULTAD,
+            "ADMINISTRADOR": ALLOW,
+        },
         "PUT": {
             "SECRETARIO_ABOGADO": ALLOW,
             "ANALISTA_APOYO": SCOPE_BORRADOR,

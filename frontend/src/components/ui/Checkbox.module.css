@@ -1,0 +1,33 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.control {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-brand-red);
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+}
+
+.label {
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--font-size-label);
+  color: var(--color-danger-text);
+}

@@ -1,0 +1,78 @@
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  word-break: break-word;
+}
+
+.table th {
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+  color: var(--color-text-secondary);
+}
+
+.table td {
+  color: var(--color-text-primary);
+}
+
+.cards {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.cardLabel {
+  font-size: var(--font-size-label);
+  color: var(--color-text-secondary);
+}
+
+.cardValue {
+  color: var(--color-text-primary);
+  text-align: right;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .tableScroll {
+    display: none;
+  }
+
+  .cards {
+    display: flex;
+  }
+}
