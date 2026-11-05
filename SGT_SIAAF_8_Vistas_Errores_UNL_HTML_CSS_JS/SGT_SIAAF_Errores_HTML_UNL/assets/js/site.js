@@ -1,0 +1,5 @@
+
+(()=>{'use strict';
+const toast=(message)=>{document.querySelector('.toast')?.remove();const node=document.createElement('div');node.className='toast';node.role='status';node.textContent=message;document.body.appendChild(node);setTimeout(()=>node.remove(),4200);};
+document.addEventListener('click',ev=>{const trigger=ev.target.closest('[data-action]');if(!trigger)return;const a=trigger.dataset.action;if(a==='retry'){ev.preventDefault();toast('Demostración: se intentaría cargar nuevamente esta página.');}if(a==='refresh-form'){ev.preventDefault();toast('Demostración: aquí se consultarían los datos actualizados al servidor, sin sobrescribir cambios.');}if(a==='review-form'){ev.preventDefault();toast('Demostración: aquí se mostrarían tus peticiones registradas.');}if(a==='dismiss'){ev.preventDefault();const alert=trigger.closest('.alert');if(alert){alert.hidden=true;toast('Aviso cerrado.');}}if(a==='submit-demo'){ev.preventDefault();toast('Este es un prototipo visual. No se han enviado datos ni modificado ninguna solicitud.');}});
+})();

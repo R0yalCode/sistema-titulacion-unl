@@ -10,7 +10,22 @@ Usa ReportLab para maquetado programático sin dependencias externas pesadas.
 import os
 from datetime import datetime
 from decimal import Decimal
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+from django.conf import settings
+
+
+def _raiz_almacenamiento_privado() -> str:
+    """Raíz del almacenamiento privado (ADR-005/plan.md §19).
+
+    Usa PRIVATE_MEDIA_ROOT si está definida; en su defecto MEDIA_ROOT/private,
+    la misma base que PrivateMediaStorage (core/adapters/local_storage.py).
+    """
+    raiz_privada = getattr(settings, "PRIVATE_MEDIA_ROOT", None)
+    if raiz_privada is None:
+        raiz_privada = Path(settings.MEDIA_ROOT) / "private"
+    return str(raiz_privada)
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
@@ -45,7 +60,9 @@ class PDFGeneratorAdapter:
     PLANTILLAS_DIR = os.path.join(os.path.dirname(__file__), "plantillas")
 
     def __init__(self, output_dir: Optional[str] = None):
-        self.output_dir = output_dir or "/media/private/resoluciones"
+        self.output_dir = output_dir or os.path.join(
+            _raiz_almacenamiento_privado(), "resoluciones"
+        )
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.PLANTILLAS_DIR, exist_ok=True)
 

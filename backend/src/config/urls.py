@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import path
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -23,6 +24,9 @@ from apps.resoluciones.adapters.views import (
 from apps.notificaciones.adapters.views import NotificacionViewSet
 
 urlpatterns = [
+    # Consola interna de administración (ADR-0009): solo staff/superuser,
+    # sin exposición operativa del trámite.
+    path("admin/", admin.site.urls),
     path("api/v1/auth/token/", TokenPairView.as_view(), name="auth-token"),
     path(
         "api/v1/expedientes/",

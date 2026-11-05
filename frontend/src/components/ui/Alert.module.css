@@ -1,0 +1,30 @@
+.alert {
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid transparent;
+}
+
+.title {
+  margin: 0 0 var(--space-1);
+  font-weight: var(--font-weight-h3);
+}
+
+.info {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+}
+
+.success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
