@@ -628,7 +628,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** responsive y accesible.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `StudentDashboardPage.tsx` reescrita — saludo con `cedula` del token (separado del `<h1>` por jerarquía de encabezados), 3 tarjetas de resumen (borrador/observadas/no leídas) reutilizando `Card` del UI Kit, CTA "Crear solicitud" dentro del estado vacío de `ExpedientesCard` (CA-V02-02), `Alert` informativo de limitación de perfil/historial (RFF-205). Grid de tarjetas colapsa a 1 columna en móvil (375px, sin overflow horizontal, verificado en navegador). Se mantuvo el texto del `<h1>` ("Dashboard del estudiante (V-02)") para no romper las aserciones de regresión existentes en `router.test.tsx`/`App.test.tsx`/`router.auth-expiry.test.tsx`/`LoginPage.test.tsx`, que usan ese heading como ancla).
 
 ### FE-T202 — Query de bandeja del estudiante
 
@@ -643,7 +643,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** muestra datos reales; estado vacío correcto.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: contrato real verificado contra `backend/src/apps/expedientes/adapters/views.py` — `GET /api/v1/expedientes/bandeja/` (`BandejaExpedienteViewSet`) existe, tiene `rbac_resource="expedientes"` con `RBAC_MATRIX["expedientes"]["GET"]["ESTUDIANTE"]=SCOPE_OWN` y `MAPA_INTERVENCION_POR_ROL["ESTUDIANTE"]=("BORRADOR","OBSERVADA")`: el estudiante SÍ puede listar sus propios expedientes en esos dos estados — **no bloqueada**, a pesar de que BE-05 (perfil + historial COMPLETO en todos los estados) sigue NO AUTORIZADA/ausente; son limitaciones distintas (BE-05 es más amplia que lo que esta tarea necesita). Paginación real confirmada en `BandejaPagination` (`page`/`page_size`, máx. 50) y en `openapi.yaml` (`PaginatedBandejaExpedienteList`: `count`/`next`/`previous`/`results`). `src/api/endpoints/expedientes.ts` (tipos `BandejaExpediente`/`ListBandejaEstudianteParams`, función `listBandejaEstudiante`) + `src/features/dashboard/queries.ts` (`useBandejaEstudiante`, `retry:false` para evitar depender del reintento automático de `queryClient.ts`, ver hallazgo P2 en el informe) + `ExpedientesCard.tsx` (tabla vía `Table` del UI Kit, contadores sobre la página actual, nota "hay más páginas" cuando `next!==null`, `Pagination` del UI Kit cuando `count>pageSize`). Pruebas: `expedientes.test.ts` (4, construcción de query string) + casos de integración en `StudentDashboardPage.test.tsx`.
 
 ### FE-T203 — Notificaciones internas
 
@@ -658,7 +658,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el contador baja al marcar leída.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Should. **Estado:** **Hecha, con una desviación de contrato documentada** (2026-11-05: `GET /api/v1/notificaciones/` y `PATCH /api/v1/notificaciones/{id}/marcar-leida/` (`NotificacionViewSet`) existen y tienen `RBAC_MATRIX["notificaciones"]["GET"/"PATCH"]["ESTUDIANTE"]=SCOPE_OWN` — **no bloqueada**. **Hallazgo de discrepancia código-vs-documentación** (verificado en `backend/src/apps/notificaciones/adapters/views.py` línea 30 y `backend/openapi.yaml`): la vista fija explícitamente `pagination_class = None` ("Deshabilitar paginación para pruebas simples") y devuelve `{"results": [...]}` — **sin `count`/`next`/`previous` y sin paginar** — a pesar de que `specify.md` §7 (V-02) la describe como "paginado; estructura estándar DRF" y `openapi.yaml` la tipa como `type: array` plano (tampoco coincide con el código real). Se implementó contra el **código real** (jerarquía de `clarify.md` §2): `listNotificaciones()` sin `page`/`page_size`, tipo `ListNotificacionesResponse={results: NotificacionInterna[]}`, con un comentario en el código que documenta la discrepancia. El contador de no leídas se calcula sobre el conjunto completo devuelto (no hay "página" que calcular). Mutación `marcarNotificacionLeida` invalida la query (`useMarcarNotificacionLeida`, TanStack Query) y el contador baja tras el `PATCH` (verificado en `StudentDashboardPage.test.tsx`, caso CA-V02-03, con mocks MSW con estado mutable que simulan el ciclo GET→PATCH→GET real).
 
 ### FE-T204 — Persistencia local del último expediente
 
@@ -673,7 +673,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el estudiante puede volver a un expediente `ENVIADA` si conserva el ID.
 - **Pruebas:** unitarias de storage.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Should. **Estado:** **Hecha, con alcance acotado documentado** (2026-11-05: `src/lib/storage.ts` — `recordVisitedExpediente`/`getRecentExpedientes`/`clearRecentExpedientes` sobre `sessionStorage` (clave `sgt.recent_expedientes`), dedupe por `id` (revisitar mueve al frente), tope de 5 entradas, descarta JSON inválido o entradas con forma incorrecta sin lanzar. `AuthContext.logout()` extendido para llamar `clearRecentExpedientes()` además de `clearAccessToken()` (aislamiento de sesión). Integrado en `ExpedientesCard`/`StudentDashboardPage` al hacer clic en "Ver expediente" (enlace real a la ruta `/expedientes/:id`, ya wireada sin `RequireRole` adicional). `AccesosRapidos.tsx` muestra el disclaimer explícito de que no sustituye un historial oficial (BE-05) y marca con una insignia los accesos cuyo `id` no está en la página actual de la bandeja ("No aparece en su bandeja actual; puede haber cambiado de estado"), cubriendo CA-V02-05. **Alcance acotado:** solo se registran expedientes **visitados** (clic real desde la bandeja); el registro al **crear** un expediente queda pendiente de V-03 (FE-T301+, `NuevaSolicitudPage` sigue siendo el stub de FE-T009 y no está autorizada en este lote) — no es un bloqueo de backend, es una dependencia de una tarea de frontend no autorizada todavía. Pruebas: `storage.test.ts` (9) + 2 casos en `AuthContext.test.tsx` + casos de integración en `StudentDashboardPage.test.tsx`.
 
 ### FE-T205 — Estados y errores del dashboard
 
@@ -688,7 +688,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cada estado es visible y accesible.
 - **Pruebas:** RTL + MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `ExpedientesCard`/`NotificacionesCard` manejan `loading` (vía `Table`/`Spinner` existentes), `empty` (`EmptyState`), `error` (`presentApiError()` + `ErrorState` con `onRetry={() => query.refetch()}` real, o `ForbiddenState` si `presentApiError(...).kind==='forbidden'`), sin duplicar `apiErrorPresentation.ts` ni los manejadores globales de F2.5/V-01. Estado parcial implementado en `StudentDashboardPage.tsx`: cuando exactamente una de las dos queries falla y la otra tiene éxito, se muestra un aviso explícito ("Algunos datos no se pudieron cargar. El resto del panel sigue disponible.") y la sección que sí cargó permanece funcional (verificado en `StudentDashboardPage.test.tsx`). Ningún estado muestra datos ficticios: los contadores de resumen muestran "—" en vez de "0" mientras la query respectiva no haya tenido éxito, para no insinuar "cero expedientes" cuando en realidad es "desconocido/error".).
 
 ### FE-T206 — Pruebas de V-02
 
@@ -703,7 +703,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: se mantuvo la convención de archivos `*.test.ts(x)` co-ubicados en vez de `__tests__/`, por consistencia con F0-V01 (mismo criterio documentado en FE-T017/FE-T104). 29 pruebas nuevas: `storage.test.ts` (9), `expedientes.test.ts` (4), `ExpedientesCard.test.tsx` (1), `NotificacionesCard.test.tsx` (4), `StudentDashboardPage.test.tsx` (10, integración real con MSW: con/sin expedientes, contadores, notificaciones no leídas, marcado como leída con invalidación real, error 500 + reintento real, estado parcial, acceso rápido registrado al visitar, aviso CA-V02-05, aviso de limitación RFF-205, axe), más 1 prueba añadida a `AuthContext.test.tsx` (limpieza de accesos rápidos al cerrar sesión). Cobertura real (`npm run test -- --coverage`): `features/dashboard` 96,34% stmts / 89,06% branch / 94,28% funcs / 97,46% lines — ≥80% en las cuatro métricas, sin reducir umbrales globales ni excluir archivos. Suite completa: 255/255 pruebas, sin regresiones en F0–V01 (se corrigió `LoginPage.test.tsx`, que no envolvía `AppRouter` en `QueryClientProvider`, porque antes `StudentDashboardPage` era un stub sin queries; también se añadió un `<h2>Resumen</h2>` en el dashboard para no romper el orden de encabezados WCAG al introducir las tarjetas `<h3>` de `Card`). `npm run lint`/`typecheck`/`build` sin errores. Verificación manual en navegador (`npm run dev`, sesión inyectada vía `sessionStorage`): estructura accesible completa (landmarks/headings/alerts correctos), botón "Reintentar" dispara una petición real a `GET http://localhost:8000/api/v1/expedientes/bandeja/?page=1&page_size=10` (falla con `ERR_CONNECTION_REFUSED` por ausencia de backend en este entorno, confirmando que el reintento es real y no simulado), y colapso responsive a 375px sin overflow horizontal.).
 
 ---
 
@@ -723,7 +723,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Notas DEC-14 (corregidas, MOMENTO 2 — 2026-11-04):** `carrera_id` (carrera) y `opcion_titulacion` (modalidad) son conceptos distintos. **Esta tarea se implementa solo con `carrera_id`** (obligatorio, UUID, sin catálogo —BE-10). El selector de modalidades del prototipo A **no está descartado definitivamente, pero está sin implementar**: queda condicionado a (1) human decision, (2) validación del RRA-UNL (arts. 39/40/212/216/233 señalados; fuente primaria no verificada) y (3) contrato backend aprobado (BE-06: solo dependencia solicitada, no autorización de modificar el backend). "Proyecto de Emprendimiento" **no confirmado** — no se muestra como opción. Detalle en `specify.md` §9.2 (puntos a–f).
 - **Pruebas:** RTL + unitarias de validación.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `NuevaSolicitudForm.tsx` — campo `carrera_id` con `Input` del UI Kit, hint explicando que no hay catálogo (BE-10) y que debe usarse el UUID proporcionado por la institución, validación estricta con regex de UUID canónico (`isValidCarreraId`, exportada y probada por separado), obligatorio, foco en el error, confirmación real vía `window.confirm` antes de enviar (mismo patrón ya usado y probado en el logout de `AppLayout`), doble guard contra doble envío. Sin selector de modalidad, sin TIC/Examen Complexivo/Proyecto de Emprendimiento, sin inferencia de elegibilidad — DEC-14 respetada sin cambios.).
 
 ### FE-T302 — Integración de creación de expediente
 
@@ -738,7 +738,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** 201 → expediente creado y redirección; 400 → mensaje.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: contrato real verificado directamente contra `backend/src/apps/expedientes/services/crear_expediente.py` + `backend/src/apps/expedientes/tests/test_crear_expediente.py` (pruebas reales del backend, no solo `specify.md`/`openapi.yaml`): `POST /api/v1/expedientes/` con `{"carrera_id": "<uuid>"}`, `RBAC_MATRIX["expedientes"]["POST"]["ESTUDIANTE"]=ALLOW`, 201 con `ExpedienteBorradorSerializer` (`id, numero_expediente, estudiante_id, carrera_id, estado, activa, fecha_creacion, peticiones[5]`). `crearExpediente()` añadida a `src/api/endpoints/expedientes.ts` (sin duplicar el archivo ni tocar `listBandejaEstudiante`). `useCrearExpediente()` en `src/features/solicitud/queries.ts` (`useMutation`, `retry:false` explícito —ver hallazgo P2 de `queryClient.ts`, heredado de V-02, no corregido aquí—), invalida `BANDEJA_ESTUDIANTE_QUERY_KEY` de V-02 en `onSuccess` reexportada desde un nuevo barrel `src/features/dashboard/index.ts` (la regla de lint `no-restricted-imports` del proyecto prohíbe importar módulos internos de otra feature; se creó el barrel mínimo necesario, sin tocar el resto de V-02). Sin reintentos automáticos del `POST` (operación de escritura; además `queryClient.ts` ya fija `mutations:{retry:0}` globalmente). Registro del `id`/`numero_expediente` creado vía `recordVisitedExpediente()` de `src/lib/storage.ts` (reutilizado de FE-T204, sin romperlo).).
 
 ### FE-T303 — Manejo de errores de creación
 
@@ -753,7 +753,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el usuario entiende el error y tiene una acción.
 - **Pruebas:** RTL + MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `describeError()` en `NuevaSolicitudPage.tsx` clasifica la respuesta real —no se inventó 409/412/428, BE-11 sigue sin autorizar esa suposición, confirmado: el backend real devuelve **400** para expediente activo/catálogo incompleto—. **Expediente activo existente**: detectado por la palabra "activo" en `detail` (mismo criterio literal que usa la prueba real del backend, `test_creacion_rechazada_con_expediente_activo_previo_400`); el backend **no** incluye el `id` del expediente activo en esta respuesta (solo `{"detail": "..."}"`), por lo que en vez de inventar un enlace directo inexistente se ofrece el botón real "Ir a mi panel" → `/estudiante`, donde la bandeja de V-02 (ya funcional) permite verlo. **403**: `navigate('/no-habilitado')` (flujo V-09 existente, igual que las guardas de ruta — no se usó `ForbiddenState` inline como en los cards de V-02, por instrucción explícita de esta autorización). **5xx**: reutiliza `presentApiError()` sin duplicar lógica. **Red/timeout**: NO se ofrece un botón "Reintentar" que repita el `POST` (protección ante duplicados, ver FE-T302); se muestra un aviso de resultado ambiguo + el mismo botón "Ir a mi panel" para verificar la bandeja antes de cualquier nuevo intento manual. Mensajes mostrados en `Alert` (ya accesible, `role="alert"`), sin componentes nuevos.).
 
 ### FE-T304 — Borrador local del formulario
 
@@ -767,7 +767,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** recargar conserva el valor; enviar lo limpia.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Should. **Estado:** **Hecha** (2026-11-05: `getNuevaSolicitudDraft`/`saveNuevaSolicitudDraft`/`clearNuevaSolicitudDraft` añadidas a `src/lib/storage.ts` (clave `sgt.nueva_solicitud_draft`, independiente de `sgt.recent_expedientes` de FE-T204 — no se tocó ni rompió esa funcionalidad). Se restaura al montar (`useState(() => getNuevaSolicitudDraft() ?? '')`), se actualiza en cada cambio del campo (y se limpia si el campo queda vacío), se limpia al crear con éxito y `AuthContext.logout()` fue extendido para llamar también `clearNuevaSolicitudDraft()` junto a `clearRecentExpedientes()` (aislamiento de sesión, mecanismo existente). Solo se guarda `carrera_id`; nunca contraseñas ni tokens.).
 
 ### FE-T305 — Éxito y redirección
 
@@ -781,7 +781,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el usuario llega a V-04 con datos.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha, con la limitación de V-04 documentada** (2026-11-05: tras un 201 real se registra el `id`/`numero_expediente` (`recordVisitedExpediente`), se invalida la bandeja (en `useCrearExpediente`), se muestra un toast de éxito con el `numero_expediente` **real** devuelto por el backend (nunca inventado) vía `ToastProvider` existente, y se navega a `/expedientes/:id`. **Estado real de la ruta V-04 verificado**: `/expedientes/:id` está registrada en `router.tsx` (sin `RequireRole` adicional más allá de `RequireAuth`, por lo que es alcanzable) pero `ExpedientePage.tsx` sigue siendo el stub de FE-T009 ("Vista pendiente de implementación"); no se implementó ni se amplió V-04. **No se implementó prefetch**: aunque `GET /api/v1/expedientes/{id}/` es un endpoint real y accesible (`SCOPE_OWN`, verificado en `ExpedienteViewSet.retrieve`), construir una query de detalle para prefetch equivaldría a adelantar la capa de datos de V-04, fuera del alcance autorizado; se documenta como dependencia pendiente, no como funcionalidad faltante de V-03.).
 
 ### FE-T306 — Pruebas de V-03
 
@@ -795,7 +795,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: convención `*.test.ts(x)` co-ubicados, igual que V-01/V-02. `NuevaSolicitudForm.test.tsx` (13, unitario) + `NuevaSolicitudPage.test.tsx` (11, integración real con MSW sobre contratos verificados contra el backend) = 24 pruebas nuevas. Cubren: formulario válido, UUID inválido, campo obligatorio, confirmación antes de enviar (aceptada/cancelada), prevención de doble envío (guard de botón + guard del handler + protección real ante doble `POST` concurrente), creación exitosa 201 verificado, 400 genérico, 400 "expediente activo" con botón real a la bandeja, 403→V-09, 500, red/timeout con aviso de ambigüedad y sin botón de reintento automático, persistencia/restauración/limpieza del borrador (incl. al borrar el campo), registro del ID creado, toast + navegación a `/expedientes/:id`, axe. Cobertura real (`npm run test -- --coverage`): `features/solicitud` 97,1% stmts / 97,29% branch / 100% funcs / 97,05% lines — ≥80% en las cuatro métricas (único hueco: rama defensiva no-`ApiRequestError`, mismo patrón ya aceptado en V-01/V-02). Suite completa: 277/277 pruebas, sin regresiones en F0–V02. `npm run lint`/`typecheck`/`build` sin errores. Verificación manual en navegador (`npm run dev`, sesión inyectada): formulario real, validación local, `window.confirm` real (cancelar bloquea el envío; aceptar lo dispara), POST real a `http://localhost:8000/api/v1/expedientes/` (falla con `ERR_CONNECTION_REFUSED` por ausencia de backend, confirmando que no es simulado), aviso de ambigüedad real sin reintento automático, navegación real a `/estudiante` desde "Ir a mi panel", responsive 375px sin overflow.).
 
 ---
 
@@ -814,7 +814,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** datos correctos y accesibles.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `ExpedienteHeader.tsx` — número real, `Badge` de estado (7 estados reales de `ExpedienteTitulacion.ESTADOS_CHOICES`), fechas reales (`fecha_creacion`/`fecha_recepcion`/`fecha_limite_atencion`) y `dias_laborables_acumulados` (campo real del modelo, sin fórmula inventada). **Timeline construido solo con datos reales** (`buildTimelineSteps`): se verificó que `HistorialEstado` existe como modelo en el backend pero `ExpedienteDetalleSerializer` no lo serializa — por eso el timeline usa únicamente `fecha_creacion`/`fecha_recepcion` como fechas reales; los demás pasos del timeline muestran el estado (completado/actual/pendiente) sin fecha inventada. UUID de `carrera_id`/`facultad_id` mostrados con nota explícita de que no hay catálogo de nombres. `Badge`/`Card`/`Timeline` reutilizados del UI Kit sin duplicar.).
 
 ### FE-T402 — Carga de detalle y peticiones
 
@@ -829,7 +829,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** detalle y peticiones visibles; 404/403 correctos.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `GET /api/v1/expedientes/{id}/` verificado contra `ExpedienteViewSet.retrieve` + `ExpedienteDetalleSerializer` (código real, no solo `openapi.yaml`): campos reales `id, numero_expediente, estudiante_id, carrera_id, facultad_id, estado, activa, fecha_creacion, fecha_recepcion, numero_providencia, fecha_limite_atencion, dias_laborables_acumulados, peticiones[]`; aislamiento real por `scope_queryset` (ESTUDIANTE→`SCOPE_OWN`, operativos→`SCOPE_FACULTAD`/`SCOPE_CARRERA`, ADMINISTRADOR→`ALLOW`) — un expediente ajeno responde 404 real (vía `get_object_or_404` sobre el queryset ya filtrado), no simulado. `getExpedienteDetalle()` añadida a `src/api/endpoints/expedientes.ts` (sin duplicar `listBandejaEstudiante`/`crearExpediente`). `useExpedienteDetalle()` en `src/features/expediente/queries.ts`, `retry:false` explícito. `PeticionesSection.tsx` renderiza `peticiones[]` reutilizando `Table`/`Badge`. 404/403 manejados vía `presentApiError()` existente (sin duplicar), con `NotFoundState`/`ForbiddenState` del UI Kit.).
 
 ### FE-T403 — Checklist con manejo de 403
 
@@ -844,7 +844,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** roles autorizados ven checklist; estudiante ve limitación sin error no controlado.
 - **Pruebas:** integración por rol.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `GET /api/v1/expedientes/{expediente_id}/checklist/` verificado contra `ChecklistListViewSet`: `RBAC_MATRIX["checklist"]["GET"]` solo concede `SECRETARIO_ABOGADO`/`ANALISTA_APOYO` (`SCOPE_FACULTAD`) y `ADMINISTRADOR` (`ALLOW`) — **ESTUDIANTE no está en la matriz**, por lo que recibe 403 real con el mensaje de `HasRolePermission` ("El rol del usuario no esta autorizado..."). `useChecklist()` usa `enabled: puedeVerChecklist(roles)` (TanStack Query) para **no ejecutar la petición en absoluto** para ESTUDIANTE, verificado con una prueba que confirma que el handler MSW nunca se invoca. `ChecklistSection.tsx` muestra `ForbiddenState` ("No disponible para su rol") sin siquiera consultar la API para ese rol; para roles autorizados muestra los ítems reales (`id, requisito_codigo, requisito_nombre, estado_verificacion, evaluado_por_username, fecha_evaluacion`). Sin bucle de reintento (`retry:false`).).
 
 ### FE-T404 — Acción enviar expediente
 
@@ -860,7 +860,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** 200 → `ENVIADA`; 422 → mensaje de requisitos incompletos.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `enviarExpediente()` reutiliza el endpoint ya verificado en V-03 (`ExpedienteViewSet.enviar`, `POST /expedientes/{id}/enviar/`, **200 real**, no 201). Botón "Enviar expediente" condicionado por `puedeEnviar(roles, estado, esPropietario)` (FE-T409): solo visible para ESTUDIANTE con el expediente en `BORRADOR`. Confirmación real vía `window.confirm` (mismo patrón que V-03). `useEnviarExpediente()` sin reintentos automáticos (`retry:false`), invalida `expediente-detalle` y `BANDEJA_ESTUDIANTE_QUERY_KEY` (de V-02, vía el barrel `@/features/dashboard`) en `onSuccess`. 422 (`RequisitosIncompletosError`) muestra el mensaje real del backend sin inventar una lista de errores — verificado con `CA-V04-03`.).
 
 ### FE-T405 — Acción observar expediente
 
@@ -876,7 +876,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** 201 → `OBSERVADA` y motivo visible.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha, con discrepancia real documentada (INC-21)** (2026-11-05: `observarExpediente()` verificado contra `ExpedienteViewSet.observar` (ruta real wireada en `urls.py`; se confirmó además que `ObservacionViewSet` —con un método `crear_observacion` similar— existe en el código pero **no está mapeada a ninguna URL real**, por lo que no es el contrato vigente). **201 real** (no 200). Body real `{motivo_observacion, peticion_id?}` — `peticion_id` se lee directo de `request.data` en el backend (no está en `ObservacionRegistroSerializer`), por eso es opcional y se construye con las `peticiones[]` ya disponibles del detalle (sin endpoint adicional). `ObservarDialog.tsx` (Modal accesible del UI Kit) exige `motivo_observacion`; botón "Observar" condicionado por `puedeObservar(roles, estado)`: solo `SECRETARIO_ABOGADO` con el expediente `EN_VERIFICACION` (confirmado en `RBAC_MATRIX["expedientes:observar"]`, que NO concede a `ANALISTA_APOYO`). **Discrepancia real (INC-21):** dos de las cuatro excepciones de dominio (`ExpedienteNoEnVerificacionError`, `PeticionNoEncontradaError`) se re-lanzan como `APIException` genérica sin `status_code` propio → **HTTP 500**, no 400/404 como asumiría la documentación; se implementó mostrando siempre el mensaje real del backend (`describeAccionError()`) sin importar si llega como 400 o 500, en vez de tratar todo 500 como "error de servidor genérico".).
 
 ### FE-T406 — Evaluar checklist
 
@@ -892,7 +892,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** evaluación persiste; sin motivo no se envía.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha, con discrepancia real documentada (INC-21)** (2026-11-05: `evaluarChecklist()` verificado contra `ChecklistViewSet.update` (`PUT /checklist/{id}/`), **200 real**. Acciones "Verificar"/"Observar" por ítem condicionadas por `puedeEvaluarItem(roles, estadoExpediente, estadoItem)`: solo `SECRETARIO_ABOGADO`/`ANALISTA_APOYO`/`ADMINISTRADOR`, expediente `EN_VERIFICACION` e ítem `PENDIENTE` (confirmado: `VerificationAlreadyCompletedError` real si se reevalúa). Motivo obligatorio para `OBSERVADO` validado **localmente antes de llamar a la API** (no solo visualmente: la UI nunca construye ni envía la petición sin motivo) y también por el propio `ChecklistEvaluationSerializer` del backend como defensa real. **Discrepancia (INC-21):** `ChecklistVerificationNotFoundError` → 500 real (no 404); se muestra igualmente el mensaje real del backend. `onSuccess` invalida `checklist` y `expediente-detalle` (FE-T410).).
 
 ### FE-T407 — Subsanar checklist
 
@@ -908,7 +908,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** PDF válido subsana; inválido no se envía.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha, con una limitación real severa documentada para el actor principal** (2026-11-05: `subsanarChecklist()` verificado contra `ChecklistViewSet.subsanar` (`POST /checklist/{id}/subsanar/`, **201 real**, `multipart/form-data` con el campo exacto `archivo`). Reutiliza `FileUpload` de F2 **sin modificar sus reglas** (misma validación de extensión/MIME/magic-bytes/10 MB de `src/lib/files.ts`, ya alineada con el límite real del backend `SubsanacionSerializer`). Un PDF inválido se rechaza localmente y **no llama a la API** (verificado, CA-V04-07). RBAC real: `RBAC_MATRIX["checklist"]["POST"]` concede `ESTUDIANTE`(own)/`SECRETARIA_CARRERA`(carrera)/`ADMINISTRADOR`(all). **Hallazgo crítico (documentado, no resuelto modificando el backend):** el endpoint requiere el `id` de un `ChecklistVerification`, pero **ESTUDIANTE y SECRETARIA_CARRERA —los dos roles reales autorizados a subsanar— no tienen ningún endpoint accesible para descubrir ese `id`**: el único listado (`GET /expedientes/{id}/checklist/`) es 403 para ambos roles (FE-T403), y ni la respuesta de `peticiones[]` del detalle ni las notificaciones exponen el `checklist_verification_id` (solo el `id` de la petición, que el servicio `subsanar_requisito.py` no acepta). Se implementó el flujo completo y correcto dondequiera que el `id` SÍ esté disponible (la sección de checklist, visible solo a roles con acceso de lista — en la práctica, solo `ADMINISTRADOR` reúne lista+escritura); para `ESTUDIANTE`, `PeticionesSection.tsx` muestra una nota honesta en vez de un botón roto cuando `estado_peticion==='OBSERVADO'`. No se modificó el backend para resolver esto, conforme a la restricción explícita de esta autorización.).
 
 ### FE-T408 — Descarga de documentos
 
@@ -923,7 +923,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el PDF se descarga con nombre correcto.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: contrato verificado contra `PeticionViewSet.descargar_documento` real (`GET /peticiones/{id}/documento/` y `/{id}/documento/{version}/`): `FileResponse` con `Content-Type` real del documento (`tipo_mime` o `application/pdf` — **no se asume que todo sea PDF**) y `Content-Disposition: attachment; filename="..."`; 404 real (`Http404`) si no hay acceso o no existe el archivo. Utilidad reutilizable nueva `src/lib/download.ts` (`fetchAuthenticatedFile`/`triggerBlobDownload`, no existía ninguna previa): usa el mismo mecanismo de sesión que `api/client.ts` (Bearer en `Authorization`, **nunca en la URL**), obtiene el `Blob` real, lee el nombre de `Content-Disposition` con respaldo si falta, crea un enlace temporal y lo revoca tras usarlo. `DescargaButton.tsx` condicionado por `puedeDescargar(roles)` — excluye a `DECANO` a propósito (no está en `RBAC_MATRIX["peticiones:documento"]["GET"]`, confirmado en el código real).).
 
 ### FE-T409 — Visibilidad de acciones por rol/estado
 
@@ -937,7 +937,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cada rol ve solo sus acciones.
 - **Pruebas:** unitarias de la matriz.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: `src/features/expediente/accionesPorRolEstado.ts` — matriz explícita ROL×ESTADO×ACCIÓN (`puedeVerChecklist`, `puedeEnviar`, `puedeObservar`, `puedeEvaluarItem`, `puedeSubsanarItem`, `puedeDescargar`), basada únicamente en las reglas verificadas en el backend real durante la auditoría (ver matriz de contratos en el informe final). 20 pruebas unitarias exhaustivas (`accionesPorRolEstado.test.ts`) cubriendo combinaciones rol×estado relevantes, incl. negativos explícitos (p. ej. `ANALISTA_APOYO` no puede observar aunque sí evaluar; `SECRETARIO_ABOGADO`/`ANALISTA_APOYO` no pueden subsanar aunque vean el checklist; `DECANO` no puede descargar). Acciones no autorizadas se **ocultan** (no solo se deshabilitan) con las secciones de estado/panel informativo correspondientes. La matriz es solo ayuda de interfaz: el backend sigue aplicando su propio RBAC real independientemente (verificado con las pruebas de 403 reales de `ExpedientePage.test.tsx`).).
 
 ### FE-T410 — Invalidación y refresco
 
@@ -951,7 +951,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** tras cada acción, la UI refleja el nuevo estado.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: cada mutación (`useEnviarExpediente`, `useObservarExpediente`, `useEvaluarChecklist`, `useSubsanarChecklist` en `src/features/expediente/queries.ts`) invalida en `onSuccess` exactamente las claves reales afectadas: `expediente-detalle` (siempre), `checklist` (observar/evaluar/subsanar) y `BANDEJA_ESTUDIANTE_QUERY_KEY` de V-02 (solo enviar, porque mover a `ENVIADA` hace que el expediente desaparezca de la bandeja del estudiante). Ninguna mutación tiene reintento automático (`retry:false` explícito en las cuatro; además `queryClient.ts` ya fija `mutations:{retry:0}` globalmente — hallazgo P2 heredado de V-02/V-03, no corregido aquí por instrucción explícita de esta autorización). Sin refetch en bucle: las invalidaciones son puntuales por clave, no un `invalidateQueries()` global.).
 
 ### FE-T411 — Pruebas de V-04
 
@@ -966,7 +966,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** **Hecha** (2026-11-05: convención `*.test.ts(x)` co-ubicados, igual que V-01/V-02/V-03. `ExpedientePage.test.tsx` (16, integración real multi-rol con MSW sobre contratos verificados) + `ChecklistSection.test.tsx` (5) + `accionesPorRolEstado.test.ts` (20) + `errors.test.ts` (5) + `checklist.test.ts` (1) + `download.test.ts` (4) = 51 pruebas nuevas. Cubren: detalle por rol/estado, 404, 403 real, timeline/cabecera, peticiones, checklist autorizado, checklist 403 del estudiante **sin ejecutar la query** (verificado que el handler MSW nunca se invoca), enviar desde BORRADOR, 422 real sin enviar, observar con motivo, validación local sin motivo, evaluar VERIFICADO/OBSERVADO, PDF inválido sin llamar a la API, descarga real (Blob + Content-Disposition), error 404 de descarga, discrepancia real INC-21 (500 de regla de negocio con mensaje real), axe. Cobertura real (`npm run test -- --coverage`): `features/expediente` **85,78% stmts / 86,36% branch / 84,37% funcs / 85,63% lines** — ≥80% en las cuatro métricas. Suite completa: 328/328 pruebas, sin regresiones en F0–V03. `npm run lint`/`typecheck`/`build` sin errores. Verificación manual en navegador (`npm run dev`, sesión SECRETARIO_ABOGADO inyectada): estructura accesible completa, botón "Reintentar" dispara peticiones reales a `GET http://localhost:8000/api/v1/expedientes/{id}/` y `.../checklist/` (fallan con `ERR_CONNECTION_REFUSED` por ausencia de backend, confirmando que no es simulado), responsive 375px sin overflow.).
 
 ---
 
@@ -1791,11 +1791,11 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 4. **F2.5:** FE-T1211 → FE-T1212 → FE-T1214 — **Hechas** (2026-11-05; FE-T1210 ya Hecha en el primer lote). FE-T1213 sigue **Bloqueada por BE-11**.
 5. **V-01:** FE-T101 → FE-T104 — Hechas (2026-11-05: formulario, integración, errores/accesibilidad y pruebas de login; 22 pruebas nuevas, 226/226 totales).
 6. **V-09:** FE-T901 → FE-T904 (necesaria para degradar).
-7. **V-03:** FE-T301 → FE-T306.
-8. **V-04:** FE-T401 → FE-T411.
+7. **V-03:** FE-T301 → FE-T306 — Hechas (2026-11-05: formulario, integración, errores/protección ante duplicados, borrador local, éxito/redirección y pruebas; V-04 confirmada como stub, sin ampliar su alcance).
+8. **V-04:** FE-T401 → FE-T411 — Hechas (2026-11-05: cabecera/timeline, detalle/peticiones, checklist con 403 real, enviar/observar/evaluar/subsanar, descarga, matriz de acciones, invalidación y pruebas; FE-T407 con limitación real severa documentada para ESTUDIANTE —sin `checklist_verification_id` descubrible—, sin modificar el backend; INC-21 documenta discrepancias de código HTTP en observar/evaluar/subsanar).
 9. **V-05:** FE-T501 → FE-T506.
 10. **V-06:** FE-T601 → FE-T605.
-11. **V-02:** FE-T201 → FE-T206.
+11. **V-02:** FE-T201 → FE-T206 — Hechas (2026-11-05: dashboard del estudiante completo; FE-T203 con desviación de contrato documentada —notificaciones sin paginar en el backend real—; FE-T204 con alcance acotado a expedientes visitados, el registro al crear queda pendiente de V-03).
 12. **V-07:** FE-T701 → FE-T706.
 13. **V-08:** FE-T801 → FE-T810.
 14. **Transversal:** FE-T1001 → FE-T1010.
