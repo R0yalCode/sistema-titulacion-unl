@@ -1,6 +1,7 @@
 import { createContext, useCallback, useMemo, useState, type ReactNode } from 'react'
 import { decodeAccessToken, type JwtUser } from './jwt'
 import { clearAccessToken, getAccessToken, saveAccessToken } from './storage'
+import { clearNuevaSolicitudDraft, clearRecentExpedientes } from '@/lib/storage'
 
 export type AuthUser = JwtUser
 
@@ -43,6 +44,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = useCallback(() => {
     clearAccessToken()
+    clearRecentExpedientes()
+    clearNuevaSolicitudDraft()
     setUser(null)
   }, [])
 

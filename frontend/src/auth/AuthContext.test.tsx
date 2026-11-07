@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AuthProvider } from './AuthContext'
 import { clearAccessToken, getAccessToken } from './storage'
 import { useAuth } from './useAuth'
+import { getRecentExpedientes, recordVisitedExpediente } from '@/lib/storage'
 
 function base64UrlEncode(value: string): string {
   return btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -81,6 +82,21 @@ describe('AuthProvider / useAuth', () => {
 
     expect(screen.getByText('Autenticado: false')).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
+  })
+
+  it('logout también limpia los accesos rápidos de expedientes (aislamiento de sesión, FE-T204)', async () => {
+    const user = userEvent.setup()
+    recordVisitedExpediente('exp-1')
+    render(
+      <AuthProvider>
+        <Consumer />
+      </AuthProvider>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
+    await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+
+    expect(getRecentExpedientes()).toEqual([])
   })
 
   it('restaura la sesión desde sessionStorage al montar', () => {
