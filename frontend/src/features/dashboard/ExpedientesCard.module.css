@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.pageNote {
+  margin: 0;
+  font-size: var(--font-size-label);
+  color: var(--color-text-secondary);
+}
