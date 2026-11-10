@@ -21,6 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
     restart: unless-stopped
     depends_on:
       db:
@@ -29,6 +30,7 @@ services:
       DJANGO_SETTINGS_MODULE: config.settings.local
       DEBUG: ${DEBUG:-1}
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
       ALLOWED_HOSTS: localhost,127.0.0.1
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${POSTGRES_DB:-sgt_siaaf}

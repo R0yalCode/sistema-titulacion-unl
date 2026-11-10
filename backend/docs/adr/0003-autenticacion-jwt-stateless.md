@@ -18,9 +18,9 @@ verificación de tokens para la API REST versionada `/api/v1/`.
 1. Endpoint `POST /api/v1/auth/token/` (adaptador de
    `rest_framework_simplejwt.views.TokenObtainPairView`) que devuelve el par
    `access` (60 minutos) y `refresh` (24 horas).
-2. Algoritmo `HS256` y clave de firma = `SECRET_KEY` del backend (vale
-   igualmente el `SIGNING_KEY` por defecto); sin tokens en base de datos
-   (stateless).
+2. Algoritmo `HS256` y clave de firma = `JWT_SIGNING_KEY`, variable de
+   entorno independiente de `SECRET_KEY` (ver actualización SEC-T004 al
+   final de este documento); sin tokens en base de datos (stateless).
 3. `REST_FRAMEWORK.DEFAULT_AUTHENTICATION_CLASSES =
    "rest_framework_simplejwt.authentication.JWTAuthentication"` como
    autenticación por defecto de la API.
@@ -39,12 +39,22 @@ ecosistema DRF.
 - Positivas: autenticación verificable en el servidor sin sesiones; cliente
   web y móvil comparten el mismo mecanismo; los claims de rol quedan
   disponibles para el evaluador RBAC que se implementará en `T009`.
-- Negativas: un `SECRET_KEY` comprometido permite falsificar tokens → gestión
-  estricta de secretos por variable de entorno (C-012); la revocación
-  individual de tokens no está contemplada por ADR dentro del MVP.
+- Negativas: un `JWT_SIGNING_KEY` comprometido permite falsificar tokens →
+  gestión estricta de secretos por variable de entorno (C-012); la
+  revocación individual de tokens no está contemplada por ADR dentro del
+  MVP.
 - La autorización (matriz rol × recurso × acción) sigue siendo
   responsabilidad del backend en cada operación; el presencia de un token
   válido no es autorización (`T009`/`T010`).
+
+## Actualización (SEC-T004, 2026-11-05)
+
+La clave de firma JWT se separó de `SECRET_KEY` mediante la variable de
+entorno independiente `JWT_SIGNING_KEY` (`SIMPLE_JWT["SIGNING_KEY"]`).
+`SECRET_KEY` continúa firmando exclusivamente sesiones, cookies y CSRF de
+Django; ya no firma JWT. El punto 2 de la Decisión y la consecuencia
+negativa correspondiente se actualizaron para reflejar este cambio. Detalle
+completo, procedimiento de rotación e impacto: `docs/06-seguridad/SECURITY_CONFIG.md`.
 
 ## Referencias
 

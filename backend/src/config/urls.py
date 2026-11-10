@@ -22,8 +22,11 @@ from apps.resoluciones.adapters.views import (
     DeclaratoriaViewSet,
 )
 from apps.notificaciones.adapters.views import NotificacionViewSet
+from core.adapters.health import health
 
 urlpatterns = [
+    # Healthcheck del contenedor (SEC-T001): sin autenticación, sin datos.
+    path("health/", health, name="health"),
     # Consola interna de administración (ADR-0009): solo staff/superuser,
     # sin exposición operativa del trámite.
     path("admin/", admin.site.urls),

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 820" width="1180" height="820" font-family="Segoe UI, Arial, sans-serif">
+<title>C3 — Diagrama de Componentes — Backend Django (SGT-SIAAF)</title>
+<rect width="1180" height="820" fill="#ffffff"/>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+</marker>
+</defs>
+<text x="590.0" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a1a">C3 — Componentes del contenedor "Backend Django REST Framework"</text>
+<text x="590.0" y="48" text-anchor="middle" font-size="11.5" fill="#666">Dependencias verificadas contra el código real (servicios de cada app). Flujo principal vertical; "usa" hacia core en línea discontinua.</text>
+<rect x="260" y="90" width="320" height="80" rx="8" ry="8" fill="#ffffff" stroke="#0d47a1" stroke-width="1.8"/>
+<text x="420.0" y="110.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">authentication</text>
+<text x="420.0" y="139.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">JWT (SimpleJWT)</text>
+<text x="420.0" y="152.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">RBAC_MATRIX (mundo cerrado)</text>
+<rect x="260" y="200" width="320" height="80" rx="8" ry="8" fill="#ffffff" stroke="#0d47a1" stroke-width="1.8"/>
+<text x="420.0" y="220.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">expedientes</text>
+<text x="420.0" y="249.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Expediente, máquina de estados</text>
+<text x="420.0" y="262.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Plazo de 8 días hábiles</text>
+<rect x="260" y="310" width="320" height="80" rx="8" ry="8" fill="#ffffff" stroke="#0d47a1" stroke-width="1.8"/>
+<text x="420.0" y="330.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">peticiones</text>
+<text x="420.0" y="359.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Peticiones documentales</text>
+<text x="420.0" y="372.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Ingestión/versionado de PDF</text>
+<rect x="260" y="420" width="320" height="80" rx="8" ry="8" fill="#ffffff" stroke="#0d47a1" stroke-width="1.8"/>
+<text x="420.0" y="440.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">verificacion</text>
+<text x="420.0" y="469.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Checklist digital</text>
+<text x="420.0" y="482.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Observaciones accionables</text>
+<rect x="260" y="530" width="320" height="80" rx="8" ry="8" fill="#ffffff" stroke="#0d47a1" stroke-width="1.8"/>
+<text x="420.0" y="550.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">resoluciones</text>
+<text x="420.0" y="579.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Informe (#590)</text>
+<text x="420.0" y="592.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Declaratoria (#162), ReportLab</text>
+<rect x="260" y="640" width="320" height="80" rx="8" ry="8" fill="#ffffff" stroke="#0d47a1" stroke-width="1.8"/>
+<text x="420.0" y="660.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">notificaciones</text>
+<text x="420.0" y="689.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Notificaciones internas</text>
+<text x="420.0" y="702.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">Auditoría JSONB (signals)</text>
+<rect x="700" y="260" width="340" height="260" rx="8" ry="8" fill="#f5f5f5" stroke="#555" stroke-width="1.8"/>
+<text x="870.0" y="280.7" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1a1a1a" font-family="Segoe UI, Arial, sans-serif">core (módulo transversal)</text>
+<text x="870.0" y="373.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">ISGALegacyPort (único puerto real)</text>
+<text x="870.0" y="386.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">+ SGAMockAdapter</text>
+<text x="870.0" y="399.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">PDFValidation (magic bytes, SHA-256)</text>
+<text x="870.0" y="412.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">PrivateMediaStorage (sin URL pública)</text>
+<text x="870.0" y="425.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">ScopeFilterMixin (anti-IDOR)</text>
+<text x="870.0" y="438.2" text-anchor="middle" font-size="10.5" font-weight="normal" fill="#555" font-family="Segoe UI, Arial, sans-serif">ThreadLocalRequestMiddleware</text>
+<line x1="420.0" y1="200" x2="420.0" y2="170" stroke="#0d47a1" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="425.0" y="168.0" width="96" height="14" fill="#ffffffcc"/>
+<text x="473.0" y="179.0" text-anchor="middle" font-size="10.5" fill="#333" font-family="Segoe UI, Arial, sans-serif">usa RBAC_MATRIX</text>
+<line x1="420.0" y1="310" x2="420.0" y2="280" stroke="#0d47a1" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="425.0" y="278.0" width="156" height="14" fill="#ffffffcc"/>
+<text x="503.0" y="289.0" text-anchor="middle" font-size="10.5" fill="#333" font-family="Segoe UI, Arial, sans-serif">consulta/actualiza estado</text>
+<line x1="420.0" y1="420" x2="420.0" y2="390" stroke="#0d47a1" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="425.0" y="388.0" width="138" height="14" fill="#ffffffcc"/>
+<text x="494.0" y="399.0" text-anchor="middle" font-size="10.5" fill="#333" font-family="Segoe UI, Arial, sans-serif">checklist por petición</text>
+<line x1="420.0" y1="530" x2="420.0" y2="500" stroke="#0d47a1" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="425.0" y="498.0" width="144" height="14" fill="#ffffffcc"/>
+<text x="497.0" y="509.0" text-anchor="middle" font-size="10.5" fill="#333" font-family="Segoe UI, Arial, sans-serif">checklist 100% (RN-003)</text>
+<line x1="290" y1="650" x2="290" y2="270" stroke="#8a6d00" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="6,4"/>
+<line x1="290" y1="650" x2="290" y2="490" stroke="#8a6d00" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="6,4"/>
+<line x1="290" y1="650" x2="290" y2="600" stroke="#8a6d00" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="6,4"/>
+<text x="220" y="417.6" text-anchor="middle" font-size="9.5" font-weight="normal" fill="#8a6d00" font-family="Segoe UI, Arial, sans-serif">señal</text>
+<text x="220" y="429.0" text-anchor="middle" font-size="9.5" font-weight="normal" fill="#8a6d00" font-family="Segoe UI, Arial, sans-serif">(signals)</text>
+<line x1="580" y1="240.0" x2="700" y2="390.0" stroke="#777" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="6,4"/>
+<line x1="580" y1="350.0" x2="700" y2="390.0" stroke="#777" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="6,4"/>
+<line x1="580" y1="570.0" x2="700" y2="390.0" stroke="#777" stroke-width="1.8" marker-end="url(#arrow)" stroke-dasharray="6,4"/>
+</svg>

@@ -10,6 +10,8 @@ from django.db.models.signals import post_save, pre_save, m2m_changed
 from django.dispatch import receiver
 from django.utils import timezone
 
+from core.adapters.client_ip import resolver_ip_cliente
+from core.adapters.middleware import get_current_request
 from apps.notificaciones.adapters.models import EventoAuditoria
 from apps.expedientes.adapters.models import ExpedienteTitulacion, HistorialEstado
 from apps.peticiones.adapters.models import PeticionDocumental, DocumentoEntregado
@@ -20,20 +22,15 @@ logger = logging.getLogger(__name__)
 
 
 def _get_client_ip(request):
-    """Extrae la IP del cliente desde el request."""
-    if request is None:
-        return None
-    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
-    if x_forwarded_for:
-        return x_forwarded_for.split(",")[0].strip()
-    return request.META.get("REMOTE_ADDR")
+    """Extrae la IP del cliente desde el request (SEC-T005), validando
+    TRUSTED_PROXIES. Delegado a `core.adapters.client_ip` (compartido con
+    el throttling de login, SEC-T002)."""
+    return resolver_ip_cliente(request)
 
 
 def _get_current_request():
-    """Obtiene el request actual (si está disponible en thread local)."""
-    # En producción se usaría middleware para guardar request en thread local
-    # Por ahora retornamos None y se llenará desde la vista
-    return None
+    """Obtiene el request actual desde el middleware thread-local (SEC-T005)."""
+    return get_current_request()
 
 
 def _crear_evento_auditoria(

@@ -15,6 +15,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.authentication.adapters.permissions import HasRolePermission
@@ -92,6 +93,12 @@ class PeticionViewSet(
         if self.action == "cargar_documento":
             return [MultiPartParser, FormParser]
         return [JSONParser]
+
+    def get_throttles(self):
+        if self.action == "cargar_documento":
+            self.throttle_scope = "document_upload"
+            return [ScopedRateThrottle()]
+        return super().get_throttles()
 
     def get_rbac_resource(self):
         # En has_permission, self.action puede ser None (se setea en initial() después de check_permissions)

@@ -8,17 +8,17 @@ title: "SGT-SIAAF — Documentación Técnica"
 
 SGT-SIAAF automatiza el trámite de **Declaratoria de Aptitud Legal (Art. 235 del Reglamento de Régimen Académico)**: el estudiante inicia una solicitud, adjunta los documentos requeridos, Secretaría-Abogacía verifica el checklist, registra observaciones de ser necesarias, emite el Informe de Aptitud (Providencia N.º 590) y el Decanato firma la Declaratoria (Memorando N.º 162).
 
-## Estado del sistema (verificado 05-11-2026)
+## Estado del sistema
 
-| Componente | Estado |
-|---|---|
-| Backend Django/DRF | MVP funcional verificado — 17 operaciones API, 526 pruebas verdes, 93 % de cobertura |
-| Base de datos PostgreSQL | 14 modelos, migraciones consistentes |
-| Contrato OpenAPI | Válido y sincronizado con el código |
-| Frontend React | Andamiaje completo; vistas de negocio pendientes |
-| Seguridad operacional | RBAC e IDOR verificados; endurecimiento de producción pendiente |
+| Componente | Estado (05-11-2026) | Reverificado (06-11-2026) |
+|---|---|---|
+| Backend Django/DRF | MVP funcional verificado — 17 operaciones API, 526 pruebas verdes, 93 % de cobertura | 560/573 passed (97.7 %), 90 % cobertura de código fuente — [detalle](10-auditoria-2026-11/pruebas-reales.qmd) |
+| Base de datos PostgreSQL | 14 modelos, migraciones consistentes | Sin cambios detectados |
+| Contrato OpenAPI | Válido y sincronizado con el código | Confirmado: 16/16 rutas coinciden exactamente con el código |
+| Frontend React | Andamiaje completo; vistas de negocio pendientes | V-01 a V-04 cerradas (328 pruebas; no determinista en ~40 % de las ejecuciones, ver detalle) |
+| Seguridad operacional | RBAC e IDOR verificados; endurecimiento de producción pendiente | Throttling de login y vulnerabilidad de DRF, antes reportados como pendientes, **ya están corregidos** |
 
-Detalles: [Informe de auditoría técnica](auditoria/INFORME_AUDITORIA_TECNICA.md).
+Detalles: [Informe de auditoría técnica](auditoria/INFORME_AUDITORIA_TECNICA.md) · [Auditoría de noviembre 2026](10-auditoria-2026-11/index.qmd) (BPMN, C4/UML, pruebas reales, hallazgos consolidados H-01 a H-16).
 
 ## Cómo navegar esta documentación
 
@@ -32,6 +32,8 @@ Detalles: [Informe de auditoría técnica](auditoria/INFORME_AUDITORIA_TECNICA.m
 - **Infraestructura**: entornos, Docker y despliegue.
 - **Calidad**: estrategia de pruebas y resultados verificados.
 - **Auditoría**: informe técnico integral, plan de mejora y matriz de trazabilidad.
+- **Auditoría 2026-11**: diagrama BPMN, arquitectura C4/UML (Structurizr/PlantUML, construidos desde cero), resultados de pruebas con ejecución real y tabla consolidada de hallazgos (16 hallazgos, incluidas 2 autocorrecciones propias de esta auditoría).
+- **Inteligencia Artificial**: declaratoria de uso responsable de IA en el proyecto.
 
 ## Construir el sitio
 
