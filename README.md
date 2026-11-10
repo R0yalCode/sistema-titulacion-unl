@@ -296,8 +296,9 @@ sistema-titulacion-unl/
 
 ---
 
-## 👥 Equipo
-
-**Arquitectura e Ingeniería SGT-SIAAF** — Carrera de Computación, UNL  
-**Versión:** 1.0.0 (MVP — Aptitud Legal, Art. 235 RRA-UNL)  
-**Fecha:** Octubre 2026
+## Autores: 
+### [Royel Jima](https://github.com/R0yalCode)
+### [Steeven Pardo](https://github.com/Dan1el17)
+### [Mark Gonzalez](https://github.com/7777-C)
+### [Juan Calopino](https://github.com/JuaaanCalopino)
+### [Jimmy Ontaneda](https://github.com/JJOC3S)
