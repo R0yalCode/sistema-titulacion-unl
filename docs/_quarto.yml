@@ -82,6 +82,14 @@ website:
           - auditoria/INFORME_AUDITORIA_TECNICA.md
           - auditoria/PLAN_MEJORA_TECNICA.md
           - auditoria/matriz-trazabilidad.md
+      - text: "Auditoría 2026-11"
+        menu:
+          - 10-auditoria-2026-11/index.qmd
+          - 10-auditoria-2026-11/bpmn.qmd
+          - 10-auditoria-2026-11/arquitectura.qmd
+          - 10-auditoria-2026-11/pruebas-reales.qmd
+      - text: "Inteligencia Artificial"
+        file: 11-inteligencia-artificial/declaratoria-ia.qmd
       - text: "Anexos"
         menu:
           - anexos/decisiones.md

@@ -9,6 +9,16 @@ env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
+JWT_SIGNING_KEY = env("JWT_SIGNING_KEY")
+
+if JWT_SIGNING_KEY == SECRET_KEY:
+    import logging
+
+    logging.getLogger(__name__).warning(
+        "JWT_SIGNING_KEY coincide con SECRET_KEY: configure una clave "
+        "distinta (openssl rand -base64 32) antes de producción."
+    )
+
 DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
@@ -30,12 +40,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "core.adapters.middleware.ThreadLocalRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -100,14 +112,53 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_RATES": {
+        "document_upload": env("DOCUMENT_UPLOAD_THROTTLE", default="10/hour"),
+        "auth": env("AUTH_THROTTLE_RATE", default="5/minute"),
+    },
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(hours=24),
     "ROTATE_REFRESH_TOKENS": False,
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
+    "SIGNING_KEY": JWT_SIGNING_KEY,
+}
+
+# --- Logging estructurado (SEC-T011) ---------------------------------
+# Base segura para TODOS los entornos: solo consola, JSON, con filtros de
+# datos sensibles. `production.py` añade handlers de archivo con rotación
+# (requieren un directorio que solo existe en el contenedor de producción,
+# por lo que no pueden vivir aquí sin romper desarrollo/tests).
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "fmt": "%(asctime)s %(levelname)s %(name)s %(message)s %(request_id)s %(user_id)s",
+        },
+    },
+    "filters": {
+        "sensitive_data": {"()": "core.adapters.logging_filters.SensitiveDataFilter"},
+        "request_id": {"()": "core.adapters.logging_filters.RequestIdFilter"},
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+            "filters": ["sensitive_data", "request_id"],
+        },
+    },
+    "loggers": {
+        "apps": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "core": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "django": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+        "django.request": {"handlers": ["console"], "level": "WARNING", "propagate": False},
+        "django.security": {"handlers": ["console"], "level": "INFO", "propagate": False},
+    },
+    "root": {"handlers": ["console"], "level": "WARNING"},
 }
 
 SPECTACULAR_SETTINGS = {

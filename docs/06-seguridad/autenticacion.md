@@ -12,7 +12,7 @@ JWT stateless (SimpleJWT, HS256) según ADR-0003.
 |---|---|
 | access token | 60 minutos, claims `cedula` y `roles[]` |
 | refresh token | 24 horas, sin rotación |
-| firma | HS256 con `SECRET_KEY` de Django |
+| firma | HS256 con `JWT_SIGNING_KEY` (independiente de `SECRET_KEY`, SEC-T004) |
 | transporte | Cabecera `Authorization: Bearer` |
 | almacenamiento frontend | `sessionStorage` (muere al cerrar pestaña) |
 
@@ -27,5 +27,5 @@ JWT stateless (SimpleJWT, HS256) según ADR-0003.
 ## Limitaciones conocidas
 
 - Sin rotación de refresh ni blacklist: un refresh robado es usable durante su vigencia (AUD-P2-04).
-- `SIGNING_KEY = SECRET_KEY`: la clave de firma es la misma del framework (aceptable en MVP; separable a futuro).
+- Resuelto (SEC-T004, 2026-11-05): `SIGNING_KEY` usa `JWT_SIGNING_KEY`, variable de entorno independiente de `SECRET_KEY`. Ver `docs/06-seguridad/SECURITY_CONFIG.md`.
 - Sin throttling en el endpoint de login (AUD-P0-02).

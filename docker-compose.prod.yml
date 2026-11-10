@@ -1,0 +1,86 @@
+# Despliegue de producción (SEC-T001). Vive en la raíz, junto a
+# docker-compose.yml (desarrollo), siguiendo la convención ya existente
+# del repositorio (ver DECISION_LOG.md, "Ubicación de archivos de
+# producción").
+#
+# Uso: ejecutar con un nombre de proyecto propio para no colisionar con
+# una instancia de desarrollo que pudiera estar corriendo en el mismo host:
+#   docker compose -f docker-compose.prod.yml -p sgt-siaaf-prod up -d
+#
+# Variables de entorno: todas obligatorias (sin valores por defecto para
+# nada sensible). Deben proveerse en un .env.prod o en el entorno real de
+# despliegue — este archivo no contiene ningún dominio, secreto ni
+# certificado real.
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      TZ: UTC
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    networks:
+      - backend_net_prod
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:?JWT_SIGNING_KEY is required}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:?ALLOWED_HOSTS is required}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:?CSRF_TRUSTED_ORIGINS is required}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?CORS_ALLOWED_ORIGINS is required}
+      CSP_CONNECT_SRC_EXTRA: ${CSP_CONNECT_SRC_EXTRA:-}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      DOCUMENT_UPLOAD_THROTTLE: ${DOCUMENT_UPLOAD_THROTTLE:-10/hour}
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: ${POSTGRES_DB:?POSTGRES_DB is required}
+      DB_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      DB_HOST: db
+      DB_PORT: "5432"
+    volumes:
+      - media_private_prod:/app/backend/media
+      - static_data_prod:/app/backend/staticfiles
+    networks:
+      - backend_net_prod
+
+  nginx:
+    image: nginx:1.24-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+    networks:
+      - backend_net_prod
+
+networks:
+  backend_net_prod:
+    driver: bridge
+
+volumes:
+  postgres_data_prod:
+  media_private_prod:
+  static_data_prod:

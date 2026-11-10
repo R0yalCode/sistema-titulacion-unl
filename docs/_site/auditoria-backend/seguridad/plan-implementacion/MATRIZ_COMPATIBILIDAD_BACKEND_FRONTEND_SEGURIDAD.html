@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>matriz_compatibilidad_backend_frontend_seguridad – SGT-SIAAF</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-09879b9ad4171be1d2e4d8ac2c802d9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../_quarto/styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">SGT-SIAAF</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introducción" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introducción</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introducción">    
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/introduccion.html">
+ <span class="dropdown-text">Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/objetivos.html">
+ <span class="dropdown-text">Objetivos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/alcance.html">
+ <span class="dropdown-text">Alcance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/actores.html">
+ <span class="dropdown-text">Actores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/glosario.html">
+ <span class="dropdown-text">Glosario</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-arquitectura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Arquitectura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-arquitectura">    
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-general.html">
+ <span class="dropdown-text">Arquitectura general</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-backend.html">
+ <span class="dropdown-text">Arquitectura del backend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-frontend.html">
+ <span class="dropdown-text">Arquitectura del frontend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-base-datos.html">
+ <span class="dropdown-text">Arquitectura de base de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/decisiones-arquitectonicas.html">
+ <span class="dropdown-text">Decisiones arquitectónicas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Modelo C4</li>
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/contexto.html">
+ <span class="dropdown-text">C4 — Nivel 1: Contexto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/contenedores.html">
+ <span class="dropdown-text">C4 — Nivel 2: Contenedores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/componentes.html">
+ <span class="dropdown-text">C4 — Nivel 3: Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/codigo.html">
+ <span class="dropdown-text">C4 — Nivel 4: Código</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03-modulos/inventario-modulos.html"> 
+<span class="menu-text">Módulos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-api" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">API</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-api">    
+        <li>
+    <a class="dropdown-item" href="../../../04-api/introduccion.html">
+ <span class="dropdown-text">API — Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/autenticacion.html">
+ <span class="dropdown-text">API — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/convenciones.html">
+ <span class="dropdown-text">API — Convenciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/expedientes.html">
+ <span class="dropdown-text">Endpoints: Expedientes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/peticiones.html">
+ <span class="dropdown-text">Endpoints: Peticiones y documentos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/checklist.html">
+ <span class="dropdown-text">Endpoints: Checklist</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/resoluciones.html">
+ <span class="dropdown-text">Endpoints: Resoluciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/notificaciones.html">
+ <span class="dropdown-text">Endpoints: Notificaciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/auth.html">
+ <span class="dropdown-text">Endpoints: Autenticación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-base-de-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Base de datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-base-de-datos">    
+        <li>
+    <a class="dropdown-item" href="../../../05-base-datos/modelo-entidad-relacion.html">
+ <span class="dropdown-text">Modelo entidad-relación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../05-base-datos/diccionario-datos.html">
+ <span class="dropdown-text">Diccionario de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../05-base-datos/relaciones.html">
+ <span class="dropdown-text">Relaciones e integridad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seguridad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Seguridad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seguridad">    
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/autenticacion.html">
+ <span class="dropdown-text">Seguridad — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/autorizacion.html">
+ <span class="dropdown-text">Seguridad — Autorización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/roles-permisos.html">
+ <span class="dropdown-text">Seguridad — Roles y permisos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/consideraciones-seguridad.html">
+ <span class="dropdown-text">Seguridad — Consideraciones</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/informe-kpi.html">
+ <span class="dropdown-text">Informe KPI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/catalogo-indicadores.html">
+ <span class="dropdown-text">Catálogo de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/dashboards-por-rol.html">
+ <span class="dropdown-text">Dashboards por rol</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/apis-indicadores.html">
+ <span class="dropdown-text">APIs de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-infraestructura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Infraestructura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-infraestructura">    
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/entorno-desarrollo.html">
+ <span class="dropdown-text">Entorno de desarrollo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/docker.html">
+ <span class="dropdown-text">Docker</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/configuracion.html">
+ <span class="dropdown-text">Configuración</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/despliegue.html">
+ <span class="dropdown-text">Despliegue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/mantenimiento.html">
+ <span class="dropdown-text">Mantenimiento</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-calidad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Calidad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-calidad">    
+        <li>
+    <a class="dropdown-item" href="../../../09-calidad/estrategia-pruebas.html">
+ <span class="dropdown-text">Estrategia de pruebas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../09-calidad/cobertura.html">
+ <span class="dropdown-text">Cobertura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../09-calidad/resultados-validacion.html">
+ <span class="dropdown-text">Resultados de validación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría">    
+        <li>
+    <a class="dropdown-item" href="../../../RESUMEN_EJECUTIVO.html">
+ <span class="dropdown-text">Resumen ejecutivo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../auditoria/INFORME_AUDITORIA_TECNICA.html">
+ <span class="dropdown-text">INFORME DE AUDITORÍA TÉCNICA INTEGRAL — SGT-SIAAF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../auditoria/PLAN_MEJORA_TECNICA.html">
+ <span class="dropdown-text">Plan de mejora técnica</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../auditoria/matriz-trazabilidad.html">
+ <span class="dropdown-text">Matriz de trazabilidad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría-2026-11" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría 2026-11</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría-2026-11">    
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/index.html">
+ <span class="dropdown-text">Auditoría y documentación técnica — noviembre 2026</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/bpmn.html">
+ <span class="dropdown-text">BPMN — Declaratoria de Aptitud Legal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/arquitectura.html">
+ <span class="dropdown-text">Arquitectura C4 y UML (noviembre 2026)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/pruebas-reales.html">
+ <span class="dropdown-text">Resultados de pruebas (ejecución real, noviembre 2026)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../11-inteligencia-artificial/declaratoria-ia.html"> 
+<span class="menu-text">Inteligencia Artificial</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-anexos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Anexos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-anexos">    
+        <li>
+    <a class="dropdown-item" href="../../../anexos/decisiones.html">
+ <span class="dropdown-text">Anexos — Decisiones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../anexos/referencias.html">
+ <span class="dropdown-text">Anexos — Referencias</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#matriz-de-compatibilidad-backend-frontend-tareas-de-seguridad" id="toc-matriz-de-compatibilidad-backend-frontend-tareas-de-seguridad" class="nav-link active" data-scroll-target="#matriz-de-compatibilidad-backend-frontend-tareas-de-seguridad"><span class="header-section-number">1</span> MATRIZ DE COMPATIBILIDAD BACKEND-FRONTEND — TAREAS DE SEGURIDAD</a>
+  <ul class="collapse">
+  <li><a href="#resumen-de-impacto-por-tarea" id="toc-resumen-de-impacto-por-tarea" class="nav-link" data-scroll-target="#resumen-de-impacto-por-tarea"><span class="header-section-number">1.1</span> Resumen de Impacto por Tarea</a></li>
+  <li><a href="#detalle-de-impacto-por-tareas-con-cambios-frontend" id="toc-detalle-de-impacto-por-tareas-con-cambios-frontend" class="nav-link" data-scroll-target="#detalle-de-impacto-por-tareas-con-cambios-frontend"><span class="header-section-number">1.2</span> Detalle de Impacto por Tareas con Cambios Frontend</a>
+  <ul class="collapse">
+  <li><a href="#sec-t001-configuración-producción-completa-impacto-alto" id="toc-sec-t001-configuración-producción-completa-impacto-alto" class="nav-link" data-scroll-target="#sec-t001-configuración-producción-completa-impacto-alto"><span class="header-section-number">1.2.1</span> SEC-T001 — Configuración Producción Completa (IMPACTO ALTO)</a></li>
+  <li><a href="#sec-t003-rotación-blacklist-refresh-tokens-impacto-medio" id="toc-sec-t003-rotación-blacklist-refresh-tokens-impacto-medio" class="nav-link" data-scroll-target="#sec-t003-rotación-blacklist-refresh-tokens-impacto-medio"><span class="header-section-number">1.2.2</span> SEC-T003 — Rotación + Blacklist Refresh Tokens (IMPACTO MEDIO)</a></li>
+  <li><a href="#sec-t009-remover-rutas-internas-serializers-impacto-medio" id="toc-sec-t009-remover-rutas-internas-serializers-impacto-medio" class="nav-link" data-scroll-target="#sec-t009-remover-rutas-internas-serializers-impacto-medio"><span class="header-section-number">1.2.3</span> SEC-T009 — Remover Rutas Internas Serializers (IMPACTO MEDIO)</a></li>
+  <li><a href="#sec-t010-handler-global-excepciones-impacto-medio" id="toc-sec-t010-handler-global-excepciones-impacto-medio" class="nav-link" data-scroll-target="#sec-t010-handler-global-excepciones-impacto-medio"><span class="header-section-number">1.2.4</span> SEC-T010 — Handler Global Excepciones (IMPACTO MEDIO)</a></li>
+  </ul></li>
+  <li><a href="#tareas-sin-impacto-frontend-17-tareas" id="toc-tareas-sin-impacto-frontend-17-tareas" class="nav-link" data-scroll-target="#tareas-sin-impacto-frontend-17-tareas"><span class="header-section-number">1.3</span> Tareas SIN Impacto Frontend (17 tareas)</a></li>
+  <li><a href="#plan-de-coordinación-frontend" id="toc-plan-de-coordinación-frontend" class="nav-link" data-scroll-target="#plan-de-coordinación-frontend"><span class="header-section-number">1.4</span> Plan de Coordinación Frontend</a></li>
+  <li><a href="#riesgos-de-integración" id="toc-riesgos-de-integración" class="nav-link" data-scroll-target="#riesgos-de-integración"><span class="header-section-number">1.5</span> Riesgos de Integración</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="matriz-de-compatibilidad-backend-frontend-tareas-de-seguridad" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> MATRIZ DE COMPATIBILIDAD BACKEND-FRONTEND — TAREAS DE SEGURIDAD</h1>
+<p><strong>Fecha:</strong> 2026-11-05<br>
+<strong>Versión:</strong> 1.0<br>
+<strong>Frontend de referencia:</strong> specs/003-frontend-titulacion/ (Vistas V-01 a V-09, rutas, CA)</p>
+<hr>
+<section id="resumen-de-impacto-por-tarea" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="resumen-de-impacto-por-tarea"><span class="header-section-number">1.1</span> Resumen de Impacto por Tarea</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 5%">
+<col style="width: 14%">
+<col style="width: 19%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Tarea</th>
+<th>Impacto Frontend</th>
+<th>Contratos API Afectados</th>
+<th>Cambios HTTP</th>
+<th>Cambios Auth</th>
+<th>Cambios Permisos</th>
+<th>Coordinación Requerida</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SEC-T001</td>
+<td>Configuración Producción</td>
+<td><strong>ALTO</strong></td>
+<td>Todos (HTTPS, CORS, CSRF)</td>
+<td>Ninguno (mismos códigos)</td>
+<td>Cookies seguras, CSRF token</td>
+<td>Ninguno</td>
+<td><strong>SÍ</strong> — API_BASE_URL HTTPS, cookies, CSRF</td>
+</tr>
+<tr class="even">
+<td>SEC-T002</td>
+<td>Throttling Login</td>
+<td><strong>BAJO</strong></td>
+<td>POST /api/v1/auth/token/</td>
+<td>429 nuevo</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Menor — mensaje “demasiados intentos”</td>
+</tr>
+<tr class="odd">
+<td>SEC-T003</td>
+<td>Rotación + Blacklist Refresh</td>
+<td><strong>MEDIO</strong></td>
+<td>POST /api/v1/auth/token/ (refresh), POST /api/v1/auth/logout/ (nuevo)</td>
+<td>401 en refresh con token viejo</td>
+<td>Refresh token rota cada uso; logout invalida</td>
+<td>Ninguno</td>
+<td><strong>SÍ</strong> — Interceptor axios: guardar nuevo refresh, llamar logout, manejar 401 refresh</td>
+</tr>
+<tr class="even">
+<td>SEC-T004</td>
+<td>JWT_SIGNING_KEY Separada</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno (interno)</td>
+<td>Ninguno</td>
+<td>Tokens JWT existentes invalidados (re-login único)</td>
+<td>Ninguno</td>
+<td>No — solo re-login tras deploy</td>
+</tr>
+<tr class="odd">
+<td>SEC-T005</td>
+<td>IP Auditoría</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno (interno auditoría)</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — transparente</td>
+</tr>
+<tr class="even">
+<td>SEC-T006</td>
+<td>Access Token 30 min</td>
+<td><strong>BAJO</strong></td>
+<td>POST /api/v1/auth/token/</td>
+<td>Ninguno</td>
+<td>Refresh más frecuente (~25 min)</td>
+<td>Ninguno</td>
+<td>Menor — Interceptor ya debe manejar refresh automático</td>
+</tr>
+<tr class="odd">
+<td>SEC-T007</td>
+<td>Validación MIME Real</td>
+<td><strong>NINGUNO</strong></td>
+<td>POST /api/v1/peticiones/{id}/documento/</td>
+<td>400 si PDF inválido (igual)</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — mismo contrato, validación más estricta interna</td>
+</tr>
+<tr class="even">
+<td>SEC-T008</td>
+<td>Throttling Carga Docs</td>
+<td><strong>BAJO</strong></td>
+<td>POST /api/v1/peticiones/{id}/documento/</td>
+<td>429 nuevo</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Menor — mensaje “límite cargas alcanzado”</td>
+</tr>
+<tr class="odd">
+<td>SEC-T009</td>
+<td>Remover Rutas Internas Serializers</td>
+<td><strong>MEDIO</strong></td>
+<td>GET /api/v1/peticiones/{id}/documento/ (response), GET /api/v1/declaratorias/{id}/ (response)</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td><strong>SÍ</strong> — Frontend migra <code>archivo_path</code> → <code>download_url</code> en V-03, V-07, V-08</td>
+</tr>
+<tr class="even">
+<td>SEC-T010</td>
+<td>Handler Global Excepciones</td>
+<td><strong>MEDIO</strong></td>
+<td><strong>Todos los endpoints</strong></td>
+<td>Formato uniforme errores</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td><strong>SÍ</strong> — Frontend actualiza error handling: <code>{error: {code, message, details}}</code></td>
+</tr>
+<tr class="odd">
+<td>SEC-T011</td>
+<td>Logging Estructurado</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — interno</td>
+</tr>
+<tr class="even">
+<td>SEC-T012</td>
+<td>Eliminar print()</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — interno</td>
+</tr>
+<tr class="odd">
+<td>SEC-T013</td>
+<td>Protección Swagger/ReDoc</td>
+<td><strong>BAJO</strong></td>
+<td>/api/v1/docs/, /api/v1/redoc/, /api/v1/schema/</td>
+<td>403 anónimo prod</td>
+<td>Admin required</td>
+<td>Ninguno</td>
+<td>No — frontend no usa Swagger</td>
+</tr>
+<tr class="even">
+<td>SEC-T014</td>
+<td>CI/CD Security</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — pipeline interno</td>
+</tr>
+<tr class="odd">
+<td>SEC-T015</td>
+<td>Dependabot</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — pipeline interno</td>
+</tr>
+<tr class="even">
+<td>SEC-T016</td>
+<td>Cobertura Tests</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — configuración tests</td>
+</tr>
+<tr class="odd">
+<td>SEC-T017</td>
+<td>Tests Seguridad</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — tests backend</td>
+</tr>
+<tr class="even">
+<td>SEC-T018</td>
+<td>Procedimiento Rotación</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — documentación</td>
+</tr>
+<tr class="odd">
+<td>SEC-T019</td>
+<td>Limpieza Huérfanos</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — management command</td>
+</tr>
+<tr class="even">
+<td>SEC-T020</td>
+<td>Verificación PermissionError</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — validación ops</td>
+</tr>
+<tr class="odd">
+<td>SEC-T021</td>
+<td>Evidencias ACD 4</td>
+<td><strong>NINGUNO</strong></td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>Ninguno</td>
+<td>No — trazabilidad</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="detalle-de-impacto-por-tareas-con-cambios-frontend" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="detalle-de-impacto-por-tareas-con-cambios-frontend"><span class="header-section-number">1.2</span> Detalle de Impacto por Tareas con Cambios Frontend</h2>
+<section id="sec-t001-configuración-producción-completa-impacto-alto" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="sec-t001-configuración-producción-completa-impacto-alto"><span class="header-section-number">1.2.1</span> SEC-T001 — Configuración Producción Completa (IMPACTO ALTO)</h3>
+<p><strong>Cambios Backend:</strong> - HTTPS obligatorio (SECURE_SSL_REDIRECT=True, HSTS) - Cookies: <code>Secure</code>, <code>HttpOnly</code>, <code>SameSite=Lax</code> - CSRF: <code>CSRF_COOKIE_SECURE=True</code>, <code>CSRF_TRUSTED_ORIGINS</code> configurado - CORS: <code>django-cors-headers</code> + <code>CORS_ALLOWED_ORIGINS</code> - Headers seguridad: HSTS, CSP, X-Frame-Options, Referrer-Policy, COOP</p>
+<p><strong>Impacto Frontend (specs/003):</strong> | Aspecto | Cambio Requerido | Vistas Afectadas | |———|——————|——————| | <code>API_BASE_URL</code> | Cambiar <code>http://localhost:8000</code> → <code>https://dominio.unl.edu.ec</code> | Todas (V-01 a V-09) | | Cookies | Navegador envía cookies seguras automáticamente en HTTPS; <code>SameSite=Lax</code> permite navegación normal | Login (V-01), estado sesión | | CSRF Token | Frontend debe leer <code>csrftoken</code> cookie y enviar en header <code>X-CSRFToken</code> en requests mutantes (POST/PUT/PATCH/DELETE) | Crear expediente (V-02), Cargar docs (V-03), Checklist (V-05), Informe (V-07), Declaratoria (V-08) | | CORS | <code>CORS_ALLOWED_ORIGINS</code> debe incluir origen frontend (ej. <code>https://frontend.unl.edu.ec</code>) | Todas | | Credentials | <code>withCredentials: true</code> en axios/fetch para enviar cookies | Login, requests autenticados |</p>
+<p><strong>Pruebas de Contrato Requeridas:</strong> 1. Login HTTPS → 200 + access/refresh en body + <code>csrftoken</code> cookie Secure/HttpOnly. 2. Request mutante sin <code>X-CSRFToken</code> → 403 CSRF. 3. Request mutante con <code>X-CSRFToken</code> válido → 200/201. 4. CORS preflight OPTIONS → 200 con headers correctos. 5. Logout → cookies limpiadas.</p>
+<p><strong>Coordinación:</strong> Reunión técnica con equipo frontend antes de deploy staging. Documentar cambios en <code>FRONTEND_INTEGRATION_GUIDE.md</code>.</p>
+<hr>
+</section>
+<section id="sec-t003-rotación-blacklist-refresh-tokens-impacto-medio" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="sec-t003-rotación-blacklist-refresh-tokens-impacto-medio"><span class="header-section-number">1.2.2</span> SEC-T003 — Rotación + Blacklist Refresh Tokens (IMPACTO MEDIO)</h3>
+<p><strong>Cambios Backend:</strong> - <code>ROTATE_REFRESH_TOKENS=True</code>: cada refresh genera nuevo access + nuevo refresh; refresh anterior → blacklist. - <code>BLACKLIST_AFTER_ROTATION=True</code>. - Nuevo endpoint: <code>POST /api/v1/auth/logout/</code> (body: <code>{"refresh": "..."}</code>) → 205. - Refresh token viejo usado → 401 <code>{"detail": "Token is blacklisted", "code": "token_not_valid"}</code>.</p>
+<p><strong>Impacto Frontend:</strong> | Componente | Cambio Requerido | |————|——————| | <strong>Interceptor axios (refresh automático)</strong> | Tras recibir nuevo access+refresh en respuesta 401→refresh, <strong>guardar nuevo refresh token</strong> (reemplazar el viejo). | | <strong>Logout (V-01, barra usuario, expiración sesión)</strong> | Llamar <code>POST /api/v1/auth/logout/</code> con refresh token actual <strong>antes</strong> de limpiar estado local. | | <strong>Manejo 401 en refresh</strong> | Si refresh retorna 401 (token blacklisted/expirado) → redirigir a login (V-01) limpiando estado. | | <strong>Almacenamiento tokens</strong> | Access en memoria (variable JS); Refresh en <code>httpOnly</code> cookie <strong>O</strong> localStorage (según arquitectura actual). Si en localStorage, actualizar en cada refresh. |</p>
+<p><strong>Contrato API Nuevo:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">POST</span> <span class="er">/api/v1/auth/logout/</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="er">Request:</span> <span class="fu">{</span> <span class="dt">"refresh"</span><span class="fu">:</span> <span class="st">"eyJ..."</span> <span class="fu">}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="er">Response:</span> <span class="dv">205</span> <span class="er">Reset</span> <span class="er">Content</span> <span class="er">(sin</span> <span class="er">body)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">POST</span> <span class="er">/api/v1/auth/token/</span> <span class="er">(refresh)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="er">Request:</span> <span class="fu">{</span> <span class="dt">"refresh"</span><span class="fu">:</span> <span class="st">"eyJ..."</span> <span class="fu">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="er">Response</span> <span class="dv">200</span><span class="er">:</span> <span class="fu">{</span> <span class="dt">"access"</span><span class="fu">:</span> <span class="st">"eyJ..."</span><span class="fu">,</span> <span class="dt">"refresh"</span><span class="fu">:</span> <span class="st">"eyJ...nuevo"</span> <span class="fu">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="er">Response</span> <span class="dv">401</span><span class="er">:</span> <span class="fu">{</span> <span class="dt">"detail"</span><span class="fu">:</span> <span class="st">"Token is blacklisted"</span><span class="fu">,</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"token_not_valid"</span> <span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pruebas de Contrato:</strong> 1. Login → access + refresh guardados. 2. Access expira → interceptor usa refresh → nuevo access + <strong>nuevo refresh</strong> guardado. 3. Refresh anterior usado → 401 blacklisted. 4. Logout → POST /auth/logout/ → 205 → estado limpio → login page. 5. Refresh token expirado (24h) → 401 → redirect login.</p>
+<p><strong>Coordinación:</strong> Issue frontend para actualizar interceptor axios y logout. Documentar en <code>AUTH_FLOW_CHANGES.md</code>.</p>
+<hr>
+</section>
+<section id="sec-t009-remover-rutas-internas-serializers-impacto-medio" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="sec-t009-remover-rutas-internas-serializers-impacto-medio"><span class="header-section-number">1.2.3</span> SEC-T009 — Remover Rutas Internas Serializers (IMPACTO MEDIO)</h3>
+<p><strong>Cambios Backend:</strong> - <code>DocumentoEntregadoSerializer</code>: remover <code>archivo_path</code>; añadir <code>download_url = SerializerMethodField()</code> → <code>request.build_absolute_uri(f"/api/v1/peticiones/{obj.peticion_id}/documento/")</code>. - <code>DeclaratoriaAptitudSerializer</code>: remover <code>archivo_memorando_firmado_path</code>; añadir <code>download_url</code> → endpoint download declaratoria (por crear/confirmar en resoluciones/views.py).</p>
+<p><strong>Impacto Frontend (specs/003):</strong> | Vista | Componente Actual | Cambio Requerido | |——-|——————-|——————| | <strong>V-03</strong> (Carga/Descarga docs) | <code>documento.archivo_path</code> para construir URL descarga | Usar <code>documento.download_url</code> directo en <code>&lt;a href&gt;</code> o <code>axios.get()</code> | | <strong>V-07</strong> (Informe aptitud) | <code>informe.archivo_informe_path</code> (si expuesto) | Verificar serializer InformeAptitudSerializer — actualmente NO expone path (solo <code>archivo_informe_path</code> en modelo, serializer fields no lo incluye). <strong>Sin impacto si no expuesto.</strong> | | <strong>V-08</strong> (Declaratoria) | <code>declaratoria.archivo_memorando_firmado_path</code> | Usar <code>declaratoria.download_url</code> |</p>
+<p><strong>Verificación Serializers Actuales:</strong> - <code>InformeAptitudSerializer</code> (resoluciones/serializers.py): fields NO incluye <code>archivo_informe_path</code> ✅ - <code>DeclaratoriaAptitudSerializer</code> (resoluciones/serializers.py): fields <strong>INCLUYE</strong> <code>archivo_memorando_firmado_path</code> ❌ → SEC-T009 lo remueve.</p>
+<p><strong>Contrato API Cambiado:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">ANTES</span> <span class="er">(DocumentoEntregadoSerializer)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"..."</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"archivo_path"</span><span class="fu">:</span> <span class="st">"expedientes/2026/uuid/timestamp_doc.pdf"</span><span class="fu">,</span>  <span class="er">//</span> <span class="er">REMOVER</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"download_url"</span><span class="fu">:</span> <span class="st">"https://api.unl.edu.ec/api/v1/peticiones/{id}/documento/"</span>  <span class="er">//</span> <span class="er">NUEVO</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">ANTES</span> <span class="er">(DeclaratoriaAptitudSerializer)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"..."</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"archivo_memorando_firmado_path"</span><span class="fu">:</span> <span class="st">"expedientes/2026/uuid/timestamp_mem.pdf"</span><span class="fu">,</span>  <span class="er">//</span> <span class="er">REMOVER</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"download_url"</span><span class="fu">:</span> <span class="st">"https://api.unl.edu.ec/api/v1/declaratorias/{id}/documento/"</span>  <span class="er">//</span> <span class="er">NUEVO</span> <span class="er">(endpoint</span> <span class="er">por</span> <span class="er">confirmar)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pruebas de Contrato:</strong> 1. GET /api/v1/peticiones/{id}/documento/ → response incluye <code>download_url</code> (no <code>archivo_path</code>). 2. GET <code>download_url</code> + JWT → 200 PDF (descarga autorizada). 3. GET /api/v1/declaratorias/{id}/ → response incluye <code>download_url</code> (no <code>archivo_memorando_firmado_path</code>). 4. Frontend: botón “Descargar” usa <code>download_url</code> → funciona.</p>
+<p><strong>Coordinación:</strong> <strong>Requerida</strong>. Frontend debe migrar V-03 y V-08. Endpoint download declaratoria debe confirmarse/implementarse en resoluciones/views.py (GET /api/v1/declaratorias/{id}/documento/).</p>
+<hr>
+</section>
+<section id="sec-t010-handler-global-excepciones-impacto-medio" class="level3" data-number="1.2.4">
+<h3 data-number="1.2.4" class="anchored" data-anchor-id="sec-t010-handler-global-excepciones-impacto-medio"><span class="header-section-number">1.2.4</span> SEC-T010 — Handler Global Excepciones (IMPACTO MEDIO)</h3>
+<p><strong>Cambios Backend:</strong> - Formato uniforme <strong>todos</strong> los errores HTTP:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span>        <span class="er">//</span> <span class="er">ej</span><span class="fu">:</span> <span class="st">"validation_error"</span><span class="fu">,</span> <span class="dt">"authentication_failed"</span><span class="er">,</span> <span class="dt">"permission_denied"</span><span class="er">,</span> <span class="dt">"not_found"</span><span class="er">,</span> <span class="dt">"throttled"</span><span class="er">,</span> <span class="dt">"server_error"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span>     <span class="er">//</span> <span class="er">mensaje</span> <span class="er">legible</span> <span class="er">usuario</span> <span class="er">final</span> <span class="er">(español</span> <span class="er">institucional)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{}</span>            <span class="er">//</span> <span class="er">opcional:</span> <span class="er">campos</span><span class="fu">,</span> <span class="er">parámetros,</span> <span class="er">metadatos</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Códigos mapeados: 400, 401, 403, 404, 409, 429, 500.</li>
+<li>500 <strong>NUNCA</strong> incluye stack trace, SQL, rutas internas.</li>
+</ul>
+<p><strong>Impacto Frontend:</strong> | Componente | Cambio Requerido | |————|——————| | <strong>Error handling global (axios interceptor / try-catch)</strong> | Parsear nuevo formato <code>response.data.error.{code, message, details}</code>. Mostrar <code>message</code> al usuario. Usar <code>code</code> para lógica condicional (ej: redirect login si <code>authentication_failed</code>). | | <strong>Validación formularios (V-02, V-03, V-05, V-07, V-08)</strong> | <code>details</code> puede contener errores por campo → mostrar inline. | | <strong>Throttling (SEC-T002, SEC-T008)</strong> | <code>code: "throttled"</code> + <code>message: "Demasiados intentos, espera X minutos"</code> → mostrar toast/banner. | | <strong>Permisos/IDOR</strong> | <code>code: "permission_denied"</code> o <code>not_found</code> (404 IDOR) → mensaje genérico “No tienes acceso” o “Recurso no encontrado”. |</p>
+<p><strong>Ejemplos Nuevo Formato:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="dv">400</span> <span class="er">Validation</span> <span class="er">Error</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"validation_error"</span><span class="fu">,</span> <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Datos de entrada inválidos"</span><span class="fu">,</span> <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"archivo"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"El archivo excede el límite de 10 MB"</span><span class="ot">]</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="dv">401</span> <span class="er">Authentication</span> <span class="er">Failed</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"authentication_failed"</span><span class="fu">,</span> <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Token de acceso expirado o inválido"</span><span class="fu">,</span> <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="dv">403</span> <span class="er">Permission</span> <span class="er">Denied</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"permission_denied"</span><span class="fu">,</span> <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"No tienes permiso para realizar esta acción"</span><span class="fu">,</span> <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="dv">404</span> <span class="er">Not</span> <span class="er">Found</span> <span class="er">(IDOR)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"not_found"</span><span class="fu">,</span> <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Recurso no encontrado"</span><span class="fu">,</span> <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="dv">429</span> <span class="er">Throttled</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"throttled"</span><span class="fu">,</span> <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Demasiadas solicitudes. Intenta de nuevo en 45 segundos."</span><span class="fu">,</span> <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"retry_after"</span><span class="fu">:</span> <span class="dv">45</span> <span class="fu">}</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="dv">500</span> <span class="er">Server</span> <span class="er">Error</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">"error"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"server_error"</span><span class="fu">,</span> <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Error interno del servidor. El equipo técnico ha sido notificado."</span><span class="fu">,</span> <span class="dt">"details"</span><span class="fu">:</span> <span class="fu">{}</span> <span class="fu">}</span> <span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pruebas de Contrato:</strong> 1. Cada código HTTP (400,401,403,404,429,500) retorna formato uniforme. 2. <code>message</code> en español institucional, sin tecnicismos. 3. <code>details</code> presente solo cuando aplica (validación campos, retry_after). 4. 500 sin stack trace, SQL, rutas.</p>
+<p><strong>Coordinación:</strong> <strong>Requerida</strong>. Frontend debe actualizar manejo de errores global. Documentar formato en <code>API_ERROR_FORMAT.md</code>. Coordinar deploy simultáneo backend+frontend para evitar mismatch temporal.</p>
+<hr>
+</section>
+</section>
+<section id="tareas-sin-impacto-frontend-17-tareas" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="tareas-sin-impacto-frontend-17-tareas"><span class="header-section-number">1.3</span> Tareas SIN Impacto Frontend (17 tareas)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 71%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Tarea</th>
+<th>Justificación Sin Impacto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SEC-T004</td>
+<td>JWT_SIGNING_KEY Separada</td>
+<td>Cambio interno clave; tokens invalidados → re-login único.</td>
+</tr>
+<tr class="even">
+<td>SEC-T005</td>
+<td>IP Auditoría</td>
+<td>Interno señales Django; no expuesto en API.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T006</td>
+<td>Access Token 30 min</td>
+<td>Interceptor refresh ya maneja expiración; solo más frecuente.</td>
+</tr>
+<tr class="even">
+<td>SEC-T007</td>
+<td>Validación MIME Real</td>
+<td>Validación interna más estricta; mismo 400 si inválido.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T008</td>
+<td>Throttling Carga Docs</td>
+<td>Solo añade 429; frontend muestra mensaje genérico.</td>
+</tr>
+<tr class="even">
+<td>SEC-T011</td>
+<td>Logging Estructurado</td>
+<td>Interno contenedor; no API.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T012</td>
+<td>Eliminar print()</td>
+<td>Limpieza stdout; no API.</td>
+</tr>
+<tr class="even">
+<td>SEC-T013</td>
+<td>Protección Swagger</td>
+<td>Frontend no usa /docs, /redoc, /schema.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T014</td>
+<td>CI/CD Security</td>
+<td>Pipeline interno; no runtime.</td>
+</tr>
+<tr class="even">
+<td>SEC-T015</td>
+<td>Dependabot</td>
+<td>Pipeline interno.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T016</td>
+<td>Cobertura Tests</td>
+<td>Configuración pytest; no runtime.</td>
+</tr>
+<tr class="even">
+<td>SEC-T017</td>
+<td>Tests Seguridad</td>
+<td>Tests backend; no API.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T018</td>
+<td>Procedimiento Rotación</td>
+<td>Documentación; no código.</td>
+</tr>
+<tr class="even">
+<td>SEC-T019</td>
+<td>Limpieza Huérfanos</td>
+<td>Management command; no API.</td>
+</tr>
+<tr class="odd">
+<td>SEC-T020</td>
+<td>Verificación PermissionError</td>
+<td>Validación ops Docker; no API.</td>
+</tr>
+<tr class="even">
+<td>SEC-T021</td>
+<td>Evidencias ACD 4</td>
+<td>Trazabilidad Git; no código.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="plan-de-coordinación-frontend" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="plan-de-coordinación-frontend"><span class="header-section-number">1.4</span> Plan de Coordinación Frontend</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 30%">
+<col style="width: 39%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fase</th>
+<th>Tareas con Impacto</th>
+<th>Actividades Coordinación</th>
+<th>Entregables</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Pre-SEC-T001</strong></td>
+<td>SEC-T001</td>
+<td>Reunión técnica: HTTPS, CORS, CSRF, cookies</td>
+<td><code>FRONTEND_INTEGRATION_GUIDE.md</code></td>
+</tr>
+<tr class="even">
+<td><strong>Pre-SEC-T003</strong></td>
+<td>SEC-T003</td>
+<td>Issue frontend: interceptor refresh, logout, 401 handling</td>
+<td><code>AUTH_FLOW_CHANGES.md</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Pre-SEC-T009</strong></td>
+<td>SEC-T009</td>
+<td>Confirmar endpoint download declaratoria; migrar V-03, V-08</td>
+<td><code>DOWNLOAD_URL_MIGRATION.md</code></td>
+</tr>
+<tr class="even">
+<td><strong>Pre-SEC-T010</strong></td>
+<td>SEC-T010</td>
+<td>Definir formato errores; actualizar error handling global</td>
+<td><code>API_ERROR_FORMAT.md</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Deploy Staging</strong></td>
+<td>SEC-T001, T003, T009, T010</td>
+<td>Pruebas integradas backend+frontend en staging</td>
+<td>Checklist validación V-01 a V-09</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="riesgos-de-integración" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="riesgos-de-integración"><span class="header-section-number">1.5</span> Riesgos de Integración</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 28%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Riesgo</th>
+<th>Tareas</th>
+<th>Mitigación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Mismatch temporal formato errores</strong></td>
+<td>SEC-T010</td>
+<td>Deploy coordinado backend+frontend; feature flag temporal si necesario.</td>
+</tr>
+<tr class="even">
+<td><strong>CSRF token no enviado en requests mutantes</strong></td>
+<td>SEC-T001</td>
+<td>Verificar interceptor axios lee <code>csrftoken</code> cookie y envía <code>X-CSRFToken</code>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Refresh token storage incompatibilidad</strong></td>
+<td>SEC-T003</td>
+<td>Confirmar dónde guarda frontend refresh (localStorage vs httpOnly cookie).</td>
+</tr>
+<tr class="even">
+<td><strong>Download URL declaratoria no existe</strong></td>
+<td>SEC-T009</td>
+<td>Implementar GET /api/v1/declaratorias/{id}/documento/ en resoluciones/views.py ANTES de SEC-T009.</td>
+</tr>
+<tr class="odd">
+<td><strong>CORS bloquea frontend en HTTPS</strong></td>
+<td>SEC-T001</td>
+<td><code>CORS_ALLOWED_ORIGINS</code> incluye origen frontend exacto.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>Firma:</strong> opencode AI Assistant<br>
+<strong>Fecha:</strong> 2026-11-05</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>SGT-SIAAF — UNL / FEIRNNR</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Documentación generada con Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

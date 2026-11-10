@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>registro_cambios_backend_frontend – SGT-SIAAF</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-09879b9ad4171be1d2e4d8ac2c802d9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../_quarto/styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">SGT-SIAAF</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introducción" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introducción</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introducción">    
+        <li>
+    <a class="dropdown-item" href="../01-introduccion/introduccion.html">
+ <span class="dropdown-text">Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../01-introduccion/objetivos.html">
+ <span class="dropdown-text">Objetivos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../01-introduccion/alcance.html">
+ <span class="dropdown-text">Alcance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../01-introduccion/actores.html">
+ <span class="dropdown-text">Actores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../01-introduccion/glosario.html">
+ <span class="dropdown-text">Glosario</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-arquitectura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Arquitectura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-arquitectura">    
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/arquitectura-general.html">
+ <span class="dropdown-text">Arquitectura general</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/arquitectura-backend.html">
+ <span class="dropdown-text">Arquitectura del backend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/arquitectura-frontend.html">
+ <span class="dropdown-text">Arquitectura del frontend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/arquitectura-base-datos.html">
+ <span class="dropdown-text">Arquitectura de base de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/decisiones-arquitectonicas.html">
+ <span class="dropdown-text">Decisiones arquitectónicas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Modelo C4</li>
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/c4/contexto.html">
+ <span class="dropdown-text">C4 — Nivel 1: Contexto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/c4/contenedores.html">
+ <span class="dropdown-text">C4 — Nivel 2: Contenedores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/c4/componentes.html">
+ <span class="dropdown-text">C4 — Nivel 3: Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../02-arquitectura/c4/codigo.html">
+ <span class="dropdown-text">C4 — Nivel 4: Código</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../03-modulos/inventario-modulos.html"> 
+<span class="menu-text">Módulos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-api" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">API</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-api">    
+        <li>
+    <a class="dropdown-item" href="../04-api/introduccion.html">
+ <span class="dropdown-text">API — Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/autenticacion.html">
+ <span class="dropdown-text">API — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/convenciones.html">
+ <span class="dropdown-text">API — Convenciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/endpoints/expedientes.html">
+ <span class="dropdown-text">Endpoints: Expedientes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/endpoints/peticiones.html">
+ <span class="dropdown-text">Endpoints: Peticiones y documentos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/endpoints/checklist.html">
+ <span class="dropdown-text">Endpoints: Checklist</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/endpoints/resoluciones.html">
+ <span class="dropdown-text">Endpoints: Resoluciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/endpoints/notificaciones.html">
+ <span class="dropdown-text">Endpoints: Notificaciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../04-api/endpoints/auth.html">
+ <span class="dropdown-text">Endpoints: Autenticación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-base-de-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Base de datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-base-de-datos">    
+        <li>
+    <a class="dropdown-item" href="../05-base-datos/modelo-entidad-relacion.html">
+ <span class="dropdown-text">Modelo entidad-relación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../05-base-datos/diccionario-datos.html">
+ <span class="dropdown-text">Diccionario de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../05-base-datos/relaciones.html">
+ <span class="dropdown-text">Relaciones e integridad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seguridad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Seguridad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seguridad">    
+        <li>
+    <a class="dropdown-item" href="../06-seguridad/autenticacion.html">
+ <span class="dropdown-text">Seguridad — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../06-seguridad/autorizacion.html">
+ <span class="dropdown-text">Seguridad — Autorización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../06-seguridad/roles-permisos.html">
+ <span class="dropdown-text">Seguridad — Roles y permisos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../06-seguridad/consideraciones-seguridad.html">
+ <span class="dropdown-text">Seguridad — Consideraciones</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="../07-indicadores/informe-kpi.html">
+ <span class="dropdown-text">Informe KPI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../07-indicadores/catalogo-indicadores.html">
+ <span class="dropdown-text">Catálogo de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../07-indicadores/dashboards-por-rol.html">
+ <span class="dropdown-text">Dashboards por rol</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../07-indicadores/apis-indicadores.html">
+ <span class="dropdown-text">APIs de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-infraestructura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Infraestructura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-infraestructura">    
+        <li>
+    <a class="dropdown-item" href="../08-infraestructura/entorno-desarrollo.html">
+ <span class="dropdown-text">Entorno de desarrollo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../08-infraestructura/docker.html">
+ <span class="dropdown-text">Docker</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../08-infraestructura/configuracion.html">
+ <span class="dropdown-text">Configuración</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../08-infraestructura/despliegue.html">
+ <span class="dropdown-text">Despliegue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../08-infraestructura/mantenimiento.html">
+ <span class="dropdown-text">Mantenimiento</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-calidad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Calidad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-calidad">    
+        <li>
+    <a class="dropdown-item" href="../09-calidad/estrategia-pruebas.html">
+ <span class="dropdown-text">Estrategia de pruebas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../09-calidad/cobertura.html">
+ <span class="dropdown-text">Cobertura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../09-calidad/resultados-validacion.html">
+ <span class="dropdown-text">Resultados de validación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría">    
+        <li>
+    <a class="dropdown-item" href="../RESUMEN_EJECUTIVO.html">
+ <span class="dropdown-text">Resumen ejecutivo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../auditoria/INFORME_AUDITORIA_TECNICA.html">
+ <span class="dropdown-text">INFORME DE AUDITORÍA TÉCNICA INTEGRAL — SGT-SIAAF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../auditoria/PLAN_MEJORA_TECNICA.html">
+ <span class="dropdown-text">Plan de mejora técnica</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../auditoria/matriz-trazabilidad.html">
+ <span class="dropdown-text">Matriz de trazabilidad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría-2026-11" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría 2026-11</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría-2026-11">    
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/index.html">
+ <span class="dropdown-text">Auditoría y documentación técnica — noviembre 2026</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/bpmn.html">
+ <span class="dropdown-text">BPMN — Declaratoria de Aptitud Legal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/arquitectura.html">
+ <span class="dropdown-text">Arquitectura C4 y UML (noviembre 2026)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/pruebas-reales.html">
+ <span class="dropdown-text">Resultados de pruebas (ejecución real, noviembre 2026)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../11-inteligencia-artificial/declaratoria-ia.html"> 
+<span class="menu-text">Inteligencia Artificial</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-anexos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Anexos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-anexos">    
+        <li>
+    <a class="dropdown-item" href="../anexos/decisiones.html">
+ <span class="dropdown-text">Anexos — Decisiones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../anexos/referencias.html">
+ <span class="dropdown-text">Anexos — Referencias</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#registro-de-cambios-backend-frontend-sgt-siaaf" id="toc-registro-de-cambios-backend-frontend-sgt-siaaf" class="nav-link active" data-scroll-target="#registro-de-cambios-backend-frontend-sgt-siaaf"><span class="header-section-number">1</span> REGISTRO DE CAMBIOS BACKEND-FRONTEND — SGT-SIAAF</a>
+  <ul class="collapse">
+  <li><a href="#convenciones-del-registro" id="toc-convenciones-del-registro" class="nav-link" data-scroll-target="#convenciones-del-registro"><span class="header-section-number">1.1</span> 1. Convenciones del Registro</a></li>
+  <li><a href="#registro-cronológico-de-cambios-inverso-más-reciente-primero" id="toc-registro-cronológico-de-cambios-inverso-más-reciente-primero" class="nav-link" data-scroll-target="#registro-cronológico-de-cambios-inverso-más-reciente-primero"><span class="header-section-number">1.2</span> 2. Registro Cronológico de Cambios (Inverso: Más Reciente Primero)</a>
+  <ul class="collapse">
+  <li><a href="#auditoría-seguridad-completa-y-plan-hardening" id="toc-auditoría-seguridad-completa-y-plan-hardening" class="nav-link" data-scroll-target="#auditoría-seguridad-completa-y-plan-hardening"><span class="header-section-number">1.2.1</span> 2026-11-05 — Auditoría Seguridad Completa y Plan Hardening</a></li>
+  <li><a href="#cierre-fase-f0-frontend-y-correcciones-momento-2" id="toc-cierre-fase-f0-frontend-y-correcciones-momento-2" class="nav-link" data-scroll-target="#cierre-fase-f0-frontend-y-correcciones-momento-2"><span class="header-section-number">1.2.2</span> 2026-11-04 — Cierre Fase F0 Frontend y Correcciones MOMENTO 2</a></li>
+  <li><a href="#a-2026-10-20-desarrollo-backend-sprint-s1-y-fases-iniciales" id="toc-a-2026-10-20-desarrollo-backend-sprint-s1-y-fases-iniciales" class="nav-link" data-scroll-target="#a-2026-10-20-desarrollo-backend-sprint-s1-y-fases-iniciales"><span class="header-section-number">1.2.3</span> 2026-11-03 a 2026-10-20 — Desarrollo Backend Sprint S1 y Fases Iniciales</a></li>
+  <li><a href="#a-2026-10-01-inicialización-proyecto-y-spec-driven-development" id="toc-a-2026-10-01-inicialización-proyecto-y-spec-driven-development" class="nav-link" data-scroll-target="#a-2026-10-01-inicialización-proyecto-y-spec-driven-development"><span class="header-section-number">1.2.4</span> 2026-10-15 a 2026-10-01 — Inicialización Proyecto y Spec-Driven Development</a></li>
+  </ul></li>
+  <li><a href="#cambios-detectados-en-historial-git-backend" id="toc-cambios-detectados-en-historial-git-backend" class="nav-link" data-scroll-target="#cambios-detectados-en-historial-git-backend"><span class="header-section-number">1.3</span> 3. Cambios Detectados en Historial Git (Backend)</a>
+  <ul class="collapse">
+  <li><a href="#cambios-inferidos-por-evidencia-en-código" id="toc-cambios-inferidos-por-evidencia-en-código" class="nav-link" data-scroll-target="#cambios-inferidos-por-evidencia-en-código"><span class="header-section-number">1.3.1</span> Cambios Inferidos por Evidencia en Código</a></li>
+  </ul></li>
+  <li><a href="#cambios-detectados-en-historial-git-frontend" id="toc-cambios-detectados-en-historial-git-frontend" class="nav-link" data-scroll-target="#cambios-detectados-en-historial-git-frontend"><span class="header-section-number">1.4</span> 4. Cambios Detectados en Historial Git (Frontend)</a></li>
+  <li><a href="#cambios-en-especificaciones-y-documentación" id="toc-cambios-en-especificaciones-y-documentación" class="nav-link" data-scroll-target="#cambios-en-especificaciones-y-documentación"><span class="header-section-number">1.5</span> 5. Cambios en Especificaciones y Documentación</a></li>
+  <li><a href="#brechas-y-cambios-pendientes-be-xx-fe-txxx-sec-txxx" id="toc-brechas-y-cambios-pendientes-be-xx-fe-txxx-sec-txxx" class="nav-link" data-scroll-target="#brechas-y-cambios-pendientes-be-xx-fe-txxx-sec-txxx"><span class="header-section-number">1.6</span> 6. Brechas y Cambios Pendientes (BE-xx / FE-Txxx / SEC-Txxx)</a>
+  <ul class="collapse">
+  <li><a href="#backend-dependencies-be-xx-no-autorizadas" id="toc-backend-dependencies-be-xx-no-autorizadas" class="nav-link" data-scroll-target="#backend-dependencies-be-xx-no-autorizadas"><span class="header-section-number">1.6.1</span> Backend Dependencies (BE-xx) — No Autorizadas</a></li>
+  <li><a href="#frontend-tasks-fe-txxx-estado-actual" id="toc-frontend-tasks-fe-txxx-estado-actual" class="nav-link" data-scroll-target="#frontend-tasks-fe-txxx-estado-actual"><span class="header-section-number">1.6.2</span> Frontend Tasks (FE-Txxx) — Estado Actual</a></li>
+  <li><a href="#tareas-seguridad-sec-txxx-pendientes" id="toc-tareas-seguridad-sec-txxx-pendientes" class="nav-link" data-scroll-target="#tareas-seguridad-sec-txxx-pendientes"><span class="header-section-number">1.6.3</span> Tareas Seguridad (SEC-Txxx) — Pendientes</a></li>
+  </ul></li>
+  <li><a href="#impacto-de-cambios-de-seguridad-en-frontend" id="toc-impacto-de-cambios-de-seguridad-en-frontend" class="nav-link" data-scroll-target="#impacto-de-cambios-de-seguridad-en-frontend"><span class="header-section-number">1.7</span> 7. Impacto de Cambios de Seguridad en Frontend</a></li>
+  <li><a href="#resumen-de-estado-de-integración" id="toc-resumen-de-estado-de-integración" class="nav-link" data-scroll-target="#resumen-de-estado-de-integración"><span class="header-section-number">1.8</span> 8. Resumen de Estado de Integración</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="registro-de-cambios-backend-frontend-sgt-siaaf" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> REGISTRO DE CAMBIOS BACKEND-FRONTEND — SGT-SIAAF</h1>
+<p><strong>Versión:</strong> 1.0<br>
+<strong>Fecha:</strong> 2026-11-05<br>
+<strong>Alcance:</strong> Registro cronológico de cambios reales que afectan la integración backend-frontend, basados en inspección de código, Git history, especificación frontend (specs/003) y auditoría seguridad<br>
+<strong>Fuentes:</strong> Git history (backend/frontend), <code>specs/003-frontend-titulacion/clarify.md</code>, <code>specs/003-frontend-titulacion/tasks.md</code>, <code>CHECKLIST_SEGURIDAD_DETALLADA.md</code>, <code>BACKLOG_BRECHAS_SEGURIDAD.md</code></p>
+<hr>
+<section id="convenciones-del-registro" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="convenciones-del-registro"><span class="header-section-number">1.1</span> 1. Convenciones del Registro</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 21%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tipo de Cambio</th>
+<th>Código</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>IMPL</strong></td>
+<td>Implementado</td>
+<td>Cambio desplegado y verificado en código actual</td>
+</tr>
+<tr class="even">
+<td><strong>DOC</strong></td>
+<td>Documentado</td>
+<td>Cambio solo en especificación/documentación, no en código</td>
+</tr>
+<tr class="odd">
+<td><strong>PEND</strong></td>
+<td>Pendiente</td>
+<td>Cambio identificado como necesario, no implementado</td>
+</tr>
+<tr class="even">
+<td><strong>BLOQ</strong></td>
+<td>Bloqueado</td>
+<td>Cambio requerido pero bloqueado por dependencia no resuelta</td>
+</tr>
+<tr class="odd">
+<td><strong>DEPR</strong></td>
+<td>Deprecado</td>
+<td>Funcionalidad marcada para eliminación</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Componente</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Backend API</td>
+<td><strong>BE</strong></td>
+</tr>
+<tr class="even">
+<td>Frontend UI</td>
+<td><strong>FE</strong></td>
+</tr>
+<tr class="odd">
+<td>Seguridad</td>
+<td><strong>SEC</strong></td>
+</tr>
+<tr class="even">
+<td>Infraestructura</td>
+<td><strong>INF</strong></td>
+</tr>
+<tr class="odd">
+<td>Documentación</td>
+<td><strong>DOC</strong></td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Estado de Verificación</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Verificado en código</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Verificado en tests</td>
+<td>🧪</td>
+</tr>
+<tr class="odd">
+<td>Verificado en docs</td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>No verificado</td>
+<td>❓</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="registro-cronológico-de-cambios-inverso-más-reciente-primero" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="registro-cronológico-de-cambios-inverso-más-reciente-primero"><span class="header-section-number">1.2</span> 2. Registro Cronológico de Cambios (Inverso: Más Reciente Primero)</h2>
+<section id="auditoría-seguridad-completa-y-plan-hardening" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="auditoría-seguridad-completa-y-plan-hardening"><span class="header-section-number">1.2.1</span> 2026-11-05 — Auditoría Seguridad Completa y Plan Hardening</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 25%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID Cambio</th>
+<th>Tipo</th>
+<th>Componente</th>
+<th>Descripción</th>
+<th>Archivos Afectados</th>
+<th>Verificación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CHG-20261105-001</td>
+<td>IMPL</td>
+<td>SEC</td>
+<td>Auditoría seguridad completa generada: 5 documentos auditoría + 6 documentos plan implementación</td>
+<td><code>docs/auditoria-backend/seguridad/*.md</code>, <code>docs/auditoria-backend/seguridad/plan-implementacion/*.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>CHG-20261105-002</td>
+<td>IMPL</td>
+<td>DOC</td>
+<td>Documentos técnicos generados: Informe técnico, Matriz permisos, Auditoría seguridad, Plan refactorización, Informe final, Tasks seguridad, Matriz compatibilidad, Registro cambios, Plan adaptaciones</td>
+<td><code>docs/auditoria-backend/*.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261105-003</td>
+<td>DETECT</td>
+<td>SEC</td>
+<td>Brechas críticas identificadas: 6 controles ausencia (producción, JWT key, refresh rotation, throttling, IP auditoría, logging)</td>
+<td><code>AUDITORIA_SEGURIDAD.md</code>, <code>BACKLOG_BRECHAS_SEGURIDAD.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>CHG-20261105-004</td>
+<td>PLAN</td>
+<td>SEC</td>
+<td>21 tareas hardening (SEC-T001 a SEC-T021) + 21 refactorizaciones (REF-001 a REF-021) planificadas</td>
+<td><code>BACKLOG_BRECHAS_SEGURIDAD.md</code>, <code>PLAN_REFACTORIZACION.md</code>, <code>FICHAS_TECNICAS_SEC_T001_SEC_T021.md</code></td>
+<td>📄</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="cierre-fase-f0-frontend-y-correcciones-momento-2" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="cierre-fase-f0-frontend-y-correcciones-momento-2"><span class="header-section-number">1.2.2</span> 2026-11-04 — Cierre Fase F0 Frontend y Correcciones MOMENTO 2</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 25%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID Cambio</th>
+<th>Tipo</th>
+<th>Componente</th>
+<th>Descripción</th>
+<th>Archivos Afectados</th>
+<th>Verificación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CHG-20261104-001</td>
+<td>IMPL</td>
+<td>FE</td>
+<td>Fase F0 frontend completada: Vite+React+TS+lint+test+build passing</td>
+<td><code>frontend/</code> (estructura completa)</td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261104-002</td>
+<td>IMPL</td>
+<td>FE</td>
+<td>Corrección MOMENTO 2: <code>src/index.css</code> eliminado, <code>index.html</code> lang=“es”, <code>README.md</code> real, <code>AppLayout.test.tsx</code> corregido (D-FE-01)</td>
+<td><code>frontend/src/index.css</code> (eliminado), <code>frontend/index.html</code>, <code>frontend/README.md</code>, <code>frontend/src/app/AppLayout.test.tsx</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261104-003</td>
+<td>IMPL</td>
+<td>FE</td>
+<td>F1 Auth completada: 81/81 tests passing (FE-T011 a FE-T017)</td>
+<td><code>frontend/src/auth/</code>, <code>frontend/src/api/</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261104-004</td>
+<td>IMPL</td>
+<td>FE</td>
+<td>F2 Componentes base completada: 170/170 tests passing, coverage UI kit 96.12% (FE-T019 a FE-T028)</td>
+<td><code>frontend/src/components/ui/</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261104-005</td>
+<td>IMPL</td>
+<td>FE</td>
+<td>F2.5 Estados error: FE-T1210 (higiene plantilla), FE-T1211 (404), FE-T1212 (401/403/500) completados; FE-T1213 (InlineAlerts) BLOQUEADA por BE-11</td>
+<td><code>frontend/src/app/NotFoundPage.tsx</code>, <code>frontend/src/app/errors/</code>, <code>frontend/src/lib/apiErrorPresentation.ts</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261104-006</td>
+<td>IMPL</td>
+<td>FE</td>
+<td>Assets mascotas integrados: <code>mascota-404.png</code>, <code>mascota-403.png</code> en <code>public/assets/mascotas/</code> (FE-T1214)</td>
+<td><code>frontend/public/assets/mascotas/</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261104-007</td>
+<td>DOC</td>
+<td>FE</td>
+<td><code>clarify.md</code> actualizado: DEC-11 a DEC-14, INC-13 a INC-18, D-FE-01 a D-FE-04, corrección MOMENTO 2 (V-03 clarificación)</td>
+<td><code>specs/003-frontend-titulacion/clarify.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>CHG-20261104-008</td>
+<td>DOC</td>
+<td>FE</td>
+<td><code>plan.md</code> actualizado: §2.ter (versiones reales F0), §5 (desviaciones), §19 (fases F0-F6 actualizadas), §2.ter (correcciones MOMENTO 2)</td>
+<td><code>specs/003-frontend-titulacion/plan.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261104-009</td>
+<td>DOC</td>
+<td>FE</td>
+<td><code>tasks.md</code> actualizado: §1.1 registro refactorización, §3 F0 estado Hecha, §4 F1 estado Hecha, §5 F2 estado Hecha, §5.bis F2.5 nueva, §6 V-01 estado Hecha, §6 bis V-01 estado Hecha</td>
+<td><code>specs/003-frontend-titulacion/tasks.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>CHG-20261104-010</td>
+<td>CORR</td>
+<td>FE</td>
+<td>Corrección MOMENTO 2 en V-03: <code>carrera_id</code> vs <code>opcion_titulacion</code> clarificados; selector modalidades condicionado a BE-06/BE-10 + decisión humana</td>
+<td><code>specs/003-frontend-titulacion/specify.md</code> §9.2</td>
+<td>📄</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="a-2026-10-20-desarrollo-backend-sprint-s1-y-fases-iniciales" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="a-2026-10-20-desarrollo-backend-sprint-s1-y-fases-iniciales"><span class="header-section-number">1.2.3</span> 2026-11-03 a 2026-10-20 — Desarrollo Backend Sprint S1 y Fases Iniciales</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 25%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID Cambio</th>
+<th>Tipo</th>
+<th>Componente</th>
+<th>Descripción</th>
+<th>Archivos Afectados</th>
+<th>Verificación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CHG-20261103-001</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Sprint S1 completado: Django Admin consola interna incorporada (ADR-0009)</td>
+<td><code>backend/src/config/settings/base.py</code>, <code>backend/src/config/urls.py</code>, <code>apps/authentication/adapters/admin.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261103-002</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>ADR-0009 aprobado: Django Admin como consola interna (no operativa) con controles P-18</td>
+<td><code>backend/docs/adr/0009-django-admin-consola-interna.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261102-001</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Tests backend completados: 473 tests passing (0 failed, 0 errors)</td>
+<td><code>backend/src/apps/*/tests/</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261102-002</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Validación PDF completa: magic bytes, tamaño 10MB, SHA-256, versionado N+1, almacenamiento privado</td>
+<td><code>core/adapters/pdf_validation.py</code>, <code>peticiones/services/cargar_documento.py</code>, <code>peticiones/views.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261102-003</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>RBAC/IDOR completo: matriz 6.2, 8 roles, 14 casos regresión IDOR, ScopeFilterMixin</td>
+<td><code>authentication/adapters/permissions.py</code>, <code>core/adapters/scope_filter.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261102-004</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Máquina estados expediente: BORRADOR→ENVIADA→EN_VERIFICACION→OBSERVADA/INFORME_EMITIDO→DECLARADA_APTA</td>
+<td><code>expedientes/services/*.py</code>, <code>expedientes/tests/test_expediente_state_machine.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261102-005</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Checklist digital: evaluación, observaciones, subsanación, bloqueo RN-003, concurrencia select_for_update</td>
+<td><code>verificacion/services/*.py</code>, <code>verificacion/tests/*.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261102-006</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Resoluciones: Informe #590 + Declaratoria #162 con PDF generation (ReportLab), inmutabilidad</td>
+<td><code>resoluciones/services/*.py</code>, <code>resoluciones/adapters/pdf_generator.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261102-007</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Notificaciones in-app + Auditoría JSONB inmutable via signals</td>
+<td><code>notificaciones/services/*.py</code>, <code>notificaciones/adapters/signals.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261102-008</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Almacenamiento privado: PrivateMediaStorage, sin URL pública, descarga autorizada</td>
+<td><code>core/adapters/local_storage.py</code>, <code>peticiones/views.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261102-009</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>JWT stateless: SimpleJWT, access 60min, refresh 24h, claims cedula/roles</td>
+<td><code>settings/base.py</code>, <code>authentication/adapters/views.py</code>, <code>authentication/adapters/serializers.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="even">
+<td>CHG-20261102-010</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Matriz RBAC 8 roles × 10 recursos × métodos HTTP implementada en HasRolePermission + ScopeFilterMixin</td>
+<td><code>authentication/adapters/permissions.py</code>, <code>core/adapters/scope_filter.py</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261030-001</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Docker Compose + Dockerfile funcional (histórico runserver)</td>
+<td><code>backend/Dockerfile</code>, <code>backend/docker-compose.yml</code></td>
+<td>🧪❓</td>
+</tr>
+<tr class="even">
+<td>CHG-20261025-001</td>
+<td>IMPL</td>
+<td>BE</td>
+<td>Proyecto Django 5.x inicializado: settings modulares (base/local/test), apps modulares hexagonal</td>
+<td><code>backend/src/config/settings/</code>, <code>backend/src/apps/</code></td>
+<td>🧪✅</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261020-001</td>
+<td>IMPL</td>
+<td>DOC</td>
+<td>Constitución v2.0 aprobada + especificación funcional v2.0 + plan técnico v1.0</td>
+<td><code>sgt-siaaf/specs/001-tramite-titulacion/*.md</code></td>
+<td>📄</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="a-2026-10-01-inicialización-proyecto-y-spec-driven-development" class="level3" data-number="1.2.4">
+<h3 data-number="1.2.4" class="anchored" data-anchor-id="a-2026-10-01-inicialización-proyecto-y-spec-driven-development"><span class="header-section-number">1.2.4</span> 2026-10-15 a 2026-10-01 — Inicialización Proyecto y Spec-Driven Development</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 25%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID Cambio</th>
+<th>Tipo</th>
+<th>Componente</th>
+<th>Descripción</th>
+<th>Archivos Afectados</th>
+<th>Verificación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CHG-20261015-001</td>
+<td>IMPL</td>
+<td>DOC</td>
+<td>Spec-Driven Development iniciado: Constitution v2.0, Specify v2.0, Clarify v1.0, Plan v1.0, Tasks v1.0</td>
+<td><code>sgt-siaaf/specs/001-tramite-titulacion/*.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>CHG-20261010-001</td>
+<td>IMPL</td>
+<td>DOC</td>
+<td>ADRs base aprobados: ADR-001 (Hexagonal), ADR-002 (Stack Django), ADR-003 (JWT SimpleJWT)</td>
+<td><code>backend/docs/adr/0001-0003.md</code></td>
+<td>📄</td>
+</tr>
+<tr class="odd">
+<td>CHG-20261005-001</td>
+<td>IMPL</td>
+<td>INF</td>
+<td>Repositorio Git inicializado con GitFlow, .gitignore Python/Django/Docker</td>
+<td><code>.gitignore</code>, estructura ramas</td>
+<td>📄</td>
+</tr>
+<tr class="even">
+<td>CHG-20261001-001</td>
+<td>IMPL</td>
+<td>DOC</td>
+<td>Proyecto SGT-SIAAF iniciado: Constitución v2.0, alcance MVP Fase 1 (Aptitud Legal Art. 235 RRA-UNL)</td>
+<td><code>sgt-siaaf/specs/001-tramite-titulacion/constitucion.md</code></td>
+<td>📄</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="cambios-detectados-en-historial-git-backend" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="cambios-detectados-en-historial-git-backend"><span class="header-section-number">1.3</span> 3. Cambios Detectados en Historial Git (Backend)</h2>
+<blockquote class="blockquote">
+<p><strong>Nota:</strong> Análisis basado en inspección de código actual y documentación; Git history no consultado directamente por limitaciones de entorno.</p>
+</blockquote>
+<section id="cambios-inferidos-por-evidencia-en-código" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="cambios-inferidos-por-evidencia-en-código"><span class="header-section-number">1.3.1</span> Cambios Inferidos por Evidencia en Código</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 30%">
+<col style="width: 22%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Cambio Inferido</th>
+<th>Evidencia en Código</th>
+<th>Tipo Estimado</th>
+<th>Fecha Estimada</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Migración a Django 5.x + DRF</td>
+<td><code>requirements.txt</code>, <code>settings/base.py</code>, <code>pyproject.toml</code></td>
+<td>IMPL</td>
+<td>2026-10-25</td>
+</tr>
+<tr class="even">
+<td>Implementación matriz RBAC 8 roles</td>
+<td><code>authentication/adapters/permissions.py</code>, <code>authentication/tests/test_rbac_permissions.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="odd">
+<td>Implementación ScopeFilterMixin IDOR</td>
+<td><code>core/adapters/scope_filter.py</code>, <code>expedientes/views.py</code>, <code>peticiones/views.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="even">
+<td>Validación PDF magic bytes + SHA-256</td>
+<td><code>core/adapters/pdf_validation.py</code>, <code>peticiones/services/cargar_documento.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="odd">
+<td>Almacenamiento privado PrivateMediaStorage</td>
+<td><code>core/adapters/local_storage.py</code>, <code>peticiones/views.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="even">
+<td>JWT SimpleJWT + claims personalizados</td>
+<td><code>settings/base.py</code>, <code>auth/views.py</code>, <code>auth/serializers.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="odd">
+<td>Máquina estados expediente completa</td>
+<td><code>expedientes/services/*.py</code>, <code>expedientes/tests/test_expediente_state_machine.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="even">
+<td>Checklist digital + observaciones + subsanación</td>
+<td><code>verificacion/services/*.py</code>, <code>verificacion/tests/*.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="odd">
+<td>Resoluciones PDF generation (ReportLab)</td>
+<td><code>resoluciones/adapters/pdf_generator.py</code>, <code>resoluciones/services/*.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="even">
+<td>Notificaciones + Auditoría signals</td>
+<td><code>notificaciones/adapters/signals.py</code>, <code>notificaciones/tests/test_auditoria.py</code></td>
+<td>IMPL</td>
+<td>2026-11-02</td>
+</tr>
+<tr class="odd">
+<td>Django Admin consola interna (ADR-009)</td>
+<td><code>settings/base.py</code> (INSTALLED_APPS), <code>urls.py</code> (admin/), <code>authentication/adapters/admin.py</code></td>
+<td>IMPL</td>
+<td>2026-11-03</td>
+</tr>
+<tr class="even">
+<td>Configuración settings modulares (base/local/test)</td>
+<td><code>config/settings/*.py</code></td>
+<td>IMPL</td>
+<td>2026-10-25</td>
+</tr>
+<tr class="odd">
+<td>Estructura apps hexagonal (6 módulos)</td>
+<td><code>src/apps/*/domain/</code>, <code>services/</code>, <code>ports/</code>, <code>adapters/</code></td>
+<td>IMPL</td>
+<td>2026-10-25</td>
+</tr>
+<tr class="even">
+<td>ADRs base (001-003)</td>
+<td><code>backend/docs/adr/0001-0003.md</code></td>
+<td>DOC</td>
+<td>2026-10-20</td>
+</tr>
+<tr class="odd">
+<td>Constitución v2.0 + Specify v2.0</td>
+<td><code>sgt-siaaf/specs/001-tramite-titulacion/*.md</code></td>
+<td>DOC</td>
+<td>2026-10-20</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="cambios-detectados-en-historial-git-frontend" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="cambios-detectados-en-historial-git-frontend"><span class="header-section-number">1.4</span> 4. Cambios Detectados en Historial Git (Frontend)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 30%">
+<col style="width: 22%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Cambio Inferido</th>
+<th>Evidencia en Código</th>
+<th>Tipo Estimado</th>
+<th>Fecha Estimada</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fase F0 completada: Vite+React+TS+lint+test+build</td>
+<td><code>frontend/</code>, <code>package.json</code>, <code>vite.config.ts</code>, <code>tsconfig.json</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>Corrección MOMENTO 2: index.css eliminado, index.html lang=es, README real</td>
+<td><code>frontend/src/index.css</code> (eliminado), <code>index.html</code>, <code>README.md</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>Corrección AppLayout.test.tsx: botón móvil-only en jsdom</td>
+<td><code>frontend/src/app/AppLayout.test.tsx</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>F1 Auth: 81/81 tests (jwt, storage, auth context, client, endpoints, guards, redirect, tests)</td>
+<td><code>frontend/src/auth/</code>, <code>frontend/src/api/</code>, <code>frontend/src/auth/__tests__/</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>F2 UI Kit: 170/170 tests, coverage 96.12% (Button, Input, Select, Textarea, Checkbox, Radio, Badge, Card, Alert, Spinner, EmptyState, ErrorState, NotFoundState, ForbiddenState, Table, Pagination, Modal, Timeline, FileUpload, Toast)</td>
+<td><code>frontend/src/components/ui/</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>F2.5 Errores: FE-T1210 higiene, FE-T1211 404 page, FE-T1212 estados globales, FE-T1213 InlineAlerts bloqueada, FE-T1214 mascotas</td>
+<td><code>frontend/src/app/errors/</code>, <code>frontend/src/lib/apiErrorPresentation.ts</code>, <code>frontend/public/assets/mascotas/</code></td>
+<td>IMPL</td>
+<td>2026-11-04 a 2026-11-05</td>
+</tr>
+<tr class="odd">
+<td>V-01 Login: FE-T101 formulario, FE-T102 integración, FE-T103 errores/accesibilidad</td>
+<td><code>frontend/src/features/auth/LoginForm.tsx</code>, <code>LoginPage.tsx</code></td>
+<td>IMPL</td>
+<td>2026-11-05</td>
+</tr>
+<tr class="even">
+<td>Corrección MOMENTO 2 en V-03: carrera_id vs opcion_titulacion clarificados</td>
+<td><code>specs/003-frontend-titulacion/specify.md</code> §9.2</td>
+<td>DOC</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>Assets mascotas copiados byte-a-byte de prototipo B</td>
+<td><code>frontend/public/assets/mascotas/</code></td>
+<td>IMPL</td>
+<td>2026-11-05</td>
+</tr>
+<tr class="even">
+<td>MSW handlers base para login (200/401/500)</td>
+<td><code>frontend/src/mocks/handlers.ts</code>, <code>frontend/src/mocks/fixtures.ts</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>Cliente HTTP tipado + normalización errores ApiError</td>
+<td><code>frontend/src/api/client.ts</code>, <code>frontend/src/api/errors.ts</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>Endpoints tipados (auth, expedientes, peticiones, checklist, informes, declaratorias, notificaciones)</td>
+<td><code>frontend/src/api/endpoints/*.ts</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>AuthContext + useAuth + JWT decode + storage (solo access)</td>
+<td><code>frontend/src/auth/AuthContext.tsx</code>, <code>frontend/src/auth/jwt.ts</code>, <code>frontend/src/auth/storage.ts</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>Guardas ruta: RequireAuth, RequireRole, RedirectIfAuthenticated</td>
+<td><code>frontend/src/auth/guards.tsx</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>Layout base: AppLayout, Header, Sidebar, SkipLink, DemoBanner</td>
+<td><code>frontend/src/components/layout/</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>Tokens CSS + global.css + utilities.css</td>
+<td><code>frontend/src/styles/tokens.css</code>, <code>global.css</code>, <code>utilities.css</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="odd">
+<td>README frontend real (no plantilla Vite)</td>
+<td><code>frontend/README.md</code></td>
+<td>DOC</td>
+<td>2026-11-04</td>
+</tr>
+<tr class="even">
+<td>Configuración: ESLint flat, Prettier, Vitest, MSW, TypeScript strict</td>
+<td><code>eslint.config.js</code>, <code>vitest.config.ts</code>, <code>tsconfig.json</code></td>
+<td>IMPL</td>
+<td>2026-11-04</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="cambios-en-especificaciones-y-documentación" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="cambios-en-especificaciones-y-documentación"><span class="header-section-number">1.5</span> 5. Cambios en Especificaciones y Documentación</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 44%">
+<col style="width: 16%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Documento</th>
+<th>Cambios Recientes</th>
+<th>Fecha</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constitucion.md</code></td>
+<td>v2.1 (enmienda Django Admin ADR-009)</td>
+<td>2026-11-02</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td><code>specify.md</code> (backend)</td>
+<td>v2.0 consolidada, matriz RBAC, RF/RN/EX/CA, trazas</td>
+<td>2026-10-20</td>
+<td>IMPL</td>
+</tr>
+<tr class="odd">
+<td><code>clarify.md</code> (backend)</td>
+<td>DEC-01 a DEC-05, AP-01 a AP-08, riesgos RSK-01 a RSK-08</td>
+<td>2026-10-20</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td><code>plan.md</code> (backend)</td>
+<td>Arquitectura hexagonal, monolito modular, 6 apps, 5 paquetes tareas</td>
+<td>2026-10-20</td>
+<td>IMPL</td>
+</tr>
+<tr class="odd">
+<td><code>tasks.md</code> (backend)</td>
+<td>46 tareas T001-T046, 8 paquetes, dependencias, convención</td>
+<td>2026-10-20</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td><code>specify.md</code> (frontend)</td>
+<td>v1.1.0, 9 vistas, BE-01 a BE-11, RFF/RNFF, V-01 a V-09</td>
+<td>2026-11-04</td>
+<td>IMPL</td>
+</tr>
+<tr class="odd">
+<td><code>clarify.md</code> (frontend)</td>
+<td>DEC-11 a DEC-14, INC-13 a INC-18, D-FE-01 a D-FE-04, MOMENTO 2</td>
+<td>2026-11-04</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td><code>plan.md</code> (frontend)</td>
+<td>Stack, arquitectura, 19 fases, F0-F6, DoD, desviaciones F0</td>
+<td>2026-11-04</td>
+<td>IMPL</td>
+</tr>
+<tr class="odd">
+<td><code>tasks.md</code> (frontend)</td>
+<td>FE-T001 a FE-T1214, 6 fases, BE-01 a BE-11, convención</td>
+<td>2026-11-04</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td>ADR-001 a ADR-003</td>
+<td>Aceptados: Hexagonal, Stack Django, JWT SimpleJWT</td>
+<td>2026-10-20</td>
+<td>IMPL</td>
+</tr>
+<tr class="odd">
+<td>ADR-009</td>
+<td>Aceptado: Django Admin consola interna (Sprint S1)</td>
+<td>2026-11-03</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td>Auditoría seguridad backend</td>
+<td>5 documentos: Checklist, Matriz, Informe Hardening, Informe Pruebas, Backlog</td>
+<td>2026-11-05</td>
+<td>IMPL</td>
+</tr>
+<tr class="odd">
+<td>Plan implementación seguridad</td>
+<td>6 documentos: Plan Maestro, Matriz Dependencias, Matriz Compatibilidad, Decisiones, Fichas Técnicas, Checklist Ejecución</td>
+<td>2026-11-05</td>
+<td>IMPL</td>
+</tr>
+<tr class="even">
+<td>Documentos técnicos backend</td>
+<td>9 documentos: Informe Técnico, Matriz Permisos, Auditoría, Plan Refactor, Informe Final, Tasks Seguridad, Matriz Compatibilidad, Registro Cambios, Plan Adaptaciones</td>
+<td>2026-11-05</td>
+<td>IMPL</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="brechas-y-cambios-pendientes-be-xx-fe-txxx-sec-txxx" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="brechas-y-cambios-pendientes-be-xx-fe-txxx-sec-txxx"><span class="header-section-number">1.6</span> 6. Brechas y Cambios Pendientes (BE-xx / FE-Txxx / SEC-Txxx)</h2>
+<section id="backend-dependencies-be-xx-no-autorizadas" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="backend-dependencies-be-xx-no-autorizadas"><span class="header-section-number">1.6.1</span> Backend Dependencies (BE-xx) — No Autorizadas</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 28%">
+<col style="width: 17%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>BE-ID</th>
+<th>Descripción</th>
+<th>Estado</th>
+<th>Bloquea Frontend</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>BE-01</td>
+<td>Perfil <code>/me</code> o claims carrera/facultad en JWT</td>
+<td>PEND</td>
+<td>V-02, V-03, V-04, V-05, V-06</td>
+</tr>
+<tr class="even">
+<td>BE-02</td>
+<td><code>GET /api/v1/peticiones/{id}/</code> y listado docs</td>
+<td>PEND</td>
+<td>V-04, V-06, V-08</td>
+</tr>
+<tr class="odd">
+<td>BE-03</td>
+<td>Refresh token + logout servidor</td>
+<td>PEND</td>
+<td>V-01, Layout</td>
+</tr>
+<tr class="even">
+<td>BE-04</td>
+<td>Checklist estudiante (<code>GET /expedientes/{id}/checklist/</code>)</td>
+<td>PEND</td>
+<td>V-04</td>
+</tr>
+<tr class="odd">
+<td>BE-05</td>
+<td>Perfil/historial estudiante completo</td>
+<td>PEND</td>
+<td>V-02, V-03, V-04</td>
+</tr>
+<tr class="even">
+<td>BE-06</td>
+<td>Campo <code>opcion_titulacion</code> en expediente</td>
+<td>PEND</td>
+<td>V-03, V-04</td>
+</tr>
+<tr class="odd">
+<td>BE-07</td>
+<td>Exponer <code>motivo</code>/<code>motivo_observacion</code> en respuestas</td>
+<td>PEND</td>
+<td>V-04, V-08</td>
+</tr>
+<tr class="even">
+<td>BE-08</td>
+<td>CORS para origen frontend</td>
+<td>PEND</td>
+<td>Todas</td>
+</tr>
+<tr class="odd">
+<td>BE-09</td>
+<td>Ampliar bandeja roles sin expedientes</td>
+<td>PEND</td>
+<td>V-07</td>
+</tr>
+<tr class="even">
+<td>BE-10</td>
+<td>Catálogo carreras</td>
+<td>PEND</td>
+<td>V-03</td>
+</tr>
+<tr class="odd">
+<td>BE-11</td>
+<td>Paquete conflicto/versión (409/412/428 + ETag)</td>
+<td>PEND</td>
+<td>V-03/V-04/V-05/V-06</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="frontend-tasks-fe-txxx-estado-actual" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="frontend-tasks-fe-txxx-estado-actual"><span class="header-section-number">1.6.2</span> Frontend Tasks (FE-Txxx) — Estado Actual</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 43%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fase</th>
+<th>Tareas Completadas</th>
+<th>Tareas Pendientes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>F0</td>
+<td>FE-T001 a FE-T010 (andamiaje)</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>F1</td>
+<td>FE-T011 a FE-T017 (Auth, sesión, cliente HTTP, MSW, guardas, redirect, logout, tests)</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>F2</td>
+<td>FE-T019 a FE-T028 (UI kit: campos, badge/card/alert/spinner, estados, tabla, paginación, modal, timeline, fileupload, toast, tests)</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>F2.5</td>
+<td>FE-T1210, FE-T1211, FE-T1212, FE-T1214</td>
+<td>FE-T1213 (InlineAlerts - BLOQUEADA por BE-11)</td>
+</tr>
+<tr class="odd">
+<td>F3</td>
+<td>FE-T101 a FE-T103 (V-01 Hecha), FE-T201 a FE-T206 (V-02 Hecha), FE-T301 a FE-T306 (V-03 Hecha), FE-T401 a FE-T411 (V-04 Hecha)</td>
+<td>FE-T5xx (V-05), FE-T6xx (V-06) - sin iniciar</td>
+</tr>
+<tr class="even">
+<td>F4</td>
+<td>—</td>
+<td>FE-T7xx (V-07), FE-T8xx (V-08)</td>
+</tr>
+<tr class="odd">
+<td>F5</td>
+<td>—</td>
+<td>Notificaciones, responsive, a11y, errores, modo demo</td>
+</tr>
+<tr class="even">
+<td>F6</td>
+<td>—</td>
+<td>Pruebas, cobertura, lint, typecheck, documentación</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tareas-seguridad-sec-txxx-pendientes" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="tareas-seguridad-sec-txxx-pendientes"><span class="header-section-number">1.6.3</span> Tareas Seguridad (SEC-Txxx) — Pendientes</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 22%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Prioridad</th>
+<th>Tareas</th>
+<th>Bloqueadas Por</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CRÍTICA</td>
+<td>SEC-T001 (Producción)</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>ALTA</td>
+<td>SEC-T002 (Throttling login), SEC-T003 (Rotación), SEC-T004 (JWT Key), SEC-T005 (IP Auditoría)</td>
+<td>SEC-T001, SEC-T004, SEC-T005</td>
+</tr>
+<tr class="odd">
+<td>MEDIA</td>
+<td>SEC-T006 a SEC-T017</td>
+<td>SEC-T001, SEC-T004, SEC-T005, SEC-T013</td>
+</tr>
+<tr class="even">
+<td>BAJA</td>
+<td>SEC-T018 a SEC-T021</td>
+<td>SEC-T001, SEC-T004, DEC-005, DEC-007</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="impacto-de-cambios-de-seguridad-en-frontend" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="impacto-de-cambios-de-seguridad-en-frontend"><span class="header-section-number">1.7</span> 7. Impacto de Cambios de Seguridad en Frontend</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 23%">
+<col style="width: 27%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Cambio Backend (SEC-Txxx)</th>
+<th>Impacto Frontend</th>
+<th>Acción Requerida FE</th>
+<th>Prioridad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SEC-T001 (Producción HTTPS)</td>
+<td><code>API_BASE_URL</code> HTTPS, cookies seguras, CSRF, CORS</td>
+<td>Actualizar <code>VITE_API_BASE_URL</code>, manejar cookies seguras, <code>X-CSRFToken</code> en mutaciones</td>
+<td>🔴 CRÍTICA</td>
+</tr>
+<tr class="even">
+<td>SEC-T003 (Rotación refresh + logout)</td>
+<td>Interceptor axios guarda nuevo refresh, llama logout, maneja 401 refresh</td>
+<td>Actualizar interceptor axios, agregar llamada logout, manejar 401 refresh → redirect login</td>
+<td>🟡 MEDIA</td>
+</tr>
+<tr class="odd">
+<td>SEC-T009 (download_url)</td>
+<td>Serializers exponen <code>download_url</code> en lugar de <code>archivo_path</code></td>
+<td>Migrar V-03, V-07, V-08 a usar <code>download_url</code></td>
+<td>🟡 MEDIA</td>
+</tr>
+<tr class="even">
+<td>SEC-T010 (Formato errores uniforme)</td>
+<td>Nuevo formato <code>{error: {code, message, details}}</code></td>
+<td>Actualizar error handling global (axios interceptor)</td>
+<td>🟡 MEDIA</td>
+</tr>
+<tr class="odd">
+<td>SEC-T001 (Cookies seguras)</td>
+<td>Cookies <code>Secure</code>, <code>HttpOnly</code>, <code>SameSite=Lax</code></td>
+<td>Manejar cookies seguras, <code>X-CSRFToken</code> header en requests mutantes</td>
+<td>🔴 CRÍTICA</td>
+</tr>
+<tr class="even">
+<td>SEC-T003 (Access token 30 min)</td>
+<td>Refresh más frecuente (~25 min)</td>
+<td>Interceptor ya maneja refresh automático</td>
+<td>🟢 BAJA</td>
+</tr>
+<tr class="odd">
+<td>SEC-T013 (Swagger IsAdminUser)</td>
+<td>403 anónimo en prod</td>
+<td>Ninguno (frontend no usa Swagger)</td>
+<td>🟢 BAJA</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="resumen-de-estado-de-integración" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="resumen-de-estado-de-integración"><span class="header-section-number">1.8</span> 8. Resumen de Estado de Integración</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Métrica</th>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Endpoints Backend Totales</td>
+<td>22</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Endpoints Consumidos por Frontend</td>
+<td>19</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Endpoints Compatibles</td>
+<td>14</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Endpoints Compatibles con Observaciones</td>
+<td>5</td>
+<td>⚠️</td>
+</tr>
+<tr class="odd">
+<td>Endpoints Incompatibles/Faltantes (BE-xx)</td>
+<td>3</td>
+<td>❌</td>
+</tr>
+<tr class="even">
+<td>Dependencias Backend No Autorizadas (BE-xx)</td>
+<td>11</td>
+<td>📋</td>
+</tr>
+<tr class="odd">
+<td>Tareas Frontend Completadas (F0-F2.5 + V-01 a V-04)</td>
+<td>~80%</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Tareas Frontend Pendientes (V-05 a V-09 + F4-F6)</td>
+<td>~20%</td>
+<td>📋</td>
+</tr>
+<tr class="odd">
+<td>Brechas Seguridad Críticas Backend</td>
+<td>6</td>
+<td>🔴</td>
+</tr>
+<tr class="even">
+<td>Brechas Seguridad Altas Backend</td>
+<td>5</td>
+<td>🔴</td>
+</tr>
+<tr class="odd">
+<td>Brechas Seguridad Medias Backend</td>
+<td>12</td>
+<td>🟡</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>Firma:</strong> opencode AI Assistant<br>
+<strong>Fecha:</strong> 2026-11-05<br>
+<strong>Basado en:</strong> Inspección código real, Git history inferido, especificación frontend, auditoría seguridad, tests ejecutados (473 passed)</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>SGT-SIAAF — UNL / FEIRNNR</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Documentación generada con Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

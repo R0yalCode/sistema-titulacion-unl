@@ -1,0 +1,27 @@
+---
+title: "Declaratoria de uso de IA"
+---
+
+# Declaratoria de uso responsable de Inteligencia Artificial
+
+La Inteligencia Artificial se usó en SGT-SIAAF como **herramienta de apoyo**, no como sustituto del criterio del equipo. Las decisiones normativas y técnicas, la verificación del código y la responsabilidad del producto final son siempre del equipo de desarrollo y del docente responsable.
+
+## Herramientas con evidencia directa en el repositorio
+
+**NotebookLM** — usado como entorno de consulta y organización de fuentes documentales. Citado explícitamente en `clarify.md`/`specify.md` del frontend como análisis **secundario y no normativo** sobre modalidades de titulación frente al RRA-UNL; el propio proyecto decidió no implementar nada basándose en ese análisis hasta contrastarlo con la fuente legal primaria — un ejemplo documentado de revisión crítica.
+
+**Claude Code** — usado como entorno de asistencia al desarrollo: análisis de código, apoyo en tareas técnicas (en particular, 21 fichas de hardening de seguridad backend, SEC-T001 a SEC-T021) y generación/revisión de documentación. Citado por nombre en `docs/auditoria-backend/seguridad/plan-implementacion/` y gobernado por guías operativas propias del repositorio (`AGENTS.md`, `CLAUDE.md`). Esta misma auditoría de noviembre de 2026 se realizó con esta herramienta.
+
+## Herramienta mencionada sin evidencia directa en el repositorio
+
+**ChatGPT** — no se encontró ninguna cita o artefacto en el repositorio que lo identifique directamente, a diferencia de las dos herramientas anteriores. Se documenta como categoría de uso declarada, sin presentarla como confirmada por evidencia del propio repositorio.
+
+## Principio de responsabilidad
+
+| Aspecto | Responsable |
+|---|---|
+| Decisiones normativas y de negocio | Equipo de desarrollo y docente responsable |
+| Código integrado al repositorio | Equipo de desarrollo, verificado por ejecución real de pruebas |
+| Exactitud de la documentación | Contrastada contra el código real; los errores detectados se corrigen explícitamente, no se ocultan |
+
+Declaratoria completa, con citas de archivo y línea: `DOCUMENTACION/10_INTELIGENCIA_ARTIFICIAL/DECLARATORIA_IA.md`.

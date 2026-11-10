@@ -14,11 +14,21 @@ title: "Docker"
 
 ## Dockerfile
 
-- Base `python:3.12-slim`; usuario no privilegiado `django`; instala requirements y requirements-dev; `CMD python manage.py runserver 0.0.0.0:8000`.
+Multi-stage (SEC-T001, 2026-11-05) con dos targets, en el mismo archivo
+para no duplicar las etapas comunes de instalación de dependencias:
 
-## Advertencia operativa (hallazgo AUD-P0-01)
+| Target | Uso | Usuario | Servidor |
+|---|---|---|---|
+| `development` | `docker-compose.yml` (este, por defecto) | `django` | `runserver` |
+| `production` | `docker-compose.prod.yml` | `appuser` (UID 1000) | `gunicorn` vía `entrypoint.sh` |
 
-El compose actual fija `DJANGO_SETTINGS_MODULE: config.settings.local` y `DEBUG: ${DEBUG:-1}`: **por defecto el contenedor corre en modo desarrollo con DEBUG activo y runserver**. Es funcional para demostración local, pero no debe exponerse más allá del entorno de desarrollo. El plan de mejora incluye `settings/production.py` + gunicorn.
+`docker-compose.yml` fija explícitamente `target: development` — sin esa
+línea, un build multi-stage construye por defecto la **última** etapa
+(`production`), lo que habría roto silenciosamente el flujo de desarrollo.
+
+## Advertencia operativa (hallazgo AUD-P0-01) — resuelta para producción
+
+El compose de **desarrollo** sigue fijando `DJANGO_SETTINGS_MODULE: config.settings.local` y `DEBUG: ${DEBUG:-1}` intencionalmente (es su propósito). Para producción real, usar `docker-compose.prod.yml` (`DJANGO_SETTINGS_MODULE: config.settings.production`, `DEBUG=False` fijo, gunicorn) — ver `despliegue.md`.
 
 ## Uso
 
@@ -32,8 +42,9 @@ docker compose exec backend python manage.py seed_initial_data   # opcional, dem
 
 ## Volúmenes
 
-| Volumen | Contenido |
-|---|---|
-| `postgres_data` | Base de datos |
-| `media_data` | PDFs privados (`/app/backend/media`) |
-| `static_data` | Estáticos de Django Admin |
+| Volumen | Contenido | Compose |
+|---|---|---|
+| `postgres_data` | Base de datos | `docker-compose.yml` (dev) |
+| `media_data` | PDFs privados (`/app/backend/media`) | `docker-compose.yml` (dev) |
+| `static_data` | Estáticos de Django Admin | `docker-compose.yml` (dev) |
+| `postgres_data_prod`, `media_private_prod`, `static_data_prod` | Equivalentes de producción, nombrados aparte para no colisionar con los de desarrollo | `docker-compose.prod.yml` |

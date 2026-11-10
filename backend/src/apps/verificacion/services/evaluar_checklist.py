@@ -5,6 +5,8 @@ Evalúa cada requisito (VERIFICADO / OBSERVADO) encapsulado en
 condiciones de carrera entre juristas y analistas de apoyo (AP-06).
 """
 
+import logging
+
 from django.db import transaction
 from django.utils import timezone
 
@@ -22,6 +24,8 @@ from apps.peticiones.adapters.models import (
 )
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.notificaciones.adapters.models import NotificacionInterna
+
+logger = logging.getLogger(__name__)
 
 
 class ChecklistVerificationNotFoundError(Exception):
@@ -161,13 +165,23 @@ def execute(usuario, checklist_verification_id, nuevo_estado, motivo_observacion
             )
         
         # Verificar que el usuario pertenezca a la facultad/carrera del expediente
-        print(f"DEBUG: user={usuario.username}, roles={list(usuario.get_roles())}, has_secretario={usuario.has_role('SECRETARIO_ABOGADO')}, has_analista={usuario.has_role('ANALISTA_APOYO')}")
+        logger.debug(
+            "evaluar_checklist: user=%s roles=%s has_secretario=%s has_analista=%s",
+            usuario.username,
+            list(usuario.get_roles()),
+            usuario.has_role("SECRETARIO_ABOGADO"),
+            usuario.has_role("ANALISTA_APOYO"),
+        )
         if usuario.has_role("SECRETARIO_ABOGADO") or usuario.has_role("ANALISTA_APOYO"):
             # Comparar como strings para evitar problemas de tipo UUID vs string
             user_facultad = str(usuario.facultad_id) if usuario.facultad_id else None
             expediente_facultad = str(expediente.facultad_id) if expediente.facultad_id else None
-            # Debug: log the values for debugging
-            print(f"DEBUG FACULTY CHECK: user_facultad={user_facultad}, expediente_facultad={expediente_facultad}, match={user_facultad == expediente_facultad}")
+            logger.debug(
+                "evaluar_checklist faculty check: user_facultad=%s expediente_facultad=%s match=%s",
+                user_facultad,
+                expediente_facultad,
+                user_facultad == expediente_facultad,
+            )
             if user_facultad != expediente_facultad:
                 raise UserNotAuthorizedError(
                     "El usuario no pertenece a la facultad del expediente."
