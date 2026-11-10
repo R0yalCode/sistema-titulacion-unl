@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>plan_maestro_implementacion – SGT-SIAAF</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-09879b9ad4171be1d2e4d8ac2c802d9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../_quarto/styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">SGT-SIAAF</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introducción" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introducción</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introducción">    
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/introduccion.html">
+ <span class="dropdown-text">Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/objetivos.html">
+ <span class="dropdown-text">Objetivos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/alcance.html">
+ <span class="dropdown-text">Alcance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/actores.html">
+ <span class="dropdown-text">Actores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../01-introduccion/glosario.html">
+ <span class="dropdown-text">Glosario</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-arquitectura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Arquitectura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-arquitectura">    
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-general.html">
+ <span class="dropdown-text">Arquitectura general</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-backend.html">
+ <span class="dropdown-text">Arquitectura del backend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-frontend.html">
+ <span class="dropdown-text">Arquitectura del frontend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/arquitectura-base-datos.html">
+ <span class="dropdown-text">Arquitectura de base de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/decisiones-arquitectonicas.html">
+ <span class="dropdown-text">Decisiones arquitectónicas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Modelo C4</li>
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/contexto.html">
+ <span class="dropdown-text">C4 — Nivel 1: Contexto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/contenedores.html">
+ <span class="dropdown-text">C4 — Nivel 2: Contenedores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/componentes.html">
+ <span class="dropdown-text">C4 — Nivel 3: Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../02-arquitectura/c4/codigo.html">
+ <span class="dropdown-text">C4 — Nivel 4: Código</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03-modulos/inventario-modulos.html"> 
+<span class="menu-text">Módulos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-api" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">API</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-api">    
+        <li>
+    <a class="dropdown-item" href="../../../04-api/introduccion.html">
+ <span class="dropdown-text">API — Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/autenticacion.html">
+ <span class="dropdown-text">API — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/convenciones.html">
+ <span class="dropdown-text">API — Convenciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/expedientes.html">
+ <span class="dropdown-text">Endpoints: Expedientes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/peticiones.html">
+ <span class="dropdown-text">Endpoints: Peticiones y documentos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/checklist.html">
+ <span class="dropdown-text">Endpoints: Checklist</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/resoluciones.html">
+ <span class="dropdown-text">Endpoints: Resoluciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/notificaciones.html">
+ <span class="dropdown-text">Endpoints: Notificaciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../04-api/endpoints/auth.html">
+ <span class="dropdown-text">Endpoints: Autenticación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-base-de-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Base de datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-base-de-datos">    
+        <li>
+    <a class="dropdown-item" href="../../../05-base-datos/modelo-entidad-relacion.html">
+ <span class="dropdown-text">Modelo entidad-relación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../05-base-datos/diccionario-datos.html">
+ <span class="dropdown-text">Diccionario de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../05-base-datos/relaciones.html">
+ <span class="dropdown-text">Relaciones e integridad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seguridad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Seguridad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seguridad">    
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/autenticacion.html">
+ <span class="dropdown-text">Seguridad — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/autorizacion.html">
+ <span class="dropdown-text">Seguridad — Autorización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/roles-permisos.html">
+ <span class="dropdown-text">Seguridad — Roles y permisos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../06-seguridad/consideraciones-seguridad.html">
+ <span class="dropdown-text">Seguridad — Consideraciones</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/informe-kpi.html">
+ <span class="dropdown-text">Informe KPI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/catalogo-indicadores.html">
+ <span class="dropdown-text">Catálogo de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/dashboards-por-rol.html">
+ <span class="dropdown-text">Dashboards por rol</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../07-indicadores/apis-indicadores.html">
+ <span class="dropdown-text">APIs de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-infraestructura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Infraestructura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-infraestructura">    
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/entorno-desarrollo.html">
+ <span class="dropdown-text">Entorno de desarrollo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/docker.html">
+ <span class="dropdown-text">Docker</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/configuracion.html">
+ <span class="dropdown-text">Configuración</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/despliegue.html">
+ <span class="dropdown-text">Despliegue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../08-infraestructura/mantenimiento.html">
+ <span class="dropdown-text">Mantenimiento</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-calidad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Calidad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-calidad">    
+        <li>
+    <a class="dropdown-item" href="../../../09-calidad/estrategia-pruebas.html">
+ <span class="dropdown-text">Estrategia de pruebas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../09-calidad/cobertura.html">
+ <span class="dropdown-text">Cobertura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../09-calidad/resultados-validacion.html">
+ <span class="dropdown-text">Resultados de validación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría">    
+        <li>
+    <a class="dropdown-item" href="../../../RESUMEN_EJECUTIVO.html">
+ <span class="dropdown-text">Resumen ejecutivo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../auditoria/INFORME_AUDITORIA_TECNICA.html">
+ <span class="dropdown-text">INFORME DE AUDITORÍA TÉCNICA INTEGRAL — SGT-SIAAF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../auditoria/PLAN_MEJORA_TECNICA.html">
+ <span class="dropdown-text">Plan de mejora técnica</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../auditoria/matriz-trazabilidad.html">
+ <span class="dropdown-text">Matriz de trazabilidad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría-2026-11" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría 2026-11</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría-2026-11">    
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/index.html">
+ <span class="dropdown-text">Auditoría y documentación técnica — noviembre 2026</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/bpmn.html">
+ <span class="dropdown-text">BPMN — Declaratoria de Aptitud Legal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/arquitectura.html">
+ <span class="dropdown-text">Arquitectura C4 y UML (noviembre 2026)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../10-auditoria-2026-11/pruebas-reales.html">
+ <span class="dropdown-text">Resultados de pruebas (ejecución real, noviembre 2026)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../11-inteligencia-artificial/declaratoria-ia.html"> 
+<span class="menu-text">Inteligencia Artificial</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-anexos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Anexos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-anexos">    
+        <li>
+    <a class="dropdown-item" href="../../../anexos/decisiones.html">
+ <span class="dropdown-text">Anexos — Decisiones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../anexos/referencias.html">
+ <span class="dropdown-text">Anexos — Referencias</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#plan-maestro-de-implementación-hardening-de-seguridad-backend-sgt-siaaf" id="toc-plan-maestro-de-implementación-hardening-de-seguridad-backend-sgt-siaaf" class="nav-link active" data-scroll-target="#plan-maestro-de-implementación-hardening-de-seguridad-backend-sgt-siaaf"><span class="header-section-number">1</span> PLAN MAESTRO DE IMPLEMENTACIÓN — HARDENING DE SEGURIDAD BACKEND SGT-SIAAF</a>
+  <ul class="collapse">
+  <li><a href="#resumen-ejecutivo" id="toc-resumen-ejecutivo" class="nav-link" data-scroll-target="#resumen-ejecutivo"><span class="header-section-number">1.1</span> Resumen Ejecutivo</a></li>
+  <li><a href="#estado-de-las-21-tareas" id="toc-estado-de-las-21-tareas" class="nav-link" data-scroll-target="#estado-de-las-21-tareas"><span class="header-section-number">1.2</span> Estado de las 21 Tareas</a></li>
+  <li><a href="#estrategia-general" id="toc-estrategia-general" class="nav-link" data-scroll-target="#estrategia-general"><span class="header-section-number">1.3</span> Estrategia General</a>
+  <ul class="collapse">
+  <li><a href="#principios-de-implementación" id="toc-principios-de-implementación" class="nav-link" data-scroll-target="#principios-de-implementación"><span class="header-section-number">1.3.1</span> Principios de Implementación</a></li>
+  <li><a href="#orden-recomendado-por-fases" id="toc-orden-recomendado-por-fases" class="nav-link" data-scroll-target="#orden-recomendado-por-fases"><span class="header-section-number">1.3.2</span> Orden Recomendado (por fases)</a></li>
+  </ul></li>
+  <li><a href="#matriz-de-dependencias-y-bloqueos" id="toc-matriz-de-dependencias-y-bloqueos" class="nav-link" data-scroll-target="#matriz-de-dependencias-y-bloqueos"><span class="header-section-number">1.4</span> Matriz de Dependencias y Bloqueos</a></li>
+  <li><a href="#riesgos-principales" id="toc-riesgos-principales" class="nav-link" data-scroll-target="#riesgos-principales"><span class="header-section-number">1.5</span> Riesgos Principales</a></li>
+  <li><a href="#decisiones-pendientes-requieren-aprobación-humana" id="toc-decisiones-pendientes-requieren-aprobación-humana" class="nav-link" data-scroll-target="#decisiones-pendientes-requieren-aprobación-humana"><span class="header-section-number">1.6</span> Decisiones Pendientes (Requieren Aprobación Humana)</a></li>
+  <li><a href="#condiciones-de-cierre-global" id="toc-condiciones-de-cierre-global" class="nav-link" data-scroll-target="#condiciones-de-cierre-global"><span class="header-section-number">1.7</span> Condiciones de Cierre Global</a></li>
+  <li><a href="#entregables-del-plan-esta-carpeta" id="toc-entregables-del-plan-esta-carpeta" class="nav-link" data-scroll-target="#entregables-del-plan-esta-carpeta"><span class="header-section-number">1.8</span> Entregables del Plan (esta carpeta)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="plan-maestro-de-implementación-hardening-de-seguridad-backend-sgt-siaaf" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> PLAN MAESTRO DE IMPLEMENTACIÓN — HARDENING DE SEGURIDAD BACKEND SGT-SIAAF</h1>
+<p><strong>Fecha:</strong> 2026-11-05<br>
+<strong>Versión:</strong> 1.0<br>
+<strong>Estado:</strong> Planificación — No implementado</p>
+<hr>
+<section id="resumen-ejecutivo" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="resumen-ejecutivo"><span class="header-section-number">1.1</span> Resumen Ejecutivo</h2>
+<p>Este plan describe la implementación incremental, controlada y verificable de las <strong>21 tareas de seguridad (SEC-T001 a SEC-T021)</strong> identificadas en la auditoría del backend SGT-SIAAF.</p>
+<p><strong>Objetivo:</strong> Cerrar las brechas críticas y medias que impiden considerar el backend listo para producción, manteniendo compatibilidad total con el frontend en desarrollo (specs/003).</p>
+<p><strong>Alcance:</strong> Solo backend (Django REST Framework). No se modifican reglas de negocio, permisos RBAC, contratos de API aprobados ni código del frontend.</p>
+<p><strong>Estrategia:</strong> Implementar por fases según dependencias técnicas y riesgo de seguridad, priorizando infraestructura base (SEC-T001) y controles de autenticación (SEC-T002 a SEC-T005).</p>
+<hr>
+</section>
+<section id="estado-de-las-21-tareas" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="estado-de-las-21-tareas"><span class="header-section-number">1.2</span> Estado de las 21 Tareas</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 12%">
+<col style="width: 19%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Tarea</th>
+<th>Prioridad</th>
+<th>Riesgo</th>
+<th>Estado</th>
+<th>Dependencias Clave</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SEC-T001</td>
+<td>Configuración Producción Completa</td>
+<td>CRÍTICA</td>
+<td>CRÍTICO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Bloquea: SEC-T005, SEC-T007, SEC-T010, SEC-T011, SEC-T013, SEC-T019, SEC-T020</td>
+</tr>
+<tr class="even">
+<td>SEC-T002</td>
+<td>Throttling Login</td>
+<td>ALTA</td>
+<td>ALTO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T005 (IP real)</td>
+</tr>
+<tr class="odd">
+<td>SEC-T003</td>
+<td>Rotación + Blacklist Refresh Tokens</td>
+<td>ALTA</td>
+<td>ALTO</td>
+<td>Pendiente — bloqueada por DEC-008</td>
+<td>Requiere: SEC-T004 (JWT Key separada)</td>
+</tr>
+<tr class="even">
+<td>SEC-T004</td>
+<td>JWT_SIGNING_KEY Separada</td>
+<td>ALTA</td>
+<td>ALTO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Independiente — cerrada sin depender de SEC-T001</td>
+</tr>
+<tr class="odd">
+<td>SEC-T005</td>
+<td>IP Auditoría + Middleware Thread-Local + TRUSTED_PROXIES</td>
+<td>ALTA</td>
+<td>ALTO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T001 (production.py + Nginx)</td>
+</tr>
+<tr class="even">
+<td>SEC-T006</td>
+<td>Access Token 30 min</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T004</td>
+</tr>
+<tr class="odd">
+<td>SEC-T007</td>
+<td>Validación MIME Real (python-magic/pikepdf)</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td>Pendiente — bloqueada por DEC-001</td>
+<td>Requiere: SEC-T001 (Dockerfile libmagic)</td>
+</tr>
+<tr class="even">
+<td>SEC-T008</td>
+<td>Throttling Carga Documentos</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Independiente</td>
+</tr>
+<tr class="odd">
+<td>SEC-T009</td>
+<td>Remover Rutas Internas Serializers</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td>Pendiente — bloqueada por DEC-006</td>
+<td>Requiere: SEC-T001 (endpoint download declaratoria)</td>
+</tr>
+<tr class="even">
+<td>SEC-T010</td>
+<td>Handler Global Excepciones</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td>Pendiente — bloqueada por DEC-009</td>
+<td>Requiere: SEC-T001 (production.py DEBUG=False)</td>
+</tr>
+<tr class="odd">
+<td>SEC-T011</td>
+<td>Logging Estructurado</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T012 (eliminar print)</td>
+</tr>
+<tr class="even">
+<td>SEC-T012</td>
+<td>Eliminar print() evaluar_checklist.py</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Independiente</td>
+</tr>
+<tr class="odd">
+<td>SEC-T013</td>
+<td>Protección Swagger/ReDoc/Schema (IsAdminUser)</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T001 (production.py)</td>
+</tr>
+<tr class="even">
+<td>SEC-T014</td>
+<td>CI/CD Security (Safety + Bandit + Gitleaks)</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T001 (Dockerfile)</td>
+</tr>
+<tr class="odd">
+<td>SEC-T015</td>
+<td>Dependabot Configurado</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td><strong>Cerrada (2026-11-05)</strong> (config; activación pendiente de push real)</td>
+<td>Requiere: SEC-T014 (CI tests)</td>
+</tr>
+<tr class="even">
+<td>SEC-T016</td>
+<td>Cobertura Tests + testpaths</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td>Pendiente — bloqueada por DEC-004 (valor umbral)</td>
+<td>Independiente</td>
+</tr>
+<tr class="odd">
+<td>SEC-T017</td>
+<td>Tests Seguridad Faltantes</td>
+<td>MEDIA</td>
+<td>MEDIO</td>
+<td>Pendiente — requiere SEC-T003 (aún bloqueada)</td>
+<td>Requiere: SEC-T002, SEC-T003, SEC-T005, SEC-T013</td>
+</tr>
+<tr class="even">
+<td>SEC-T018</td>
+<td>Procedimiento Rotación Secretos</td>
+<td>BAJA</td>
+<td>BAJO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T004</td>
+</tr>
+<tr class="odd">
+<td>SEC-T019</td>
+<td>Limpieza Archivos Huérfanos</td>
+<td>BAJA</td>
+<td>BAJO</td>
+<td>Bloqueada — DEC-005 pendiente</td>
+<td>Requiere: SEC-T001 (Dockerfile cron)</td>
+</tr>
+<tr class="even">
+<td>SEC-T020</td>
+<td>Verificación PermissionError Docker</td>
+<td>BAJA</td>
+<td>BAJO</td>
+<td><strong>Cerrada (2026-11-05)</strong></td>
+<td>Requiere: SEC-T001 (Dockerfile + docker-compose)</td>
+</tr>
+<tr class="odd">
+<td>SEC-T021</td>
+<td>Evidencias ACD 4 Reales</td>
+<td>BAJA</td>
+<td>BAJO</td>
+<td>Pendiente — bloqueada por DEC-007</td>
+<td>Independiente</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="estrategia-general" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="estrategia-general"><span class="header-section-number">1.3</span> Estrategia General</h2>
+<section id="principios-de-implementación" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="principios-de-implementación"><span class="header-section-number">1.3.1</span> Principios de Implementación</h3>
+<ol type="1">
+<li><strong>Una tarea a la vez</strong> — Implementar, probar, verificar, documentar, cerrar.</li>
+<li><strong>Dependencias respetadas</strong> — No iniciar tarea si sus dependencias no están cerradas.</li>
+<li><strong>Tests first</strong> — Para tareas que añaden funcionalidad, escribir tests antes o en paralelo.</li>
+<li><strong>Regresión obligatoria</strong> — Ejecutar suite completa (473 tests) tras cada tarea.</li>
+<li><strong>Frontend compatible</strong> — Cualquier cambio en API/contrato requiere coordinación y tests de contrato.</li>
+<li><strong>Rollback documentado</strong> — Cada tarea debe tener procedimiento de reversión.</li>
+<li><strong>Evidencia de cierre</strong> — Criterios de aceptación medibles y verificables.</li>
+</ol>
+</section>
+<section id="orden-recomendado-por-fases" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="orden-recomendado-por-fases"><span class="header-section-number">1.3.2</span> Orden Recomendado (por fases)</h3>
+<section id="fase-0-preparación-e-independencia-semana-1" class="level4">
+<h4 class="anchored" data-anchor-id="fase-0-preparación-e-independencia-semana-1">Fase 0: Preparación e Independencia (Semana 1)</h4>
+<ul>
+<li><strong>SEC-T004</strong> — JWT_SIGNING_KEY separada (independiente, base para SEC-T003, SEC-T006)</li>
+<li><strong>SEC-T012</strong> — Eliminar print() evaluar_checklist.py (independiente, rápido, requisito para SEC-T011)</li>
+<li><strong>SEC-T016</strong> — Cobertura tests + testpaths (independiente, mejora calidad suite)</li>
+<li><strong>SEC-T008</strong> — Throttling carga documentos (independiente, bajo riesgo)</li>
+</ul>
+</section>
+<section id="fase-1-infraestructura-base-producción-semana-1-2-bloque-crítico" class="level4">
+<h4 class="anchored" data-anchor-id="fase-1-infraestructura-base-producción-semana-1-2-bloque-crítico">Fase 1: Infraestructura Base Producción (Semana 1-2) — <strong>BLOQUE CRÍTICO</strong></h4>
+<ul>
+<li><strong>SEC-T001</strong> — Configuración producción completa (production.py, Dockerfile, docker-compose.prod.yml, Nginx, TLS, headers, usuario no-root)
+<ul>
+<li><em>Desbloquea: SEC-T005, SEC-T007, SEC-T010, SEC-T011, SEC-T013, SEC-T014, SEC-T019, SEC-T020</em></li>
+</ul></li>
+</ul>
+</section>
+<section id="fase-2-controles-autenticación-y-auditoría-semana-2-3" class="level4">
+<h4 class="anchored" data-anchor-id="fase-2-controles-autenticación-y-auditoría-semana-2-3">Fase 2: Controles Autenticación y Auditoría (Semana 2-3)</h4>
+<ul>
+<li><strong>SEC-T005</strong> — IP Auditoría + Middleware Thread-Local + TRUSTED_PROXIES (requiere SEC-T001)</li>
+<li><strong>SEC-T002</strong> — Throttling login 5/min/IP (requiere SEC-T005 para IP real)</li>
+<li><strong>SEC-T003</strong> — Rotación + Blacklist refresh tokens + logout endpoint (requiere SEC-T004)</li>
+<li><strong>SEC-T006</strong> — Access token 30 min (requiere SEC-T004)</li>
+</ul>
+</section>
+<section id="fase-3-validación-serializers-y-errores-semana-3-4" class="level4">
+<h4 class="anchored" data-anchor-id="fase-3-validación-serializers-y-errores-semana-3-4">Fase 3: Validación, Serializers y Errores (Semana 3-4)</h4>
+<ul>
+<li><strong>SEC-T007</strong> — Validación MIME real (requiere SEC-T001 Dockerfile)</li>
+<li><strong>SEC-T009</strong> — Remover rutas internas serializers (requiere SEC-T001 endpoint declaratoria download)</li>
+<li><strong>SEC-T010</strong> — Handler global excepciones (requiere SEC-T001 production.py)</li>
+<li><strong>SEC-T011</strong> — Logging estructurado (requiere SEC-T012)</li>
+</ul>
+</section>
+<section id="fase-4-protección-documentación-y-cicd-semana-4" class="level4">
+<h4 class="anchored" data-anchor-id="fase-4-protección-documentación-y-cicd-semana-4">Fase 4: Protección Documentación y CI/CD (Semana 4)</h4>
+<ul>
+<li><strong>SEC-T013</strong> — Protección Swagger/ReDoc/Schema (requiere SEC-T001)</li>
+<li><strong>SEC-T014</strong> — CI/CD Security Safety+Bandit+Gitleaks (requiere SEC-T001 Dockerfile)</li>
+<li><strong>SEC-T015</strong> — Dependabot (requiere SEC-T014)</li>
+</ul>
+</section>
+<section id="fase-5-tests-de-seguridad-semana-4-5" class="level4">
+<h4 class="anchored" data-anchor-id="fase-5-tests-de-seguridad-semana-4-5">Fase 5: Tests de Seguridad (Semana 4-5)</h4>
+<ul>
+<li><strong>SEC-T017</strong> — Tests seguridad faltantes (requiere SEC-T002, SEC-T003, SEC-T005, SEC-T013 implementados)</li>
+</ul>
+</section>
+<section id="fase-6-documentación-y-operaciones-post-deploy-inicial" class="level4">
+<h4 class="anchored" data-anchor-id="fase-6-documentación-y-operaciones-post-deploy-inicial">Fase 6: Documentación y Operaciones (Post-deploy inicial)</h4>
+<ul>
+<li><strong>SEC-T018</strong> — Procedimiento rotación secretos (requiere SEC-T004)</li>
+<li><strong>SEC-T019</strong> — Limpieza archivos huérfanos (requiere SEC-T001)</li>
+<li><strong>SEC-T020</strong> — Verificación PermissionError Docker (requiere SEC-T001)</li>
+<li><strong>SEC-T021</strong> — Evidencias ACD 4 reales (independiente)</li>
+</ul>
+<hr>
+</section>
+</section>
+</section>
+<section id="matriz-de-dependencias-y-bloqueos" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="matriz-de-dependencias-y-bloqueos"><span class="header-section-number">1.4</span> Matriz de Dependencias y Bloqueos</h2>
+<pre><code>SEC-T001 ──────────────────────────────────┐
+  │                                        │
+  ├── SEC-T005 (IP Auditoría) ◄───────────┤
+  │     │                                  │
+  │     └── SEC-T002 (Throttling Login)    │
+  │                                        │
+  ├── SEC-T007 (MIME Real)                 │
+  │                                        │
+  ├── SEC-T010 (Exception Handler)         │
+  │                                        │
+  ├── SEC-T011 (Logging)                   │
+  │     │                                  │
+  │     └── SEC-T012 (print cleanup) ◄─────┤ (independiente)
+  │                                        │
+  ├── SEC-T013 (Swagger Protection)        │
+  │                                        │
+  ├── SEC-T014 (CI/CD Security)            │
+  │     │                                  │
+  │     └── SEC-T015 (Dependabot)          │
+  │                                        │
+  ├── SEC-T019 (Archivos Huérfanos)        │
+  │                                        │
+  └── SEC-T020 (PermissionError Docker)    │
+                                           │
+SEC-T004 (JWT Key) ◄───────────────────────┘ (independiente)
+  │
+  ├── SEC-T003 (Rotación/Blacklist)
+  │
+  ├── SEC-T006 (Access Token 30min)
+  │
+  └── SEC-T018 (Proc. Rotación)
+
+SEC-T008 (Throttling Carga) ── Independiente
+SEC-T009 (Serializers) ───────► Requiere SEC-T001 (endpoint declaratoria)
+SEC-T016 (Cobertura) ─────────► Independiente
+SEC-T017 (Tests Seguridad) ───► Requiere SEC-T002, T003, T005, T013
+SEC-T021 (Evidencias ACD 4) ──► Independiente</code></pre>
+<hr>
+</section>
+<section id="riesgos-principales" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="riesgos-principales"><span class="header-section-number">1.5</span> Riesgos Principales</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 47%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Riesgo</th>
+<th>Tareas Afectadas</th>
+<th>Mitigación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SEC-T001 complejidad alta (infra completa)</td>
+<td>Todas las que dependen de production.py/Dockerfile</td>
+<td>Dividir en sub-tareas: 1) production.py, 2) Dockerfile, 3) docker-compose, 4) Nginx. Validar cada paso.</td>
+</tr>
+<tr class="even">
+<td>Cambio JWT_SIGNING_KEY invalida tokens existentes</td>
+<td>SEC-T003, SEC-T006</td>
+<td>Planear deploy coordinado; comunicar re-login único a usuarios.</td>
+</tr>
+<tr class="odd">
+<td>Middleware thread-local en Django async</td>
+<td>SEC-T005</td>
+<td>Usar <code>contextvars</code> (Python 3.7+) compatible con ASGI/async. Validar en tests concurrencia.</td>
+</tr>
+<tr class="even">
+<td>Impacto frontend en SEC-T009 (download_url)</td>
+<td>SEC-T009</td>
+<td>Coordinar con equipo frontend; mantener backward compatibility temporal si es posible.</td>
+</tr>
+<tr class="odd">
+<td>Tests de seguridad (SEC-T017) requieren controles implementados</td>
+<td>SEC-T017</td>
+<td>No iniciar SEC-T017 hasta que SEC-T002, T003, T005, T013 estén cerrados y pasando tests.</td>
+</tr>
+<tr class="even">
+<td>Rotación secretos (SEC-T018) sin procedimiento aprobado</td>
+<td>SEC-T018</td>
+<td>Documentar y aprobar ANTES de primera rotación real.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="decisiones-pendientes-requieren-aprobación-humana" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="decisiones-pendientes-requieren-aprobación-humana"><span class="header-section-number">1.6</span> Decisiones Pendientes (Requieren Aprobación Humana)</h2>
+<ol type="1">
+<li><strong>Validación MIME:</strong> <code>python-magic</code> (libmagic sistema) vs <code>pikepdf</code> (parseo PDF) — requiere evaluación compatibilidad Docker alpine/slim.</li>
+<li><strong>Límite throttling login:</strong> 5/min/IP es referencia; confirmar valor aprobado.</li>
+<li><strong>Límite throttling carga docs:</strong> 10/hora/usuario es referencia; confirmar valor aprobado.</li>
+<li><strong>Umbral cobertura:</strong> 80% propuesto; confirmar valor acordado.</li>
+<li><strong>Retención archivos huérfanos:</strong> 90 días propuesto; confirmar política.</li>
+<li><strong>Evidencias ACD 4:</strong> Confirmar si placeholders son datos de prueba o requieren evidencia real.</li>
+<li><strong>Scope SEC-T009:</strong> Crear endpoint download declaratoria vs reutilizar existente — requiere análisis resoluciones/views.py.</li>
+</ol>
+<hr>
+</section>
+<section id="condiciones-de-cierre-global" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="condiciones-de-cierre-global"><span class="header-section-number">1.7</span> Condiciones de Cierre Global</h2>
+<p>La implementación se considera completa cuando:</p>
+<ol type="1">
+<li>✅ <strong>SEC-T001 a SEC-T006</strong> cerradas (Producción lista + Autenticación segura).</li>
+<li>✅ <strong>SEC-T007 a SEC-T017</strong> cerradas (Controles medios + Tests + CI/CD).</li>
+<li>✅ <strong>Suite 473+ tests passing</strong> + coverage ≥80% en CI.</li>
+<li>✅ <strong>Staging deploy verificado</strong> con PostgreSQL real, Nginx TLS, backend + frontend (specs/003 V-01 a V-09).</li>
+<li>✅ <strong>Documentación actualizada:</strong> DEPLOY_PRODUCTION.md, SECURITY_CONFIG.md, API_ERROR_FORMAT.md, CI_SECURITY.md, TESTING.md, OPERATIONS.md.</li>
+<li>⏳ <strong>SEC-T018 a SEC-T021</strong> documentadas (pueden completarse post-deploy inicial).</li>
+</ol>
+<hr>
+</section>
+<section id="entregables-del-plan-esta-carpeta" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="entregables-del-plan-esta-carpeta"><span class="header-section-number">1.8</span> Entregables del Plan (esta carpeta)</h2>
+<ol type="1">
+<li><code>PLAN_MAESTRO_IMPLEMENTACION.md</code> — Este documento.</li>
+<li><code>FICHAS_TECNICAS_SEC_T001_SEC_T021.md</code> — 21 fichas de ejecución para Claude.</li>
+<li><code>MATRIZ_DEPENDENCIAS_Y_PRIORIZACION.md</code> — Dependencias, orden, bloqueos, paralelizables.</li>
+<li><code>MATRIZ_COMPATIBILIDAD_BACKEND_FRONTEND_SEGURIDAD.md</code> — Impacto frontend por tarea.</li>
+<li><code>DECISIONES_TECNICAS_PENDIENTES.md</code> — Decisiones que requieren aprobación (estado de cada una).</li>
+<li><code>CHECKLIST_EJECUCION_Y_CIERRE.md</code> — Lista de verificación control avance (estado real por tarea).</li>
+<li><code>DECISION_LOG.md</code> — Registro cronológico de decisiones efectivamente aprobadas (DEC-002, DEC-003, DEC-004 corrección documental, DEC-010).</li>
+<li><code>PAQUETE_APROBACION_SEC-T001_DEC_002_003_010.md</code> — Análisis y recomendación para DEC-002, DEC-003, DEC-010 y la ubicación de archivos de producción (ya resuelto).</li>
+<li><code>PAQUETE_APROBACION_DECISIONES_PENDIENTES.md</code> — Análisis y recomendación para DEC-001, DEC-004 (valor), DEC-005, DEC-006, DEC-007, DEC-008, DEC-009 (pendientes).</li>
+<li><code>ACTA_CIERRE_SEC-T004.md</code> — Acta de cierre de SEC-T004, pendiente de firma electrónica FirmaEc.</li>
+</ol>
+<hr>
+<p><strong>Firma:</strong> opencode AI Assistant<br>
+<strong>Fecha:</strong> 2026-11-05<br>
+<strong>Próxima acción (actualizado 2026-11-05):</strong> SEC-T004 (JWT_SIGNING_KEY separada) fue autorizada, implementada, validada de forma independiente y cerrada — ver <code>CHECKLIST_EJECUCION_Y_CIERRE.md</code> y <code>ACTA_CIERRE_SEC-T004.md</code>. Próxima acción pendiente: autorización del responsable para continuar con el resto de Fase 0 (SEC-T008, SEC-T012, SEC-T016, SEC-T021) y/o resolución de DEC-010 para desbloquear SEC-T001.</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>SGT-SIAAF — UNL / FEIRNNR</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Documentación generada con Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

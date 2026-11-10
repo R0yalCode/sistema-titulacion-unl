@@ -19,7 +19,7 @@ title: "Entorno de desarrollo"
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-dev.txt
-cp .env.example .env            # definir SECRET_KEY y DB_PASSWORD
+cp .env.example .env            # definir SECRET_KEY, JWT_SIGNING_KEY y DB_PASSWORD
 python manage.py migrate
 python manage.py seed_initial_data   # 8 cuentas demo (solo desarrollo)
 python manage.py runserver

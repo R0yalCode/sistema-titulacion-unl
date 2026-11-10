@@ -1,0 +1,43 @@
+---
+title: "Resultados de pruebas (ejecución real, noviembre 2026)"
+---
+
+# Pruebas — ejecución real de esta auditoría
+
+El capítulo [Calidad](../09-calidad/resultados-validacion.md) ya documenta resultados de pruebas de informes anteriores (526, 473 y 482 passed, según la fuente). Esta sección reporta una **ejecución propia, independiente y reproducible**, realizada el 2026-11-06 con autorización explícita, que no coincide exactamente con ninguna cifra previa — algo esperable dado que cada ejecución usó un entorno distinto (esta usó Python 3.14 por no haber 3.12 disponible, sin lockfile de versiones exactas).
+
+## Backend
+
+| Alcance | Resultado |
+|---|---|
+| `pytest` (por defecto, `src/apps`) | 484 passed, 13 failed (497) |
+| `pytest src/core` (excluido por defecto) | 76 passed, 0 failed |
+| **Combinado** | **560 passed, 13 failed (573 totales)** |
+| Cobertura (código fuente, excluyendo tests) | **90%** |
+| Cobertura (según configuración exacta del proyecto, incluye tests) | 96% |
+
+**Las 13 fallas tienen causa raíz 100% confirmada**, no son un misterio: todas están en `test_pdf_generator.py` y dependen de `pypdf`, una librería que el proyecto usa solo para *leer* el PDF generado en pruebas, pero que **no está declarada** como dependencia. Se verificó instalándola en un entorno aislado: las 30 pruebas de ese archivo pasan. Es exactamente la deuda que el equipo ya había documentado y aceptado (`clarify.md`, DEC-05).
+
+## Frontend — hallazgo nuevo: el suite no es determinista
+
+Se ejecutó `npm run test` **5 veces consecutivas sin cambiar código**:
+
+| Ejecución | Resultado |
+|---|---|
+| 1, 2 | 324 passed, **4 failed** |
+| 3, 4, 5 | **328 passed, 0 failed** |
+
+Las 4 fallas intermitentes están siempre en `src/app/router.test.tsx` y pasan siempre si ese archivo se ejecuta solo — es un problema de aislamiento entre archivos de Vitest (la propia herramienta lo señala: sugiere `isolate: false`), no un defecto de enrutamiento.
+
+## Lint y tipos
+
+| Herramienta | Resultado |
+|---|---|
+| flake8 (backend) | 874 hallazgos — **contradice** un informe previo que reportaba "sin errores" |
+| mypy (backend) | 20 errores en 7 archivos |
+| ESLint (frontend) | 0 errores |
+| TypeScript (frontend) | 0 errores |
+
+## Detalle completo
+
+`DOCUMENTACION/07_PRUEBAS/RESULTADOS_VALIDACION.md` — entorno exacto, comandos exactos, salidas textuales completas.

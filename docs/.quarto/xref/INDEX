@@ -1,215 +1,329 @@
 {
   "security_report.md": {
-    "security_report.html": "8271970a"
-  },
-  "05-base-datos/modelo-entidad-relacion.md": {
-    "modelo-entidad-relacion.html": "ebef93f4"
-  },
-  "05-base-datos/relaciones.md": {
-    "relaciones.html": "9225440d"
-  },
-  "05-base-datos/diccionario-datos.md": {
-    "diccionario-datos.html": "5f84f936"
-  },
-  "indicadores/INFORME_DISENO_KPI.md": {
-    "INFORME_DISENO_KPI.html": "9d0c3069"
-  },
-  "07-indicadores/dashboards-por-rol.md": {
-    "dashboards-por-rol.html": "a2ff1a06"
-  },
-  "07-indicadores/informe-kpi.md": {
-    "informe-kpi.html": "3d4bf3a2"
-  },
-  "07-indicadores/apis-indicadores.md": {
-    "apis-indicadores.html": "03a220c3"
-  },
-  "07-indicadores/catalogo-indicadores.md": {
-    "catalogo-indicadores.html": "94276d29"
-  },
-  "index.qmd": {
-    "index.html": "580f161a"
-  },
-  "09-calidad/estrategia-pruebas.md": {
-    "estrategia-pruebas.html": "f184bf14"
-  },
-  "09-calidad/resultados-validacion.md": {
-    "resultados-validacion.html": "45161c40"
-  },
-  "09-calidad/cobertura.md": {
-    "cobertura.html": "9cd0cde2"
-  },
-  "sprint-S1/S1_INFORME_IMPLEMENTACION.md": {
-    "S1_INFORME_IMPLEMENTACION.html": "e260a6f8"
-  },
-  "sprint-S1/S1_03_DIAGNOSTICO_DJANGO_ADMIN.md": {
-    "S1_03_DIAGNOSTICO_DJANGO_ADMIN.html": "018a7e2e"
-  },
-  "sprint-S1/S1_06_RIESGOS_Y_DEPENDENCIAS.md": {
-    "S1_06_RIESGOS_Y_DEPENDENCIAS.html": "48dd5357"
-  },
-  "sprint-S1/S1_02_DIAGNOSTICO_PRUEBAS.md": {
-    "S1_02_DIAGNOSTICO_PRUEBAS.html": "cdb9aa6f"
-  },
-  "sprint-S1/S1_05_CRITERIOS_ACEPTACION_S1.md": {
-    "S1_05_CRITERIOS_ACEPTACION_S1.html": "bd232e0e"
-  },
-  "sprint-S1/S1_04_MATRIZ_TAREAS_S1.md": {
-    "S1_04_MATRIZ_TAREAS_S1.html": "331ef7af"
-  },
-  "sprint-S1/S1_01_VALIDACION_HALLAZGOS.md": {
-    "S1_01_VALIDACION_HALLAZGOS.html": "df8cdc78"
-  },
-  "04-api/introduccion.md": {
-    "introduccion.html": "ecc0d9d8"
-  },
-  "04-api/convenciones.md": {
-    "convenciones.html": "a6321e25"
-  },
-  "04-api/endpoints/resoluciones.md": {
-    "resoluciones.html": "4c242b5a"
-  },
-  "04-api/endpoints/checklist.md": {
-    "checklist.html": "22bee2ca"
-  },
-  "04-api/endpoints/peticiones.md": {
-    "peticiones.html": "e4687412"
-  },
-  "04-api/endpoints/expedientes.md": {
-    "expedientes.html": "188440ca"
-  },
-  "04-api/endpoints/auth.md": {
-    "auth.html": "2c5b5791"
-  },
-  "04-api/endpoints/notificaciones.md": {
-    "notificaciones.html": "39fec28e"
-  },
-  "04-api/autenticacion.md": {
-    "autenticacion.html": "fc532b27"
-  },
-  "frontend/FRONTEND_IMPLEMENTATION_PLAN.md": {
-    "FRONTEND_IMPLEMENTATION_PLAN.html": "2819e08f"
-  },
-  "frontend/GUIA_VISTAS_TITULACION.md": {
-    "GUIA_VISTAS_TITULACION.html": "a624519c"
-  },
-  "06-seguridad/autorizacion.md": {
-    "autorizacion.html": "2a950758"
-  },
-  "06-seguridad/roles-permisos.md": {
-    "roles-permisos.html": "42715071"
-  },
-  "06-seguridad/consideraciones-seguridad.md": {
-    "consideraciones-seguridad.html": "1e8fbdc0"
-  },
-  "06-seguridad/autenticacion.md": {
-    "autenticacion.html": "9efd5f36"
-  },
-  "03-modulos/modulo-authentication.md": {
-    "modulo-authentication.html": "50695d43"
-  },
-  "03-modulos/modulo-notificaciones.md": {
-    "modulo-notificaciones.html": "79fbbccd"
-  },
-  "03-modulos/modulo-expedientes.md": {
-    "modulo-expedientes.html": "2294598d"
-  },
-  "03-modulos/inventario-modulos.md": {
-    "inventario-modulos.html": "4b8748c1"
-  },
-  "03-modulos/modulo-peticiones.md": {
-    "modulo-peticiones.html": "94239536"
-  },
-  "03-modulos/modulo-core.md": {
-    "modulo-core.html": "50044aa1"
-  },
-  "03-modulos/modulo-verificacion.md": {
-    "modulo-verificacion.html": "0ba36802"
-  },
-  "03-modulos/modulo-resoluciones.md": {
-    "modulo-resoluciones.html": "04e5a7e4"
-  },
-  "RESUMEN_EJECUTIVO.md": {
-    "RESUMEN_EJECUTIVO.html": "09ceae0a"
-  },
-  "anexos/decisiones.md": {
-    "decisiones.html": "505043d8"
-  },
-  "anexos/referencias.md": {
-    "referencias.html": "f29aa621"
-  },
-  "01-introduccion/introduccion.md": {
-    "introduccion.html": "d9be7da3"
-  },
-  "01-introduccion/alcance.md": {
-    "alcance.html": "ba50ac11"
-  },
-  "01-introduccion/glosario.md": {
-    "glosario.html": "365cb548"
-  },
-  "01-introduccion/objetivos.md": {
-    "objetivos.html": "adaee38f"
-  },
-  "01-introduccion/actores.md": {
-    "actores.html": "abbb2533"
-  },
-  "08-infraestructura/entorno-desarrollo.md": {
-    "entorno-desarrollo.html": "75cb6a52"
-  },
-  "08-infraestructura/mantenimiento.md": {
-    "mantenimiento.html": "687d6235"
-  },
-  "08-infraestructura/despliegue.md": {
-    "despliegue.html": "a84de5fa"
-  },
-  "08-infraestructura/docker.md": {
-    "docker.html": "1fde6219"
-  },
-  "08-infraestructura/configuracion.md": {
-    "configuracion.html": "5daac388"
-  },
-  "auditoria/PLAN_MEJORA_TECNICA.md": {
-    "PLAN_MEJORA_TECNICA.html": "a77f4bb3"
-  },
-  "auditoria/INFORME_AUDITORIA_TECNICA.md": {
-    "INFORME_AUDITORIA_TECNICA.html": "c3bb686b"
-  },
-  "auditoria/matriz-trazabilidad.md": {
-    "matriz-trazabilidad.html": "80c6b6b5"
+    "security_report.html": "ec7be6da"
   },
   "adr/0001-arquitectura-hexagonal-monolito-modular.md": {
-    "0001-arquitectura-hexagonal-monolito-modular.html": "11f28d06"
+    "0001-arquitectura-hexagonal-monolito-modular.html": "4538817e"
   },
   "adr/0002-stack-django-drf-postgresql.md": {
-    "0002-stack-django-drf-postgresql.html": "903aeb6b"
+    "0002-stack-django-drf-postgresql.html": "7bbd5873"
+  },
+  "06-seguridad/roles-permisos.md": {
+    "roles-permisos.html": "7fd35df6"
+  },
+  "06-seguridad/consideraciones-seguridad.md": {
+    "consideraciones-seguridad.html": "40b2f7d2"
+  },
+  "06-seguridad/SECURITY_CONFIG.md": {
+    "SECURITY_CONFIG.html": "ff1283c7"
+  },
+  "06-seguridad/autorizacion.md": {
+    "autorizacion.html": "440ec871"
+  },
+  "06-seguridad/autenticacion.md": {
+    "autenticacion.html": "7eafcf10"
+  },
+  "frontend/GUIA_VISTAS_TITULACION.md": {
+    "GUIA_VISTAS_TITULACION.html": "ac061b1b"
+  },
+  "frontend/FRONTEND_IMPLEMENTATION_PLAN.md": {
+    "FRONTEND_IMPLEMENTATION_PLAN.html": "eade56c9"
   },
   "02-arquitectura/arquitectura-frontend.md": {
-    "arquitectura-frontend.html": "a7c729e5"
+    "arquitectura-frontend.html": "a15321cf"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/ARQUITECTURA_PROPUESTA.md": {
+    "ARQUITECTURA_PROPUESTA.html": "36a24f31"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/PLAN_IMPLEMENTACION.md": {
+    "PLAN_IMPLEMENTACION.html": "4a6b0c1a"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/PENDIENTES_VALIDACION_UNL.md": {
+    "PENDIENTES_VALIDACION_UNL.html": "be0fb6c1"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/FLUJO_FIRMA_DOCUMENTOS.md": {
+    "FLUJO_FIRMA_DOCUMENTOS.html": "842da911"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/CONTRATOS_API_PROPUESTOS.md": {
+    "CONTRATOS_API_PROPUESTOS.html": "1ea085ef"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/REQUISITOS_INSTITUCIONALES.md": {
+    "REQUISITOS_INSTITUCIONALES.html": "8f392bb8"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/SEGURIDAD_Y_PROTECCION_CLAVES.md": {
+    "SEGURIDAD_Y_PROTECCION_CLAVES.html": "b6a00fe5"
+  },
+  "02-arquitectura/funcionalidades-futuras/firma-electronica/PROPUESTA_INTEGRACION_FIRMAEC.md": {
+    "PROPUESTA_INTEGRACION_FIRMAEC.html": "e7257f66"
   },
   "02-arquitectura/decisiones-arquitectonicas.md": {
-    "decisiones-arquitectonicas.html": "1cfe100b"
+    "decisiones-arquitectonicas.html": "1ce64043"
   },
   "02-arquitectura/arquitectura-general.md": {
-    "arquitectura-general.html": "cda3aa75"
-  },
-  "02-arquitectura/c4/componentes.md": {
-    "componentes.html": "84d9186a"
-  },
-  "02-arquitectura/c4/contexto.md": {
-    "contexto.html": "94fe286f"
-  },
-  "02-arquitectura/c4/codigo.md": {
-    "codigo.html": "46a36256"
-  },
-  "02-arquitectura/c4/contenedores.md": {
-    "contenedores.html": "dcf3202a"
-  },
-  "02-arquitectura/arquitectura-base-datos.md": {
-    "arquitectura-base-datos.html": "afcc8843"
+    "arquitectura-general.html": "3f4d1b14"
   },
   "02-arquitectura/arquitectura-backend.md": {
-    "arquitectura-backend.html": "09913399"
+    "arquitectura-backend.html": "d14cf03b"
   },
-  "ENTORNO_DESARROLLO.md": {
-    "ENTORNO_DESARROLLO.html": "c0cceea2"
+  "02-arquitectura/arquitectura-base-datos.md": {
+    "arquitectura-base-datos.html": "f39a1152"
+  },
+  "02-arquitectura/c4/contexto.md": {
+    "contexto.html": "42ef023f"
+  },
+  "02-arquitectura/c4/componentes.md": {
+    "componentes.html": "e5db7d9c"
+  },
+  "02-arquitectura/c4/contenedores.md": {
+    "contenedores.html": "621b53de"
+  },
+  "02-arquitectura/c4/codigo.md": {
+    "codigo.html": "a6265318"
+  },
+  "sprint-S1/S1_05_CRITERIOS_ACEPTACION_S1.md": {
+    "S1_05_CRITERIOS_ACEPTACION_S1.html": "f0a0d92a"
+  },
+  "sprint-S1/S1_06_RIESGOS_Y_DEPENDENCIAS.md": {
+    "S1_06_RIESGOS_Y_DEPENDENCIAS.html": "eee0348d"
+  },
+  "sprint-S1/S1_02_DIAGNOSTICO_PRUEBAS.md": {
+    "S1_02_DIAGNOSTICO_PRUEBAS.html": "35062396"
+  },
+  "sprint-S1/S1_01_VALIDACION_HALLAZGOS.md": {
+    "S1_01_VALIDACION_HALLAZGOS.html": "1f548d2b"
+  },
+  "sprint-S1/S1_04_MATRIZ_TAREAS_S1.md": {
+    "S1_04_MATRIZ_TAREAS_S1.html": "abf9e7c4"
+  },
+  "sprint-S1/S1_03_DIAGNOSTICO_DJANGO_ADMIN.md": {
+    "S1_03_DIAGNOSTICO_DJANGO_ADMIN.html": "943640ca"
+  },
+  "sprint-S1/S1_INFORME_IMPLEMENTACION.md": {
+    "S1_INFORME_IMPLEMENTACION.html": "bc0ca275"
+  },
+  "03-modulos/modulo-verificacion.md": {
+    "modulo-verificacion.html": "111b5880"
+  },
+  "03-modulos/modulo-notificaciones.md": {
+    "modulo-notificaciones.html": "2add0e2c"
+  },
+  "03-modulos/modulo-expedientes.md": {
+    "modulo-expedientes.html": "b1e44ae5"
+  },
+  "03-modulos/modulo-authentication.md": {
+    "modulo-authentication.html": "ca42bcd0"
+  },
+  "03-modulos/modulo-core.md": {
+    "modulo-core.html": "9153c6b3"
+  },
+  "03-modulos/modulo-resoluciones.md": {
+    "modulo-resoluciones.html": "939fa5f9"
+  },
+  "03-modulos/modulo-peticiones.md": {
+    "modulo-peticiones.html": "194b7e23"
+  },
+  "03-modulos/inventario-modulos.md": {
+    "inventario-modulos.html": "c16c34be"
+  },
+  "index.qmd": {
+    "index.html": "7451eb6e"
+  },
+  "RESUMEN_EJECUTIVO.md": {
+    "RESUMEN_EJECUTIVO.html": "611a2f44"
+  },
+  "auditoria-backend/PLAN_REFACTORIZACION.md": {
+    "PLAN_REFACTORIZACION.html": "5669476b"
+  },
+  "auditoria-backend/INFORME_FINAL_VALIDACION.md": {
+    "INFORME_FINAL_VALIDACION.html": "736f108f"
+  },
+  "auditoria-backend/PLAN_ADAPTACIONES_FRONTEND.md": {
+    "PLAN_ADAPTACIONES_FRONTEND.html": "bc4ab16e"
+  },
+  "auditoria-backend/seguridad/CHECKLIST_SEGURIDAD_DETALLADA.md": {
+    "CHECKLIST_SEGURIDAD_DETALLADA.html": "edceb1b1"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/FICHAS_TECNICAS_SEC_T001_SEC_T021.md": {
+    "FICHAS_TECNICAS_SEC_T001_SEC_T021.html": "fdb66249"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/MATRIZ_COMPATIBILIDAD_BACKEND_FRONTEND_SEGURIDAD.md": {
+    "MATRIZ_COMPATIBILIDAD_BACKEND_FRONTEND_SEGURIDAD.html": "4436a4d0"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/PAQUETE_APROBACION_SEC-T001_DEC_002_003_010.md": {
+    "PAQUETE_APROBACION_SEC-T001_DEC_002_003_010.html": "a42e8722"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/CHECKLIST_EJECUCION_Y_CIERRE.md": {
+    "CHECKLIST_EJECUCION_Y_CIERRE.html": "eeb23efa"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/DECISION_LOG.md": {
+    "DECISION_LOG.html": "50908251"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/DECISIONES_TECNICAS_PENDIENTES.md": {
+    "DECISIONES_TECNICAS_PENDIENTES.html": "9ce1516d"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/ACTA_CIERRE_SEC-T004.md": {
+    "ACTA_CIERRE_SEC-T004.html": "89857a6a"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/MATRIZ_DEPENDENCIAS_Y_PRIORIZACION.md": {
+    "MATRIZ_DEPENDENCIAS_Y_PRIORIZACION.html": "162d0a9c"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/PAQUETE_APROBACION_DECISIONES_PENDIENTES.md": {
+    "PAQUETE_APROBACION_DECISIONES_PENDIENTES.html": "080506fb"
+  },
+  "auditoria-backend/seguridad/plan-implementacion/PLAN_MAESTRO_IMPLEMENTACION.md": {
+    "PLAN_MAESTRO_IMPLEMENTACION.html": "9ab713fb"
+  },
+  "auditoria-backend/seguridad/BACKLOG_BRECHAS_SEGURIDAD.md": {
+    "BACKLOG_BRECHAS_SEGURIDAD.html": "bd7aaea1"
+  },
+  "auditoria-backend/seguridad/INFORME_HARDENING_SEGURIDAD.md": {
+    "INFORME_HARDENING_SEGURIDAD.html": "c9d2a289"
+  },
+  "auditoria-backend/seguridad/INFORME_PRUEBAS_SEGURIDAD.md": {
+    "INFORME_PRUEBAS_SEGURIDAD.html": "4a2a7ea2"
+  },
+  "auditoria-backend/seguridad/MATRIZ_TRAZABILIDAD_SEGURIDAD.md": {
+    "MATRIZ_TRAZABILIDAD_SEGURIDAD.html": "ccfe44c8"
+  },
+  "auditoria-backend/AUDITORIA_SEGURIDAD.md": {
+    "AUDITORIA_SEGURIDAD.html": "07def8d9"
+  },
+  "auditoria-backend/INFORME_TECNICO_BACKEND.md": {
+    "INFORME_TECNICO_BACKEND.html": "929d984d"
+  },
+  "auditoria-backend/TASKS_SEGURIDAD.md": {
+    "TASKS_SEGURIDAD.html": "0e3b883a"
+  },
+  "auditoria-backend/MATRIZ_PERMISOS_ROLES.md": {
+    "MATRIZ_PERMISOS_ROLES.html": "ae7ca2e0"
+  },
+  "auditoria-backend/MATRIZ_COMPATIBILIDAD_BACKEND_FRONTEND.md": {
+    "MATRIZ_COMPATIBILIDAD_BACKEND_FRONTEND.html": "6803612e"
+  },
+  "auditoria-backend/REGISTRO_CAMBIOS_BACKEND_FRONTEND.md": {
+    "REGISTRO_CAMBIOS_BACKEND_FRONTEND.html": "0c68c0cd"
+  },
+  "01-introduccion/objetivos.md": {
+    "objetivos.html": "f7c02857"
+  },
+  "01-introduccion/actores.md": {
+    "actores.html": "ad2a0932"
+  },
+  "01-introduccion/introduccion.md": {
+    "introduccion.html": "c0383e4f"
+  },
+  "01-introduccion/glosario.md": {
+    "glosario.html": "e0eae313"
+  },
+  "01-introduccion/alcance.md": {
+    "alcance.html": "ed6d1775"
+  },
+  "04-api/introduccion.md": {
+    "introduccion.html": "e285c1f8"
+  },
+  "04-api/endpoints/checklist.md": {
+    "checklist.html": "2f99ed24"
+  },
+  "04-api/endpoints/notificaciones.md": {
+    "notificaciones.html": "c6714c60"
+  },
+  "04-api/endpoints/peticiones.md": {
+    "peticiones.html": "ceae1f02"
+  },
+  "04-api/endpoints/expedientes.md": {
+    "expedientes.html": "f8ff4732"
+  },
+  "04-api/endpoints/resoluciones.md": {
+    "resoluciones.html": "a4f4244c"
+  },
+  "04-api/endpoints/auth.md": {
+    "auth.html": "f5e028f1"
+  },
+  "04-api/convenciones.md": {
+    "convenciones.html": "e9b9fbea"
+  },
+  "04-api/autenticacion.md": {
+    "autenticacion.html": "2c3eeb32"
+  },
+  "09-calidad/ci-seguridad.md": {
+    "ci-seguridad.html": "ccb66872"
+  },
+  "09-calidad/resultados-validacion.md": {
+    "resultados-validacion.html": "5a1b6c7f"
+  },
+  "09-calidad/estrategia-pruebas.md": {
+    "estrategia-pruebas.html": "a5799b03"
+  },
+  "09-calidad/cobertura.md": {
+    "cobertura.html": "44b18211"
+  },
+  "07-indicadores/dashboards-por-rol.md": {
+    "dashboards-por-rol.html": "bd9ccb59"
+  },
+  "07-indicadores/informe-kpi.md": {
+    "informe-kpi.html": "b7522379"
+  },
+  "07-indicadores/catalogo-indicadores.md": {
+    "catalogo-indicadores.html": "3f0c469b"
+  },
+  "07-indicadores/apis-indicadores.md": {
+    "apis-indicadores.html": "a57b745f"
+  },
+  "indicadores/INFORME_DISENO_KPI.md": {
+    "INFORME_DISENO_KPI.html": "4a5ab071"
+  },
+  "anexos/decisiones.md": {
+    "decisiones.html": "85af1613"
+  },
+  "anexos/referencias.md": {
+    "referencias.html": "da115218"
+  },
+  "auditoria/matriz-trazabilidad.md": {
+    "matriz-trazabilidad.html": "bb02b090"
+  },
+  "auditoria/INFORME_AUDITORIA_TECNICA.md": {
+    "INFORME_AUDITORIA_TECNICA.html": "b333e50b"
+  },
+  "auditoria/PLAN_MEJORA_TECNICA.md": {
+    "PLAN_MEJORA_TECNICA.html": "67cba7dc"
+  },
+  "08-infraestructura/entorno-desarrollo.md": {
+    "entorno-desarrollo.html": "60f33ae9"
+  },
+  "08-infraestructura/configuracion.md": {
+    "configuracion.html": "b59176e0"
+  },
+  "08-infraestructura/docker.md": {
+    "docker.html": "e8648091"
+  },
+  "08-infraestructura/mantenimiento.md": {
+    "mantenimiento.html": "34e36881"
+  },
+  "08-infraestructura/despliegue.md": {
+    "despliegue.html": "a74c76b0"
+  },
+  "05-base-datos/modelo-entidad-relacion.md": {
+    "modelo-entidad-relacion.html": "b8669a31"
+  },
+  "05-base-datos/diccionario-datos.md": {
+    "diccionario-datos.html": "9db9670f"
+  },
+  "05-base-datos/relaciones.md": {
+    "relaciones.html": "29986cf5"
+  },
+  "10-auditoria-2026-11/pruebas-reales.qmd": {
+    "pruebas-reales.html": "5b4c89ed"
+  },
+  "10-auditoria-2026-11/index.qmd": {
+    "index.html": "968d055d"
+  },
+  "10-auditoria-2026-11/arquitectura.qmd": {
+    "arquitectura.html": "94ff8f1f"
+  },
+  "10-auditoria-2026-11/bpmn.qmd": {
+    "bpmn.html": "a60ffeb4"
+  },
+  "11-inteligencia-artificial/declaratoria-ia.qmd": {
+    "declaratoria-ia.html": "57a64488"
   }
 }

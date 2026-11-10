@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>backlog_brechas_seguridad – SGT-SIAAF</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-09879b9ad4171be1d2e4d8ac2c802d9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../_quarto/styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">SGT-SIAAF</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-introducción" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Introducción</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-introducción">    
+        <li>
+    <a class="dropdown-item" href="../../01-introduccion/introduccion.html">
+ <span class="dropdown-text">Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../01-introduccion/objetivos.html">
+ <span class="dropdown-text">Objetivos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../01-introduccion/alcance.html">
+ <span class="dropdown-text">Alcance</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../01-introduccion/actores.html">
+ <span class="dropdown-text">Actores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../01-introduccion/glosario.html">
+ <span class="dropdown-text">Glosario</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-arquitectura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Arquitectura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-arquitectura">    
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/arquitectura-general.html">
+ <span class="dropdown-text">Arquitectura general</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/arquitectura-backend.html">
+ <span class="dropdown-text">Arquitectura del backend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/arquitectura-frontend.html">
+ <span class="dropdown-text">Arquitectura del frontend</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/arquitectura-base-datos.html">
+ <span class="dropdown-text">Arquitectura de base de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/decisiones-arquitectonicas.html">
+ <span class="dropdown-text">Decisiones arquitectónicas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Modelo C4</li>
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/c4/contexto.html">
+ <span class="dropdown-text">C4 — Nivel 1: Contexto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/c4/contenedores.html">
+ <span class="dropdown-text">C4 — Nivel 2: Contenedores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/c4/componentes.html">
+ <span class="dropdown-text">C4 — Nivel 3: Componentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../02-arquitectura/c4/codigo.html">
+ <span class="dropdown-text">C4 — Nivel 4: Código</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../03-modulos/inventario-modulos.html"> 
+<span class="menu-text">Módulos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-api" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">API</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-api">    
+        <li>
+    <a class="dropdown-item" href="../../04-api/introduccion.html">
+ <span class="dropdown-text">API — Introducción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/autenticacion.html">
+ <span class="dropdown-text">API — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/convenciones.html">
+ <span class="dropdown-text">API — Convenciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/endpoints/expedientes.html">
+ <span class="dropdown-text">Endpoints: Expedientes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/endpoints/peticiones.html">
+ <span class="dropdown-text">Endpoints: Peticiones y documentos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/endpoints/checklist.html">
+ <span class="dropdown-text">Endpoints: Checklist</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/endpoints/resoluciones.html">
+ <span class="dropdown-text">Endpoints: Resoluciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/endpoints/notificaciones.html">
+ <span class="dropdown-text">Endpoints: Notificaciones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../04-api/endpoints/auth.html">
+ <span class="dropdown-text">Endpoints: Autenticación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-base-de-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Base de datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-base-de-datos">    
+        <li>
+    <a class="dropdown-item" href="../../05-base-datos/modelo-entidad-relacion.html">
+ <span class="dropdown-text">Modelo entidad-relación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../05-base-datos/diccionario-datos.html">
+ <span class="dropdown-text">Diccionario de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../05-base-datos/relaciones.html">
+ <span class="dropdown-text">Relaciones e integridad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seguridad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Seguridad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seguridad">    
+        <li>
+    <a class="dropdown-item" href="../../06-seguridad/autenticacion.html">
+ <span class="dropdown-text">Seguridad — Autenticación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../06-seguridad/autorizacion.html">
+ <span class="dropdown-text">Seguridad — Autorización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../06-seguridad/roles-permisos.html">
+ <span class="dropdown-text">Seguridad — Roles y permisos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../06-seguridad/consideraciones-seguridad.html">
+ <span class="dropdown-text">Seguridad — Consideraciones</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="../../07-indicadores/informe-kpi.html">
+ <span class="dropdown-text">Informe KPI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../07-indicadores/catalogo-indicadores.html">
+ <span class="dropdown-text">Catálogo de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../07-indicadores/dashboards-por-rol.html">
+ <span class="dropdown-text">Dashboards por rol</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../07-indicadores/apis-indicadores.html">
+ <span class="dropdown-text">APIs de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-infraestructura" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Infraestructura</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-infraestructura">    
+        <li>
+    <a class="dropdown-item" href="../../08-infraestructura/entorno-desarrollo.html">
+ <span class="dropdown-text">Entorno de desarrollo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../08-infraestructura/docker.html">
+ <span class="dropdown-text">Docker</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../08-infraestructura/configuracion.html">
+ <span class="dropdown-text">Configuración</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../08-infraestructura/despliegue.html">
+ <span class="dropdown-text">Despliegue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../08-infraestructura/mantenimiento.html">
+ <span class="dropdown-text">Mantenimiento</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-calidad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Calidad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-calidad">    
+        <li>
+    <a class="dropdown-item" href="../../09-calidad/estrategia-pruebas.html">
+ <span class="dropdown-text">Estrategia de pruebas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../09-calidad/cobertura.html">
+ <span class="dropdown-text">Cobertura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../09-calidad/resultados-validacion.html">
+ <span class="dropdown-text">Resultados de validación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría">    
+        <li>
+    <a class="dropdown-item" href="../../RESUMEN_EJECUTIVO.html">
+ <span class="dropdown-text">Resumen ejecutivo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../auditoria/INFORME_AUDITORIA_TECNICA.html">
+ <span class="dropdown-text">INFORME DE AUDITORÍA TÉCNICA INTEGRAL — SGT-SIAAF</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../auditoria/PLAN_MEJORA_TECNICA.html">
+ <span class="dropdown-text">Plan de mejora técnica</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../auditoria/matriz-trazabilidad.html">
+ <span class="dropdown-text">Matriz de trazabilidad</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría-2026-11" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría 2026-11</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría-2026-11">    
+        <li>
+    <a class="dropdown-item" href="../../10-auditoria-2026-11/index.html">
+ <span class="dropdown-text">Auditoría y documentación técnica — noviembre 2026</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../10-auditoria-2026-11/bpmn.html">
+ <span class="dropdown-text">BPMN — Declaratoria de Aptitud Legal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../10-auditoria-2026-11/arquitectura.html">
+ <span class="dropdown-text">Arquitectura C4 y UML (noviembre 2026)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../10-auditoria-2026-11/pruebas-reales.html">
+ <span class="dropdown-text">Resultados de pruebas (ejecución real, noviembre 2026)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../11-inteligencia-artificial/declaratoria-ia.html"> 
+<span class="menu-text">Inteligencia Artificial</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-anexos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Anexos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-anexos">    
+        <li>
+    <a class="dropdown-item" href="../../anexos/decisiones.html">
+ <span class="dropdown-text">Anexos — Decisiones</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../anexos/referencias.html">
+ <span class="dropdown-text">Anexos — Referencias</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#backlog-de-brechas-de-seguridad-sgt-siaaf-backend" id="toc-backlog-de-brechas-de-seguridad-sgt-siaaf-backend" class="nav-link active" data-scroll-target="#backlog-de-brechas-de-seguridad-sgt-siaaf-backend"><span class="header-section-number">1</span> BACKLOG DE BRECHAS DE SEGURIDAD — SGT-SIAAF Backend</a>
+  <ul class="collapse">
+  <li><a href="#formato-de-tarea-sec-txxx" id="toc-formato-de-tarea-sec-txxx" class="nav-link" data-scroll-target="#formato-de-tarea-sec-txxx"><span class="header-section-number">1.1</span> Formato de Tarea SEC-TXXX</a></li>
+  <li><a href="#tareas-prioridad-crítica" id="toc-tareas-prioridad-crítica" class="nav-link" data-scroll-target="#tareas-prioridad-crítica"><span class="header-section-number">1.2</span> Tareas Prioridad CRÍTICA</a>
+  <ul class="collapse">
+  <li><a href="#sec-t001-configuración-de-producción-completa" id="toc-sec-t001-configuración-de-producción-completa" class="nav-link" data-scroll-target="#sec-t001-configuración-de-producción-completa"><span class="header-section-number">1.2.1</span> SEC-T001 — Configuración de Producción Completa</a></li>
+  </ul></li>
+  <li><a href="#tareas-prioridad-alta" id="toc-tareas-prioridad-alta" class="nav-link" data-scroll-target="#tareas-prioridad-alta"><span class="header-section-number">1.3</span> Tareas Prioridad ALTA</a>
+  <ul class="collapse">
+  <li><a href="#sec-t002-throttling-en-login-post-apiv1authtoken" id="toc-sec-t002-throttling-en-login-post-apiv1authtoken" class="nav-link" data-scroll-target="#sec-t002-throttling-en-login-post-apiv1authtoken"><span class="header-section-number">1.3.1</span> SEC-T002 — Throttling en Login (POST /api/v1/auth/token/)</a></li>
+  <li><a href="#sec-t003-rotación-y-blacklist-de-refresh-tokens" id="toc-sec-t003-rotación-y-blacklist-de-refresh-tokens" class="nav-link" data-scroll-target="#sec-t003-rotación-y-blacklist-de-refresh-tokens"><span class="header-section-number">1.3.2</span> SEC-T003 — Rotación y Blacklist de Refresh Tokens</a></li>
+  <li><a href="#sec-t004-clave-de-firma-jwt-separada-de-secret_key" id="toc-sec-t004-clave-de-firma-jwt-separada-de-secret_key" class="nav-link" data-scroll-target="#sec-t004-clave-de-firma-jwt-separada-de-secret_key"><span class="header-section-number">1.3.3</span> SEC-T004 — Clave de Firma JWT Separada de SECRET_KEY</a></li>
+  <li><a href="#sec-t005-ip-de-auditoría-con-middleware-thread-local-y-trusted_proxies" id="toc-sec-t005-ip-de-auditoría-con-middleware-thread-local-y-trusted_proxies" class="nav-link" data-scroll-target="#sec-t005-ip-de-auditoría-con-middleware-thread-local-y-trusted_proxies"><span class="header-section-number">1.3.4</span> SEC-T005 — IP de Auditoría con Middleware Thread-Local y TRUSTED_PROXIES</a></li>
+  <li><a href="#sec-t006-access-token-lifetime-30-minutos-acd" id="toc-sec-t006-access-token-lifetime-30-minutos-acd" class="nav-link" data-scroll-target="#sec-t006-access-token-lifetime-30-minutos-acd"><span class="header-section-number">1.3.5</span> SEC-T006 — Access Token Lifetime 30 Minutos (ACD)</a></li>
+  </ul></li>
+  <li><a href="#tareas-prioridad-media" id="toc-tareas-prioridad-media" class="nav-link" data-scroll-target="#tareas-prioridad-media"><span class="header-section-number">1.4</span> Tareas Prioridad MEDIA</a>
+  <ul class="collapse">
+  <li><a href="#sec-t007-validación-mime-real-con-python-magic-pikepdf" id="toc-sec-t007-validación-mime-real-con-python-magic-pikepdf" class="nav-link" data-scroll-target="#sec-t007-validación-mime-real-con-python-magic-pikepdf"><span class="header-section-number">1.4.1</span> SEC-T007 — Validación MIME Real con python-magic / pikepdf</a></li>
+  <li><a href="#sec-t008-throttling-carga-documentos-10horausuario" id="toc-sec-t008-throttling-carga-documentos-10horausuario" class="nav-link" data-scroll-target="#sec-t008-throttling-carga-documentos-10horausuario"><span class="header-section-number">1.4.2</span> SEC-T008 — Throttling Carga Documentos (10/hora/usuario)</a></li>
+  <li><a href="#sec-t009-remover-rutas-internas-de-serializers-archivo_path-archivo_memorando_firmado_path" id="toc-sec-t009-remover-rutas-internas-de-serializers-archivo_path-archivo_memorando_firmado_path" class="nav-link" data-scroll-target="#sec-t009-remover-rutas-internas-de-serializers-archivo_path-archivo_memorando_firmado_path"><span class="header-section-number">1.4.3</span> SEC-T009 — Remover Rutas Internas de Serializers (archivo_path, archivo_memorando_firmado_path)</a></li>
+  <li><a href="#sec-t010-handler-global-de-excepciones-formato-uniforme" id="toc-sec-t010-handler-global-de-excepciones-formato-uniforme" class="nav-link" data-scroll-target="#sec-t010-handler-global-de-excepciones-formato-uniforme"><span class="header-section-number">1.4.4</span> SEC-T010 — Handler Global de Excepciones (Formato Uniforme)</a></li>
+  <li><a href="#sec-t011-logging-estructurado-logging-dict-rotación-filtros-pii" id="toc-sec-t011-logging-estructurado-logging-dict-rotación-filtros-pii" class="nav-link" data-scroll-target="#sec-t011-logging-estructurado-logging-dict-rotación-filtros-pii"><span class="header-section-number">1.4.5</span> SEC-T011 — Logging Estructurado (LOGGING dict, Rotación, Filtros PII)</a></li>
+  <li><a href="#sec-t012-eliminar-print-en-evaluar_checklist.py" id="toc-sec-t012-eliminar-print-en-evaluar_checklist.py" class="nav-link" data-scroll-target="#sec-t012-eliminar-print-en-evaluar_checklist.py"><span class="header-section-number">1.4.6</span> SEC-T012 — Eliminar print() en evaluar_checklist.py</a></li>
+  <li><a href="#sec-t013-protección-swaggerredocschema-en-producción-isadminuser" id="toc-sec-t013-protección-swaggerredocschema-en-producción-isadminuser" class="nav-link" data-scroll-target="#sec-t013-protección-swaggerredocschema-en-producción-isadminuser"><span class="header-section-number">1.4.7</span> SEC-T013 — Protección Swagger/ReDoc/Schema en Producción (IsAdminUser)</a></li>
+  <li><a href="#sec-t014-escaneo-vulnerabilidades-en-cicd-safety-bandit-gitleaks" id="toc-sec-t014-escaneo-vulnerabilidades-en-cicd-safety-bandit-gitleaks" class="nav-link" data-scroll-target="#sec-t014-escaneo-vulnerabilidades-en-cicd-safety-bandit-gitleaks"><span class="header-section-number">1.4.8</span> SEC-T014 — Escaneo Vulnerabilidades en CI/CD (Safety + Bandit + Gitleaks)</a></li>
+  <li><a href="#sec-t015-dependabot-configurado" id="toc-sec-t015-dependabot-configurado" class="nav-link" data-scroll-target="#sec-t015-dependabot-configurado"><span class="header-section-number">1.4.9</span> SEC-T015 — Dependabot Configurado</a></li>
+  <li><a href="#sec-t016-cobertura-tests-fail_under-testpaths-correcto" id="toc-sec-t016-cobertura-tests-fail_under-testpaths-correcto" class="nav-link" data-scroll-target="#sec-t016-cobertura-tests-fail_under-testpaths-correcto"><span class="header-section-number">1.4.10</span> SEC-T016 — Cobertura Tests + fail_under + testpaths Correcto</a></li>
+  <li><a href="#sec-t017-tests-de-seguridad-faltantes-throttling-rotación-swagger-ip-auditoría" id="toc-sec-t017-tests-de-seguridad-faltantes-throttling-rotación-swagger-ip-auditoría" class="nav-link" data-scroll-target="#sec-t017-tests-de-seguridad-faltantes-throttling-rotación-swagger-ip-auditoría"><span class="header-section-number">1.4.11</span> SEC-T017 — Tests de Seguridad Faltantes (Throttling, Rotación, Swagger, IP Auditoría)</a></li>
+  </ul></li>
+  <li><a href="#tareas-prioridad-baja" id="toc-tareas-prioridad-baja" class="nav-link" data-scroll-target="#tareas-prioridad-baja"><span class="header-section-number">1.5</span> Tareas Prioridad BAJA</a>
+  <ul class="collapse">
+  <li><a href="#sec-t018-procedimiento-documentado-rotación-secretos" id="toc-sec-t018-procedimiento-documentado-rotación-secretos" class="nav-link" data-scroll-target="#sec-t018-procedimiento-documentado-rotación-secretos"><span class="header-section-number">1.5.1</span> SEC-T018 — Procedimiento Documentado Rotación Secretos</a></li>
+  <li><a href="#sec-t019-limpieza-archivos-huérfanos-management-command" id="toc-sec-t019-limpieza-archivos-huérfanos-management-command" class="nav-link" data-scroll-target="#sec-t019-limpieza-archivos-huérfanos-management-command"><span class="header-section-number">1.5.2</span> SEC-T019 — Limpieza Archivos Huérfanos (Management Command)</a></li>
+  <li><a href="#sec-t020-verificación-permissionerror-histórico-en-docker" id="toc-sec-t020-verificación-permissionerror-histórico-en-docker" class="nav-link" data-scroll-target="#sec-t020-verificación-permissionerror-histórico-en-docker"><span class="header-section-number">1.5.3</span> SEC-T020 — Verificación PermissionError Histórico en Docker</a></li>
+  <li><a href="#sec-t021-evidencias-acd-4-reales-commitsprs" id="toc-sec-t021-evidencias-acd-4-reales-commitsprs" class="nav-link" data-scroll-target="#sec-t021-evidencias-acd-4-reales-commitsprs"><span class="header-section-number">1.5.4</span> SEC-T021 — Evidencias ACD 4 Reales (Commits/PRs)</a></li>
+  </ul></li>
+  <li><a href="#resumen-de-dependencias-entre-tareas" id="toc-resumen-de-dependencias-entre-tareas" class="nav-link" data-scroll-target="#resumen-de-dependencias-entre-tareas"><span class="header-section-number">1.6</span> Resumen de Dependencias entre Tareas</a></li>
+  <li><a href="#criterios-generales-de-cierre-de-fase" id="toc-criterios-generales-de-cierre-de-fase" class="nav-link" data-scroll-target="#criterios-generales-de-cierre-de-fase"><span class="header-section-number">1.7</span> Criterios Generales de Cierre de Fase</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="backlog-de-brechas-de-seguridad-sgt-siaaf-backend" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> BACKLOG DE BRECHAS DE SEGURIDAD — SGT-SIAAF Backend</h1>
+<p><strong>Fecha:</strong> 2026-11-05<br>
+<strong>Versión:</strong> 1.0<br>
+<strong>Fuente:</strong> CHECKLIST_SEGURIDAD_DETALLADA.md, MATRIZ_TRAZABILIDAD_SEGURIDAD.md, INFORME_HARDENING_SEGURIDAD.md, INFORME_PRUEBAS_SEGURIDAD.md</p>
+<hr>
+<section id="formato-de-tarea-sec-txxx" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="formato-de-tarea-sec-txxx"><span class="header-section-number">1.1</span> Formato de Tarea SEC-TXXX</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>ID</strong></td>
+<td>Identificador único (SEC-TXXX)</td>
+</tr>
+<tr class="even">
+<td><strong>Título</strong></td>
+<td>Nombre breve de la tarea</td>
+</tr>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Qué se debe implementar/corregir</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>Referencia a checklist/matriz/informe donde se detectó</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td>CRÍTICA / ALTA / MEDIA / BAJA</td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td>CRÍTICO / ALTO / MEDIO / BAJO</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>Condiciones para considerar la tarea “Hecha”</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>Tests que deben pasar (nuevos o existentes)</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>Otras tareas SEC-TXXX o tareas backend/frontend</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td>Cambios en API, contratos, flujos que afecten frontend</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Cómo verificar que no se rompe funcionalidad existente</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Evidencia final para cerrar la tarea</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="tareas-prioridad-crítica" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="tareas-prioridad-crítica"><span class="header-section-number">1.2</span> Tareas Prioridad CRÍTICA</h2>
+<section id="sec-t001-configuración-de-producción-completa" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="sec-t001-configuración-de-producción-completa"><span class="header-section-number">1.2.1</span> SEC-T001 — Configuración de Producción Completa</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Crear configuración completa para entorno productivo: <code>settings/production.py</code>, <code>Dockerfile</code> multi-stage, <code>docker-compose.prod.yml</code> con Nginx + PostgreSQL + Backend, certificados TLS, headers seguridad, usuario no-root.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>INFORME_HARDENING_SEGURIDAD.md §7 (Hardening Producción - CRÍTICO); CHECKLIST §7 (todas las filas PENDIENTE/FALLIDO)</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>CRÍTICA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>CRÍTICO</strong> — Backend no desplegable en producción sin esto.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>settings/production.py</code> hereda de <code>base.py</code> con todo hardening (DEBUG=False, SECURE_*, ALLOWED_HOSTS, CSRF/CORS, cookies seguras, LOGGING, TRUSTED_PROXIES). 2. <code>Dockerfile</code> multi-stage (builder → python:3.12-slim), usuario <code>appuser</code> UID 1000, Gunicorn 4 workers, healthcheck <code>/health/</code>, entrypoint migra + collectstatic. 3. <code>docker-compose.prod.yml</code>: servicios <code>backend</code>, <code>postgres</code>, <code>nginx</code> (SSL Let’s Encrypt/Certbot), volúmenes persistentes <code>media_private</code>, <code>postgres_data</code>, <code>nginx_certs</code>. 4. Nginx config: <code>limit_req_zone</code>, <code>proxy_set_header X-Forwarded-For</code>, TLS 1.2+, HSTS, CSP headers, serve static/media solo via backend endpoints. 5. <code>.env.example</code> documentado con todas las variables requeridas.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. Build imagen Docker sin errores. 2. <code>docker-compose -f docker-compose.prod.yml up -d</code> levanta servicios healthy. 3. <code>curl -k https://localhost/health/</code> → 200. 4. <code>curl -k https://localhost/api/v1/docs/</code> → 403 (IsAdminUser). 5. <code>curl -k https://localhost/api/v1/auth/token/</code> con credenciales válidas → 200 + JWT. 6. Verificar headers seguridad en respuesta: <code>Strict-Transport-Security</code>, <code>X-Frame-Options</code>, <code>Content-Security-Policy</code>, <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code>. 7. Verificar cookies: <code>Secure</code>, <code>HttpOnly</code>, <code>SameSite=Lax</code>. 8. Verificar logs JSON rotativos en <code>docker-compose logs backend</code>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T004 (JWT_SIGNING_KEY), SEC-T005 (IP auditoría + TRUSTED_PROXIES), SEC-T010 (Exception handler), SEC-T011 (Logging), SEC-T013 (Swagger protection).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>ALTO</strong> — Cambia URLs base (HTTPS), headers CORS/CSRF, cookies, endpoints Swagger (requieren auth admin). Frontend debe actualizar <code>API_BASE_URL</code> a HTTPS, manejar cookies seguras, CSRF token en requests mutantes.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>1. Ejecutar suite completa 473 tests en contenedor staging (PostgreSQL real). 2. Verificar flujos críticos: login → expediente → peticiones → carga docs → checklist → informe → declaratoria. 3. Probar frontend contra backend staging (specs/003 vistas V-01 a V-09).</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Documento <code>DEPLOY_PRODUCTION.md</code> con pasos, variables, checklist verificación; imagen Docker publicada en registry; staging deploy verificado por QA.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="tareas-prioridad-alta" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="tareas-prioridad-alta"><span class="header-section-number">1.3</span> Tareas Prioridad ALTA</h2>
+<section id="sec-t002-throttling-en-login-post-apiv1authtoken" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="sec-t002-throttling-en-login-post-apiv1authtoken"><span class="header-section-number">1.3.1</span> SEC-T002 — Throttling en Login (POST /api/v1/auth/token/)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Implementar rate limiting 5 requests/minuto/IP en endpoint de obtención de token JWT. Usar <code>AnonRateThrottle</code> con scope <code>auth</code> o <code>UserRateThrottle</code> para anónimos.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-AUTH-01 (PENDIENTE); MATRIZ A1 (PENDIENTE); INFORME_HARDENING §1.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>ALTA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>ALTO</strong> — Fuerza bruta / credential stuffing sin límite.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>REST_FRAMEWORK.DEFAULT_THROTTLE_RATES["auth"] = "5/minute"</code> en <code>base.py</code> y <code>production.py</code>. 2. <code>TokenPairView</code> usa <code>throttle_classes = [AnonRateThrottle]</code> con <code>throttle_scope = "auth"</code>. 3. Request 6 en &lt;1 min → HTTP 429 <code>{"detail": "Request was throttled. Expected available in X seconds."}</code>. 4. Throttle por IP real (respetando <code>X-Forwarded-For</code> validado por <code>TRUSTED_PROXIES</code> — ver SEC-T005).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_login_throttle_allows_5_requests_per_minute</code> — 5 POST sucesivos → 200. 2. <code>test_login_throttle_6th_request_returns_429</code> — 6º POST → 429. 3. <code>test_login_throttle_resets_after_window</code> — esperar 61 seg → 200. 4. <code>test_login_throttle_per_ip_isolation</code> — IP A agota, IP B sigue teniendo 5. 5. <code>test_login_throttle_respects_trusted_proxies</code> — con <code>X-Forwarded-For</code> válido vs spoofed.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T005 (TRUSTED_PROXIES + middleware thread-local para IP real).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>BAJO</strong> — Frontend solo recibe 429 en login masivo; debe mostrar mensaje “Demasiados intentos, espera X minutos”.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Ejecutar tests auth existentes (<code>test_jwt.py</code> 6 tests) + nuevos tests throttling. Verificar login normal funciona.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Tests pasando; configuración en <code>base.py</code> y <code>production.py</code>; documentado en <code>SECURITY_CONFIG.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t003-rotación-y-blacklist-de-refresh-tokens" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="sec-t003-rotación-y-blacklist-de-refresh-tokens"><span class="header-section-number">1.3.2</span> SEC-T003 — Rotación y Blacklist de Refresh Tokens</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Habilitar rotación automática de refresh tokens (<code>ROTATE_REFRESH_TOKENS=True</code>) y blacklist de tokens rotados (<code>BLACKLIST_AFTER_ROTATION=True</code>). Instalar y migrar <code>rest_framework_simplejwt.token_blacklist</code>. Implementar endpoint <code>POST /api/v1/auth/logout/</code> que añade refresh token a blacklist.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-AUTH-02 (FALLIDO/PENDIENTE); MATRIZ A2,A3,A6 (FALLIDO/PENDIENTE); INFORME_HARDENING §1.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>ALTA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>ALTO</strong> — Refresh token robado = acceso indefinido sin rotación ni revocación.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>INSTALLED_APPS</code> incluye <code>"rest_framework_simplejwt.token_blacklist"</code>. 2. <code>SIMPLE_JWT.ROTATE_REFRESH_TOKENS = True</code>, <code>BLACKLIST_AFTER_ROTATION = True</code>. 3. Migraciones <code>token_blacklist</code> ejecutadas (<code>python manage.py migrate</code>). 4. Refresh token usado → nuevo access + nuevo refresh; refresh anterior añadido a <code>OutstandingToken</code> + <code>BlacklistedToken</code>. 5. Reutilizar refresh anterior → 401 <code>Token is blacklisted</code>. 6. Endpoint <code>POST /api/v1/auth/logout/</code> (requiere auth) recibe <code>{"refresh": "..."}</code> → añade a blacklist → 205 Reset Content. 7. Logout invalida refresh → posterior refresh con mismo token → 401.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_refresh_rotates_token_returns_new_access_and_refresh</code> — refresh válido → nuevo access ≠ anterior, nuevo refresh ≠ anterior. 2. <code>test_old_refresh_rejected_after_rotation</code> — usar refresh anterior → 401 blacklisted. 3. <code>test_blacklisted_refresh_rejected</code> — POST /logout/ con refresh → posterior refresh con mismo → 401. 4. <code>test_logout_requires_authentication</code> — sin token → 401. 5. <code>test_refresh_token_lifetime_respected</code> — refresh expira a 24h → 401.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T004 (JWT_SIGNING_KEY separada — rotación usa misma clave firma).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>MEDIO</strong> — Frontend debe: 1) Guardar nuevo refresh token tras cada refresh (interceptor axios), 2) Llamar <code>POST /auth/logout/</code> al cerrar sesión, 3) Manejar 401 en refresh → redirigir a login.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>1. Tests JWT existentes (<code>test_jwt.py</code> 6 tests) + nuevos tests rotación/blacklist/logout. 2. Flujo login → acceso recurso → refresh → acceso → logout → intento refresh → 401.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Migraciones aplicadas; tests pasando; endpoint logout documentado en OpenAPI; frontend actualizado (issue separado).</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t004-clave-de-firma-jwt-separada-de-secret_key" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="sec-t004-clave-de-firma-jwt-separada-de-secret_key"><span class="header-section-number">1.3.3</span> SEC-T004 — Clave de Firma JWT Separada de SECRET_KEY</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Separar <code>JWT_SIGNING_KEY</code> de <code>SECRET_KEY</code> mediante variable de entorno dedicada. <code>SECRET_KEY</code> para Django (sesiones, CSRF, cookies); <code>JWT_SIGNING_KEY</code> para firmar/verificar JWTs.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-SEC-01 (FALLIDO); MATRIZ D4 (FALLIDO); INFORME_HARDENING §4.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>ALTA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>ALTO</strong> — Compromiso SECRET_KEY permite forjar JWTs Y firmar cookies/sesiones Django.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>JWT_SIGNING_KEY = env("JWT_SIGNING_KEY")</code> en <code>base.py</code> (SIMPLE_JWT.SIGNING_KEY). 2. <code>SECRET_KEY = env("SECRET_KEY")</code> sin cambios. 3. <code>production.py</code> valida que ambas existan y sean distintas (warning/log si iguales). 4. <code>.env.example</code> documenta ambas variables con instrucciones generación (<code>openssl rand -base64 32</code>). 5. Rotación de <code>JWT_SIGNING_KEY</code> no invalida sesiones Django (cookies).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_jwt_signing_key_separate_from_secret_key</code> — <code>SIMPLE_JWT.SIGNING_KEY != SECRET_KEY</code>. 2. <code>test_jwt_token_verification_uses_jwt_signing_key</code> — token firmado con JWT_SIGNING_KEY válido; firmado con SECRET_KEY → 401. 3. <code>test_django_sessions_use_secret_key</code> — sesión/cookie firmada con SECRET_KEY funciona independientemente.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>Ninguna (independiente).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong> — Cambio interno de clave; tokens JWT existentes se invalidan (requiere re-login único tras deploy).</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>1. Deploy staging con nuevas claves → login funciona → tokens nuevos válidos. 2. Verificar sesiones Django admin siguen funcionando.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Variables en <code>.env.example</code>; tests pasando; documentado procedimiento rotación independiente en <code>SECURITY_CONFIG.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t005-ip-de-auditoría-con-middleware-thread-local-y-trusted_proxies" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="sec-t005-ip-de-auditoría-con-middleware-thread-local-y-trusted_proxies"><span class="header-section-number">1.3.4</span> SEC-T005 — IP de Auditoría con Middleware Thread-Local y TRUSTED_PROXIES</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Implementar captura confiable de IP cliente para auditoría: 1) Middleware que guarda <code>request</code> en <code>thread_local</code> (<code>_thread_locals.request = request</code>), 2) <code>_get_current_request()</code> lee de <code>thread_local</code>, 3) <code>_get_client_ip()</code> valida <code>X-Forwarded-For</code> contra <code>TRUSTED_PROXIES</code> (lista CIDR en settings), 4) Configurar <code>SECURE_PROXY_SSL_HEADER</code> y <code>TRUSTED_PROXIES</code> en <code>production.py</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-LOG-03 (FALLIDO); MATRIZ F9,F10 (FALLIDO/IMPLEMENTADO SIN PRUEBA); INFORME_HARDENING §6.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>ALTA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>ALTO</strong> — IP suplantable via <code>X-Forwarded-For</code> → auditoría poco fiable; trazabilidad comprometida.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>core/adapters/middleware.py</code>: <code>ThreadLocalRequestMiddleware</code> (ejecuta primero en MIDDLEWARE). 2. <code>signals.py</code>: <code>_get_current_request()</code> retorna <code>_thread_locals.request</code> si existe. 3. <code>_get_client_ip(request)</code>: si <code>request.META.get("HTTP_X_FORWARDED_FOR")</code> y IP cliente en <code>TRUSTED_PROXIES</code> → usa primer IP de <code>X-Forwarded-For</code>; sino <code>REMOTE_ADDR</code>. 4. <code>production.py</code>: <code>TRUSTED_PROXIES = env.list("TRUSTED_PROXIES", default=["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"])</code> (redes privadas Docker/Nginx). 5. <code>SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")</code>. 6. <code>EventoAuditoria.ip</code> poblado correctamente en signals automáticas (crear expediente, cambiar estado, evaluar checklist, cargar doc, emitir informe, registrar declaratoria).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_audit_ip_captured_from_xff_with_trusted_proxy</code> — request con <code>X-Forwarded-For: 203.0.113.195, 198.51.100.1</code> + <code>REMOTE_ADDR=10.0.0.1</code> (trusted) → IP = <code>203.0.113.195</code>. 2. <code>test_audit_ip_spoofing_blocked_untrusted_proxy</code> — request con <code>X-Forwarded-For: 203.0.113.195</code> + <code>REMOTE_ADDR=203.0.113.195</code> (no trusted) → IP = <code>203.0.113.195</code> (REMOTE_ADDR). 3. <code>test_audit_ip_persisted_in_eventoauditoria</code> — crear expediente via API → <code>EventoAuditoria.objects.latest().ip == "203.0.113.195"</code>. 4. <code>test_audit_ip_none_when_no_request</code> — signal fuera de request (management command) → IP = None.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (production.py + Nginx config con proxy real).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong> — Interno de auditoría.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>1. Tests auditoría existentes (<code>test_auditoria.py</code> 14 tests) + nuevos tests IP. 2. Flujo completo crea eventos → verificar IP en <code>EventoAuditoria</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Middleware en MIDDLEWARE[0]; tests pasando; <code>TRUSTED_PROXIES</code> documentado en <code>.env.example</code> y <code>DEPLOY_PRODUCTION.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t006-access-token-lifetime-30-minutos-acd" class="level3" data-number="1.3.5">
+<h3 data-number="1.3.5" class="anchored" data-anchor-id="sec-t006-access-token-lifetime-30-minutos-acd"><span class="header-section-number">1.3.5</span> SEC-T006 — Access Token Lifetime 30 Minutos (ACD)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Cambiar <code>SIMPLE_JWT.ACCESS_TOKEN_LIFETIME</code> de 60 a 30 minutos según decisión ACD registrada.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-AUTH-03 (FALLIDO); MATRIZ A4 (FALLIDO).</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong> (clasificada ALTA en checklist por decisión ACD)</td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Ventana exposición access token robado 2x mayor a lo aprobado.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>ACCESS_TOKEN_LIFETIME = timedelta(minutes=30)</code> en <code>base.py</code> (y <code>production.py</code>). 2. Token generado tiene claim <code>exp = iat + 1800 segundos</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_access_token_lifetime_30_minutes</code> — decodificar access token → <code>exp - iat == 1800</code>. 2. <code>test_access_token_expired_after_31_minutes_rejected</code> — token con <code>exp = now + 31 min</code> → 401.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T004 (JWT_SIGNING_KEY separada — cambiar lifetime invalida tokens existentes).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>BAJO</strong> — Frontend debe manejar refresh más frecuente (cada ~25 min); interceptor axios ya debe hacerlo.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Tests JWT existentes + nuevo test lifetime. Verificar login → acceso a los 29 min → OK; a los 31 min → 401 → refresh → OK.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Configuración actualizada; test pasando; documentado en <code>SECURITY_CONFIG.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="tareas-prioridad-media" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="tareas-prioridad-media"><span class="header-section-number">1.4</span> Tareas Prioridad MEDIA</h2>
+<section id="sec-t007-validación-mime-real-con-python-magic-pikepdf" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="sec-t007-validación-mime-real-con-python-magic-pikepdf"><span class="header-section-number">1.4.1</span> SEC-T007 — Validación MIME Real con python-magic / pikepdf</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Evaluar e implementar validación MIME real de contenido PDF más allá de magic bytes: opción A) <code>python-magic</code> (libmagic sistema) para detectar MIME real; opción B) <code>pikepdf</code> / <code>PyPDF2</code> para parsing estructura PDF básica y rechazar malformados/poliglotas. Decidir según compatibilidad Docker (libmagic en alpine/slim).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-VAL-01 (PARCIAL); MATRIZ C3 (PARCIAL); INFORME_HARDENING §3.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — PDF con magic bytes válidos pero estructura maliciosa/poliglota pasa validación actual.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. Decisión documentada (ADR) con evaluación opciones. 2. Si <code>python-magic</code>: añadido a <code>requirements.txt</code>, <code>libmagic</code> en Dockerfile, validación <code>magic.from_buffer(file.read(2048), mime=True) == "application/pdf"</code>. 3. Si <code>pikepdf</code>: <code>pikepdf.open(io.BytesIO(file.read()))</code> → catch <code>PdfError</code> → rechazar. 4. Validación integrada en <code>validar_pdf_completo()</code> ANTES de guardar. 5. Tests: PDF válido pasa; PDF poliglota (PDF+ZIP) rechazado; PDF corrupto rechazado.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_pdf_validation_real_mime_passes_valid_pdf</code> — PDF real → pasa. 2. <code>test_pdf_validation_rejects_polyglot_pdf_zip</code> — PDF+ZIP → rechaza (MIME application/zip o estructura inválida). 3. <code>test_pdf_validation_rejects_corrupted_pdf_structure</code> — PDF con xref corrupto → rechaza. 4. <code>test_pdf_validation_docker_compatibility</code> — build Dockerfile con libmagic/pikepdf → éxito.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (Dockerfile para libmagic).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong> — Validación interna; mismo contrato API (400 si inválido).</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Tests PDF existentes (25+ tests) + nuevos tests MIME real. Verificar carga docs normal sigue funcionando.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>ADR documentado; implementación elegida; tests pasando; Docker build exitoso.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t008-throttling-carga-documentos-10horausuario" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="sec-t008-throttling-carga-documentos-10horausuario"><span class="header-section-number">1.4.2</span> SEC-T008 — Throttling Carga Documentos (10/hora/usuario)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Implementar rate limiting en <code>POST /api/v1/peticiones/{id}/documento/</code>: 10 cargas por hora por usuario autenticado. Usar <code>UserRateThrottle</code> con scope <code>document_upload</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-VAL-02 (PENDIENTE); MATRIZ C7 (PENDIENTE).</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — DoS agotamiento almacenamiento; abuso carga masiva.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>REST_FRAMEWORK.DEFAULT_THROTTLE_RATES["document_upload"] = "10/hour"</code> en <code>base.py</code>/<code>production.py</code>. 2. <code>PeticionViewSet.cargar_documento</code> usa <code>throttle_classes = [UserRateThrottle]</code>, <code>throttle_scope = "document_upload"</code>. 3. Request 11 en &lt;1 hora → HTTP 429. 4. Throttle por usuario autenticado (no IP).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_document_upload_throttle_allows_10_per_hour</code> — 10 POST → 201. 2. <code>test_document_upload_throttle_11th_returns_429</code> — 11º POST → 429. 3. <code>test_document_upload_throttle_per_user_isolation</code> — Usuario A agota, Usuario B tiene 10. 4. <code>test_document_upload_throttle_resets_after_hour</code> — esperar 61 min → 201.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>Ninguna (independiente).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>BAJO</strong> — Frontend muestra mensaje “Límite de cargas alcanzado, espera X minutos” en 429.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Tests carga docs existentes + nuevos tests throttling. Verificar carga normal funciona.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Tests pasando; configuración en <code>base.py</code>/<code>production.py</code>; documentado.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t009-remover-rutas-internas-de-serializers-archivo_path-archivo_memorando_firmado_path" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="sec-t009-remover-rutas-internas-de-serializers-archivo_path-archivo_memorando_firmado_path"><span class="header-section-number">1.4.3</span> SEC-T009 — Remover Rutas Internas de Serializers (archivo_path, archivo_memorando_firmado_path)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Eliminar campos <code>archivo_path</code> (DocumentoEntregadoSerializer) y <code>archivo_memorando_firmado_path</code> (DeclaratoriaAptitudSerializer) de respuestas API. Sustituir por <code>download_url</code> opaco que apunte al endpoint de descarga autorizada (<code>/api/v1/peticiones/{id}/documento/</code> o <code>/api/v1/declaratorias/{id}/documento/</code>).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-SEC-02 (FALLIDO); MATRIZ C8 (FALLIDO); INFORME_HARDENING §4.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Fuga estructura almacenamiento privado; facilita path traversal si hay vuln en servidor web.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>DocumentoEntregadoSerializer</code>: remover <code>archivo_path</code>; añadir <code>download_url = SerializerMethodField()</code> → <code>request.build_absolute_uri(f"/api/v1/peticiones/{obj.peticion_id}/documento/")</code>. 2. <code>DeclaratoriaAptitudSerializer</code>: remover <code>archivo_memorando_firmado_path</code>; añadir <code>download_url</code> → endpoint declaratoria download (por crear). 3. Endpoints de descarga existentes funcionan sin cambios. 4. Frontend actualizado para usar <code>download_url</code> (issue separado).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_documento_serializer_excludes_archivo_path</code> — <code>archivo_path</code> not in response.data. 2. <code>test_documento_serializer_includes_download_url</code> — <code>download_url</code> present, correct format. 3. <code>test_declaratoria_serializer_excludes_memorando_path</code> — idem. 4. <code>test_download_url_works_with_auth</code> — GET download_url + JWT → 200 PDF.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (endpoints download declaratoria — ver resoluciones/views.py).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>MEDIO</strong> — Frontend debe migrar de <code>archivo_path</code> a <code>download_url</code> en componentes de descarga (V-03, V-07, V-08). Coordinar con equipo frontend (specs/003).</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Tests serializers existentes + nuevos tests campos. Verificar descarga vía endpoint sigue funcionando.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Serializers actualizados; tests pasando; frontend notificado (issue vinculado).</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t010-handler-global-de-excepciones-formato-uniforme" class="level3" data-number="1.4.4">
+<h3 data-number="1.4.4" class="anchored" data-anchor-id="sec-t010-handler-global-de-excepciones-formato-uniforme"><span class="header-section-number">1.4.4</span> SEC-T010 — Handler Global de Excepciones (Formato Uniforme)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Implementar <code>custom_exception_handler</code> en <code>core/adapters/exceptions.py</code> que estandarice respuestas de error: <code>{ "error": { "code": "string", "message": "string", "details": {} } }</code>. Mapear: <code>ValidationError</code>→400, <code>AuthenticationFailed</code>→401, <code>PermissionDenied</code>→403, <code>NotFound</code>→404, <code>Throttled</code>→429, <code>APIException</code>→status_code, <code>Exception</code>→500 (sin stack trace). Registrar en <code>REST_FRAMEWORK.EXCEPTION_HANDLER</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-LOG-01 (PARCIAL); MATRIZ F1,F4,F5 (PARCIAL); INFORME_HARDENING §6.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Respuestas error inconsistentes; posible fuga en 500 si DEBUG mal configurado.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>core/adapters/exceptions.py</code> con <code>custom_exception_handler(exc, context)</code>. 2. Formato uniforme para todos los códigos (400,401,403,404,409,429,500). 3. 500 NUNCA incluye stack trace, SQL, rutas internas. 4. <code>REST_FRAMEWORK.EXCEPTION_HANDLER = "core.adapters.exceptions.custom_exception_handler"</code> en <code>base.py</code>. 5. Custom APIExceptions existentes (<code>EstadoPeticionInvalidoAPI</code>, <code>UsuarioNoAutorizadoAPI</code>, <code>ValidacionPDF_API</code>) mapeadas correctamente.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_500_no_stacktrace_leak</code> — provocar 500 (ej. division by zero en vista) → response 500 sin <code>traceback</code>, <code>stack</code>, <code>file</code>, <code>line</code>. 2. <code>test_400_validation_error_format</code> — POST data inválida → 400 con formato uniforme. 3. <code>test_401_authentication_failed_format</code> — token inválido → 401 formato uniforme. 4. <code>test_403_permission_denied_format</code> — sin permisos → 403 formato uniforme. 5. <code>test_404_not_found_format</code> — recurso inexistente → 404 formato uniforme. 6. <code>test_429_throttled_format</code> — throttling excedido → 429 formato uniforme. 7. <code>test_409_conflict_format</code> — si se implementa 409 (BE-11) → formato uniforme.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (production.py con DEBUG=False para probar 500 sin trace).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>MEDIO</strong> — Frontend debe actualizar manejo de errores para nuevo formato uniforme (code, message, details). Coordinar con equipo frontend.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>1. Ejecutar suite completa 473 tests — todos deben pasar con nuevo formato (o actualizar asserts). 2. Verificar endpoints críticos: login, expedientes, peticiones, checklist, resoluciones, notificaciones.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Handler implementado; tests pasando (existentes actualizados + nuevos); formato documentado en <code>API_ERROR_FORMAT.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t011-logging-estructurado-logging-dict-rotación-filtros-pii" class="level3" data-number="1.4.5">
+<h3 data-number="1.4.5" class="anchored" data-anchor-id="sec-t011-logging-estructurado-logging-dict-rotación-filtros-pii"><span class="header-section-number">1.4.5</span> SEC-T011 — Logging Estructurado (LOGGING dict, Rotación, Filtros PII)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Configurar <code>LOGGING</code> dict completo en <code>base.py</code>/<code>production.py</code>: handlers <code>RotatingFileHandler</code> (maxBytes=10MB, backupCount=5), formato JSON (<code>python-json-logger</code>), nivel INFO en producción/DEBUG en local, filtros que eliminen <code>password</code>, <code>token</code>, <code>authorization</code>, <code>credit_card</code>, <code>cedula</code> de logs. Loggers por módulo (<code>apps.*</code>, <code>core.*</code>, <code>django.request</code>, <code>django.security</code>).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-LOG-02 (PENDIENTE/FALLIDO); MATRIZ F6,F7,F8 (PENDIENTE/FALLIDO); INFORME_HARDENING §6.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Sin rotación logs llenan disco; sin filtros PII fugan datos sensibles; sin estructura difícil análisis SIEM.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>LOGGING</code> dict en <code>base.py</code> con configuración base; <code>production.py</code> sobrescribe nivel=INFO, handlers archivo. 2. Formato JSON: <code>{"timestamp": "...", "level": "INFO", "logger": "apps.peticiones", "message": "...", "request_id": "...", "user_id": "..."}</code>. 3. Filtro <code>SensitiveDataFilter</code> elimina campos sensibles de <code>record.__dict__</code> y <code>record.msg</code>. 4. <code>RotatingFileHandler</code> para <code>apps</code>, <code>core</code>, <code>django</code>, <code>security</code> logs separados. 5. <code>logging.config.dictConfig(LOGGING)</code> ejecutado al inicio.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_logging_structured_json_format</code> — log generado → parseable JSON con campos esperados. 2. <code>test_logging_no_secrets_in_output</code> — log con <code>password="secret"</code> → JSON no contiene “secret”. 3. <code>test_logging_rotation_max_bytes</code> — escribir &gt;10MB → archivo rotado, backup creado. 4. <code>test_logging_no_print_in_production_code</code> — grep <code>print(</code> en <code>src/</code> (excluyendo tests) → 0 resultados.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T012 (eliminar print en evaluar_checklist.py).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong> — Interno de logging.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>1. Deploy staging → generar logs → verificar JSON, rotación, sin secretos. 2. Tests existentes no rotos por logging.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>LOGGING dict en settings; filtros funcionando; rotación verificada; <code>print()</code> eliminado de código producción.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t012-eliminar-print-en-evaluar_checklist.py" class="level3" data-number="1.4.6">
+<h3 data-number="1.4.6" class="anchored" data-anchor-id="sec-t012-eliminar-print-en-evaluar_checklist.py"><span class="header-section-number">1.4.6</span> SEC-T012 — Eliminar print() en evaluar_checklist.py</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Reemplazar <code>print(f"DEBUG: ...")</code> en <code>src/apps/verificacion/services/evaluar_checklist.py:164,170</code> con <code>logger.debug(...)</code> usando logger del módulo.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-LOG-02 (FALLIDO); MATRIZ F7 (FALLIDO); INFORME_PRUEBAS §5.2.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong> (fácil, rápido)</td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Fuga username, roles, facultad_id en stdout contenedor.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>logger = logging.getLogger(__name__)</code> al inicio del módulo. 2. <code>logger.debug(f"user={usuario.username}, roles={list(usuario.get_roles())}, ...")</code> en línea 164. 3. <code>logger.debug(f"user_facultad={user_facultad}, expediente_facultad={expediente_facultad}, match={...}")</code> en línea 170. 4. Sin <code>print(</code> en ningún archivo <code>src/</code> (excluyendo tests y manage.py).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_no_print_in_verificacion_services</code> — grep <code>print(</code> en <code>src/apps/verificacion/services/</code> → 0. 2. Ejecutar tests <code>test_evaluar_checklist.py</code> → logs DEBUG aparecen en pytest output (caplog), no en stdout.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>Ninguna.</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Tests verificacion existentes pasando.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Código limpio; tests pasando; verificado con <code>grep -r "print(" src/ --include="*.py" | grep -v test | grep -v manage</code> → vacío.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t013-protección-swaggerredocschema-en-producción-isadminuser" class="level3" data-number="1.4.7">
+<h3 data-number="1.4.7" class="anchored" data-anchor-id="sec-t013-protección-swaggerredocschema-en-producción-isadminuser"><span class="header-section-number">1.4.7</span> SEC-T013 — Protección Swagger/ReDoc/Schema en Producción (IsAdminUser)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Cambiar <code>SPECTACULAR_SETTINGS.SERVE_PERMISSIONS</code> a <code>["rest_framework.permissions.IsAdminUser"]</code> en <code>production.py</code>. Mantener <code>AllowAny</code> en <code>local.py</code> y <code>test.py</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §8 (FALLIDO); MATRIZ H1-H4 (FALLIDO); INFORME_HARDENING §8.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Superficie de ataque expuesta (endpoints, modelos, parámetros).</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>production.py</code>: <code>SPECTACULAR_SETTINGS["SERVE_PERMISSIONS"] = ["rest_framework.permissions.IsAdminUser"]</code>. 2. <code>local.py</code>/<code>test.py</code>: <code>SERVE_PERMISSIONS = ["rest_framework.permissions.AllowAny"]</code>. 3. Anónimo en producción → 403 en <code>/api/v1/docs/</code>, <code>/api/v1/redoc/</code>, <code>/api/v1/schema/</code>. 4. Admin (staff/superuser) → 200.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>test_swagger_anonymous_denied_in_production_settings</code> — con <code>settings.production</code> → 403. 2. <code>test_swagger_admin_allowed_in_production_settings</code> — usuario staff → 200. 3. <code>test_schema_anonymous_denied_in_production_settings</code> — 403. 4. <code>test_swagger_allowany_in_local_settings</code> — con <code>settings.local</code> → 200.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (production.py existe).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>BAJO</strong> — Frontend no usa Swagger/ReDoc; solo equipo desarrollo/admin.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Tests existentes de espectacular (si los hay) + nuevos tests. Verificar en staging.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Configuración por entorno; tests pasando; documentado en <code>SECURITY_CONFIG.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t014-escaneo-vulnerabilidades-en-cicd-safety-bandit-gitleaks" class="level3" data-number="1.4.8">
+<h3 data-number="1.4.8" class="anchored" data-anchor-id="sec-t014-escaneo-vulnerabilidades-en-cicd-safety-bandit-gitleaks"><span class="header-section-number">1.4.8</span> SEC-T014 — Escaneo Vulnerabilidades en CI/CD (Safety + Bandit + Gitleaks)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Integrar en pipeline CI (GitHub Actions / GitLab CI): 1) <code>safety check</code> — falla si vulnerabilidades HIGH/CRITICAL en deps. 2) <code>bandit -r src/</code> — falla si issues HIGH/MEDIUM. 3) <code>gitleaks detect --source=. --verbose</code> — falla si secretos en historial. Configurar como jobs obligatorios en PR/merge.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §9 (PENDIENTE); MATRIZ I1-I3 (PENDIENTE); INFORME_HARDENING §9.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Deps vulnerables / código inseguro / secretos en Git sin detección automática.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>.github/workflows/security.yml</code> (o <code>.gitlab-ci.yml</code>) con jobs <code>safety</code>, <code>bandit</code>, <code>gitleaks</code>. 2. Jobs corren en cada PR y push a main. 3. Falla build si hallazgos severos. 4. <code>safety</code> usa <code>requirements.txt</code> + <code>requirements-dev.txt</code>. 5. <code>bandit</code> excluye <code>tests/</code>, <code>migrations/</code>. 6. <code>gitleaks</code> escanea historial completo (<code>--source=.</code>).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. Ejecutar <code>safety check</code> local → 0 vulnerabilidades HIGH/CRITICAL (o documentadas como aceptadas). 2. Ejecutar <code>bandit -r src/</code> local → 0 HIGH/MEDIUM (o falsos positivos documentados). 3. Ejecutar <code>gitleaks detect --source=.</code> local → 0 hallazgos (o falsos positivos). 4. Pipeline CI pasa en PR de prueba.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (Dockerfile para CI environment consistente).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong> — Pipeline interno.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Ejecutar herramientas manualmente antes de cada release.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Pipeline configurado; pasando en main; documentado en <code>CI_SECURITY.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t015-dependabot-configurado" class="level3" data-number="1.4.9">
+<h3 data-number="1.4.9" class="anchored" data-anchor-id="sec-t015-dependabot-configurado"><span class="header-section-number">1.4.9</span> SEC-T015 — Dependabot Configurado</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Crear <code>.github/dependabot.yml</code> con schedule semanal, auto-merge para patch versions, reviewers asignados, labels <code>dependencies</code>, <code>security</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §9 (PENDIENTE); MATRIZ I4 (PENDIENTE).</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Actualizaciones manuales propensas a olvido; ventana exposición CVEs.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>.github/dependabot.yml</code> con <code>package-ecosystem: "pip"</code>, <code>directory: "/"</code>, <code>schedule: {interval: "weekly"}</code>, <code>open-pull-requests-limit: 10</code>, <code>allow: [{dependency-type: "direct"}]</code>, <code>automerge: true</code> para <code>update-type: "version-update:semver-patch"</code>. 2. PRs generados semanalmente; patch auto-merge si tests pasan.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. Merge <code>.github/dependabot.yml</code> → Dependabot activa en repo. 2. Verificar PR generado para dependencia desactualizada (simular).</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T014 (CI tests para auto-merge).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Verificar PRs Dependabot no rompen tests.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Configuración mergeada; Dependabot activo; primer PR automático procesado.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t016-cobertura-tests-fail_under-testpaths-correcto" class="level3" data-number="1.4.10">
+<h3 data-number="1.4.10" class="anchored" data-anchor-id="sec-t016-cobertura-tests-fail_under-testpaths-correcto"><span class="header-section-number">1.4.10</span> SEC-T016 — Cobertura Tests + fail_under + testpaths Correcto</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>1) Cambiar <code>testpaths = ["src"]</code> en <code>pyproject.toml</code> para incluir <code>src/core/tests</code> explícitamente. 2) Añadir <code>--cov=src --cov-fail-under=80 --cov-report=term-missing</code> a pytest config o CI. 3) Configurar <code>coverage.py</code> omit patterns (migrations, settings, apps.py, <strong>init</strong>.py).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §11 (PARCIAL); MATRIZ J2,J3 (PARCIAL/PENDIENTE); INFORME_PRUEBAS §4.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Cobertura no medida; gaps sin detectar; testpaths engañoso.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>pyproject.toml</code>: <code>testpaths = ["src"]</code>, <code>addopts = "--cov=src --cov-fail-under=80 --cov-report=term-missing"</code>. 2. <code>pytest</code> ejecuta 473+ tests (incluye core/tests) y reporta cobertura ≥80%. 3. Módulos críticos (<code>authentication</code>, <code>peticiones</code>, <code>verificacion</code>, <code>core.adapters</code>) ≥90%.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. <code>pytest</code> → coverage report ≥80% overall. 2. <code>pytest --collect-only</code> → incluye <code>src/core/adapters/tests/</code>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>Ninguna.</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Ejecutar <code>pytest</code> local y CI → coverage pasa.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Configuración actualizada; coverage ≥80% en CI; documentado en <code>TESTING.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t017-tests-de-seguridad-faltantes-throttling-rotación-swagger-ip-auditoría" class="level3" data-number="1.4.11">
+<h3 data-number="1.4.11" class="anchored" data-anchor-id="sec-t017-tests-de-seguridad-faltantes-throttling-rotación-swagger-ip-auditoría"><span class="header-section-number">1.4.11</span> SEC-T017 — Tests de Seguridad Faltantes (Throttling, Rotación, Swagger, IP Auditoría)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Crear tests para controles implementados en SEC-T002, SEC-T003, SEC-T005, SEC-T013: throttling login/carga, rotación/blacklist/logout JWT, IP auditoría con proxy real, protección Swagger prod.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>INFORME_PRUEBAS §3 (Gaps); CHECKLIST controles correspondientes.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>MEDIA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>MEDIO</strong> — Controles implementados sin validación automática → regresión silenciosa.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. Tests en <code>src/apps/authentication/tests/test_security_controls.py</code> (nuevo archivo): throttling login, rotación/blacklist, logout, lifetime 30min. 2. Tests en <code>src/apps/notificaciones/tests/test_audit_ip.py</code> (nuevo): IP con proxy trusted, spoofing bloqueado, IP persistida. 3. Tests en <code>src/apps/authentication/tests/test_swagger_protection.py</code> (nuevo): Swagger/schema 403 anónimo prod, 200 admin. 4. Tests en <code>src/apps/peticiones/tests/test_upload_throttle.py</code> (nuevo): throttling carga docs. 5. Todos los tests nuevos pasan y están en suite CI.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>Los tests mismos son la verificación.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T002, SEC-T003, SEC-T005, SEC-T013 (controles deben existir para testearlos).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Suite completa 473+ tests passing en CI.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Tests creados, pasando, integrados en <code>pytest</code> collection.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="tareas-prioridad-baja" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="tareas-prioridad-baja"><span class="header-section-number">1.5</span> Tareas Prioridad BAJA</h2>
+<section id="sec-t018-procedimiento-documentado-rotación-secretos" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="sec-t018-procedimiento-documentado-rotación-secretos"><span class="header-section-number">1.5.1</span> SEC-T018 — Procedimiento Documentado Rotación Secretos</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Documentar en <code>SECURITY_CONFIG.md</code>: procedimiento rotación <code>SECRET_KEY</code> y <code>JWT_SIGNING_KEY</code> (generación, deploy, ventana solape, revocación antigua, verificación).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST SEC-SEC-01 (PENDIENTE); MATRIZ D5 (PENDIENTE).</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>BAJA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>BAJO</strong> — Sin procedimiento, rotación reactiva y propensa a errores.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>Documento con pasos claros, comandos, checklist verificación, responsable, frecuencia (ej. anual o tras incidente).</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>Simulación en staging (rotar claves → login funciona → sesiones admin OK).</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T004 (JWT_SIGNING_KEY separada).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Verificar documento actualizado tras cada rotación real.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Documento mergeado en repo; equipo notificado.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t019-limpieza-archivos-huérfanos-management-command" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="sec-t019-limpieza-archivos-huérfanos-management-command"><span class="header-section-number">1.5.2</span> SEC-T019 — Limpieza Archivos Huérfanos (Management Command)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Crear <code>management command</code> <code>limpiar_archivos_huerfanos</code>: 1) Archivos en <code>MEDIA_ROOT/private/</code> sin registro <code>DocumentoEntregado</code> correspondiente → eliminar (o mover a quarantine). 2) Registros <code>DocumentoEntregado</code> con <code>es_vigente=False</code> mayores a 90 días → opcional eliminar archivo físico (política retención). 3) Programar via cron en contenedor backend (diario 03:00).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §5 (PARCIAL); MATRIZ E6 (PARCIAL); INFORME_HARDENING §5.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>BAJA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>BAJO</strong> — Fuga almacenamiento a largo plazo; inconsistencia DB-disco.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. <code>python manage.py limpiar_archivos_huerfanos --dry-run</code> lista huérfanos. 2. <code>python manage.py limpiar_archivos_huerfanos</code> elimina/mueve. 3. Log JSON con archivos procesados, bytes liberados. 4. Cron configurado en Dockerfile/entrypoint.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>1. Crear archivo huérfano manual → command lo detecta. 2. Crear DocumentoEntregado sin archivo físico → command lo detecta (opcional). 3. <code>--dry-run</code> no elimina; sin flag elimina.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (Dockerfile para cron).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Verificar command no elimina archivos vigentes.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Command implementado, testeado, documentado en <code>OPERATIONS.md</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t020-verificación-permissionerror-histórico-en-docker" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="sec-t020-verificación-permissionerror-histórico-en-docker"><span class="header-section-number">1.5.3</span> SEC-T020 — Verificación PermissionError Histórico en Docker</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Reproducir y documentar errores históricos <code>PermissionError</code> en almacenamiento privado: montar volumen <code>media_private</code> con usuario/grupo específicos, ejecutar carga/descarga concurrente, verificar permisos rw para <code>appuser</code> (UID 1000). Documentar configuración correcta en <code>DEPLOY_PRODUCTION.md</code>.</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §5 (NO VERIFICABLE); MATRIZ E7 (NO VERIFICABLE); INFORME_HARDENING §5.</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>BAJA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>BAJO</strong> — Solo afecta si permisos volumen mal configurados.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>1. Entorno Docker staging con volumen <code>media_private</code> montado. 2. Carga/descarga docs concurrentes (10 hilos) → 0 PermissionError. 3. Documentar <code>UID/GID</code> requeridos, <code>chown</code> en entrypoint si necesario.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>Test de carga concurrente en staging (script separado).</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>SEC-T001 (Dockerfile + docker-compose.prod.yml).</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>Verificar en cada deploy staging.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Documentado en <code>DEPLOY_PRODUCTION.md</code>; verificado en staging.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="sec-t021-evidencias-acd-4-reales-commitsprs" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="sec-t021-evidencias-acd-4-reales-commitsprs"><span class="header-section-number">1.5.4</span> SEC-T021 — Evidencias ACD 4 Reales (Commits/PRs)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Campo</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descripción</strong></td>
+<td>Sustituir identificadores placeholder (<code>a1b2c3d</code>, <code>e4f5g6h</code>, <code>i7j8k9l</code>, <code>m0n1o2p</code>, <code>q3r4s5t</code>) por evidencia real: SHA commits, URLs PRs, autores, archivos modificados, tests aportados. Verificar en plataforma Git (GitHub/GitLab).</td>
+</tr>
+<tr class="even">
+<td><strong>Evidencia de Origen</strong></td>
+<td>CHECKLIST §12 (NO VERIFICADO); MATRIZ K1-K5 (NO VERIFICADO).</td>
+</tr>
+<tr class="odd">
+<td><strong>Prioridad</strong></td>
+<td><strong>BAJA</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Riesgo</strong></td>
+<td><strong>BAJO</strong> — Trazabilidad individual incompleta; no bloquea producción.</td>
+</tr>
+<tr class="odd">
+<td><strong>Criterios de Aceptación</strong></td>
+<td>Matriz actualizada con datos reales verificables para cada integrante.</td>
+</tr>
+<tr class="even">
+<td><strong>Pruebas Obligatorias</strong></td>
+<td>Verificación manual en Git platform.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencias</strong></td>
+<td>Ninguna.</td>
+</tr>
+<tr class="even">
+<td><strong>Impacto Backend-Frontend</strong></td>
+<td><strong>NINGUNO</strong>.</td>
+</tr>
+<tr class="odd">
+<td><strong>Plan de Regresión</strong></td>
+<td>N/A.</td>
+</tr>
+<tr class="even">
+<td><strong>Criterio de Cierre</strong></td>
+<td>Matriz <code>MATRIZ_TRAZABILIDAD_SEGURIDAD.md</code> actualizada con evidencias reales.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="resumen-de-dependencias-entre-tareas" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="resumen-de-dependencias-entre-tareas"><span class="header-section-number">1.6</span> Resumen de Dependencias entre Tareas</h2>
+<pre><code>SEC-T001 (Producción) ──┬──→ SEC-T004 (JWT Key)
+    │                   ├──→ SEC-T005 (IP Auditoría + TRUSTED_PROXIES)
+    │                   ├──→ SEC-T007 (python-magic Docker)
+    │                   ├──→ SEC-T010 (Exception Handler prod)
+    │                   ├──→ SEC-T011 (Logging prod)
+    │                   ├──→ SEC-T013 (Swagger prod)
+    │                   └──→ SEC-T019, SEC-T020 (Docker ops)
+    │
+SEC-T004 (JWT Key) ────→ SEC-T003 (Rotación/Blacklist)
+    │                   └──→ SEC-T006 (Lifetime 30min)
+    │                   └──→ SEC-T018 (Proc. Rotación)
+    │
+SEC-T005 (IP Auditoría) → SEC-T002 (Throttling login por IP real)
+    │
+SEC-T002, T003, T005, T013 → SEC-T017 (Tests seguridad)
+    │
+SEC-T014 (CI Security) → SEC-T015 (Dependabot auto-merge)
+    │
+SEC-T012 (Print cleanup) → SEC-T011 (Logging sin prints)</code></pre>
+<hr>
+</section>
+<section id="criterios-generales-de-cierre-de-fase" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="criterios-generales-de-cierre-de-fase"><span class="header-section-number">1.7</span> Criterios Generales de Cierre de Fase</h2>
+<p>La fase de auditoría y hardening se considera <strong>cerrada</strong> cuando:</p>
+<ol type="1">
+<li>✅ <strong>Tareas CRÍTICAS completadas:</strong> SEC-T001 (producción deployable).</li>
+<li>✅ <strong>Tareas ALTAS completadas:</strong> SEC-T002, SEC-T003, SEC-T004, SEC-T005, SEC-T006.</li>
+<li>✅ <strong>Tareas MEDIAS completadas:</strong> SEC-T007 a SEC-T017 (controles + tests + CI).</li>
+<li>⏳ <strong>Tareas BAJAS:</strong> SEC-T018 a SEC-T021 (documentación, ops, trazabilidad) — pueden completarse post-deploy inicial.</li>
+<li>✅ <strong>Suite de pruebas completa:</strong> 473+ tests passing + nuevos tests seguridad + coverage ≥80% en CI.</li>
+<li>✅ <strong>Staging deploy verificado:</strong> Backend + Frontend (specs/003) funcionando en entorno idéntico a producción.</li>
+<li>✅ <strong>Documentación actualizada:</strong> <code>DEPLOY_PRODUCTION.md</code>, <code>SECURITY_CONFIG.md</code>, <code>API_ERROR_FORMAT.md</code>, <code>CI_SECURITY.md</code>, <code>TESTING.md</code>, <code>OPERATIONS.md</code>.</li>
+</ol>
+<hr>
+<p><strong>Firma:</strong> opencode AI Assistant<br>
+<strong>Fecha:</strong> 2026-11-05<br>
+<strong>Próxima revisión:</strong> Tras implementación SEC-T001 a SEC-T006 (hito “Producción Lista”)</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>SGT-SIAAF — UNL / FEIRNNR</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Documentación generada con Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

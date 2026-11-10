@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-eef4408bf333cb76301fb76674f98191.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-09879b9ad4171be1d2e4d8ac2c802d9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -353,6 +353,33 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-auditoría-2026-11" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Auditoría 2026-11</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-auditoría-2026-11">    
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/index.html">
+ <span class="dropdown-text">Auditoría y documentación técnica — noviembre 2026</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/bpmn.html">
+ <span class="dropdown-text">BPMN — Declaratoria de Aptitud Legal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/arquitectura.html">
+ <span class="dropdown-text">Arquitectura C4 y UML (noviembre 2026)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../10-auditoria-2026-11/pruebas-reales.html">
+ <span class="dropdown-text">Resultados de pruebas (ejecución real, noviembre 2026)</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../11-inteligencia-artificial/declaratoria-ia.html"> 
+<span class="menu-text">Inteligencia Artificial</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-anexos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Anexos</span>
     </a>
@@ -422,6 +449,12 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="1.1" class="anchored" data-anchor-id="variables-de-entorno-backend"><span class="header-section-number">1.1</span> Variables de entorno (backend)</h2>
 <p>Fuente: <code>backend/.env.example</code> y <code>src/config/settings/base.py</code>.</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Variable</th>
@@ -435,43 +468,73 @@ ul.task-list li input[type="checkbox"] {
 <td><code>SECRET_KEY</code></td>
 <td>Sí (sin default)</td>
 <td>—</td>
-<td>Firma Django y JWT</td>
+<td>Firma sesiones/cookies/CSRF de Django</td>
 </tr>
 <tr class="even">
+<td><code>JWT_SIGNING_KEY</code></td>
+<td>Sí (sin default)</td>
+<td>—</td>
+<td>Firma y verifica JWT (access/refresh), independiente de <code>SECRET_KEY</code> (SEC-T004)</td>
+</tr>
+<tr class="odd">
 <td><code>DEBUG</code></td>
 <td>No</td>
 <td><code>False</code></td>
 <td>Modo desarrollo</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>ALLOWED_HOSTS</code></td>
 <td>No</td>
 <td><code>[]</code></td>
 <td>Hosts permitidos</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>DB_ENGINE</code></td>
 <td>No</td>
 <td><code>postgresql</code></td>
 <td>Motor</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>DB_NAME</code> / <code>DB_USER</code></td>
 <td>No</td>
 <td><code>sgt_siaaf</code> / <code>sgt_user</code></td>
 <td>Credenciales</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>DB_PASSWORD</code></td>
 <td>Sí (sin default)</td>
 <td>—</td>
 <td>Contraseña</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>DB_HOST</code> / <code>DB_PORT</code></td>
 <td>No</td>
 <td><code>localhost</code> / <code>5432</code></td>
 <td>Conexión</td>
+</tr>
+<tr class="odd">
+<td><code>DOCUMENT_UPLOAD_THROTTLE</code></td>
+<td>No</td>
+<td><code>10/hour</code></td>
+<td>Límite de carga de documentos (SEC-T008/DEC-003)</td>
+</tr>
+<tr class="even">
+<td><code>ALLOWED_HOSTS</code>, <code>CSRF_TRUSTED_ORIGINS</code>, <code>CORS_ALLOWED_ORIGINS</code></td>
+<td>Sí, solo en <code>production.py</code></td>
+<td>—</td>
+<td>Dominios reales del despliegue; sin valor por defecto (SEC-T001)</td>
+</tr>
+<tr class="odd">
+<td><code>CSP_CONNECT_SRC_EXTRA</code></td>
+<td>No, solo en <code>production.py</code></td>
+<td><code>'self'</code></td>
+<td>Orígenes extra para la CSP Report-Only (DEC-010)</td>
+</tr>
+<tr class="even">
+<td><code>TRUSTED_PROXIES</code></td>
+<td>No, solo en <code>production.py</code></td>
+<td>Rangos RFC1918</td>
+<td>Proxies confiables para IP real (SEC-T005)</td>
 </tr>
 </tbody>
 </table>
@@ -495,7 +558,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><code>base.py</code></td>
 <td>Común</td>
-<td>Seguro por defecto; DRF+SimpleJWT+spectacular; sin CORS ni throttling</td>
+<td>Seguro por defecto; DRF+SimpleJWT+spectacular; sin CORS ni throttling de login (sí de carga de documentos, SEC-T008)</td>
 </tr>
 <tr class="even">
 <td><code>local.py</code></td>
@@ -509,8 +572,8 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><code>production.py</code></td>
-<td><strong>No existe</strong></td>
-<td>Pendiente (AUD-P0-01)</td>
+<td>Producción</td>
+<td><strong>Implementado (SEC-T001, 2026-11-05).</strong> <code>DEBUG=False</code>, <code>ALLOWED_HOSTS</code>/<code>CSRF_TRUSTED_ORIGINS</code>/<code>CORS_ALLOWED_ORIGINS</code> obligatorios, HSTS, cookies seguras, CORS (<code>django-cors-headers</code>), CSP Report-Only + <code>frame-ancestors</code>/<code>base-uri</code> bloqueantes (DEC-010). No incluye el handler global de excepciones (SEC-T010, bloqueada), la protección de Swagger (SEC-T013) ni el logging estructurado completo (SEC-T011) — se añaden en sus propias tareas sobre este mismo archivo.</td>
 </tr>
 </tbody>
 </table>
@@ -553,8 +616,8 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="1.4" class="anchored" data-anchor-id="pendientes-de-configuración"><span class="header-section-number">1.4</span> Pendientes de configuración</h2>
 <ul>
 <li><code>PRIVATE_MEDIA_ROOT</code> (el código lo soporta vía <code>getattr</code>, pero no está declarado) — AUD-P2-05.</li>
-<li><code>LOGGING</code> estructurado — AUD-P2-03.</li>
-<li>CORS y endurecimiento HTTPS — AUD-P1-01.</li>
+<li><del><code>LOGGING</code> estructurado — AUD-P2-03.</del> <strong>Resuelto (SEC-T011, 2026-11-05):</strong> JSON (<code>python-json-logger</code>), filtros de datos sensibles y <code>request_id</code>/<code>user_id</code>, consola en todos los entornos, archivos rotativos (<code>RotatingFileHandler</code>, 10MB/5 backups) solo en <code>production.py</code> vía <code>LOG_DIR</code>.</li>
+<li><del>CORS y endurecimiento HTTPS — AUD-P1-01.</del> <strong>Resuelto (SEC-T001, 2026-11-05).</strong></li>
 </ul>
 
 

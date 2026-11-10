@@ -1,3 +1,5 @@
-[bandit]
-exclude_dirs = "tests,migrations"
-skips = "B101"
+exclude_dirs:
+  - tests
+  - migrations
+skips:
+  - B101
