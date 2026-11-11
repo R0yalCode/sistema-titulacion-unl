@@ -54,9 +54,9 @@ Validación:
 - comando ejecutado → resultado real.
 
 Pendientes / limitaciones (si los hay).
-
-Co-Authored-By: …
 ```
+
+**Autoría:** los commits y merges figuran **solo a nombre del responsable** (usuario Git configurado). No se añaden líneas `Co-Authored-By`, menciones a Claude/IA ni firmas de herramientas (DK-009, 2026-11-11). El 2026-11-11, con autorización expresa del responsable, se reescribió el historial publicado de `main` y `develop` (13 commits a partir de `fee9119`, con push forzado `--force-with-lease`) para eliminar las líneas de coautoría de los commits anteriores; el contenido de los archivos no cambió. Ver [[BUILD_REPORT]] § Reescritura del historial.
 
 **Merge en `develop`:** `Merge branch '<rama>' into develop` + descripción de lo integrado y cómo se validó.
 
