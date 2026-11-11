@@ -12,7 +12,7 @@ Lee primero `AGENTS.md` (raíz). Resumen operativo para ti:
 1. **Frontend only.** `backend/`, `openapi.yaml`, migraciones Constitución y specs 001 (la `002` y la futura `004` **no existen**; si aparecieran, la prohibición aplica igual) intocables; nada de endpoints/campos/estados inventados.
 2. **Cero simulación** (CA-G-01): sin datos/usuarios/estados demo; ni "En revisión" ni "Proyecto de Emprendimiento"; sin porcentajes que el backend no provea.
 3. **Prototipos A/B**: solo referencia visual y de tono; prohibido copiar su HTML/CSS/JS. Escribe React desde cero con `tokens.css` (FE-T006) y los tokens de `especificaciones/01`.
-4. **Sin dependencias nuevas** sin autorización humana; sin Git (init/commit; el repo no lo usa). Prohibido implementar tareas no autorizadas (las de BE-x nunca; FE-T1213 Bloqueada).
+4. **Sin dependencias nuevas** sin autorización humana. **Git**: sigue obligatoriamente la sección "Flujo Git" de este archivo. Prohibido implementar tareas no autorizadas (las de BE-x nunca; FE-T1213 Bloqueada).
 5. **FE-T1213 (409/412/428) bloqueada** por BE-11: no la toques. El backend no ofrece renovación de sesión: no implementes refresh automático ni logout de servidor inventados (re-login al expirar; `plan.md` §6).
 6. Estados de error según `especificaciones/08` y `specify.md` §9.3: 401 no es página (aviso + `/login`); 403 en vista (`ForbiddenState`, destino V-09); 404 sí es página; 500/503 `ErrorState` con reintento real; formularios con `InlineAlert` (400/422; 409/412/428 solo si BE-11 se autoriza).
 
@@ -22,6 +22,19 @@ Lee primero `AGENTS.md` (raíz). Resumen operativo para ti:
 2. Verifica: `npm run lint` → `npm run typecheck` → `npm run test` (+ `npm run build` si aplica). Todo verde o no es "Hecha".
 3. Actualiza `tasks.md`: Estado + evidencia (comandos/pruebas) + dependencias desbloqueadas.
 4. **Detente al final del lote** y resume qué hiciste, qué quedó bloqueado y qué decisión necesitas del humano.
+
+## Flujo Git (obligatorio, confirmado por el responsable el 2026-11-11)
+
+Jerarquía de ramas: **`main`** (principal) → **`develop`** (se deriva de `main`) → **ramas de trabajo** (se derivan de `develop`, una por funcionalidad o tarea).
+
+1. **Rama de trabajo**: parte de `develop` actualizada (`git switch develop && git pull --ff-only origin develop`, luego `git switch -c <tipo>/<descripcion>`). Tipos: `feat/`, `fix/`, `docs/`, `refactor/`, `security/`, `test/`, `build/`, `ci/`. Nunca trabajes ni hagas commits directamente sobre `main` o `develop`.
+2. **Commits** en la rama de trabajo, en formato Conventional Commits: título `tipo(ámbito): descripción breve` + **descripción técnica** en el cuerpo (qué se hizo, archivos/módulos afectados, validaciones *realmente ejecutadas* con su resultado, limitaciones y pendientes). Agrega rutas explícitas (nunca `git add .`) y no incluyas cambios locales ajenos a la tarea. Termina el mensaje con la línea `Co-Authored-By` correspondiente.
+3. **Fusión en `develop`**: al terminar y verificar la tarea, publica la rama y fusiónala en `develop` con `git merge --no-ff`, con un mensaje de merge que tenga título y descripción (qué integra la rama y cómo se validó). Publica `develop` y elimina la rama de trabajo (local y remota) cuando quede integrada.
+4. **Fusión `develop` → `main`: SIEMPRE PREGUNTA ANTES.** Tras integrar en `develop`, pregunta expresamente al responsable: "¿Quieres fusionar `develop` con `main`?". **Solo con su confirmación explícita** fusiona con `git merge --no-ff develop` en `main`, usando un mensaje profesional con título (p. ej. `release(<hito>): <resumen>` o `Merge develop into main: <resumen>`) y una descripción que liste los cambios integrados, las validaciones y los pendientes. Publica `main` y luego alinea `develop` con `main` (`git merge --ff-only main` en `develop` + push). Sin confirmación, `main` no se toca.
+5. **Prohibido** `--force`, reescribir historial publicado, desactivar protecciones o resolver conflictos con operaciones destructivas. Si algo bloquea (permisos, conflictos, protección de ramas), detente y reporta.
+6. Tags y releases solo para entregas funcionales validadas, según `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/COSMOS_VERSIONING.md` (formato `HITO vX.Y.Z — Descripción`; no reutilices identificadores).
+
+Detalle y ejemplos: `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md`.
 
 ## Estado actual (2026-11-05)
 
@@ -42,3 +55,23 @@ Lee primero `AGENTS.md` (raíz). Resumen operativo para ti:
 **V-04 cerrada (2026-11-05).** FE-T401…T411 (expediente y requisitos: cabecera/timeline con datos reales, detalle+peticiones, checklist con 403 real para ESTUDIANTE, enviar/observar/evaluar/subsanar, descarga autenticada, matriz de acciones por rol/estado, invalidación, pruebas): Hechas. **INC-21**: varias excepciones de dominio en observar/evaluar/subsanar responden HTTP 500 real (no 400/404) aunque describen reglas de negocio — se muestra siempre el mensaje real del backend. **Limitación crítica documentada (no resuelta modificando el backend):** ESTUDIANTE y SECRETARIA_CARRERA no tienen ningún endpoint accesible para descubrir el `checklist_verification_id` que requiere la subsanación (`GET .../checklist/` es 403 para ambos); solo ADMINISTRADOR reúne lista+escritura en la práctica. 51 pruebas nuevas; 328/328 totales, sin regresiones.
 
 V-05 y fases posteriores (F3 restante, F4+) **sin iniciar**; requieren autorización explícita independiente. Orden en `tasks.md` §18.
+
+
+**Bóveda SIAAF-KNOWLEDGE (2026-11-11).** Construida en `SIAAF-KNOWLEDGE/` (informe: `00-CORE/BUILD_REPORT.md`). Hallazgos sin resolver que afectan a tareas futuras: no existe la transición `ENVIADA→EN_VERIFICACION` por API (GAP-STATE-01); `RESPONSABLE_DEPENDENCIA` no tiene celdas RBAC; la suite frontend mostró intermitencia (1 de 3 ejecuciones con 6 fallos).
+
+## Política de consulta del conocimiento SIAAF-KNOWLEDGE
+
+La bóveda `SIAAF-KNOWLEDGE/` (raíz del repo, bóveda Obsidian oficial) es la fuente central de conocimiento documental. Misma bóveda y mismas reglas para OpenCode (`AGENTS.md`).
+
+Antes de iniciar una tarea (recuperación progresiva; no releas lo que ya está en contexto):
+
+1. `SIAAF-KNOWLEDGE/00-CORE/MASTER_INDEX.md`: localiza el área (arranque mínimo: `00-CORE/SYSTEM.md`).
+2. `SIAAF-KNOWLEDGE/00-CORE/CURRENT_STATE.md`: solo el contexto general.
+3. La nota específica del módulo o proceso, y desde ella requisitos, decisiones, auditorías o trazabilidad, **solo** si hacen falta.
+4. Con el MCP `obsidian` disponible: `search_notes` → `read_note` (`metadataOnly`) → `read_note` (`heading`); edita con `patch_note`/`append_to_note`. Sin MCP: lee directamente los `.md` (grep + rango de líneas). Nunca bloquees una tarea por falta de MCP.
+5. Fuentes originales por sección (rutas en `90-ORIGINAL-SOURCES/SOURCE_CATALOG.md`).
+6. **Verifica siempre el código real**: el código y las pruebas ejecutadas mandan sobre la documentación para el estado de implementación; la normativa y las specs, para los requisitos. Si chocan, registra la contradicción en `13-TRACEABILITY/DOCUMENT_TRACEABILITY.md`; no la resuelvas inventando.
+
+No leas toda la bóveda ni todo el repositorio. No copies a la bóveda `.env`, secretos, tokens, claves, PDF de `media/private/` ni datos personales.
+
+Al finalizar una tarea, actualiza **solo** las notas afectadas según `15-GIT-AND-WORKFLOWS/KNOWLEDGE_MAINTENANCE.md` (cambios, pruebas con resultados reales, decisiones, evidencias, pendientes, commits).

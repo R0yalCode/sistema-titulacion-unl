@@ -30,7 +30,7 @@ Antes de proponer o ejecutar trabajo, leer (en este orden):
 5. No mover, renombrar ni borrar prototipos, `diseno-ui/` ni `docs/` (la copia canónica de la guía es `diseno-ui/ui/titulacion-v2/GUIA_VISTAS_TITULACION.md`).
 6. No implementar los inline-alerts 409/412/428 (FE-T1213): está **Bloqueada** hasta que el backend (BE-11) declare esos códigos.
 7. No usar logotipo oficial UNL sin archivo autorizado; no representar colores como "oficiales UNL" (solo "propuestos" y "observados"; PQ-13).
-8. No inicializar Git, no hacer commits, no revertir archivos ajenos a la tarea.
+8. No inicializar Git ni revertir archivos ajenos a la tarea. Seguir el **Flujo Git de `CLAUDE.md`** (detalle en `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md`): `main` → `develop` → ramas de trabajo desde `develop`; commits Conventional Commits con título y descripción; fusión `--no-ff` en `develop`; y **fusión `develop` → `main` solo tras preguntar al responsable y recibir su confirmación explícita**. Rutas explícitas en lugar de `git add .`.
 9. No editar `clarify.md`/`specify.md`/`plan.md` salvo que la tarea explícitamente lo pida, y citando el ID de decisión afectado.
 10. No crear páginas independientes para estados que se resuelven en-vista (401/403; ver DEC-13 y `especificaciones/08`).
 
@@ -44,3 +44,15 @@ Antes de proponer o ejecutar trabajo, leer (en este orden):
 ## 5. Si encuentras algo fuera de alcance
 
 Si una tarea necesita tocar backend, instalar paquetes, o un endpoint/campo no declarado: **detenerse** y reportar en la revisión del lote; no "arreglarlo por el lado" del frontend.
+
+## 6. Bóveda de conocimiento SIAAF-KNOWLEDGE (Claude Code y OpenCode)
+
+Fuente central de conocimiento: `SIAAF-KNOWLEDGE/` (bóveda Obsidian en la raíz del repo; **la misma** que indica `CLAUDE.md`). Recuperación progresiva, sin leer la bóveda ni el repo enteros:
+
+1. `SIAAF-KNOWLEDGE/00-CORE/SYSTEM.md` (contexto mínimo, apto para contextos de 8K) y `00-CORE/MASTER_INDEX.md`.
+2. `00-CORE/CURRENT_STATE.md` (contexto general).
+3. La nota del módulo o proceso de la tarea; requisitos, decisiones y auditorías solo si hacen falta.
+4. Fuentes originales por sección (`90-ORIGINAL-SOURCES/SOURCE_CATALOG.md`).
+5. **Verificar el código real** antes de implementar o afirmar que algo existe: el código manda sobre la documentación para el estado de implementación.
+
+Acceso: MCP `obsidian` si el agente lo tiene configurado (Claude Code sí; OpenCode no lo declara) o lectura directa de los `.md`. Al cerrar una tarea, actualizar solo las notas afectadas según `15-GIT-AND-WORKFLOWS/KNOWLEDGE_MAINTENANCE.md`. Guía: `15-GIT-AND-WORKFLOWS/CLAUDE_CODE_OPENCODE_GUIDE.md`.

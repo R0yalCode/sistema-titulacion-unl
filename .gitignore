@@ -224,3 +224,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Obsidian — bóveda SIAAF-KNOWLEDGE (DK-006): se versiona la configuración
+# compartible (app, appearance, core/community-plugins); se excluye estado local,
+# código de plugins de terceros, cachés y papelera interna.
+SIAAF-KNOWLEDGE/.obsidian/workspace*.json
+SIAAF-KNOWLEDGE/.obsidian/plugins/
+SIAAF-KNOWLEDGE/.obsidian/cache
+SIAAF-KNOWLEDGE/.obsidian/graph.json
+SIAAF-KNOWLEDGE/.trash/
