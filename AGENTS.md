@@ -30,7 +30,7 @@ Antes de proponer o ejecutar trabajo, leer (en este orden):
 5. No mover, renombrar ni borrar prototipos, `diseno-ui/` ni `docs/` (la copia canónica de la guía es `diseno-ui/ui/titulacion-v2/GUIA_VISTAS_TITULACION.md`).
 6. No implementar los inline-alerts 409/412/428 (FE-T1213): está **Bloqueada** hasta que el backend (BE-11) declare esos códigos.
 7. No usar logotipo oficial UNL sin archivo autorizado; no representar colores como "oficiales UNL" (solo "propuestos" y "observados"; PQ-13).
-8. No inicializar Git ni revertir archivos ajenos a la tarea. Commit, push o merge **solo con autorización humana explícita para esa tarea**, siguiendo `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md` (ramas desde `develop`, nunca sobre `main`, rutas explícitas en lugar de `git add .`).
+8. No inicializar Git ni revertir archivos ajenos a la tarea. Seguir el **Flujo Git de `CLAUDE.md`** (detalle en `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md`): `main` → `develop` → ramas de trabajo desde `develop`; commits Conventional Commits con título y descripción; fusión `--no-ff` en `develop`; y **fusión `develop` → `main` solo tras preguntar al responsable y recibir su confirmación explícita**. Rutas explícitas en lugar de `git add .`.
 9. No editar `clarify.md`/`specify.md`/`plan.md` salvo que la tarea explícitamente lo pida, y citando el ID de decisión afectado.
 10. No crear páginas independientes para estados que se resuelven en-vista (401/403; ver DEC-13 y `especificaciones/08`).
 

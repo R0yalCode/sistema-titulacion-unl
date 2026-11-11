@@ -33,7 +33,7 @@ Frontend: 328/328 en la 3.ª ejecución; **1 de 3 ejecuciones falló (6 pruebas)
 3. BE-01…BE-11 no autorizadas; FE-T1213 bloqueada (BE-11).
 4. Validación normativa de los Arts. 39, 40, 212, 216 y 233 para las modalidades.
 5. Autorización para iniciar V-05 (siguiente lote del frontend) o INC-01 (seguridad P0).
-6. Confirmar la nueva política Git para agentes (DK-003).
+6. ~~Confirmar la política Git~~ → **confirmada** (DK-008): flujo `main` → `develop` → ramas; preguntar siempre antes de fusionar en `main`.
 7. Versionar `DOCUMENTACION/` y `.github/workflows/` (hoy sin seguimiento Git).
 
 ## Próximo paso recomendado por el plan

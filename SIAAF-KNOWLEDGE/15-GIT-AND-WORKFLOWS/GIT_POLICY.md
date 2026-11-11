@@ -2,43 +2,81 @@
 system: SGT-SIAAF
 type: workflow
 status: active
-source: user-directive 2026-11-11 + repository-history
+source: user-directive 2026-11-11 (confirmada) + repository-history
 last_updated: 2026-11-11
 ---
 
 # Política Git
 
+> **Confirmada por el responsable el 2026-11-11.** La versión operativa está en `CLAUDE.md` § "Flujo Git"; esta nota la detalla.
+
 ## Ramas
+
+```
+main  (principal)
+ └── develop  (se deriva de main; integración)
+      ├── feat/<funcionalidad>
+      ├── fix/<corrección>
+      └── docs/<tema> …   (una rama por tarea, siempre desde develop)
+```
 
 | Rama | Rol | Reglas |
 |---|---|---|
-| `main` | Protegida | **Nunca** trabajar, hacer commit ni fusionar hacia `main` desde un agente; nunca usarla como origen de ramas de trabajo |
-| `develop` | Integración | Todas las ramas de trabajo parten de `develop` actualizada (`git pull --ff-only origin develop`) y se integran en ella |
-| Ramas de trabajo | — | `docs/…`, `feat/…`, `fix/…`, `refactor/…`, `security/…`, `test/…`, `build/…`, `ci/…` |
+| `main` | Principal | No se trabaja ni se hacen commits directos. Solo recibe merges `--no-ff` desde `develop`, **y solo tras preguntar al responsable y recibir su confirmación explícita** |
+| `develop` | Integración | Se deriva de `main`. Recibe las ramas de trabajo con `--no-ff`. Tras cada fusión en `main`, se alinea con `git merge --ff-only main` |
+| Ramas de trabajo | Una por tarea o funcionalidad | Parten de `develop` actualizada: `feat/`, `fix/`, `docs/`, `refactor/`, `security/`, `test/`, `build/`, `ci/` |
 
 Remoto: `origin` → `git@github.com:R0yalCode/sistema-titulacion-unl.git`.
 
-## Commits (Conventional Commits)
+## Ciclo completo
 
-Formato `tipo(ámbito): descripción breve`. Tipos: `feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `perf`. Cuerpo técnico con cambios, validaciones **realmente ejecutadas** y limitaciones.
-- Nunca `git add .`: agrega rutas explícitas.
-- No incluyas cambios locales ajenos a la tarea (el árbol suele tener trabajo sin confirmar del equipo).
-- Nada de `--force`, ni desactivar protecciones, ni resolver conflictos con operaciones destructivas.
+1. `git switch develop && git pull --ff-only origin develop && git switch -c <tipo>/<descripcion>`
+2. Commits en la rama (formato abajo) → `git push -u origin <rama>`
+3. `git switch develop && git merge --no-ff <rama> -F <mensaje>` → `git push origin develop` → borrar la rama (local y remota) una vez integrada.
+4. **Preguntar:** "¿Quieres fusionar `develop` con `main`?"
+5. Solo con un "sí" explícito: `main` ← `git merge --no-ff develop -F <mensaje>` → `git push origin main` → en `develop`: `git merge --ff-only main` → `git push origin develop`.
 
-## Integración
+Si el árbol de trabajo tiene cambios locales ajenos, se puede fusionar en `main` desde un `git worktree` temporal para no tocarlos.
 
-Por **Pull Request hacia `develop`** cuando la herramienta lo permita (la CLI `gh` **no está instalada** en esta máquina: el PR se crea desde la web de GitHub). Si `develop` no está protegida, se admite un merge local `--no-ff` y push, solo con autorización expresa.
+## Mensajes (mismo modelo que el historial)
 
-## Autorización de agentes (DK-003)
+**Commit de rama de trabajo:**
 
-`AGENTS.md` §3.8, `CLAUDE.md` y DEC-08 (spec 003) decían "sin Git". Política vigente: **los agentes solo hacen commit, push o merge con autorización humana explícita para esa tarea**. Sin autorización, dejan los cambios en el árbol de trabajo y los describen.
+```
+tipo(ámbito): descripción breve en imperativo
 
-## Práctica histórica observada
+Párrafo de contexto: qué problema resuelve.
 
-- Ramas `release/0.2.0-andromeda`, `release/0.3.0-andromeda` y `release/0.4.0-eclipse` se fusionaron **directamente en `main`** (y PR #16). Tras la nueva política, eso no debe repetirse desde agentes.
-- Mensajes `release(andromeda): …`, `feat(security): …`, `docs(rosetta): …`.
-- **No existen tags** en el repositorio (ni locales ni remotos).
+Cambios realizados:
+- módulo/archivo: qué cambió y por qué.
+
+Validación:
+- comando ejecutado → resultado real.
+
+Pendientes / limitaciones (si los hay).
+
+Co-Authored-By: …
+```
+
+**Merge en `develop`:** `Merge branch '<rama>' into develop` + descripción de lo integrado y cómo se validó.
+
+**Merge en `main`:** título `release(<hito>): <resumen>` para una entrega versionada (COSMOS) o `Merge develop into main: <resumen>` en otro caso, más una descripción con: cambios integrados (agrupados), validaciones, cambios que **no** incluye y pendientes.
+
+Tipos: `feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `perf`, `release`.
+
+## Reglas
+
+- Nunca `git add .`: rutas explícitas; no incluir cambios locales ajenos.
+- Nada de `--force`, reescribir historial publicado, desactivar protecciones ni resolver conflictos de forma destructiva.
+- Pull Request cuando haya herramienta (`gh` **no está instalada** en esta máquina; hoy los merges son locales con `--no-ff`).
+- Tags y releases: solo entregas funcionales validadas ([[COSMOS_VERSIONING]]).
+
+## Historial de la política
+
+- Antes: `AGENTS.md`, `CLAUDE.md` y DEC-08 (spec 003) decían "sin Git".
+- 2026-11-11: DK-003 (Git solo con autorización) → **confirmada y ampliada** con este flujo `main` → `develop` → ramas, con la pregunta obligatoria antes de tocar `main` (DK-008).
+- Práctica histórica: ramas `release/0.2.0-andromeda`, `release/0.3.0-andromeda` y `release/0.4.0-eclipse` fusionadas en `main` (PR #14, #16); no hay tags.
 
 ## Relacionado
 
-[[COSMOS_VERSIONING]] · [[CLAUDE_CODE_OPENCODE_GUIDE]] · [[KNOWLEDGE_MAINTENANCE]]
+[[COSMOS_VERSIONING]] · [[CLAUDE_CODE_OPENCODE_GUIDE]] · [[KNOWLEDGE_MAINTENANCE]] · [[DECISIONS_LOG]]
