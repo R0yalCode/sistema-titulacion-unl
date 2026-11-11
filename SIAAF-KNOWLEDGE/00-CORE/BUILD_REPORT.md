@@ -123,7 +123,7 @@ Todos con `git add` de rutas explícitas; los cambios locales ajenos (borrados e
 `git push -u origin docs/siaaf-knowledge` → `* [new branch] docs/siaaf-knowledge -> docs/siaaf-knowledge` (OK).
 
 ## 25. Pull Request o integración
-Ver [[#Resultado de la integración]] al final de este informe.
+Sin PR (no hay `gh`); merge `--no-ff` local en `develop` (`6ddcc87`) y push aceptado. Detalle: [[#Resultado de la integración]].
 
 ## 26. Estado de `develop`
 Ver [[#Resultado de la integración]].
@@ -159,4 +159,16 @@ Ya está registrada y abierta. En otra máquina: Obsidian → "Open folder as va
 
 ## Resultado de la integración
 
-*(Se completa tras la integración en `develop`.)*
+| Paso | Comando | Resultado comprobado |
+|---|---|---|
+| Pull Request | — | **No creado**: la CLI `gh` no está instalada y no se buscaron credenciales alternativas. GitHub ofreció la URL `https://github.com/R0yalCode/sistema-titulacion-unl/pull/new/docs/siaaf-knowledge` |
+| Actualizar `develop` | `git switch develop && git pull --ff-only origin develop` | Ya al día (`fee9119`) |
+| Merge | `git merge --no-ff docs/siaaf-knowledge` | Commit de merge `6ddcc87` (sin conflictos) |
+| Publicar `develop` | `git push origin develop` | `fee9119..6ddcc87 develop -> develop`: aceptado (la rama **no** rechazó el push directo, por lo que no parece tener protección que exija PR) |
+| Verificación | `git fetch` + `git diff origin/develop docs/siaaf-knowledge -- SIAAF-KNOWLEDGE` | Sin diferencias; `origin/develop = 6ddcc87` |
+| `main` | `git rev-parse origin/main` | `fe75d39`, **sin cambios** |
+| Árbol de trabajo | `git status --short` | Cambios ajenos intactos: 136 `D` (docs/), 1 `M` (`backend/entrypoint.sh`), 9 `??` |
+| Este apartado | Commit de seguimiento en la rama, integrado en `develop` por fast-forward | Ver `git log origin/develop` |
+| Eliminación de la rama `docs/siaaf-knowledge` (local y remota) | `git branch -d` / `git push origin --delete` | Se ejecuta **después** de este commit, una vez verificado que `develop` la contiene; comprobable con `git ls-remote --heads origin docs/siaaf-knowledge` |
+
+**Estado de `develop`:** contiene toda la bóveda SIAAF-KNOWLEDGE, `CLAUDE.md`/`AGENTS.md` actualizados y la regla de `.gitignore`. **Estado de `main`:** intacto.
