@@ -38,7 +38,7 @@ Dos bóvedas registradas en Obsidian (`~/Documentos/SIAAF-KNOWLEDGE` y `<repo>/d
 [[SOURCE_CATALOG]]: unas 230 fuentes en 9 grupos, cada una con su decisión (incorporada, referenciada o excluida) y motivo.
 
 ## 6. Archivos incorporados
-12 MD de `Documentacion-parte-2` (4 829 líneas añadidas en el commit `9f8e416`, incluidos el README y el catálogo).
+12 MD de `Documentacion-parte-2` (4 829 líneas añadidas en el commit `f363c38`, incluidos el README y el catálogo).
 
 ## 7. Estado de todos los archivos de Documentacion-parte-2
 12/12 **incorporados**, con copia íntegra verificada por SHA-256 y una nota derivada verificada contra el código. `index.html` **excluido** (render Quarto). Tabla completa: [[SOURCE_CATALOG]] §1.
@@ -80,7 +80,7 @@ Verificación con script (resuelve `[[nombre]]` y `[[ruta/nombre]]`, ignora bloq
 7. Significado temático de cada nombre COSMOS.
 
 ## 17. Configuración de Claude Code
-`CLAUDE.md`: nueva política de consulta (recuperación progresiva, MCP con alternativa directa, verificación contra código, mantenimiento), hallazgos vigentes y máxima 4 de Git actualizada (DK-003). Se conservó el resto del contenido. **Nota:** el `CLAUDE.md` local tenía 25 líneas sin confirmar (la sección de política de consulta); se reescribieron y quedaron incluidas en el commit `5b96cde`.
+`CLAUDE.md`: nueva política de consulta (recuperación progresiva, MCP con alternativa directa, verificación contra código, mantenimiento), hallazgos vigentes y máxima 4 de Git actualizada (DK-003). Se conservó el resto del contenido. **Nota:** el `CLAUDE.md` local tenía 25 líneas sin confirmar (la sección de política de consulta); se reescribieron y quedaron incluidas en el commit `37b577a`.
 
 ## 18. Configuración de OpenCode
 `AGENTS.md` §6 nueva (misma bóveda y reglas) y §3.8 (Git). `~/.config/opencode/opencode.json` inspeccionado (Ollama local, contextos de 8K, sin MCP de Obsidian): **no modificado**. [[SYSTEM]] está pensado para contextos de 8K.
@@ -110,11 +110,11 @@ Servidor `obsidian`, alcance usuario, HTTP `http://localhost:8765/mcp`, **Connec
 ## 23. Commits realizados
 | Hash | Mensaje |
 |---|---|
-| `9f8e416` | docs(obsidian): incorporar fuentes originales de Documentacion-parte-2 |
-| `af62f3e` | docs(architecture): documentar arquitectura, módulos y contratos verificados |
-| `02b31f0` | docs(knowledge): documentar normativa, procesos, trazabilidad y KPIs |
-| `8893145` | docs(obsidian): núcleo, flujos de trabajo y configuración de la bóveda |
-| `5b96cde` | docs(agents): apuntar CLAUDE.md y AGENTS.md a SIAAF-KNOWLEDGE |
+| `f363c38` | docs(obsidian): incorporar fuentes originales de Documentacion-parte-2 |
+| `e26252e` | docs(architecture): documentar arquitectura, módulos y contratos verificados |
+| `a72418b` | docs(knowledge): documentar normativa, procesos, trazabilidad y KPIs |
+| `6fc5f12` | docs(obsidian): núcleo, flujos de trabajo y configuración de la bóveda |
+| `37b577a` | docs(agents): apuntar CLAUDE.md y AGENTS.md a SIAAF-KNOWLEDGE |
 | (este informe) | docs(obsidian): agregar informe de construcción BUILD_REPORT |
 
 Todos con `git add` de rutas explícitas; los cambios locales ajenos (borrados en `docs/`, `backend/entrypoint.sh`, archivos sin seguimiento) **no se incluyeron** y siguen en el árbol de trabajo.
@@ -123,7 +123,7 @@ Todos con `git add` de rutas explícitas; los cambios locales ajenos (borrados e
 `git push -u origin docs/siaaf-knowledge` → `* [new branch] docs/siaaf-knowledge -> docs/siaaf-knowledge` (OK).
 
 ## 25. Pull Request o integración
-Sin PR (no hay `gh`); merge `--no-ff` local en `develop` (`6ddcc87`) y push aceptado. Detalle: [[#Resultado de la integración]].
+Sin PR (no hay `gh`); merge `--no-ff` local en `develop` (`73f1925`) y push aceptado. Detalle: [[#Resultado de la integración]].
 
 ## 26. Estado de `develop`
 Ver [[#Resultado de la integración]].
@@ -163,12 +163,27 @@ Ya está registrada y abierta. En otra máquina: Obsidian → "Open folder as va
 |---|---|---|
 | Pull Request | — | **No creado**: la CLI `gh` no está instalada y no se buscaron credenciales alternativas. GitHub ofreció la URL `https://github.com/R0yalCode/sistema-titulacion-unl/pull/new/docs/siaaf-knowledge` |
 | Actualizar `develop` | `git switch develop && git pull --ff-only origin develop` | Ya al día (`fee9119`) |
-| Merge | `git merge --no-ff docs/siaaf-knowledge` | Commit de merge `6ddcc87` (sin conflictos) |
-| Publicar `develop` | `git push origin develop` | `fee9119..6ddcc87 develop -> develop`: aceptado (la rama **no** rechazó el push directo, por lo que no parece tener protección que exija PR) |
-| Verificación | `git fetch` + `git diff origin/develop docs/siaaf-knowledge -- SIAAF-KNOWLEDGE` | Sin diferencias; `origin/develop = 6ddcc87` |
+| Merge | `git merge --no-ff docs/siaaf-knowledge` | Commit de merge `73f1925` (sin conflictos) |
+| Publicar `develop` | `git push origin develop` | `fee9119..73f1925 develop -> develop`: aceptado (la rama **no** rechazó el push directo, por lo que no parece tener protección que exija PR) |
+| Verificación | `git fetch` + `git diff origin/develop docs/siaaf-knowledge -- SIAAF-KNOWLEDGE` | Sin diferencias; `origin/develop = 73f1925` |
 | `main` | `git rev-parse origin/main` | `fe75d39`, **sin cambios** |
 | Árbol de trabajo | `git status --short` | Cambios ajenos intactos: 136 `D` (docs/), 1 `M` (`backend/entrypoint.sh`), 9 `??` |
 | Este apartado | Commit de seguimiento en la rama, integrado en `develop` por fast-forward | Ver `git log origin/develop` |
 | Eliminación de la rama `docs/siaaf-knowledge` (local y remota) | `git branch -d` / `git push origin --delete` | Se ejecuta **después** de este commit, una vez verificado que `develop` la contiene; comprobable con `git ls-remote --heads origin docs/siaaf-knowledge` |
 
 **Estado de `develop`:** contiene toda la bóveda SIAAF-KNOWLEDGE, `CLAUDE.md`/`AGENTS.md` actualizados y la regla de `.gitignore`. **Estado de `main`:** intacto.
+
+## Reescritura del historial (2026-11-11)
+
+Con autorización expresa del responsable (DK-009), se eliminaron las líneas `Co-Authored-By` de los commits publicados. Procedimiento: clon temporal, `git filter-branch --msg-filter` sobre `develop main ^fee9119 ^fe75d39` (13 commits; la historia anterior no tenía coautoría) y push con `--force-with-lease`. Los **árboles son idénticos** (`git diff` vacío entre versiones antigua y nueva); solo cambian los mensajes y, por tanto, los hashes. Las referencias a hashes de este informe se actualizaron:
+
+| Antes | Después | Antes | Después |
+|---|---|---|---|
+| 9f8e416 | f363c38 | c739463 | ab111cd |
+| af62f3e | e26252e | 85ced57 | 389cb31 |
+| 02b31f0 | a72418b | 8208fdc | 39e9448 |
+| 8893145 | 6fc5f12 | 8a84fc7 | 97ffc6e |
+| 5b96cde | 37b577a | fa5be2d | 33898ce |
+| 46594bb | 1681517 | b8c2c57 | c9c8db4 |
+| 6ddcc87 | 73f1925 | | |
+
