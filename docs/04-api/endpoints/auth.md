@@ -16,7 +16,7 @@ Obtiene el par de tokens JWT con credenciales. **Sin parámetros de ruta ni de c
 | 200 | `{ "access": string, "refresh": string }` — `access` incluye claims `cedula` y `roles[]` |
 | 401 | `{ "detail": "No active account found with the given credentials" }` |
 
-- **Seguridad**: endpoint público (login). Sin throttling implementado (ver auditoría AUD-P0-02).
+- **Seguridad**: endpoint público (login). Throttling 5/min por IP real (`TrustedProxyScopedRateThrottle`, ámbito `auth`, SEC-T002); excederlo responde 429.
 - **Módulo**: authentication (`TokenPairView`).
 
 Ejemplo:

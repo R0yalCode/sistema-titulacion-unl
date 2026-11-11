@@ -548,18 +548,24 @@ class TestInmutabilidadAuditoriaJSONB:
     def test_cambio_estado_genera_auditoria_con_delta(
         self, estudiante, expediente_en_verificacion
     ):
-        """Cambio de estado genera evento ESTADO_CAMBIADO con delta completo."""
+        """DT-12: la transición genera un ESTADO_CAMBIADO con delta completo."""
+        from apps.expedientes.services.transiciones import registrar_transicion
+
         estado_anterior = expediente_en_verificacion.estado
-        expediente_en_verificacion.estado = ExpedienteTitulacion.ESTADO_OBSERVADA
-        expediente_en_verificacion.save(update_fields=["estado"])
+        registrar_transicion(
+            expediente_en_verificacion,
+            ExpedienteTitulacion.ESTADO_OBSERVADA,
+            estudiante,
+            origen="prueba",
+        )
 
         eventos = EventoAuditoria.objects.filter(
             expediente=expediente_en_verificacion,
             accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
         )
-        assert eventos.count() >= 1
+        assert eventos.count() == 1
 
-        evento = eventos.latest("timestamp")
+        evento = eventos.get()
         assert evento.accion == EventoAuditoria.Accion.ESTADO_CAMBIADO
         assert evento.detalles["estado_anterior"] == estado_anterior
         assert evento.detalles["estado_nuevo"] == "OBSERVADA"

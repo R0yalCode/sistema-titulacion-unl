@@ -16,7 +16,7 @@ last_verified: 2026-11-11
 |---|---|---|
 | Backend Fase 1 | **Implementado con brechas** | 6 apps, 17 operaciones API, 12 migraciones → [[02-BACKEND/MODULES|Módulos backend]] |
 | Frontend | **F0, F1, F2, F2.5, V-01…V-04 cerradas**; V-05…V-09 y transversales pendientes | [[TASKS]], [[ROUTES]] |
-| Seguridad | Controles base implementados (ECLIPSE v0.4.0); VULN-001/002/003/005/006/010 abiertas | [[06-AUDITS/SECURITY/SECURITY_AUDIT|Auditoría de seguridad]] |
+| Seguridad | Controles base implementados (ECLIPSE v0.4.0); VULN-001/002/003 cerradas el 2026-11-11 (INC-01, rama `security/inc-01-endurecimiento-backend`, sin commit); VULN-005/006/010 abiertas. Plan backend nuevo: `docs/planificacion-backend/` (etapas E0–E7, decisiones DP-01…DP-17) | [[06-AUDITS/SECURITY/SECURITY_AUDIT|Auditoría de seguridad]] |
 | Modalidades TIC/EC | **No implementadas**; normativa sin validar | [[COMPREHENSIVE_EXAMINATION]] |
 | KPIs/dashboards | **No implementados** (solo V-02 con datos reales) | [[KPI_CATALOG]] |
 | Planificación | DP2: INC-01…INC-09; ruta crítica INC-01→03→04→08/07→09 | [[DP2-PLAN_MAESTRO]] |

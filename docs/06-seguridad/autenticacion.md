@@ -28,4 +28,5 @@ JWT stateless (SimpleJWT, HS256) según ADR-0003.
 
 - Sin rotación de refresh ni blacklist: un refresh robado es usable durante su vigencia (AUD-P2-04).
 - Resuelto (SEC-T004, 2026-11-05): `SIGNING_KEY` usa `JWT_SIGNING_KEY`, variable de entorno independiente de `SECRET_KEY`. Ver `docs/06-seguridad/SECURITY_CONFIG.md`.
-- Sin throttling en el endpoint de login (AUD-P0-02).
+- ~~Sin throttling en el endpoint de login (AUD-P0-02)~~ — resuelto: `TokenPairView` usa `TrustedProxyScopedRateThrottle` con ámbito `auth` (5/min por IP real, SEC-T002).
+- No existen endpoints `POST /auth/token/refresh/` ni `POST /auth/logout/` (VULN-005, INC-02): el frontend vuelve a iniciar sesión al expirar el access token.

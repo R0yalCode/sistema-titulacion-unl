@@ -15,7 +15,7 @@ title: "Módulo: expedientes"
 | Modelo | Campos clave | Restricciones |
 |---|---|---|
 | `ExpedienteTitulacion` | `numero_expediente` único (`EXP-AAAA-NNNN`), `numero_providencia` único (`PROV-AAAA-NNNN`), `estado` (7 choices, indexado), `fecha_recepcion`, `fecha_limite_atencion`, `dias_laborables_acumulados`, `activa` | FK PROTECT a estudiante; índice `carrera_id` |
-| `HistorialEstado` | `estado_anterior`, `estado_nuevo`, `fecha_cambio` | FK CASCADE al expediente; FK registrador |
+| `HistorialEstado` | `estado_anterior`, `estado_nuevo`, `fecha_cambio` | FK CASCADE al expediente; FK registrador. Se crea **solo** desde `registrar_transicion()` (DT-12), una fila por transición, con el estado anterior leído de la BD antes del cambio |
 
 ## Endpoints
 

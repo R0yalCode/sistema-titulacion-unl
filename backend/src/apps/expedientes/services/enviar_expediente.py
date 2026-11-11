@@ -22,6 +22,7 @@ from django.utils import timezone
 
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.expedientes.domain.plazo_calculator import PlazoLaboralCalculator
+from apps.expedientes.services.transiciones import registrar_transicion
 from apps.peticiones.adapters.models import PeticionDocumental
 
 DIAS_PLAZO_RRA = 8
@@ -80,8 +81,12 @@ def _requisitos_sin_documento_vigente(expediente):
     ]
 
 
-def execute(expediente, ahora=None):
-    """Envia el expediente: BORRADOR -> ENVIADA dentro de transaccion atomica."""
+def execute(expediente, ahora=None, *, actor):
+    """Envia el expediente: BORRADOR -> ENVIADA dentro de transaccion atomica.
+
+    `actor` es el usuario autenticado que envía (DT-12): la transición se
+    registra con `registrar_transicion()`.
+    """
     with transaction.atomic():
         cadena = (
             ExpedienteTitulacion.objects.select_for_update()
@@ -100,7 +105,6 @@ def execute(expediente, ahora=None):
                 "no poseen documento en firme: " + ", ".join(faltantes)
             )
         recepcion = ahora if ahora is not None else timezone.now()
-        cadena.estado = ExpedienteTitulacion.ESTADO_ENVIADA
         cadena.fecha_recepcion = recepcion
         cadena.numero_providencia = generar_numero_providencia()
         fecha_limite = PlazoLaboralCalculator().calcular_fecha_limite(
@@ -110,7 +114,17 @@ def execute(expediente, ahora=None):
             datetime.combine(fecha_limite, time.min),
             dt_timezone.utc,
         )
-        cadena.save()
+        registrar_transicion(
+            cadena,
+            ExpedienteTitulacion.ESTADO_ENVIADA,
+            actor,
+            origen="enviar_expediente",
+            campos_adicionales=(
+                "fecha_recepcion",
+                "numero_providencia",
+                "fecha_limite_atencion",
+            ),
+        )
     return cadena
 
 

@@ -6,14 +6,14 @@ con formato JSONB inmutable.
 
 import logging
 
-from django.db.models.signals import post_save, pre_save, m2m_changed
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from django.utils import timezone
 
 from core.adapters.client_ip import resolver_ip_cliente
 from core.adapters.middleware import get_current_request
 from apps.notificaciones.adapters.models import EventoAuditoria
-from apps.expedientes.adapters.models import ExpedienteTitulacion, HistorialEstado
+from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.peticiones.adapters.models import PeticionDocumental, DocumentoEntregado
 from apps.resoluciones.adapters.models import InformeAptitud, DeclaratoriaAptitud
 from apps.verificacion.adapters.models import ChecklistVerification, ObservacionAccionable
@@ -72,22 +72,17 @@ def _crear_evento_auditoria(
 # Señales para ExpedienteTitulacion
 # ============================================================
 
-@receiver(pre_save, sender=ExpedienteTitulacion)
-def expediente_pre_save(sender, instance, **kwargs):
-    """Captura estado anterior antes de guardar."""
-    if instance.pk:
-        try:
-            anterior = ExpedienteTitulacion.objects.get(pk=instance.pk)
-            instance._estado_anterior = anterior.estado
-        except ExpedienteTitulacion.DoesNotExist:
-            instance._estado_anterior = None
-    else:
-        instance._estado_anterior = None
-
-
 @receiver(post_save, sender=ExpedienteTitulacion)
 def expediente_post_save(sender, instance, created, **kwargs):
-    """Registra creación de expediente o cambio de estado."""
+    """Registra la creación del expediente.
+
+    DT-12 (PLB-E2-06): las transiciones de estado ya **no** se auditan desde
+    señales. Su única fuente es
+    `apps.expedientes.services.transiciones.registrar_transicion()`, que
+    registra `HistorialEstado` y un único `ESTADO_CAMBIADO` con el actor
+    autenticado. Antes, esta señal atribuía todo cambio al estudiante (H-24)
+    y la señal de `HistorialEstado` duplicaba el evento.
+    """
     if created:
         _crear_evento_auditoria(
             accion=EventoAuditoria.Accion.EXPEDIENTE_CREADO,
@@ -97,42 +92,6 @@ def expediente_post_save(sender, instance, created, **kwargs):
                 "numero_expediente": instance.numero_expediente,
                 "estado_inicial": instance.estado,
                 "fecha_creacion": instance.fecha_creacion.isoformat() if instance.fecha_creacion else None,
-            },
-        )
-    else:
-        # Verificar cambio de estado
-        if hasattr(instance, "_estado_anterior") and instance._estado_anterior != instance.estado:
-            _crear_evento_auditoria(
-                accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
-                # El usuario que causó el cambio se determina por contexto
-                # En la práctica se pasaría desde la vista; aquí usamos estudiante como fallback
-                usuario=instance.estudiante,
-                expediente=instance,
-                detalles={
-                    "estado_anterior": instance._estado_anterior,
-                    "estado_nuevo": instance.estado,
-                    "fecha_cambio": timezone.now().isoformat(),
-                },
-            )
-
-
-# ============================================================
-# Señales para HistorialEstado (cambio de estado explícito)
-# ============================================================
-
-@receiver(post_save, sender="expedientes.HistorialEstado")
-def historial_estado_post_save(sender, instance, created, **kwargs):
-    """Registra cambios de estado explícitos."""
-    if created:
-        _crear_evento_auditoria(
-            accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
-            usuario=instance.registrado_por,
-            expediente=instance.expediente,
-            detalles={
-                "estado_anterior": instance.estado_anterior,
-                "estado_nuevo": instance.estado_nuevo,
-                "fecha_cambio": instance.fecha_cambio.isoformat() if instance.fecha_cambio else None,
-                "registrado_por_id": str(instance.registrado_por_id) if instance.registrado_por_id else None,
             },
         )
 

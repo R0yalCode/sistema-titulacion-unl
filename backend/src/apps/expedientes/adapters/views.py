@@ -25,6 +25,7 @@ from apps.authentication.adapters.permissions import HasRolePermission
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.expedientes.services import crear_expediente, enviar_expediente
 from apps.verificacion.services import registrar_observacion
+from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
 from .serializers import (
@@ -56,6 +57,7 @@ class ExpedienteViewSet(
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, HasRolePermission]
+    throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "expedientes"
     queryset = ExpedienteTitulacion.objects.select_related("estudiante")
     serializer_class = ExpedienteDetalleSerializer
@@ -125,7 +127,7 @@ class ExpedienteViewSet(
             estudiante=request.user,
         )
         try:
-            enviado = enviar_expediente.execute(expediente)
+            enviado = enviar_expediente.execute(expediente, actor=request.user)
         except enviar_expediente.EstadoInvalidoError as error:
             raise drf_serializers.ValidationError(str(error))
         except enviar_expediente.RequisitosIncompletosError as error:
