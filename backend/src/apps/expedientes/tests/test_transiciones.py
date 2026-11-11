@@ -185,6 +185,16 @@ APPS_DIR = Path(__file__).resolve().parents[2]
 PERMITIDO = APPS_DIR / "expedientes" / "services" / "transiciones.py"
 ASIGNACION_ESTADO = re.compile(r"\b(expediente|cadena|exp|instance)\.estado\s*=(?!=)")
 CREACION_HISTORIAL = re.compile(r"HistorialEstado\.objects\.(create|bulk_create)")
+# O-3 (E2-06): escrituras masivas que esquivarían la función. `\bestado\s*=`
+# no coincide con `estado_verificacion=` ni `estado_peticion=`.
+ACTUALIZACION_MASIVA = re.compile(r"\.update\([^)]*\bestado\s*=", re.DOTALL)
+BULK_UPDATE_ESTADO = re.compile(r"\.bulk_update\([^)]*[\"']estado[\"']", re.DOTALL)
+PATRONES_PROHIBIDOS = (
+    ASIGNACION_ESTADO,
+    CREACION_HISTORIAL,
+    ACTUALIZACION_MASIVA,
+    BULK_UPDATE_ESTADO,
+)
 
 
 def _fuentes_productivas():
@@ -199,7 +209,7 @@ def test_arquitectura_ningun_servicio_cambia_estado_fuera_de_la_funcion():
     infractores = []
     for ruta in _fuentes_productivas():
         texto = ruta.read_text(encoding="utf-8")
-        for patron in (ASIGNACION_ESTADO, CREACION_HISTORIAL):
+        for patron in PATRONES_PROHIBIDOS:
             for m in patron.finditer(texto):
                 linea = texto.count("\n", 0, m.start()) + 1
                 infractores.append(f"{ruta.relative_to(APPS_DIR)}:{linea}")
@@ -208,3 +218,33 @@ def test_arquitectura_ningun_servicio_cambia_estado_fuera_de_la_funcion():
     ), "Cambios de estado o historial fuera de registrar_transicion(): " + ", ".join(
         infractores
     )
+
+
+@pytest.mark.parametrize(
+    "codigo",
+    [
+        "expediente.estado = 'ENVIADA'",
+        "ExpedienteTitulacion.objects.filter(pk=pk).update(estado='ENVIADA')",
+        "qs.update(\n    fecha_actualizacion=ahora,\n    estado=nuevo,\n)",
+        "ExpedienteTitulacion.objects.bulk_update(lista, ['estado'])",
+        'qs.bulk_update(lista, fields=["fecha_actualizacion", "estado"])',
+        "HistorialEstado.objects.create(expediente=e)",
+    ],
+)
+def test_arquitectura_patrones_detectan_cambios_de_estado(codigo):
+    """O-3: la prueba de arquitectura detecta también escrituras masivas."""
+    assert any(p.search(codigo) for p in PATRONES_PROHIBIDOS)
+
+
+@pytest.mark.parametrize(
+    "codigo",
+    [
+        "ChecklistVerification.objects.filter(pk=pk).update(estado_verificacion='X')",
+        "PeticionDocumental.objects.filter(pk=pk).update(estado_peticion='X')",
+        "DocumentoEntregado.objects.filter(peticion=p).update(es_vigente=False)",
+        "PeticionDocumental.objects.bulk_update(lista, ['estado_peticion'])",
+        "if expediente.estado == 'ENVIADA':",
+    ],
+)
+def test_arquitectura_patrones_no_dan_falsos_positivos(codigo):
+    assert not any(p.search(codigo) for p in PATRONES_PROHIBIDOS)

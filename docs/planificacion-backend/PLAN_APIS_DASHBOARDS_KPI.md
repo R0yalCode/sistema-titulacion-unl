@@ -66,7 +66,7 @@ Ocho roles en `authentication/adapters/models.py`: ESTUDIANTE, SECRETARIA_CARRER
 
 | Método y ruta | Objetivo | Permisos | Tarea | Estado |
 |---|---|---|---|---|
-| `POST /api/v1/expedientes/{id}/iniciar-verificacion/` | ENVIADA→EN_VERIFICACION + crear el checklist; respuesta: detalle del expediente | SECRETARIO_ABOGADO (facultad), celda nueva sujeta a **AUT-02**; ANALISTA según DP-01b | E2-01 | Definida, **no autorizada** |
+| `POST /api/v1/expedientes/{id}/iniciar-verificacion/` | ENVIADA→EN_VERIFICACION + crear el checklist; respuesta: detalle del expediente | SECRETARIO_ABOGADO (facultad), celda `expedientes:iniciar_verificacion` (AUT-02); ANALISTA según DP-01b | E2-01 | **Implementado 2026-11-11** (400 `transicion_invalida`, 403, 404, 429 en el contrato) |
 | `GET /api/v1/expedientes/{id}/observaciones/` | Observaciones para el estudiante: `[{id, requisito_codigo, requisito_nombre, motivo, fecha_observacion, estado_subsanacion, checklist_verification_id, puede_subsanar}]` | ESTUDIANTE (own), SECRETARIO_ABOGADO (facultad), ADMIN, celda nueva sujeta a **AUT-03**; ANALISTA según DP-05b; SECRETARIA_CARRERA según DP-21 | E2-02a | Definida, **no autorizada** |
 | `POST /api/v1/auth/token/refresh/` | Renovar el par (rotación) | Pública + throttle `auth` | E3-01 | Lista |
 | `POST /api/v1/auth/logout/` | Revocar el refresh | Autenticado | E3-02 | Lista |

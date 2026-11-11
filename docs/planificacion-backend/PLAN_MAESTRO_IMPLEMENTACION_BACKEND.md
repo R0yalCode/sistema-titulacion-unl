@@ -153,7 +153,7 @@ P2 · añadir `EventoAuditoria.Accion.DOCUMENTO_INTEGRIDAD_FALLIDA` (migración 
 
 | Tarea | Hallazgo | Requerimiento | Estado | Bloqueo / autorización |
 |---|---|---|---|---|
-| E2-01 Iniciar verificación + generar checklist | H-01, H-17 | RQ-FL-03, RQ-FL-21 | DEF + **AUT** | AUT-02 (celda nueva); requiere E2-06 (DT-12) antes o a la vez; DP-01b solo afecta al analista |
+| E2-01 Iniciar verificación + generar checklist | H-01, H-17 | RQ-FL-03, RQ-FL-21 | **HECHA 2026-11-11** (autorizada; AUT-02 aplicada) | DP-01b solo afecta al analista (excluido) |
 | E2-02a Consulta de observaciones | H-04 | RQ-FL-16 | DEF + **AUT** | AUT-03 (celda nueva); DP-21 solo afecta a la Secretaría de Carrera |
 | E2-02b1 Rechazar la carga normal sobre OBSERVADO | H-21 | RQ-FL-18 | DEF | Coordinar con E2-02b3.2 (riesgo R-07) |
 | E2-02b2 Notificación de subsanación al actor correcto | H-18 | RQ-FL-23 | DEF | DP-05b para incluir o no al analista (excluido por defecto) |
@@ -171,7 +171,7 @@ P2 · añadir `EventoAuditoria.Accion.DOCUMENTO_INTEGRIDAD_FALLIDA` (migración 
 | Objetivo funcional | Que el SECRETARIO_ABOGADO de la facultad inicie de forma explícita la verificación de un expediente ENVIADA y que, en la misma operación, queden creados los ítems del checklist que luego se evalúan |
 | Problema | H-01 (no existe la transición) y H-17 (ningún servicio crea `ChecklistVerification`; la e2e fuerza ambos) |
 | Requerimiento / prioridad | RQ-FL-03, RQ-FL-21 · **P0** |
-| Estado | DEF (no autorizada) + **AUT-02** pendiente. El ANALISTA_APOYO queda excluido hasta DP-01b |
+| Estado | **HECHA 2026-11-11** (autorizada por el responsable; AUT-02 aplicada). `test_iniciar_verificacion.py` 34/34; e2e sin forzar estados ni crear filas a mano. El ANALISTA_APOYO queda excluido hasta DP-01b. Concurrencia real no probada (SQLite en pruebas): cubierta por `select_for_update` y por la prueba secuencial de segunda llamada → 400 |
 | Archivos / componentes | `expedientes/services/iniciar_verificacion.py` (nuevo); `expedientes/adapters/views.py` (acción `iniciar_verificacion` en `ExpedienteViewSet`, que ya hereda `MutantOperationThrottle`); `config/urls.py`; `authentication/adapters/permissions.py` (**nueva** celda `expedientes:iniciar_verificacion`: requiere **AUT-02**, independiente de la autorización de la tarea); reutiliza `verificacion/services/evaluar_checklist._get_or_create_checklist_verification`; `tests/e2e/test_full_workflow.py` |
 | Endpoint | `POST /api/v1/expedientes/{id}/iniciar-verificacion/` (sin cuerpo) → 200 con `ExpedienteDetalleSerializer` |
 | Autorización | RBAC `expedientes:iniciar_verificacion` POST = `{SECRETARIO_ABOGADO: SCOPE_FACULTAD}`; el queryset se filtra con `ScopeFilterMixin` (lo ajeno → 404); el servicio revalida la facultad (defensa en profundidad, igual que `evaluar_checklist`) |

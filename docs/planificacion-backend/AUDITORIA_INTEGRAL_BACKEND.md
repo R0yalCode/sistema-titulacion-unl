@@ -12,7 +12,7 @@ date: 2026-11-11
 
 - El backend (Django 5.2 + DRF, monolito modular hexagonal, 6 apps) implementa de forma sólida el **núcleo de la Fase 1** (expediente → peticiones documentales → checklist → informe → declaratoria), con RBAC de mundo cerrado, aislamiento IDOR por ámbito, validación estricta de PDF, plazos de 8 días hábiles con pausas y auditoría inmutable.
 - **No es completo para el frontend.** Faltan, en este orden de impacto:
-  1. **Transición `ENVIADA → EN_VERIFICACION`** (GAP-STATE-01). Sin ella, el flujo de verificación (evaluar checklist, observar, emitir informe) **no es alcanzable por la API**; la prueba E2E lo fuerza asignando el estado. Además, ningún servicio crea los ítems del checklist (H-17). *Actualización 2026-11-11:* el responsable aportó un criterio funcional (fuente secundaria) que define la solución técnica (PLB-E2-01), **pendiente de autorización** para implementarse.
+  1. **Transición `ENVIADA → EN_VERIFICACION`** (GAP-STATE-01). Sin ella, el flujo de verificación (evaluar checklist, observar, emitir informe) **no es alcanzable por la API**; la prueba E2E lo fuerza asignando el estado. Además, ningún servicio crea los ítems del checklist (H-17). *Actualización 2026-11-11:* el responsable aportó un criterio funcional (fuente secundaria) que define la solución técnica (PLB-E2-01). **Implementada el 2026-11-11** (E2-01, AUT-02): H-01 y H-17 corregidos.
   2. **App `indicadores` y `GET /dashboard/me/`**: no existen. Los dashboards por rol (excepto el del estudiante, que combina bandeja y notificaciones) no tienen fuente de datos.
   3. **Modalidades de titulación (TIC/EC)**: ausentes en todas las capas y **bloqueadas** por validación normativa (RRA-UNL arts. 39, 40, 212, 216, 233) y por datos: el mock SGA no expone reprobaciones ni tercera matrícula.
   4. **Sesiones**: no hay endpoint de refresh ni de logout; el refresh de 24 h no se usa.
@@ -127,7 +127,7 @@ App `indicadores` y `/dashboard/me/`; endpoints analíticos; modalidades (4 endp
 
 | Hallazgo | Requerimiento | Tarea | Estado | Pruebas previstas |
 |---|---|---|---|---|
-| H-17 Checklist no generado | RQ-FL-21 (y RQ-FL-03) | PLB-E2-01 | Definida, no autorizada | `expedientes/tests/test_iniciar_verificacion.py` (filas, idempotencia, rollback); e2e sin creación manual |
+| H-17 Checklist no generado | RQ-FL-21 (y RQ-FL-03) | PLB-E2-01 | **Corregido 2026-11-11** (E2-01) | `expedientes/tests/test_iniciar_verificacion.py` (filas, idempotencia, rollback); e2e sin creación manual |
 | H-18 Resolución automática + notificación equivocada | RQ-FL-06 / RQ-FL-23 | PLB-E2-02b3.1 / PLB-E2-02b2 | Definidas, no autorizadas | `verificacion/tests/test_subsanar_requisito.py` (no resuelve; destinatarios) |
 | H-19 Subsanación múltiple bloqueada | RQ-FL-24 | PLB-E2-02b3.2 | **Bloqueada (DP-20)** | Dos o tres ítems observados, todos subsanables |
 | H-20 Dos caminos de observación | RQ-FL-17 | PLB-E2-02c | **Bloqueada (DP-19)** | Paridad de efectos entre `POST /observar/` y `PUT /checklist/` |

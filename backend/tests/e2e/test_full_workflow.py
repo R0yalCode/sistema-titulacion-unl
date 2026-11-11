@@ -25,13 +25,14 @@ from apps.peticiones.adapters.models import (
     PeticionDocumental,
     DocumentoEntregado,
 )
-from apps.verificacion.adapters.models import (
-    ChecklistVerification,
-    ObservacionAccionable,
-)
+from apps.verificacion.adapters.models import ObservacionAccionable
 from apps.resoluciones.adapters.models import InformeAptitud, DeclaratoriaAptitud
 from apps.notificaciones.adapters.models import NotificacionInterna, EventoAuditoria
-from apps.expedientes.services import crear_expediente, enviar_expediente
+from apps.expedientes.services import (
+    crear_expediente,
+    enviar_expediente,
+    iniciar_verificacion,
+)
 from apps.verificacion.services import (
     evaluar_checklist,
     subsanar_requisito,
@@ -286,19 +287,8 @@ class TestFlujoCompletoTitulacionE2E:
         for p in peticiones:
             assert p.estado_peticion == "PENDIENTE"
 
-        # Crear checklist inicializado en PENDIENTE (el servicio no lo crea automáticamente)
-        for p in peticiones:
-            ChecklistVerification.objects.create(
-                expediente=expediente,
-                requisito=p.requisito,
-                estado_verificacion="PENDIENTE",
-            )
-
-        # Verificar checklist inicializado en PENDIENTE
-        checklists = expediente.checklist_verificaciones.all()
-        assert checklists.count() == 5
-        for c in checklists:
-            assert c.estado_verificacion == "PENDIENTE"
+        # El checklist aún no existe: lo crea el inicio de verificación (PLB-E2-01).
+        assert not expediente.checklist_verificaciones.exists()
  
         # Verificar auditoría de creación
         evento_creacion = EventoAuditoria.objects.filter(
@@ -338,10 +328,19 @@ class TestFlujoCompletoTitulacionE2E:
         assert evento_envio.detalles.get("estado_nuevo") == ExpedienteTitulacion.ESTADO_ENVIADA
 
         # ============================================================
-        # Transición ENVIADA -> EN_VERIFICACION (inicio de verificación)
+        # Transición ENVIADA -> EN_VERIFICACION (inicio de verificación,
+        # PLB-E2-01): el SECRETARIO_ABOGADO la inicia y se crea el checklist.
         # ============================================================
-        expediente_enviado.estado = ExpedienteTitulacion.ESTADO_EN_VERIFICACION
-        expediente_enviado.save(update_fields=["estado"])
+        expediente_enviado = iniciar_verificacion.execute(
+            expediente_enviado.pk, actor=secretario_abogado
+        )
+        assert expediente_enviado.estado == ExpedienteTitulacion.ESTADO_EN_VERIFICACION
+
+        # Verificar checklist inicializado en PENDIENTE por el servicio
+        checklists = expediente_enviado.checklist_verificaciones.all()
+        assert checklists.count() == 5
+        for c in checklists:
+            assert c.estado_verificacion == "PENDIENTE"
 
         # ============================================================
         # FL-03: OBSERVACIÓN (OBSERVADA) - pausa de plazo (AP-01, RF-007)
@@ -525,22 +524,23 @@ class TestFlujoCompletoTitulacionE2E:
 
         # DT-12 / PLB-E2-06: cada transición ejecutada por un servicio se
         # registra una sola vez, con el actor real y el estado anterior real.
-        # (ENVIADA->EN_VERIFICACION se fuerza arriba con save(): no es una
-        # transición de servicio hasta PLB-E2-01 y por eso no se registra.)
+        # (ENVIADA->EN_VERIFICACION se registra desde PLB-E2-01.)
         transiciones = [
             (h.estado_anterior, h.estado_nuevo, h.registrado_por) for h in historial
         ]
         E = ExpedienteTitulacion
         assert [(a, n) for a, n, _ in transiciones] == [
             (E.ESTADO_BORRADOR, E.ESTADO_ENVIADA),
+            (E.ESTADO_ENVIADA, E.ESTADO_EN_VERIFICACION),
             (E.ESTADO_EN_VERIFICACION, E.ESTADO_OBSERVADA),
             (E.ESTADO_OBSERVADA, E.ESTADO_EN_VERIFICACION),
             (E.ESTADO_EN_VERIFICACION, E.ESTADO_INFORME_EMITIDO),  # H-25 corregido
             (E.ESTADO_INFORME_EMITIDO, E.ESTADO_DECLARADA_APTA),
         ]
         assert transiciones[0][2] == estudiante
-        assert transiciones[3][2] == secretario_abogado
-        assert transiciones[4][2] == decano
+        assert transiciones[1][2] == secretario_abogado
+        assert transiciones[4][2] == secretario_abogado
+        assert transiciones[5][2] == decano
         eventos_transicion = EventoAuditoria.objects.filter(
             expediente=expediente_enviado,
             accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
