@@ -28,11 +28,46 @@ Lee primero `AGENTS.md` (raíz). Resumen operativo para ti:
 Jerarquía de ramas: **`main`** (principal) → **`develop`** (se deriva de `main`) → **ramas de trabajo** (se derivan de `develop`, una por funcionalidad o tarea).
 
 1. **Rama de trabajo**: parte de `develop` actualizada (`git switch develop && git pull --ff-only origin develop`, luego `git switch -c <tipo>/<descripcion>`). Tipos: `feat/`, `fix/`, `docs/`, `refactor/`, `security/`, `test/`, `build/`, `ci/`. Nunca trabajes ni hagas commits directamente sobre `main` o `develop`.
-2. **Commits** en la rama de trabajo, en formato Conventional Commits: título `tipo(ámbito): descripción breve` + **descripción técnica** en el cuerpo (qué se hizo, archivos/módulos afectados, validaciones *realmente ejecutadas* con su resultado, limitaciones y pendientes). Agrega rutas explícitas (nunca `git add .`) y no incluyas cambios locales ajenos a la tarea. **Autoría: solo el responsable del repositorio** (usuario Git configurado). Es un repositorio de trabajo académico: **no añadas** líneas `Co-Authored-By`, menciones a Claude/IA ni firmas de herramientas en commits, merges, PR ni releases.
+2. **Commits** en la rama de trabajo, en formato Conventional Commits: título `tipo(ámbito): descripción breve` + **descripción técnica** en el cuerpo (qué se hizo, archivos/módulos afectados, validaciones *realmente ejecutadas* con su resultado, limitaciones y pendientes). Agrega rutas explícitas (nunca `git add .`) y no incluyas cambios locales ajenos a la tarea. **Autoría:** según la sección "Equipo, autoría y distribución del trabajo" (autor real + `Co-authored-by` solo entre integrantes que contribuyeron). Es un repositorio de trabajo académico: **no añadas** menciones a Claude/IA, coautoría de Claude ni firmas de herramientas en commits, merges, PR ni releases.
 3. **Fusión en `develop`**: al terminar y verificar la tarea, publica la rama y fusiónala en `develop` con `git merge --no-ff`, con un mensaje de merge que tenga título y descripción (qué integra la rama y cómo se validó). Publica `develop` y elimina la rama de trabajo (local y remota) cuando quede integrada.
 4. **Fusión `develop` → `main`: SIEMPRE PREGUNTA ANTES.** Tras integrar en `develop`, pregunta expresamente al responsable: "¿Quieres fusionar `develop` con `main`?". **Solo con su confirmación explícita** fusiona con `git merge --no-ff develop` en `main`, usando un mensaje profesional con título (p. ej. `release(<hito>): <resumen>` o `Merge develop into main: <resumen>`) y una descripción que liste los cambios integrados, las validaciones y los pendientes. Publica `main` y luego alinea `develop` con `main` (`git merge --ff-only main` en `develop` + push). Sin confirmación, `main` no se toca.
 5. **Prohibido** `--force`, reescribir historial publicado, desactivar protecciones o resolver conflictos con operaciones destructivas. Si algo bloquea (permisos, conflictos, protección de ramas), detente y reporta.
 6. Tags y releases solo para entregas funcionales validadas, según `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/COSMOS_VERSIONING.md` (formato `HITO vX.Y.Z — Descripción`; no reutilices identificadores).
+
+### Equipo, autoría y distribución del trabajo (política permanente, DK-010)
+
+Esta política complementa el Flujo Git; no anula ni debilita ninguna de sus restricciones (protección de cambios locales, sin operaciones destructivas, sin commits/push/merges/cambios de rama fuera del alcance autorizado, sin tocar archivos restringidos, sin sobrescribir trabajo de otros integrantes).
+
+**Integrantes** (identidad de referencia; no inventes nombres personales ni alteres los correos):
+
+| GitHub | Correo |
+|---|---|
+| R0yalCode (responsable del repositorio) | royel.jima@unl.edu.ec |
+| JuanCalopinoo | Juan.calopino@unl.edu.ec |
+| 7777-C | markgonzalez20062@gmail.com |
+| Dan1el17 | steeven.pardo@unl.edu.ec |
+| JJOC3S | jimmy.ontaneda@unl.edu.ec |
+
+**Autoría:**
+
+- El **autor** del commit es el integrante que implementó realmente el cambio. Trabajo individual → solo su autoría.
+- Si varios integrantes contribuyeron realmente al mismo cambio: autor = autor principal, y al final del mensaje un trailer por cada colaborador: `Co-authored-by: Identificador <correo>` (identificador y correo exactos de la tabla).
+- Nunca agregues por defecto a los cinco integrantes, ni atribuyas a nadie contribuciones que no hizo.
+- Claude Code es una herramienta de asistencia: **nunca** figura como autor, committer ni coautor.
+- Usa la identidad Git de un integrante (`--author`) solo con su conocimiento y la autorización del responsable. No modifiques la configuración Git (global ni local) para ello.
+- No modifiques commits anteriores ni agregues autores retroactivamente: la regla 5 (prohibido reescribir historial publicado y `--force`) sigue siendo absoluta.
+
+**Antes de cada commit:** `git status` → diff completo → identificar qué archivos/partes hizo cada integrante → comprobar que no entren cambios ajenos → verificar la identidad Git (`git config user.name/user.email`, `git var GIT_AUTHOR_IDENT`/`GIT_COMMITTER_IDENT`) → fijar autor y coautores según contribuciones verificables (si no puedes verificarlas, **pregunta** antes de commitear) → mensaje Conventional Commits descriptivo.
+
+**Distribución del trabajo (en cada funcionalidad pendiente; objetivo: que los cinco tengan oportunidades reales de contribuir y generar sus propios commits):**
+
+1. Analiza la funcionalidad y divídela en tareas técnicas concretas (componentes, servicios, endpoints, pruebas o documentación).
+2. Propón el integrante más adecuado para cada tarea según su alcance técnico, dependencias y responsabilidades en curso, con carga equilibrada entre los cinco. **Rota las categorías**: no asignes siempre el mismo tipo de trabajo a las mismas personas.
+3. Para cada tarea indica: integrante responsable, archivos/componentes, resultado esperado, pruebas y validaciones, y commit individual previsto con su autor real (plantilla en `GIT_POLICY.md` § Distribución de tareas).
+4. Evita que dos integrantes modifiquen los mismos archivos a la vez sin coordinación.
+5. La propuesta **no es trabajo ejecutado**: confírmala con el equipo antes de tratarla como asignada, y nunca registres que alguien hizo algo que no hizo.
+6. Cada integrante desarrolla y valida su parte antes de integrarla. Solo después de verificar lo realmente realizado, y con autorización, prepara el commit con la identidad (`--author`) del integrante que lo implementó (coautores si la contribución fue compartida). El committer es quien ejecuta el commit.
+7. Registra quién hizo cada parte (tarea, bitácora de sesión y autoría del commit).
 
 Detalle y ejemplos: `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md`.
 
