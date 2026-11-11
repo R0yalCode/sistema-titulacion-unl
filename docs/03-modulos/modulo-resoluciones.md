@@ -40,6 +40,6 @@ Emitir informe (24), declarar aptitud (29), modelos (16), generador PDF (30), fl
 ## Estado y limitaciones
 
 - **Implementado y verificado.**
-- Bug N-1: `HistorialEstado.estado_anterior` registra el estado ya mutado en la transición a INFORME_EMITIDO (AUD-P2-01).
+- ~~Bug N-1: `HistorialEstado.estado_anterior` registra el estado ya mutado en la transición a INFORME_EMITIDO (AUD-P2-01).~~ **Corregido 2026-11-11** (H-25, PLB-E2-06): la transición se registra con `registrar_transicion()`; prueba `test_emitir_informe_historial_estado_anterior_real_h25`.
 - Hardcode de nombres "Computación"/"FEIRNNR" en el PDF con TODO (pendiente catálogo institucional).
 - Serializers de entrada definidos inline en las vistas (deuda de estilo).

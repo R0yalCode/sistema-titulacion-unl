@@ -82,6 +82,13 @@ website:
           - auditoria/INFORME_AUDITORIA_TECNICA.md
           - auditoria/PLAN_MEJORA_TECNICA.md
           - auditoria/matriz-trazabilidad.md
+      - text: "Plan backend"
+        menu:
+          - planificacion-backend/AUDITORIA_INTEGRAL_BACKEND.md
+          - planificacion-backend/MATRIZ_REQUERIMIENTOS_BACKEND.md
+          - planificacion-backend/PLAN_MAESTRO_IMPLEMENTACION_BACKEND.md
+          - planificacion-backend/PLAN_APIS_DASHBOARDS_KPI.md
+          - planificacion-backend/REGISTRO_DECISIONES_TECNICAS.md
       - text: "Auditoría 2026-11"
         menu:
           - 10-auditoria-2026-11/index.qmd

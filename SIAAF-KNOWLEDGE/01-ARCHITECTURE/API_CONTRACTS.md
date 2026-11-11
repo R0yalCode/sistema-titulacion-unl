@@ -21,6 +21,7 @@ Rutas y métodos coinciden entre `urls.py` y OpenAPI: **16 rutas, 17 operaciones
 | 3 | GET | `/api/v1/expedientes/bandeja/` | `BandejaExpedienteViewSet.list` | `expedientes` GET + `MAPA_INTERVENCION_POR_ROL` | Según rol y estado |
 | 4 | GET | `/api/v1/expedientes/{id}/` | `ExpedienteViewSet.retrieve` | `expedientes` GET | Todos menos RESPONSABLE_DEPENDENCIA |
 | 5 | POST | `/api/v1/expedientes/{id}/enviar/` | `ExpedienteViewSet.enviar` | `expedientes:enviar` | ESTUDIANTE (own) |
+| 5a | POST | `/api/v1/expedientes/{id}/iniciar-verificacion/` (sin cuerpo; 200 `ExpedienteDetalle`, 400 `transicion_invalida`, 403, 404, 429) | `ExpedienteViewSet.iniciar_verificacion` (E2-01, 2026-11-11) | `expedientes:iniciar_verificacion` | SECRETARIO_ABOGADO (facultad; AUT-02) |
 | 6 | GET | `/api/v1/expedientes/{expediente_id}/checklist/` | `ChecklistListViewSet.list` | `checklist` GET | SECRETARIO_ABOGADO, ANALISTA_APOYO, ADMINISTRADOR |
 | 7 | PUT | `/api/v1/checklist/{id}/` | `ChecklistViewSet.update` | `checklist` PUT | SECRETARIO_ABOGADO, ANALISTA_APOYO (borrador), ADMINISTRADOR |
 | 8 | POST | `/api/v1/checklist/{id}/subsanar/` | `ChecklistViewSet.subsanar` | `checklist` POST | ESTUDIANTE (own), SECRETARIA_CARRERA (carrera), ADMINISTRADOR |

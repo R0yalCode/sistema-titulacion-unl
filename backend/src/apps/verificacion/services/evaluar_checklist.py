@@ -23,6 +23,7 @@ from apps.peticiones.adapters.models import (
     ESTADO_OBSERVADO as PETICION_ESTADO_OBSERVADO,
 )
 from apps.expedientes.adapters.models import ExpedienteTitulacion
+from apps.expedientes.services.transiciones import registrar_transicion
 from apps.notificaciones.adapters.models import NotificacionInterna
 
 logger = logging.getLogger(__name__)
@@ -220,8 +221,12 @@ def execute(usuario, checklist_verification_id, nuevo_estado, motivo_observacion
             _update_peticion_state(peticion, PETICION_ESTADO_OBSERVADO)
             
             # Cambiar estado del expediente a OBSERVADA
-            expediente.estado = ExpedienteTitulacion.ESTADO_OBSERVADA
-            expediente.save(update_fields=["estado", "fecha_actualizacion"])
+            registrar_transicion(
+                expediente,
+                ExpedienteTitulacion.ESTADO_OBSERVADA,
+                usuario,
+                origen="evaluar_checklist",
+            )
             
             # Crear observación accionable
             _create_observacion_and_notify(

@@ -22,9 +22,11 @@ title: "Seguridad — Consideraciones"
 
 | # | Brecha | Prioridad |
 |---|---|---|
-| 1 | Sin throttling/rate limiting (incluido login) | P0 |
-| 2 | Docker con `DEBUG=1` y `runserver`; sin `settings/production.py` ni hardening HTTPS/HSTS/cookies | P0/P1 |
-| 3 | `/api/v1/schema|docs|redoc/` con `AllowAny` | P1 |
+| 1 | ~~Sin throttling/rate limiting~~ — **Resuelto**: login 5/min por IP real (SEC-T002), carga 10/h (SEC-T008) y operaciones mutantes 30/min por usuario (VULN-001, INC-01, 2026-11-11; `core/adapters/throttling.py`) | — |
+| 1b | ~~`SCOPE_ASIGNADO` no implementado en `ScopeFilterMixin`~~ — **Resuelto** (VULN-002, INC-01): `core/adapters/scope_filter.py` | — |
+| 1c | ~~Sin verificación SHA-256 en la descarga~~ — **Resuelto** (VULN-003, INC-01): `peticiones/adapters/views.py` | — |
+| 2 | Docker con `DEBUG=1` y `runserver` en desarrollo. `config/settings/production.py` existe (SEC-T001: HTTPS, HSTS, cookies, CORS, CSP report-only); revisar el despliegue real | P1 |
+| 3 | `/api/v1/schema|docs|redoc/` restringido a administradores en producción (`test_swagger_protection.py`); abierto en desarrollo | P2 |
 | 4 | Sin backups ni procedimiento de restauración | P1 |
 | 5 | JWT sin rotación/blacklist | P2 |
 | 6 | `print()` de depuración en producción; sin `LOGGING` | P2 |

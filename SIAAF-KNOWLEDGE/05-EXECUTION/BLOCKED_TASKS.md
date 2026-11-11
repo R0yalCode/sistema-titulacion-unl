@@ -37,7 +37,7 @@ last_verified: 2026-11-11
 
 | ID provisional | Brecha | Impacto |
 |---|---|---|
-| GAP-STATE-01 | No hay operación que pase `ENVIADA→EN_VERIFICACION` | Bloquea por API los flujos FL-03/FL-04 y V-08 (evaluar, observar) |
+| ~~GAP-STATE-01~~ | ~~No hay operación que pase `ENVIADA→EN_VERIFICACION`~~ | **Resuelta 2026-11-11** por E2-01 (`POST /expedientes/{id}/iniciar-verificacion/`, AUT-02) |
 | GAP-STATE-02 | `CANCELADA` sin servicio ni endpoint | Ningún expediente puede cancelarse |
 | GAP-RBAC-01 | `RESPONSABLE_DEPENDENCIA` sin permisos, aunque emite 3 de los 5 requisitos | Las dependencias no pueden cargar sus certificados |
 

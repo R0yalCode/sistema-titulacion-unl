@@ -39,6 +39,7 @@ Un usuario puede tener varios roles (`UserRole`); los scopes concedidos se **une
 | `expedientes` POST | ALLOW | — | — | — | — | — | — | ALLOW |
 | `expedientes` GET | OWN | CARRERA | FACULTAD | FACULTAD | FACULTAD | CARRERA | — | ALLOW |
 | `expedientes:enviar` POST | OWN | — | — | — | — | — | — | — |
+| `expedientes:iniciar_verificacion` POST (AUT-02, 2026-11-11) | — | — | FACULTAD | — | — | — | — | — |
 | `peticiones` POST (solicitar emisión) | OWN | — | — | — | — | — | — | ALLOW |
 | `peticiones:documento` POST/GET | OWN | ASIGNADO | ASIGNADO | ASIGNADO | — | ASIGNADO | — | ALLOW |
 | `checklist` GET | — | — | FACULTAD | FACULTAD | — | — | — | ALLOW |

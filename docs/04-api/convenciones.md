@@ -34,7 +34,20 @@ Cuerpo DRF estándar:
 | `informe_ya_emitido` / `declaratoria_ya_emitida` | 400 | Resolución duplicada |
 | `expediente_invalido_para_informe` | 400 | Estado del expediente no permite el informe |
 
-Códigos HTTP usados: 200, 201, 400, 401, 403, 404, 422. **No se declaran** 409/412/428/429 porque no están implementados (los 409/412/428 son dependencia BE-11, bloqueada).
+| `throttled` | 429 | Límite de operaciones mutantes por usuario excedido (`MutantOperationThrottle`, VULN-001); respetar `Retry-After` |
+| `documento_integridad_comprometida` | 500 | El SHA-256 del archivo almacenado no coincide con el registrado; el documento no se entrega (VULN-003) |
+
+Códigos HTTP usados: 200, 201, 400, 401, 403, 404, 422, 429 y 500 (integridad documental). **No se declaran** 409/412/428 porque no están implementados (dependencia BE-11, bloqueada).
+
+### Límites de frecuencia (INC-01, 2026-11-11)
+
+| Ámbito | Tasa por defecto | Variable | Aplica a |
+|---|---|---|---|
+| `auth` (por IP real) | 5/minuto | `AUTH_THROTTLE_RATE` | `POST /auth/token/` |
+| `document_upload` (por usuario) | 10/hora | `DOCUMENT_UPLOAD_THROTTLE` | `POST /peticiones/{id}/documento/` |
+| `mutante` (por usuario, contador compartido) | 30/minuto (provisional, DT-03) | `MUTANT_THROTTLE_RATE` | `POST /expedientes/`, `enviar`, `observar`, `PUT /checklist/{id}/`, `subsanar`, `POST /informes/`, `POST /declaratorias/`, `solicitar-emision` |
+
+Las lecturas (`GET`) no están limitadas por `mutante`. El caché de throttling es el `LocMemCache` por proceso: con varios workers el límite efectivo es por worker (ver riesgo R-05 en `planificacion-backend/AUDITORIA_INTEGRAL_BACKEND.md`).
 
 ## Aislamiento por rol (importante)
 

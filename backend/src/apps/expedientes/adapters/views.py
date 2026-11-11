@@ -8,6 +8,7 @@ El detalle por ID (IDOR generalizado) es sucesor (T018).
 """
 
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import (
     pagination,
 )
@@ -16,15 +17,21 @@ from rest_framework import (
     status,
     viewsets,
 )
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, NotFound, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.authentication.adapters.permissions import HasRolePermission
 from apps.expedientes.adapters.models import ExpedienteTitulacion
-from apps.expedientes.services import crear_expediente, enviar_expediente
+from apps.expedientes.services import (
+    crear_expediente,
+    enviar_expediente,
+    iniciar_verificacion,
+)
+from apps.expedientes.services.transiciones import TransicionNoPermitidaError
 from apps.verificacion.services import registrar_observacion
+from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
 from .serializers import (
@@ -48,6 +55,18 @@ class ReqIncompletosAPI(APIException):
     default_code = "requisitos_incompletos"
 
 
+class TransicionInvalidaAPI(APIException):
+    """HTTP 400 para una transicion de estado invalida (PLB-E2-01; O-2).
+
+    Cuerpo `{"detail": "..."}` con codigo `transicion_invalida`: el estado
+    vigente (leido con bloqueo) no admite la operacion. Sin efectos.
+    """
+
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = "Transicion de estado no permitida."
+    default_code = "transicion_invalida"
+
+
 class ExpedienteViewSet(
     ScopeFilterMixin,
     viewsets.GenericViewSet,
@@ -56,12 +75,24 @@ class ExpedienteViewSet(
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, HasRolePermission]
+    throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "expedientes"
     queryset = ExpedienteTitulacion.objects.select_related("estudiante")
     serializer_class = ExpedienteDetalleSerializer
     scope_owner_field = "estudiante_id"
     scope_carrera_field = "carrera_id"
     scope_facultad_field = "facultad_id"
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema).
+    openapi_respuestas_extra = {
+        "iniciar_verificacion": {
+            "400": (
+                "El expediente no esta en ENVIADA (p. ej. ya en verificacion, "
+                "incluida una segunda llamada concurrente); sin efectos."
+            ),
+            "403": "Rol sin la celda expedientes:iniciar_verificacion (AUT-02).",
+            "404": "Expediente inexistente o fuera de la facultad del usuario.",
+        },
+    }
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -79,6 +110,8 @@ class ExpedienteViewSet(
         """Celda de la matriz RBAC 6.2 segun la accion invocada."""
         if self.action in ("enviar", "retrieve"):
             return "expedientes"
+        if self.action == "iniciar_verificacion":
+            return "expedientes:iniciar_verificacion"
         if self.action == "observar":
             return "expedientes:observar"
         return self.rbac_resource
@@ -125,13 +158,44 @@ class ExpedienteViewSet(
             estudiante=request.user,
         )
         try:
-            enviado = enviar_expediente.execute(expediente)
+            enviado = enviar_expediente.execute(expediente, actor=request.user)
         except enviar_expediente.EstadoInvalidoError as error:
             raise drf_serializers.ValidationError(str(error))
         except enviar_expediente.RequisitosIncompletosError as error:
             raise ReqIncompletosAPI(str(error))
         serializer_out = ExpedienteEnviadoSerializer(
             enviado,
+            context={"request": request},
+        )
+        return Response(serializer_out.data, status=status.HTTP_200_OK)
+
+    @extend_schema(request=None, responses={200: ExpedienteDetalleSerializer})
+    def iniciar_verificacion(self, request, pk=None):
+        """POST /api/v1/expedientes/{id}/iniciar-verificacion/ (PLB-E2-01).
+
+        Sin cuerpo. Solo SECRETARIO_ABOGADO de la facultad (AUT-02): un
+        expediente fuera de su ambito desaparece del queryset (404). Errores
+        de estado o de transicion (incluida una llamada concurrente que espera
+        el bloqueo) -> 400, sin efectos (rollback).
+        """
+        expediente = get_object_or_404(self.get_queryset(), pk=pk)
+        try:
+            actualizado = iniciar_verificacion.execute(
+                expediente.pk, actor=request.user
+            )
+        except (
+            iniciar_verificacion.EstadoInvalidoError,
+            TransicionNoPermitidaError,
+        ) as error:
+            raise TransicionInvalidaAPI(str(error))
+        except iniciar_verificacion.UsuarioNoAutorizadoError as error:
+            raise PermissionDenied(str(error))
+        except iniciar_verificacion.ExpedienteNoEncontradoError as error:
+            raise NotFound(str(error))
+        except iniciar_verificacion.CatalogoIncompletoError as error:
+            raise APIException(str(error))
+        serializer_out = ExpedienteDetalleSerializer(
+            actualizado,
             context={"request": request},
         )
         return Response(serializer_out.data, status=status.HTTP_200_OK)

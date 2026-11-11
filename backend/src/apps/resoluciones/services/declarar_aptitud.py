@@ -8,7 +8,8 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.resoluciones.adapters.models import DeclaratoriaAptitud, InformeAptitud
-from apps.expedientes.adapters.models import ExpedienteTitulacion, HistorialEstado
+from apps.expedientes.adapters.models import ExpedienteTitulacion
+from apps.expedientes.services.transiciones import registrar_transicion
 from apps.notificaciones.adapters.models import NotificacionInterna
 from core.adapters.local_storage import guardar_archivo_privado
 from core.adapters.pdf_validation import validar_pdf_completo, PDFValidationError
@@ -199,17 +200,12 @@ def execute(usuario, expediente_id, archivo_memorando, numero_memorando=None):
             archivo_memorando_firmado_path=archivo_path,
         )
 
-        # Actualizar expediente a DECLARADA_APTA
-        expediente.estado = ExpedienteTitulacion.ESTADO_DECLARADA_APTA
-        expediente.fecha_actualizacion = timezone.now()
-        expediente.save(update_fields=["estado", "fecha_actualizacion"])
-
-        # Registrar en historial de estados
-        HistorialEstado.objects.create(
-            expediente=expediente,
-            estado_anterior=ExpedienteTitulacion.ESTADO_INFORME_EMITIDO,
-            estado_nuevo=ExpedienteTitulacion.ESTADO_DECLARADA_APTA,
-            registrado_por=usuario,
+        # Actualizar expediente + historial + auditoría (DT-12, fuente única)
+        registrar_transicion(
+            expediente,
+            ExpedienteTitulacion.ESTADO_DECLARADA_APTA,
+            usuario,
+            origen="declarar_aptitud",
         )
 
         # Notificar con copia a autoridades y estudiante (DEC-04)

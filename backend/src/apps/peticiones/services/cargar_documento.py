@@ -104,12 +104,16 @@ def execute(
         carrera_match = (usuario_carrera_id == expediente_carrera_id)
         
         has_role = usuario.has_role("SECRETARIA_CARRERA")
-        es_secretaria_carrera = has_role and carrera_match
-        
+        # VULN-002 (INC-01-T02): SCOPE_ASIGNADO — la Secretaría solo carga en
+        # peticiones cuya dependencia emisora es la propia Secretaría.
+        asignada_a_secretaria = peticion.dependencia_emisora == "SECRETARIA_CARRERA"
+        es_secretaria_carrera = has_role and carrera_match and asignada_a_secretaria
+
         if not (es_estudiante_propietario or es_secretaria_carrera):
             raise UsuarioNoAutorizadoError(
                 "Solo el estudiante propietario o la Secretaría de Carrera "
-                "de la misma carrera pueden cargar documentos."
+                "de la misma carrera, en peticiones asignadas a la "
+                "Secretaría, pueden cargar documentos."
             )
 
         # Validar PDF (tamaño, magic bytes, hash SHA-256)

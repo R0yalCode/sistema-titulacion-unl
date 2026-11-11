@@ -13,8 +13,13 @@ paths:
     post:
       operationId: auth_token_create
       description: |-
-        Takes a set of user credentials and returns an access and refresh JSON web
-        token pair to prove the authentication of those credentials.
+        Login (T012). Throttling por IP (SEC-T002, DEC-002: 5/min).
+
+        `TrustedProxyScopedRateThrottle` (no `AnonRateThrottle` ni
+        `ScopedRateThrottle` genérica): `AnonRateThrottle` tiene un `scope`
+        fijo ('anon') que ignora `throttle_scope` de la vista, y el
+        `get_ident()` por defecto de DRF confía ciegamente en
+        `X-Forwarded-For` sin validar contra `TRUSTED_PROXIES` (SEC-T005).
       tags:
       - auth
       requestBody:
@@ -73,6 +78,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChecklistEvaluation'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/checklist/{id}/subsanar/:
     post:
       operationId: checklist_subsanar_create
@@ -112,6 +129,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/Subsanacion'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/declaratorias/:
     post:
       operationId: declaratorias_create
@@ -146,6 +175,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeclaratoriaCreate'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/expedientes/:
     post:
       operationId: expedientes_create
@@ -174,6 +215,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/CrearExpediente'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/expedientes/{expediente_id}/checklist/:
     get:
       operationId: expedientes_checklist_list
@@ -258,6 +311,93 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExpedienteEnviado'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+  /api/v1/expedientes/{id}/iniciar-verificacion/:
+    post:
+      operationId: expedientes_iniciar_verificacion_create
+      description: |-
+        POST /api/v1/expedientes/{id}/iniciar-verificacion/ (PLB-E2-01).
+
+        Sin cuerpo. Solo SECRETARIO_ABOGADO de la facultad (AUT-02): un
+        expediente fuera de su ambito desaparece del queryset (404). Errores
+        de estado o de transicion (incluida una llamada concurrente que espera
+        el bloqueo) -> 400, sin efectos (rollback).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpedienteDetalle'
+          description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+        '400':
+          description: El expediente no esta en ENVIADA (p. ej. ya en verificacion,
+            incluida una segunda llamada concurrente); sin efectos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+        '403':
+          description: Rol sin la celda expedientes:iniciar_verificacion (AUT-02).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+        '404':
+          description: Expediente inexistente o fuera de la facultad del usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/expedientes/{id}/observar/:
     post:
       operationId: expedientes_observar_create
@@ -297,6 +437,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ObservacionRegistro'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/expedientes/bandeja/:
     get:
       operationId: expedientes_bandeja_list
@@ -362,6 +514,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/InformeCreate'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/notificaciones/:
     get:
       operationId: notificaciones_list
@@ -437,6 +601,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/DocumentoEntregado'
           description: ''
+        '500':
+          description: 'documento_integridad_comprometida: el SHA-256 del archivo
+            almacenado no coincide con el registrado en la carga (VULN-003); el archivo
+            no se entrega.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
     post:
       operationId: peticiones_documento_create
       description: |-
@@ -475,6 +652,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/CargarDocumento'
           description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/peticiones/{id}/documento/{version}/:
     get:
       operationId: peticiones_documento_retrieve_2
@@ -507,6 +696,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/DocumentoEntregado'
           description: ''
+        '500':
+          description: 'documento_integridad_comprometida: el SHA-256 del archivo
+            almacenado no coincide con el registrado en la carga (VULN-003); el archivo
+            no se entrega.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/peticiones/{id}/solicitar-emision/:
     post:
       operationId: peticiones_solicitar_emision_create
@@ -530,6 +732,18 @@ paths:
       responses:
         '200':
           description: No response body
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
 components:
   schemas:
     BandejaExpediente:

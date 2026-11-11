@@ -52,6 +52,11 @@ urlpatterns = [
         name="expedientes-enviar",
     ),
     path(
+        "api/v1/expedientes/<uuid:pk>/iniciar-verificacion/",
+        ExpedienteViewSet.as_view({"post": "iniciar_verificacion"}),
+        name="expedientes-iniciar-verificacion",
+    ),
+    path(
         "api/v1/expedientes/<uuid:expediente_id>/checklist/",
         ChecklistListViewSet.as_view({"get": "list"}),
         name="expedientes-checklist",

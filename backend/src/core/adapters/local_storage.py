@@ -4,6 +4,7 @@ Almacena archivos PDF en volumen privado fuera de la carpeta pública web.
 Estructura: /media/private/expedientes/{year}/{expediente_id}/
 """
 
+import hashlib
 import os
 from datetime import datetime
 from pathlib import Path
@@ -89,6 +90,18 @@ def archivo_existe(ruta_relativa: str) -> bool:
     """Verifica si un archivo existe en el almacenamiento privado."""
     storage = PrivateMediaStorage()
     return storage.exists(ruta_relativa)
+
+
+def calcular_sha256(ruta_relativa: str, tamanio_bloque: int = 64 * 1024) -> str:
+    """SHA-256 (hex) del archivo almacenado, leído por bloques (VULN-003).
+
+    Lectura en streaming: no carga el archivo completo en memoria.
+    """
+    digest = hashlib.sha256()
+    with open(obtener_ruta_absoluta(ruta_relativa), "rb") as fh:
+        for bloque in iter(lambda: fh.read(tamanio_bloque), b""):
+            digest.update(bloque)
+    return digest.hexdigest()
 
 
 def eliminar_archivo(ruta_relativa: str) -> bool:

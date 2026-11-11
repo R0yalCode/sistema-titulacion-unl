@@ -16,7 +16,7 @@ last_verified: 2026-11-11
 |---|---|---|
 | Backend Fase 1 | **Implementado con brechas** | 6 apps, 17 operaciones API, 12 migraciones → [[02-BACKEND/MODULES|Módulos backend]] |
 | Frontend | **F0, F1, F2, F2.5, V-01…V-04 cerradas**; V-05…V-09 y transversales pendientes | [[TASKS]], [[ROUTES]] |
-| Seguridad | Controles base implementados (ECLIPSE v0.4.0); VULN-001/002/003/005/006/010 abiertas | [[06-AUDITS/SECURITY/SECURITY_AUDIT|Auditoría de seguridad]] |
+| Seguridad | Controles base implementados (ECLIPSE v0.4.0); VULN-001/002/003 cerradas el 2026-11-11 (INC-01, commit `0a24109`, integrado en `develop`); E2-06 hecha (aprobada con observaciones O-1/O-2/O-3) y E2-01 hecha (inicio de verificación, AUT-02); VULN-005/006/010 abiertas. Plan backend nuevo: `docs/planificacion-backend/` (etapas E0–E7, decisiones DP-01…DP-17) | [[06-AUDITS/SECURITY/SECURITY_AUDIT|Auditoría de seguridad]] |
 | Modalidades TIC/EC | **No implementadas**; normativa sin validar | [[COMPREHENSIVE_EXAMINATION]] |
 | KPIs/dashboards | **No implementados** (solo V-02 con datos reales) | [[KPI_CATALOG]] |
 | Planificación | DP2: INC-01…INC-09; ruta crítica INC-01→03→04→08/07→09 | [[DP2-PLAN_MAESTRO]] |
@@ -24,11 +24,11 @@ last_verified: 2026-11-11
 
 ## Pruebas (última ejecución)
 
-Frontend: 328/328 en la 3.ª ejecución; **1 de 3 ejecuciones falló (6 pruebas): intermitencia sin diagnosticar** → [[REGRESSION_TESTS]]. Backend: 497 según la documentación, no reejecutado.
+Frontend: 328/328 en la 3.ª ejecución; **1 de 3 ejecuciones falló (6 pruebas): intermitencia sin diagnosticar** → [[REGRESSION_TESTS]]. Backend (2026-11-11, E2-01): `pytest` → 554 aprobadas, 13 fallidas (`test_pdf_generator.py`, `pypdf` ausente, deuda previa); `src/core` 76/76; e2e 4/4.
 
 ## Bloqueos y decisiones humanas pendientes
 
-1. **GAP-STATE-01**: no existe la transición `ENVIADA→EN_VERIFICACION` por API → ¿se autoriza una tarea backend? ([[BLOCKED_TASKS]])
+1. ~~GAP-STATE-01~~ → **resuelta** por E2-01 (2026-11-11). Pendientes de E2: O-1 (divergencia `validar_checklist_completo` / tabla de transiciones), O-2 en los demás endpoints, H-26 (DP-05b), DP-01b.
 2. RBAC de `RESPONSABLE_DEPENDENCIA` (emite 3 de los 5 requisitos) y `CANCELADA` sin operación.
 3. BE-01…BE-11 no autorizadas; FE-T1213 bloqueada (BE-11).
 4. Validación normativa de los Arts. 39, 40, 212, 216 y 233 para las modalidades.
