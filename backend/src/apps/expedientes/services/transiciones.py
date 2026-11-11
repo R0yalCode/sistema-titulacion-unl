@@ -34,6 +34,8 @@ E = ExpedienteTitulacion
 TRANSICIONES_PERMITIDAS: dict[tuple[str, str], tuple[str, ...]] = {
     # enviar_expediente: solo el estudiante dueño (vista filtra por dueño).
     (E.ESTADO_BORRADOR, E.ESTADO_ENVIADA): ("ESTUDIANTE",),
+    # iniciar_verificacion (PLB-E2-01, AUT-02): solo SECRETARIO_ABOGADO.
+    (E.ESTADO_ENVIADA, E.ESTADO_EN_VERIFICACION): ("SECRETARIO_ABOGADO",),
     # registrar_observacion / evaluar_checklist (OBSERVADO).
     (E.ESTADO_EN_VERIFICACION, E.ESTADO_OBSERVADA): (
         "SECRETARIO_ABOGADO",

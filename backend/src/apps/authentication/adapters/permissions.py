@@ -55,6 +55,11 @@ RBAC_MATRIX = {
         },
     },
     "expedientes:enviar": {"POST": {"ESTUDIANTE": SCOPE_OWN}},
+    # AUT-02 (2026-11-11): celda nueva, exclusiva de PLB-E2-01. El ANALISTA_APOYO
+    # queda excluido hasta DP-01b.
+    "expedientes:iniciar_verificacion": {
+        "POST": {"SECRETARIO_ABOGADO": SCOPE_FACULTAD}
+    },
     "peticiones": {"POST": {"ESTUDIANTE": SCOPE_OWN, "ADMINISTRADOR": ALLOW}},
     "peticiones:documento": {
         "POST": {

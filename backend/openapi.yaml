@@ -323,6 +323,81 @@ paths:
                     type: string
                 required:
                 - detail
+  /api/v1/expedientes/{id}/iniciar-verificacion/:
+    post:
+      operationId: expedientes_iniciar_verificacion_create
+      description: |-
+        POST /api/v1/expedientes/{id}/iniciar-verificacion/ (PLB-E2-01).
+
+        Sin cuerpo. Solo SECRETARIO_ABOGADO de la facultad (AUT-02): un
+        expediente fuera de su ambito desaparece del queryset (404). Errores
+        de estado o de transicion (incluida una llamada concurrente que espera
+        el bloqueo) -> 400, sin efectos (rollback).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpedienteDetalle'
+          description: ''
+        '429':
+          description: Demasiadas operaciones mutantes en poco tiempo para este usuario
+            (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+        '400':
+          description: El expediente no esta en ENVIADA (p. ej. ya en verificacion,
+            incluida una segunda llamada concurrente); sin efectos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+        '403':
+          description: Rol sin la celda expedientes:iniciar_verificacion (AUT-02).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
+        '404':
+          description: Expediente inexistente o fuera de la facultad del usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                required:
+                - detail
   /api/v1/expedientes/{id}/observar/:
     post:
       operationId: expedientes_observar_create
