@@ -54,9 +54,9 @@ Validación:
 - comando ejecutado → resultado real.
 
 Pendientes / limitaciones (si los hay).
-
-Co-Authored-By: …
 ```
+
+**Autoría:** los commits y merges figuran **solo a nombre del responsable** (usuario Git configurado). No se añaden líneas `Co-Authored-By`, menciones a Claude/IA ni firmas de herramientas (DK-009, 2026-11-11). Los commits anteriores a esa fecha conservan su línea `Co-Authored-By` en el historial publicado.
 
 **Merge en `develop`:** `Merge branch '<rama>' into develop` + descripción de lo integrado y cómo se validó.
 
