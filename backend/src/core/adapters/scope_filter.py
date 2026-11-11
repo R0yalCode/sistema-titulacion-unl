@@ -14,6 +14,7 @@ SCOPE_ALL = "all"
 SCOPE_OWN = "own"
 SCOPE_CARRERA = "carrera"
 SCOPE_FACULTAD = "facultad"
+SCOPE_ASIGNADO = "asignado"
 SCOPE_DENEGADO = "denegado"
 
 
@@ -23,11 +24,20 @@ class ScopeFilterMixin:
     Uso (T018): la vista declara los nombres de campo del modelo
     (`scope_owner_field`, `scope_carrera_field`, `scope_facultad_field`) y
     su `get_queryset()` retorna `self.scope_queryset(qs, self.request)`.
+
+    SCOPE_ASIGNADO (VULN-002, INC-01-T02): si la vista declara
+    `scope_asignado_field` (p. ej. `dependencia_emisora`) y sus concesiones
+    incluyen `asignado`, el registro es visible cuando ese campo coincide con
+    alguno de los roles del usuario **y** pertenece a su ámbito institucional
+    (carrera del usuario; si no tiene carrera, su facultad). Las vistas que
+    necesiten concesiones distintas a `ROW_TO_SCOPE` (p. ej. derivadas de la
+    matriz RBAC por recurso) sobrescriben `get_scope_grants()`.
     """
 
     scope_owner_field: str = "estudiante_id"
     scope_carrera_field: str = "carrera_id"
     scope_facultad_field: str = "facultad_id"
+    scope_asignado_field: str | None = None
 
     ROW_TO_SCOPE: ClassVar[dict] = {
         "ESTUDIANTE": SCOPE_OWN,
@@ -50,7 +60,8 @@ class ScopeFilterMixin:
         user = getattr(request, "user", None)
         if user is None or not user.is_authenticated:
             return queryset.none()
-        scopes = {self.ROW_TO_SCOPE[r] for r in user.get_roles()}
+        roles = user.get_roles()
+        scopes = self.get_scope_grants(user, roles)
         if not scopes:
             return queryset.none()
         if SCOPE_ALL in scopes:
@@ -62,6 +73,28 @@ class ScopeFilterMixin:
             predicate |= Q(**{self.scope_carrera_field: user.carrera_id})
         if SCOPE_FACULTAD in scopes and user.facultad_id:
             predicate |= Q(**{self.scope_facultad_field: user.facultad_id})
+        if SCOPE_ASIGNADO in scopes and self.scope_asignado_field:
+            predicate |= self._predicado_asignado(user, roles)
         if not predicate:
             return queryset.none()
         return queryset.filter(predicate)
+
+    def get_scope_grants(self, user, roles: list[str]) -> set[str]:
+        """Ámbitos concedidos (unión por rol). Por defecto, `ROW_TO_SCOPE`."""
+        return {self.ROW_TO_SCOPE.get(r, SCOPE_DENEGADO) for r in roles} - {
+            SCOPE_DENEGADO
+        }
+
+    def _predicado_asignado(self, user, roles: list[str]) -> Q:
+        """Registros asignados a un rol del usuario dentro de su ámbito.
+
+        Sin carrera ni facultad registradas no hay ámbito institucional que
+        acotar: el predicado no concede nada (mundo cerrado).
+        """
+        if user.carrera_id:
+            ambito = Q(**{self.scope_carrera_field: user.carrera_id})
+        elif user.facultad_id:
+            ambito = Q(**{self.scope_facultad_field: user.facultad_id})
+        else:
+            return Q(pk__in=[])
+        return Q(**{f"{self.scope_asignado_field}__in": roles}) & ambito

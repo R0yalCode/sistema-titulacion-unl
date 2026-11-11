@@ -39,3 +39,13 @@ Contradicciones y afirmaciones no verificables detectadas al contrastar la docum
 ## Relacionado
 
 [[SOURCE_CATALOG]] · [[GENERAL_TRACEABILITY_MATRIX]]
+
+
+## Contradicciones registradas el 2026-11-11 (auditoría integral backend)
+
+Dieciocho contradicciones entre los documentos DP2 y el código (C-01…C-18), con lo que debe confirmarse en cada una: `docs/planificacion-backend/AUDITORIA_INTEGRAL_BACKEND.md` §7. Las más relevantes:
+- C-01: actor de `POST /modalidad/cambiar/` (Secretario frente a Decano, "autorización dual" sin mecanismo).
+- C-11: KPI-SEC-04 y D05 usan `ChecklistVerification.peticion` (FK inexistente); el cruce correcto es por `(expediente, requisito)`.
+- C-13: D01/D08 dan por existente `POST /auth/token/refresh/`; no está enrutado.
+- C-14: "497 pruebas pasando"; en un entorno limpio fallan 13 (`pypdf`).
+No se resolvieron inventando: quedan como DP-xx en `REGISTRO_DECISIONES_TECNICAS.md`.

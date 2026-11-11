@@ -25,7 +25,7 @@ Solicita a la dependencia emisora la emisión del documento (T021): PENDIENTE→
 Carga un PDF para la petición (T023). **Solo `multipart/form-data`** (JSON no admitido en esta acción).
 
 - **Cuerpo** (`CargarDocumentoRequest`): `archivo` (binary, obligatorio, PDF ≤ 10 MB). Sin otros campos.
-- **Roles**: estudiante dueño, SECRETARIA_CARRERA de la misma carrera, ADMINISTRADOR. Estados de petición admitidos: PENDIENTE, SOLICITADO, OBSERVADO, CARGADO.
+- **Roles**: estudiante dueño, SECRETARIA_CARRERA de la misma carrera **solo en peticiones con `dependencia_emisora = SECRETARIA_CARRERA`** (SCOPE_ASIGNADO, VULN-002, desde 2026-11-11; antes podía cargar en cualquier petición de su carrera), ADMINISTRADOR. Estados de petición admitidos: PENDIENTE, SOLICITADO, OBSERVADO, CARGADO.
 - **Efectos**: validación (tamaño + magic bytes + hash SHA-256), guardado en almacenamiento privado, versionado N+1 (anterior `es_vigente=False`), petición→CARGADO.
 - **Respuestas**:
 
@@ -39,7 +39,9 @@ Carga un PDF para la petición (T023). **Solo `multipart/form-data`** (JSON no a
 
 Descarga el documento **vigente** (T024).
 
-- **Roles**: dueño, secretaría de carrera, emisores asignados (`SCOPE_ASIGNADO`), juristas de la facultad, ADMINISTRADOR.
+- **Roles** (matriz RBAC `peticiones:documento` GET): estudiante dueño (`SCOPE_OWN`); SECRETARIA_CARRERA, SECRETARIO_ABOGADO, ANALISTA_APOYO y DIRECTOR_CARRERA con `SCOPE_ASIGNADO`; ADMINISTRADOR. DECANO no tiene celda (403).
+- **SCOPE_ASIGNADO** (VULN-002, `ScopeFilterMixin`, 2026-11-11): la petición es visible si `dependencia_emisora` es uno de los roles del usuario **y** el expediente pertenece a su carrera (o, si el usuario no tiene carrera, a su facultad). Un jurista solo descarga documentos asignados a su rol; no descarga los emitidos por otras dependencias (hallazgo H-07, pendiente de decisión).
+- **Integridad** (VULN-003): antes de servir el archivo se recalcula su SHA-256 por bloques y se compara con el registrado en la carga. Si no coincide: **500** `documento_integridad_comprometida`, el archivo no se entrega y se registra un `logger.error`.
 - **200**: binario PDF (`Content-Disposition: attachment; filename=…`, `Content-Length`). **404** si no hay documento vigente o el objeto es ajeno. 401/403.
 
 ## GET /api/v1/peticiones/{id}/documento/{version}/

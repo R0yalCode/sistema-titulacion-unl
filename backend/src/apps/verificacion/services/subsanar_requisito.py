@@ -22,6 +22,7 @@ from apps.peticiones.adapters.models import (
 )
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.expedientes.domain.plazo_calculator import PlazoLaboralCalculator
+from apps.expedientes.services.transiciones import registrar_transicion
 from apps.notificaciones.adapters.models import NotificacionInterna
 from core.adapters.pdf_validation import validar_pdf_completo, PDFValidationError
 from core.adapters.local_storage import guardar_archivo_privado
@@ -66,7 +67,7 @@ def _marcar_anterior_no_vigente(peticion):
     )
 
 
-def _reanudar_plazo_y_cambiar_estados(expediente, peticion):
+def _reanudar_plazo_y_cambiar_estados(expediente, peticion, actor):
     """Reanuda el reloj y cambia estados a EN_VERIFICACION/CARGADO."""
     # Reanudar el reloj de plazo laborable (AP-01)
     PlazoLaboralCalculator().reanudar_reloj(expediente)
@@ -76,9 +77,18 @@ def _reanudar_plazo_y_cambiar_estados(expediente, peticion):
     peticion.fecha_actualizacion = timezone.now()
     peticion.save(update_fields=["estado_peticion", "fecha_actualizacion"])
 
-    # Cambiar estado del expediente a EN_VERIFICACION
-    expediente.estado = ExpedienteTitulacion.ESTADO_EN_VERIFICACION
-    expediente.save(update_fields=["estado", "fecha_actualizacion", "fecha_ultima_pausa", "fecha_limite_atencion", "dias_laborables_acumulados"])
+    # Cambiar estado del expediente a EN_VERIFICACION (DT-12: fuente única)
+    registrar_transicion(
+        expediente,
+        ExpedienteTitulacion.ESTADO_EN_VERIFICACION,
+        actor,
+        origen="subsanar_requisito",
+        campos_adicionales=(
+            "fecha_ultima_pausa",
+            "fecha_limite_atencion",
+            "dias_laborables_acumulados",
+        ),
+    )
 
 
 def execute(usuario, checklist_verification_id, archivo, nombre_original):
@@ -216,7 +226,7 @@ def execute(usuario, checklist_verification_id, archivo, nombre_original):
         checklist_verif.save(update_fields=["estado_verificacion", "fecha_actualizacion"])
 
         # Reanudar plazo y cambiar estados a EN_VERIFICACION / CARGADO
-        _reanudar_plazo_y_cambiar_estados(expediente, peticion)
+        _reanudar_plazo_y_cambiar_estados(expediente, peticion, usuario)
 
         # Notificar al jurista/analista que hay una subsanación
         NotificacionInterna.objects.create(

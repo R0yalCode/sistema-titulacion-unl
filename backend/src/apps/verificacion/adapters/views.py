@@ -19,6 +19,7 @@ from apps.authentication.adapters.permissions import HasRolePermission
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.verificacion.adapters.models import ChecklistVerification
 from apps.verificacion.services import evaluar_checklist, subsanar_requisito
+from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
 from .serializers import (
@@ -63,6 +64,7 @@ class ChecklistViewSet(
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, HasRolePermission]
+    throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "checklist"
     queryset = ChecklistVerification.objects.select_related(
         "expediente", "requisito", "evaluado_por"

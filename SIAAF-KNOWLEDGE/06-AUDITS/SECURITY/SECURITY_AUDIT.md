@@ -39,9 +39,9 @@ last_verified: 2026-11-11
 
 | ID | Brecha | Verificación |
 |---|---|---|
-| VULN-001 | Sin throttling para endpoints mutantes (enviar, observar, checklist, informes, declaratorias) | Solo hay throttles `auth` y `document_upload`; no existe `MutantOperationThrottle` |
-| VULN-002 | `SCOPE_ASIGNADO` no implementado en `ScopeFilterMixin` | Mitigación manual solo en la descarga ([[PERMISSIONS_ROLES]] §4) |
-| VULN-003 | Sin verificación de hash al descargar | Sin comparación de SHA-256 en `descargar_documento` (grep sin coincidencias) |
+| ~~VULN-001~~ | **Cerrada 2026-11-11 (INC-01, sin commit)**: `core/adapters/throttling.py` `MutantOperationThrottle` (30/min/usuario, `MUTANT_THROTTLE_RATE`) en expedientes, checklist, informes, declaratorias, peticiones | `test_inc01_seguridad.py` (4 pruebas) |
+| ~~VULN-002~~ | **Cerrada 2026-11-11 (INC-01, sin commit)**: `SCOPE_ASIGNADO` en `ScopeFilterMixin` (dependencia ∈ roles ∧ carrera/facultad); la carga de la Secretaría exige `dependencia_emisora=SECRETARIA_CARRERA` (403) | 6 pruebas; ver `docs/planificacion-backend/REGISTRO_DECISIONES_TECNICAS.md` DT-02 |
+| ~~VULN-003~~ | **Cerrada 2026-11-11 (INC-01, sin commit)**: SHA-256 por bloques antes de servir; si no coincide → 500 `documento_integridad_comprometida` | 2 pruebas + contrato OpenAPI |
 | VULN-005 | Refresh sin rotación, sin blacklist, sin logout | `ROTATE_REFRESH_TOKENS=False`; no hay rutas |
 | VULN-006 | `RESPONSABLE_DEPENDENCIA` sin celdas en `RBAC_MATRIX` | Verificado |
 | VULN-010 | FirmaEC no verificada en la declaratoria | `declarar_aptitud.py` valida solo el PDF; ver [[FIRMA_EC]] |

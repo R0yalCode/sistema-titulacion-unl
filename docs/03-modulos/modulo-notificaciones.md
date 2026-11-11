@@ -27,7 +27,8 @@ title: "Módulo: notificaciones"
 
 1. El listado filtra siempre por `usuario_destino = request.user` (además del scope).
 2. Despacho **sincrónico in-process** (sin cola ni correo): helpers por evento (observación, subsanación jurista/estudiante, informe, declaratoria).
-3. Auditoría por signals `post_save` sobre Expediente, HistorialEstado, Checklist, Observación, Documento, Informe y Declaratoria; JSONB inmutable.
+3. Auditoría por signals `post_save` sobre la **creación** del expediente (`EXPEDIENTE_CREADO`), Checklist, Observación, Documento, Informe y Declaratoria; JSONB inmutable.
+4. **Transiciones de estado (DT-12, PLB-E2-06, 2026-11-11):** ya no se auditan por señales. Su única fuente es `expedientes/services/transiciones.py:registrar_transicion()`, que en la misma transacción guarda el estado, crea `HistorialEstado` y **un** `EventoAuditoria` `ESTADO_CAMBIADO` con el usuario autenticado que ejecuta la acción (antes se atribuía siempre al estudiante y se duplicaba con la señal del historial: H-24). Los eventos registrados antes del cambio no se modificaron.
 
 ## Pruebas (71)
 

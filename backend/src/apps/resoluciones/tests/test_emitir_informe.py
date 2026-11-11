@@ -368,6 +368,29 @@ class TestEmitirInformeService:
         assert historial.estado_nuevo == ExpedienteTitulacion.ESTADO_INFORME_EMITIDO
         assert historial.registrado_por == secretario_abogado
 
+    def test_emitir_informe_historial_estado_anterior_real_h25(
+        self, secretario_abogado, expediente_listo_para_informe
+    ):
+        """H-25 (DT-12): el historial registra EN_VERIFICACION -> INFORME_EMITIDO
+        (antes registraba INFORME_EMITIDO -> INFORME_EMITIDO) y un único evento."""
+        from apps.notificaciones.adapters.models import EventoAuditoria
+
+        emitir_informe(
+            usuario=secretario_abogado,
+            expediente_id=expediente_listo_para_informe.id,
+            dictamen="APTO",
+        )
+        historial = HistorialEstado.objects.get(
+            expediente=expediente_listo_para_informe
+        )
+        assert historial.estado_anterior == ExpedienteTitulacion.ESTADO_EN_VERIFICACION
+        evento = EventoAuditoria.objects.get(
+            expediente=expediente_listo_para_informe,
+            accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
+        )
+        assert evento.usuario == secretario_abogado
+        assert evento.rol_usuario == "SECRETARIO_ABOGADO"
+
     def test_emitir_informe_notifica_decano(self, secretario_abogado, decano, expediente_listo_para_informe):
         """Crea notificación interna para el Decano/a."""
         emitir_informe(

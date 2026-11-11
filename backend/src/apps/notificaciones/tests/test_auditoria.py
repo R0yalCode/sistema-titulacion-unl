@@ -361,7 +361,13 @@ class TestSenalesExpediente:
         assert "numero_expediente" in evento.detalles
 
     def test_cambio_estado_genera_auditoria(self, estudiante, secretario_abogado):
-        """Cambio de estado genera evento ESTADO_CAMBIADO."""
+        """DT-12: la transición genera UN ESTADO_CAMBIADO con el actor real.
+
+        Antes (H-24) bastaba un `save()` y el evento se atribuía al estudiante;
+        ahora la única fuente es `registrar_transicion()`.
+        """
+        from apps.expedientes.services.transiciones import registrar_transicion
+
         expediente = ExpedienteTitulacion.objects.create(
             numero_expediente="EXP-2026-0001",
             estudiante=estudiante,
@@ -371,21 +377,45 @@ class TestSenalesExpediente:
             activa=True,
         )
 
-        # Cambiar estado
-        expediente.estado = ExpedienteTitulacion.ESTADO_OBSERVADA
-        expediente.save(update_fields=["estado"])
+        registrar_transicion(
+            expediente,
+            ExpedienteTitulacion.ESTADO_OBSERVADA,
+            secretario_abogado,
+            origen="prueba",
+        )
 
         eventos = EventoAuditoria.objects.filter(
             expediente=expediente,
             accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
         )
-        assert eventos.count() >= 1
+        assert eventos.count() == 1
 
-        evento = eventos.latest("timestamp")
-        assert evento.accion == EventoAuditoria.Accion.ESTADO_CAMBIADO
-        assert "estado_anterior" in evento.detalles
+        evento = eventos.get()
+        assert evento.usuario == secretario_abogado
         assert evento.detalles["estado_anterior"] == "EN_VERIFICACION"
         assert evento.detalles["estado_nuevo"] == "OBSERVADA"
+
+    def test_save_directo_no_audita_transicion(self, estudiante):
+        """DT-12: un `save()` del modelo ya no genera ESTADO_CAMBIADO."""
+        expediente = ExpedienteTitulacion.objects.create(
+            numero_expediente="EXP-2026-0099",
+            estudiante=estudiante,
+            carrera_id="11111111-1111-1111-1111-111111111111",
+            facultad_id="22222222-2222-2222-2222-222222222222",
+            estado=ExpedienteTitulacion.ESTADO_EN_VERIFICACION,
+            activa=True,
+        )
+        expediente.estado = ExpedienteTitulacion.ESTADO_OBSERVADA
+        expediente.save(update_fields=["estado"])
+        assert not EventoAuditoria.objects.filter(
+            expediente=expediente,
+            accion=EventoAuditoria.Accion.ESTADO_CAMBIADO,
+        ).exists()
+        # La auditoría de creación se conserva.
+        assert EventoAuditoria.objects.filter(
+            expediente=expediente,
+            accion=EventoAuditoria.Accion.EXPEDIENTE_CREADO,
+        ).count() == 1
 
 
 class TestSenalesChecklist:

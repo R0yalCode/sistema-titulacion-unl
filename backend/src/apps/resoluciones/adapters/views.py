@@ -26,6 +26,7 @@ from apps.resoluciones.services import (
     UsuarioNoAutorizadoErrorDeclaratoria,
     PDFInvalidoError,
 )
+from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
 
@@ -64,6 +65,7 @@ class InformeViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, HasRolePermission]
+    throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "informes"
     queryset = InformeAptitud.objects.select_related("expediente", "emisor")
     serializer_class = InformeAptitudSerializer
@@ -145,6 +147,7 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, HasRolePermission]
+    throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "declaratorias"
     queryset = DeclaratoriaAptitud.objects.select_related("expediente", "decano")
     serializer_class = DeclaratoriaAptitudSerializer

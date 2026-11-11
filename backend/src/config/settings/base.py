@@ -111,10 +111,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # Añade 429 (VULN-001) y respuestas extra por acción al contrato OpenAPI.
+    "DEFAULT_SCHEMA_CLASS": "core.adapters.openapi.SGTAutoSchema",
     "DEFAULT_THROTTLE_RATES": {
         "document_upload": env("DOCUMENT_UPLOAD_THROTTLE", default="10/hour"),
         "auth": env("AUTH_THROTTLE_RATE", default="5/minute"),
+        # VULN-001 / INC-01-T01: tasa compartida de operaciones mutantes por
+        # usuario. Valor técnico provisional (DT-03, pendiente de aprobación).
+        "mutante": env("MUTANT_THROTTLE_RATE", default="30/minute"),
     },
 }
 

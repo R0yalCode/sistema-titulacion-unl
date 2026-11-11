@@ -65,7 +65,7 @@ def expediente_completo_para_enviar(estudiante):
 
 def avanzar_a_enviada(expediente, ahora=None):
     """Ejecuta el caso de uso enviar_expediente (BORRADOR -> ENVIADA)."""
-    return enviar_expediente.execute(expediente, ahora=ahora)
+    return enviar_expediente.execute(expediente, ahora=ahora, actor=expediente.estudiante)
 
 
 # --- FIXTURES ---------------------------------------------------------------
@@ -105,7 +105,7 @@ class TestTransicionesValidas:
         expediente = expediente_completo_para_enviar(estudiante)
         assert expediente.estado == ExpedienteTitulacion.ESTADO_BORRADOR
 
-        enviado = enviar_expediente.execute(expediente)
+        enviado = enviar_expediente.execute(expediente, actor=expediente.estudiante)
 
         assert enviado.estado == ExpedienteTitulacion.ESTADO_ENVIADA
         assert enviado.fecha_recepcion is not None
@@ -289,7 +289,7 @@ class TestCalculoPlazoLaboral:
         expediente = expediente_completo_para_enviar(estudiante)
         lunes = datetime(2026, 1, 5, 10, 0, tzinfo=UTC)  # Lunes 5 ene 2026
 
-        enviado = enviar_expediente.execute(expediente, ahora=lunes)
+        enviado = enviar_expediente.execute(expediente, ahora=lunes, actor=expediente.estudiante)
 
         # Lunes 5 -> hábiles: 6,7,8,9,12,13,14,15 = Miércoles 15
         esperado = PlazoLaboralCalculator().calcular_fecha_limite(lunes.date(), 8)
@@ -304,7 +304,7 @@ class TestCalculoPlazoLaboral:
         esperado = calc.calcular_fecha_limite(lunes.date(), 8)
         # 6,8,9,12,13,14,15,16 = Viernes 16
 
-        _ = enviar_expediente.execute(expediente, ahora=lunes)
+        _ = enviar_expediente.execute(expediente, ahora=lunes, actor=expediente.estudiante)
         # El servicio usa PlazoLaboralCalculator() sin feriados por defecto
         # Este test verifica la lógica del calculador, no el servicio
         assert esperado == datetime(2026, 1, 16).date()
@@ -314,7 +314,7 @@ class TestCalculoPlazoLaboral:
         expediente = expediente_completo_para_enviar(estudiante)
         ahora = datetime(2026, 3, 15, 14, 30, tzinfo=UTC)
 
-        enviado = enviar_expediente.execute(expediente, ahora=ahora)
+        enviado = enviar_expediente.execute(expediente, ahora=ahora, actor=expediente.estudiante)
 
         assert timezone.is_aware(enviado.fecha_recepcion)
         assert enviado.fecha_recepcion.utcoffset() == timedelta(0)
@@ -331,7 +331,7 @@ class TestCalculoPlazoLaboral:
 
         # Segundo execute lanza EstadoInvalidoError, no cambia nada
         with pytest.raises(enviar_expediente.EstadoInvalidoError):
-            enviar_expediente.execute(enviado)
+            enviar_expediente.execute(enviado, actor=enviado.estudiante)
 
         enviado.refresh_from_db()
         assert enviado.numero_providencia == providencia_orig

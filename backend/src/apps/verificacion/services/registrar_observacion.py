@@ -19,6 +19,7 @@ from apps.peticiones.adapters.models import (
 )
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.expedientes.domain.plazo_calculator import PlazoLaboralCalculator
+from apps.expedientes.services.transiciones import registrar_transicion
 from apps.notificaciones.adapters.models import NotificacionInterna
 
 
@@ -146,8 +147,13 @@ def execute(usuario, expediente_id, peticion_id, motivo_observacion):
         peticion.save(update_fields=["estado_peticion", "fecha_actualizacion"])
 
         # Cambiar estado del expediente a OBSERVADA
-        expediente.estado = "OBSERVADA"
-        expediente.save(update_fields=["estado", "fecha_actualizacion", "fecha_ultima_pausa"])
+        registrar_transicion(
+            expediente,
+            ExpedienteTitulacion.ESTADO_OBSERVADA,
+            usuario,
+            origen="registrar_observacion",
+            campos_adicionales=("fecha_ultima_pausa",),
+        )
 
         # Actualizar ChecklistVerification a OBSERVADO
         ChecklistVerification.objects.filter(

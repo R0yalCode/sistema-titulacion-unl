@@ -5,6 +5,8 @@ Endpoints:
 - POST /api/v1/peticiones/{id}/documento/           (T023, HU-003)
 - GET  /api/v1/peticiones/{id}/documento/{version}/ (T024, descarga segura)
 """
+import logging
+
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import (
@@ -21,7 +23,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.authentication.adapters.permissions import HasRolePermission
 from apps.peticiones.adapters.models import DocumentoEntregado, PeticionDocumental
 from apps.peticiones.services import cargar_documento, solicitar_emision
-from core.adapters.local_storage import archivo_existe, obtener_ruta_absoluta
+from core.adapters.local_storage import (
+    archivo_existe,
+    calcular_sha256,
+    obtener_ruta_absoluta,
+)
+from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
 from .serializers import (
@@ -32,6 +39,9 @@ from .serializers import (
     SolicitarEmisionResponseSerializer,
     SolicitarEmisionSerializer,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class EstadoPeticionInvalidoAPI(APIException):
@@ -55,6 +65,17 @@ class UsuarioNoAutorizadoAPI(APIException):
     default_code = "usuario_no_autorizado"
 
 
+class DocumentoIntegridadAPI(APIException):
+    """HTTP 500: el hash del archivo almacenado no coincide con el registrado."""
+
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = (
+        "No se puede entregar el documento: falló la verificación de "
+        "integridad del archivo almacenado."
+    )
+    default_code = "documento_integridad_comprometida"
+
+
 class ValidacionPDF_API(APIException):
     """HTTP 400 para errores de validación PDF."""
 
@@ -70,6 +91,7 @@ class PeticionViewSet(
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, HasRolePermission]
+    throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "peticiones"
     queryset = PeticionDocumental.objects.select_related(
         "expediente", "requisito"
@@ -78,6 +100,19 @@ class PeticionViewSet(
     scope_owner_field = "expediente__estudiante_id"
     scope_carrera_field = "expediente__carrera_id"
     scope_facultad_field = "expediente__facultad_id"
+    # VULN-002 (INC-01-T02): ámbito "asignado" = dependencia emisora de la
+    # petición coincide con un rol del usuario, dentro de su ámbito.
+    scope_asignado_field = "dependencia_emisora"
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema).
+    openapi_respuestas_extra = {
+        "descargar_documento": {
+            "500": (
+                "documento_integridad_comprometida: el SHA-256 del archivo "
+                "almacenado no coincide con el registrado en la carga "
+                "(VULN-003); el archivo no se entrega."
+            ),
+        },
+    }
     parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_serializer_class(self):
@@ -118,11 +153,31 @@ class PeticionViewSet(
         return self.rbac_resource
 
     def get_queryset(self):
-        # Para descargar_documento, no aplicar filtro de ámbito (SCOPE_ASIGNADO no soportado por ScopeFilterMixin)
-        # La autorización se maneja en el action via HasRolePermission + validación manual
-        if self.action == "descargar_documento":
-            return self.queryset
         return self.scope_queryset(self.queryset, self.request)
+
+    def get_scope_grants(self, user, roles):
+        """En la descarga (GET `peticiones:documento`) el ámbito sale de la matriz RBAC.
+
+        Esa celda concede SCOPE_ASIGNADO a funcionarios (la dependencia que
+        emite el documento), que `ROW_TO_SCOPE` no puede expresar. La carga
+        (POST) conserva el ámbito por rol y su contrato 403: la restricción
+        de dependencia se valida en el servicio `cargar_documento`.
+        """
+        if (
+            self.request.method != "GET"
+            or self.get_rbac_resource() != "peticiones:documento"
+        ):
+            return super().get_scope_grants(user, roles)
+        from apps.authentication.adapters.permissions import (
+            ALLOW,
+            get_granted_scopes,
+        )
+        from core.adapters.scope_filter import SCOPE_ALL
+
+        concedidos = get_granted_scopes(
+            user, "peticiones:documento", self.request.method
+        )
+        return {SCOPE_ALL if s == ALLOW else s for s in concedidos}
 
     def solicitar_emision(self, request, pk=None):
         """POST /api/v1/peticiones/{id}/solicitar-emision/ (T021; HU-002).
@@ -197,13 +252,9 @@ class PeticionViewSet(
         Descarga segura de archivo PDF desde almacenamiento privado.
         Requiere autenticación JWT y permisos RBAC/IDOR (RNF-016).
         """
-        # Obtener la petición SIN filtro de ámbito (la autorización se valida manualmente)
-        peticion = get_object_or_404(self.queryset, pk=pk)
-
-        # Validación manual de ámbito (IDOR) - replicar lógica de ScopeFilterMixin
-        # pero soportando SCOPE_ASIGNADO para peticiones:documento
-        if not self._validar_ambito_descarga(request.user, peticion):
-            raise Http404("Petición no encontrada o sin acceso.")
+        # Aislamiento IDOR por el mismo mixin que el resto de vistas
+        # (incluye SCOPE_ASIGNADO): un registro ajeno responde 404.
+        peticion = get_object_or_404(self.get_queryset(), pk=pk)
 
         # Obtener el documento específico por versión
         if version is None:
@@ -220,6 +271,17 @@ class PeticionViewSet(
         if not archivo_existe(documento.archivo_path):
             raise Http404("El archivo no existe en el almacenamiento.")
 
+        # VULN-003 (INC-01-T03): el archivo en disco debe coincidir con el
+        # SHA-256 registrado en la carga; si no, no se sirve.
+        if calcular_sha256(documento.archivo_path) != documento.hash_sha256:
+            logger.error(
+                "Integridad comprometida en documento %s (peticion %s, v%s)",
+                documento.id,
+                peticion.id,
+                documento.version,
+            )
+            raise DocumentoIntegridadAPI()
+
         # Obtener ruta absoluta
         ruta_absoluta = obtener_ruta_absoluta(documento.archivo_path)
 
@@ -233,60 +295,6 @@ class PeticionViewSet(
         )
         response["Content-Length"] = documento.tamanio_bytes
         return response
-
-    def _validar_ambito_descarga(self, user, peticion):
-        """Valida si el usuario tiene acceso a la petición para descarga.
-
-        Replica lógica de ScopeFilterMixin pero soporta SCOPE_ASIGNADO
-        según la matriz RBAC para peticiones:documento GET.
-        """
-        from apps.authentication.adapters.permissions import (
-            get_granted_scopes,
-            SCOPE_OWN,
-            SCOPE_CARRERA,
-            SCOPE_FACULTAD,
-            SCOPE_ASIGNADO,
-        )
-
-        scopes = get_granted_scopes(user, "peticiones:documento", "GET")
-        if not scopes:
-            return False
-
-        # Si tiene ALLOW (admin), acceso total
-        from apps.authentication.adapters.permissions import ALLOW
-        if ALLOW in scopes:
-            return True
-
-        # SCOPE_OWN: estudiante propietario
-        if SCOPE_OWN in scopes:
-            return peticion.expediente.estudiante_id == user.pk
-
-        # SCOPE_CARRERA: secretaria/director de carrera
-        if SCOPE_CARRERA in scopes:
-            return (
-                user.carrera_id
-                and peticion.expediente.carrera_id == user.carrera_id
-            )
-
-        # SCOPE_FACULTAD: secretario/analista/decano
-        if SCOPE_FACULTAD in scopes:
-            return (
-                user.facultad_id
-                and peticion.expediente.facultad_id == user.facultad_id
-            )
-
-        # SCOPE_ASIGNADO: rol asignado a la petición (secretaria carrera, etc.)
-        if SCOPE_ASIGNADO in scopes:
-            # Verificar si el usuario tiene un rol que le da acceso a esta petición
-            # según la dependencia_emisora de la petición
-            from apps.peticiones.adapters.models import PeticionDocumental
-            return PeticionDocumental.objects.filter(
-                id=peticion.id,
-                expediente__carrera_id=user.carrera_id,
-                dependencia_emisora__in=user.get_roles(),
-            ).exists()
-
-        return False
 
 
 class PeticionDocumentalViewSet(

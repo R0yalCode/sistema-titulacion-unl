@@ -48,7 +48,7 @@ Ejemplo verificado: `apps/expedientes/domain/plazo_calculator.py` no importa Dja
 - **Aislamiento de datos**: `ScopeFilterMixin` compone `Q()` por ámbito en `get_queryset()`; los detalles usan `get_object_or_404` sobre el queryset filtrado → 404 ante objetos ajenos.
 - **Serializers de salida** explícitos por caso de uso (borrador, enviado, detalle, bandeja) en lugar de un serializer genérico.
 - **Notificaciones sincrónicas**: el despacho es in-process (sin cola); decisión documentada en el servicio.
-- **Auditoría por signals**: `post_save` sobre las entidades críticas escribe `EventoAuditoria` (JSONB inmutable).
+- **Auditoría por signals**: `post_save` sobre las entidades críticas escribe `EventoAuditoria` (JSONB inmutable), salvo las **transiciones de estado**, cuya única fuente es `registrar_transicion()` (DT-12): estado + `HistorialEstado` + un `ESTADO_CAMBIADO` con el actor autenticado, en una transacción.
 
 ## Manejo de errores
 

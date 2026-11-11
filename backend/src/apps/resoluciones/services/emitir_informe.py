@@ -195,19 +195,17 @@ def execute(usuario, expediente_id, dictamen: str = "APTO", fundamentacion: str 
             archivo_informe_path=archivo_pdf,
         )
 
-        # Actualizar expediente
-        expediente.estado = ExpedienteTitulacion.ESTADO_INFORME_EMITIDO
-        expediente.numero_providencia = numero_providencia
-        expediente.fecha_actualizacion = timezone.now()
-        expediente.save(update_fields=["estado", "numero_providencia", "fecha_actualizacion"])
+        # Actualizar expediente + historial + auditoría en una sola operación
+        # (DT-12). Corrige H-25: el estado anterior se lee antes del cambio.
+        from apps.expedientes.services.transiciones import registrar_transicion
 
-        # Registrar en historial de estados
-        from apps.expedientes.adapters.models import HistorialEstado
-        HistorialEstado.objects.create(
-            expediente=expediente,
-            estado_anterior=expediente.estado,  # Se guardará el anterior
-            estado_nuevo=ExpedienteTitulacion.ESTADO_INFORME_EMITIDO,
-            registrado_por=usuario,
+        expediente.numero_providencia = numero_providencia
+        registrar_transicion(
+            expediente,
+            ExpedienteTitulacion.ESTADO_INFORME_EMITIDO,
+            usuario,
+            origen="emitir_informe",
+            campos_adicionales=("numero_providencia",),
         )
 
         # Notificar al Decano/a
