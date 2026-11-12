@@ -144,6 +144,7 @@ Excepción de versión: DK-012: versión asignada por decisión expresa del resp
 **Referencias:**
 
 - Commit 0e200d9 chore(orion): merge de abe9a40 en main.
+- La release reutiliza, sin borrarlo, el borrador 431772180 creado el 2026-11-02 con el título 'v0.1.0 — SATURN | Initial Backend Implementation' (cuerpo vacío). El responsable descartó esa intención el 2026-11-12 (DK-012) y SATURN queda disponible.
 
 ### ANDROMEDA v0.2.0 — Base funcional del frontend: F0–F2.5 y V-01
 
