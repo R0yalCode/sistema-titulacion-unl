@@ -75,7 +75,7 @@ describe('LoginPage (V-01, integración real)', () => {
     renderAppAt('/login')
     await fillAndSubmit('decano.demo', 'cualquiera')
 
-    expect(await screen.findByRole('heading', { name: 'Bandeja del funcionario (V-07)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Bandeja de expedientes' })).toBeInTheDocument()
   })
 
   it('CA-V01-02: credenciales inválidas (401) muestran un mensaje genérico, permanece en /login y no dispara el cierre de sesión global (P2-3)', async () => {
