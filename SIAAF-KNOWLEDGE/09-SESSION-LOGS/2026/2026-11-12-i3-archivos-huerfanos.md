@@ -38,3 +38,18 @@ Implementación **centralizada**: el código lo ejecutó materialmente Claude Co
 - Revisión y autorización de la integración de la rama en `develop` y `main`.
 - H-I3-05 (cargas repetidas) y H-I3-07 (registro sin archivo): fuera de alcance / riesgo residual.
 - Notificación a los integrantes de su atribución delegada en E1-04 y en I-3 (DK-010): sin evidencia registrada.
+
+## Auditoría independiente y correcciones (2026-11-12)
+
+- Auditoría independiente sobre `2764d12`: NO APROBADA (D-01…D-08); informe `docs/auditorias/AUDITORIA_INDEPENDIENTE_I3.md`.
+- Correcciones autorizadas, en commits nuevos (sin reescribir los anteriores; modalidad centralizada DK-010):
+
+| Corrección | Responsable | Commit |
+|---|---|---|
+| D-05, D-08 (`local_storage.py`) | JJOC3S | `cc5d8f8` |
+| D-01, D-02, D-03, D-04, D-06 (`reconciliar_archivos`) | R0yalCode | `7be530f` |
+
+- Cada defecto se reprodujo primero contra `2764d12`, donde falló; tras la corrección pasa.
+- Regresión: SQLite 637 aprobadas y 13 fallidas, todas de `pypdf`; PostgreSQL `tests/integration` 13/13, `tests/` 37/37, `src/apps` solo con los 21 fallos conocidos; OpenAPI sin diferencias.
+- Repetición de la auditoría: **APROBADA CON OBSERVACIONES** (D-07 pendiente; D-09: el resultado de `test_postgres_infra` depende del orden de ejecución, problema previo).
+- Pendiente: autorización para integrar en `develop` y `main`.
