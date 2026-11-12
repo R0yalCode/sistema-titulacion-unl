@@ -71,7 +71,7 @@ describe('AppRouter', () => {
   it('redirige / al inicio por rol cuando hay sesión (DECANO → /bandeja)', async () => {
     renderRouterAs({ cedula: '1104567890', roles: ['DECANO'] }, '/')
 
-    expect(await screen.findByRole('heading', { name: 'Bandeja del funcionario (V-07)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Bandeja de expedientes' })).toBeInTheDocument()
   })
 
   it('muestra 404 para rutas desconocidas sin exigir sesión', async () => {

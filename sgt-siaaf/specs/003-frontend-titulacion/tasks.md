@@ -1153,7 +1153,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** datos paginados correctos.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `listBandejaOperativa()` (tipos reales de `BandejaExpedienteSerializer`; `page_size` ≤ 50) + `useBandejaOperativa`; paginación real; 403 → `ForbiddenState` con enlace a V-09; 401 por el manejador global; 500/red con reintento.
 
 ### FE-T702 — Tabla y tarjetas de bandeja
 
@@ -1167,7 +1167,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** sin overflow; accesible.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `BandejaTable` con número (enlace), estado, fecha límite, plazo, recepción, providencia, ids abreviados de estudiante/carrera/facultad y creación; tabla en escritorio y tarjetas en móvil (`Table`). **Desviación documentada:** la API solo da UUID, no nombres de estudiante/carrera/facultad (BE-01/BE-05).
 
 ### FE-T703 — Filtros de página
 
@@ -1181,7 +1181,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el filtro no induce a error.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Should. **Estado:** Hecha (2026-11-12): `BandejaFilters` por estado y número, rotulados «solo actúan sobre la página actual (N de M)», sin búsqueda global ni peticiones al backend (BE-09: sin filtros en servidor).
 
 ### FE-T704 — Estados vacíos y vencimientos
 
@@ -1195,7 +1195,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** vacío claro; vencimientos correctos.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Should. **Estado:** Hecha (2026-11-12): vacío por rol (BE-09 para SECRETARIA_CARRERA/DIRECTOR_CARRERA, cuya bandeja el backend devuelve siempre vacía; «sin pendientes» para el resto) y plazos locales sobre `fecha_limite_atencion`: vencido, vence hoy o días calendario restantes. Sin umbral de «próximo a vencer» porque la spec no lo define; el backend cuenta días laborables.
 
 ### FE-T705 — Navegación a detalle
 
@@ -1209,7 +1209,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** navegación funciona con teclado.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): enlace accesible por teclado a `/bandeja/:id` (V-08) con precarga de `GET /expedientes/{id}/` al enfocar o pasar el puntero.
 
 ### FE-T706 — Pruebas de V-07
 
@@ -1223,7 +1223,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `bandejaReglas.test.ts` y `BandejaPage.test.tsx` (20 pruebas: CA-V07-01…05, filtros locales, vencimientos, precarga, sin escritura, 403/500/red, axe). Ajuste de `router.test.tsx` y `LoginPage.test.tsx` al h1 real (antes buscaban el título del stub). Suite 394/394; 4 mutaciones detectadas.
 
 ---
 
@@ -1388,7 +1388,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** mensaje claro y accesible.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `motivos.ts`, un catálogo cerrado de motivos (`rol-no-autorizado`, `sin-rol`, `no-disponible` con `BE-xx` en lista blanca BE-01…BE-11) con título, descripción, dependencia y código de referencia (`V09-…`). Sin datos de contacto inventados.
 
 ### FE-T902 — Integración con guardas y vistas parciales
 
@@ -1402,7 +1402,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** 403 y rutas no soportadas muestran V-09.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `RequireRole` redirige a `/no-habilitado?motivo=rol-no-autorizado`; V-07 enlaza con el mismo motivo ante un 403. No se repite la ruta pedida ni la regla; los parámetros desconocidos se ignoran. Sin bucles de redirección.
 
 ### FE-T903 — Navegación de retorno
 
@@ -1416,7 +1416,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el usuario no queda atrapado.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): «Volver al inicio» solo si el rol tiene inicio propio; «Volver atrás» solo con historial en la aplicación; «Cerrar sesión» para una cuenta sin rol reconocido; contacto con la Secretaría citando el código de referencia.
 
 ### FE-T904 — Pruebas de V-09
 
@@ -1430,7 +1430,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `motivos.test.ts`, `NoHabilitadoPage.test.tsx` (+6, se conservan las 6 previas) y `guards.test.tsx` (+1): CA-V09-01…04, axe y lista blanca. Suite 406/406; 4 mutaciones detectadas.
 
 ---
 
@@ -1790,13 +1790,13 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 3. **F2:** FE-T019 → FE-T028.
 4. **F2.5:** FE-T1211 → FE-T1212 → FE-T1214 — **Hechas** (2026-11-05; FE-T1210 ya Hecha en el primer lote). FE-T1213 sigue **Bloqueada por BE-11**.
 5. **V-01:** FE-T101 → FE-T104 — Hechas (2026-11-05: formulario, integración, errores/accesibilidad y pruebas de login; 22 pruebas nuevas, 226/226 totales).
-6. **V-09:** FE-T901 → FE-T904 (necesaria para degradar).
+6. **V-09:** FE-T901 → FE-T904 — Hechas (2026-11-12: motivo, dependencia `BE-xx`, código de referencia y salidas sin bucles; integrada con `RequireRole` y V-07; 12 pruebas nuevas; responsable Dan1el17, implementación centralizada DK-010).
 7. **V-03:** FE-T301 → FE-T306 — Hechas (2026-11-05: formulario, integración, errores/protección ante duplicados, borrador local, éxito/redirección y pruebas; V-04 confirmada como stub, sin ampliar su alcance).
 8. **V-04:** FE-T401 → FE-T411 — Hechas (2026-11-05: cabecera/timeline, detalle/peticiones, checklist con 403 real, enviar/observar/evaluar/subsanar, descarga, matriz de acciones, invalidación y pruebas; FE-T407 con limitación real severa documentada para ESTUDIANTE —sin `checklist_verification_id` descubrible—, sin modificar el backend; INC-21 documenta discrepancias de código HTTP en observar/evaluar/subsanar).
 9. **V-05:** FE-T501 → FE-T506 — Hechas (2026-11-12: lista, solicitar emisión, carga y descarga de PDF, aviso de creación automática y pruebas; 30 pruebas nuevas, 358/358 totales; responsable 7777-C, implementación centralizada DK-010; discrepancias RBAC/servicio en carga y solicitud registradas en `SIAAF-KNOWLEDGE/03-FRONTEND/PLAN_VISTAS_V05_V09.md` §2).
 10. **V-06:** FE-T601 → FE-T605 — Hechas (2026-11-12: seguimiento desde el detalle del expediente, estado actual real, descarga vigente y errores; 16 pruebas nuevas, 374/374; responsable JuanCalopinoo, implementación centralizada DK-010). **BE-02 sigue sin autorizar**: sin detalle, historial ni versiones de la petición.
 11. **V-02:** FE-T201 → FE-T206 — Hechas (2026-11-05: dashboard del estudiante completo; FE-T203 con desviación de contrato documentada —notificaciones sin paginar en el backend real—; FE-T204 con alcance acotado a expedientes visitados, el registro al crear queda pendiente de V-03).
-12. **V-07:** FE-T701 → FE-T706.
+12. **V-07:** FE-T701 → FE-T706 — Hechas (2026-11-12: bandeja real paginada, filtros de página, vacíos por rol, plazos locales y navegación a V-08 con precarga; 20 pruebas nuevas; responsable Dan1el17, implementación centralizada DK-010). **BE-09** sigue sin autorizar.
 13. **V-08:** FE-T801 → FE-T810.
 14. **Transversal:** FE-T1001 → FE-T1010.
 15. **Calidad:** FE-T1101 → FE-T1105.

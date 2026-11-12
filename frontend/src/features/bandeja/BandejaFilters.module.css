@@ -1,0 +1,18 @@
+.filtros {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.aviso {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}

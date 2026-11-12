@@ -25,7 +25,8 @@ export function RequireRole({ roles, children }: RequireRoleProps) {
   const auth = useContext(AuthContext)
 
   if (!auth?.hasRole(roles)) {
-    return <Navigate replace to="/no-habilitado" />
+    // V-09 (FE-T902): motivo explícito, sin revelar la ruta ni la regla de autorización.
+    return <Navigate replace to="/no-habilitado?motivo=rol-no-autorizado" />
   }
 
   return <>{children ?? <Outlet />}</>
