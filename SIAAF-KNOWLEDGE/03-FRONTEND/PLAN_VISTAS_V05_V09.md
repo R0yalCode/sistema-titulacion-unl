@@ -69,7 +69,7 @@ Los prototipos son **solo referencia visual y de tono**: no se copia su HTML/CSS
 | V-05 | `POST /peticiones/{id}/solicitar-emision/` | ESTUDIANTE propietario; expediente BORRADOR/OBSERVADA; petición PENDIENTE | — |
 | V-05 | `POST /peticiones/{id}/documento/` (multipart `archivo`, PDF ≤ 10 MB) | ESTUDIANTE propietario; SECRETARIA_CARRERA solo en peticiones de la Secretaría; estados PENDIENTE/SOLICITADO/OBSERVADO/CARGADO | — |
 | V-05/V-06 | `GET /peticiones/{id}/documento/` y `/{version}/` | ESTUDIANTE, SECRETARIA_CARRERA, SECRETARIO_ABOGADO, ANALISTA_APOYO, DIRECTOR_CARRERA, ADMINISTRADOR (sin DECANO) | — |
-| V-06 | Datos de la petición desde `GET /expedientes/{id}/` | por ámbito | **BE-02** (detalle e historial), BE-07 (motivo) |
+| V-06 | Datos de la petición desde `GET /expedientes/{id}/`; descarga vigente `GET /peticiones/{id}/documento/` | por ámbito; descarga sin DECANO | **BE-02**, verificado el 2026-11-12: `PeticionDocumentalViewSet` existe en `views.py` pero **no está registrado** en `config/urls.py`, así que `GET /peticiones/{id}/` no es accesible. No hay listado de documentos ni de versiones, la descarga no informa la versión y la petición anidada no trae fechas. BE-07 (motivo) |
 | V-07 | `GET /expedientes/bandeja/` | roles operativos | BE-09 (roles sin expedientes, filtros en servidor) |
 | V-08 | `GET /expedientes/{id}/`, `GET /expedientes/{id}/checklist/`, `PUT /checklist/{id}/`, `POST /expedientes/{id}/observar/`, `POST /expedientes/{id}/iniciar-verificacion/`, `POST /informes/`, `POST /declaratorias/` | por rol (SECRETARIO_ABOGADO, ANALISTA_APOYO, DECANO) | BE-07; el perfil del estudiante no se anida |
 | V-09 | — (estado de interfaz) | todos | Recibe el motivo y la dependencia `BE-xx` |
@@ -121,6 +121,7 @@ Se actualiza al cerrar cada bloque.
 |---|---|---|---|
 | Plan (esta nota) | R0yalCode | commit `docs(frontend)` de esta nota | — |
 | V-05 | 7777-C | ver `tasks.md` §10 | ver `tasks.md` §10 |
+| V-06 | JuanCalopinoo | ver `tasks.md` §11 | ver `tasks.md` §11 (limitada por BE-02) |
 
 ## Relacionado
 
