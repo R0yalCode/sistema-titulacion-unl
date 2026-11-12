@@ -1,0 +1,9 @@
+.enlace {
+  color: var(--color-brand-red);
+  font-weight: 600;
+}
+
+.id {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}

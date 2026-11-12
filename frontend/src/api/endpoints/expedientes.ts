@@ -70,6 +70,43 @@ export type CrearExpedienteRequest = {
  * cuando el catálogo base está incompleto (error de datos del backend, no
  * del estudiante).
  */
+/**
+ * Ítem de la bandeja operativa (V-07). Mismo contrato que
+ * `BandejaExpedienteSerializer`, pero con cualquier estado que el rol pueda
+ * atender. Solo identificadores: el backend no expone nombres de estudiante,
+ * carrera ni facultad en la bandeja (BE-01/BE-05).
+ */
+export type BandejaOperativaItem = Omit<BandejaExpediente, 'estado'> & {
+  estado: EstadoExpediente
+}
+
+/** Tamaño máximo de página que acepta `BandejaPagination` (`max_page_size = 50`). */
+export const BANDEJA_MAX_PAGE_SIZE = 50
+
+/**
+ * `GET /api/v1/expedientes/bandeja/` para roles operativos (FE-T701;
+ * verificado 2026-11-12 contra `BandejaExpedienteViewSet`): paginado
+ * (`page`, `page_size` ≤ 50), filtrado en el servidor por ámbito y por los
+ * estados de `MAPA_INTERVENCION_POR_ROL` (SECRETARIA_CARRERA y
+ * DIRECTOR_CARRERA → lista vacía, BE-09) y ordenado por
+ * `fecha_limite_atencion`, `fecha_creacion`. No admite filtros ni búsqueda.
+ */
+export function listBandejaOperativa(
+  params: ListBandejaEstudianteParams = {},
+): Promise<Paginated<BandejaOperativaItem>> {
+  const query = new URLSearchParams()
+  if (params.page) {
+    query.set('page', String(params.page))
+  }
+  if (params.pageSize) {
+    query.set('page_size', String(Math.min(params.pageSize, BANDEJA_MAX_PAGE_SIZE)))
+  }
+  const suffix = query.toString()
+  return request<Paginated<BandejaOperativaItem>>(
+    `/api/v1/expedientes/bandeja/${suffix ? `?${suffix}` : ''}`,
+  )
+}
+
 export function crearExpediente(payload: CrearExpedienteRequest): Promise<ExpedienteBorrador> {
   return request<ExpedienteBorrador>('/api/v1/expedientes/', {
     method: 'POST',
