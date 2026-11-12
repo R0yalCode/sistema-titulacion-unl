@@ -35,7 +35,7 @@ Remoto: `origin` → `git@github.com:R0yalCode/sistema-titulacion-unl.git`.
 3. `git switch develop && git merge --no-ff <rama> -F <mensaje>` → `git push origin develop` → borrar la rama (local y remota) una vez integrada.
 4. **Preguntar:** "¿Quieres fusionar `develop` con `main`?"
 5. Solo con un "sí" explícito: `main` ← `git merge --no-ff develop -F <mensaje>` → `git push origin main` → en `develop`: `git merge --ff-only main` → `git push origin develop`.
-6. **Versionado COSMOS (DK-011):** `python3 scripts/cosmos/cosmos.py proponer` sobre el nuevo `main`.
+6. **Versionado COSMOS (DK-011, DK-012):** `python3 scripts/cosmos/cosmos.py proponer` sobre el nuevo `main`.
    - **Solo documentación:** no genera versión (DK-005).
    - **Con cambios funcionales:**
      1. Anotar las validaciones.
@@ -76,7 +76,7 @@ Tipos: `feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `perf`
 - Nunca `git add .`: rutas explícitas; no incluir cambios locales ajenos.
 - Nada de `--force`, reescribir historial publicado, desactivar protecciones ni resolver conflictos de forma destructiva.
 - Pull Request cuando haya herramienta (`gh` **no está instalada** en esta máquina; hoy los merges son locales con `--no-ff`).
-- **Etiquetas y releases** ([[COSMOS_VERSIONING]], DK-011):
+- **Etiquetas y releases** ([[COSMOS_VERSIONING]], DK-011 y DK-012):
   - Se crean solo para entregas funcionales validadas y con autorización explícita.
   - Etiqueta anotada `vX.Y.Z` sobre el commit exacto de la historia principal de `main`.
   - Son inmutables: nunca se mueven, borran ni reemplazan, ni se publican con `--force`.

@@ -45,3 +45,22 @@ branch: docs/cosmos-versionado
 - Autorización de la integración en `develop` y `main` (fase D).
 - Autorización independiente de las etiquetas y releases (fase E). `gh` no está instalado: la release se crea con `GITHUB_TOKEN` o a mano.
 - Con la secuencia estricta solo quedan TRAPPIST y SUPERNOVA: el equipo debe decidir cómo ampliar el catálogo.
+
+## Fase E — Preparación (DK-012)
+
+- **Auditoría:**
+  - Los cinco commits (`0e200d9`, `b6b953a`, `f279090`, `d020592`, `025de78`) están en la historia principal de `main`, con sus fechas.
+  - No había etiquetas ni releases.
+  - ORION (`0e200d9`) es solo documentación; se registra como excepción expresa a DK-005.
+- **Hallazgo:**
+  - `frontend/src/lib/` (15 archivos importados por 24 módulos) **nunca se ha versionado**, porque la regla `lib/` del `.gitignore` raíz (plantilla de Python) lo ignora.
+  - Re-ejecución sobre el árbol de `b6b953a` y `f279090`: hay archivos de prueba que no cargan y `typecheck` falla.
+  - Añadiendo la `lib/` actual, `f279090` pasa 328/328, la cifra reportada.
+  - Backend en `d020592`: 484 aprobadas y 13 fallidas por `pypdf`, 497 en total, la cifra reportada.
+- **Cambios preparados:**
+  - Catálogo ampliado a 36 hitos con descripción y temática.
+  - Asignación por propósito dominante.
+  - `publicar` exige que la asignación esté confirmada en un commit y marca Latest solo la versión más alta.
+  - `marcar-publicada` comprueba la etiqueta y la GitHub Release.
+  - `verificar --releases`.
+  - 40 pruebas.
