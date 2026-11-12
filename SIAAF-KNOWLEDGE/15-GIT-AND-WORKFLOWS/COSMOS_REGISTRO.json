@@ -1,35 +1,192 @@
 {
   "esquema": 1,
-  "descripcion": "Registro oficial COSMOS (SemVer + hitos astronómicos) de SGT-SIAAF. Fuente única de verdad: scripts/cosmos/cosmos.py lo valida contra Git y genera las tablas de COSMOS_VERSIONING.md. Decisión DK-011.",
+  "descripcion": "Registro oficial COSMOS (SemVer + hitos astronómicos) de SGT-SIAAF. Fuente única de verdad: scripts/cosmos/cosmos.py lo valida contra Git, el remoto y GitHub Releases, y genera las tablas de COSMOS_VERSIONING.md. Decisiones DK-011 y DK-012.",
   "rama_principal": "main",
   "remoto": "origin",
   "primera_version_estable": null,
   "catalogo": [
-    "ORION",
-    "POLARIS",
-    "SATURN",
-    "SIRIUS",
-    "MERCURY",
-    "PULSAR",
-    "ROSETTA",
-    "ANDROMEDA",
-    "VEGA",
-    "QUASAR",
-    "EUROPA",
-    "ORBIT",
-    "NOVA",
-    "ECLIPSE",
-    "HELIOS",
-    "TRAPPIST",
-    "SUPERNOVA"
+    {
+      "nombre": "ORION",
+      "descripcion": "Constelación ecuatorial del cazador, visible desde ambos hemisferios.",
+      "tematica": "Fundación del proyecto: estructura, constitución y especificaciones."
+    },
+    {
+      "nombre": "POLARIS",
+      "descripcion": "Estrella polar, alfa de la Osa Menor, junto al polo norte celeste.",
+      "tematica": "Orientación del usuario: navegación, ayuda y guías en la interfaz."
+    },
+    {
+      "nombre": "SATURN",
+      "descripcion": "Sexto planeta del sistema solar, gigante gaseoso con un gran sistema de anillos.",
+      "tematica": "Arquitectura: reorganización modular y refactorizaciones estructurales."
+    },
+    {
+      "nombre": "SIRIUS",
+      "descripcion": "Estrella más brillante del cielo nocturno, en Canis Major.",
+      "tematica": "Rendimiento y optimización."
+    },
+    {
+      "nombre": "MERCURY",
+      "descripcion": "Planeta más cercano al Sol y de traslación más rápida.",
+      "tematica": "Comunicación: notificaciones y mensajería."
+    },
+    {
+      "nombre": "PULSAR",
+      "descripcion": "Estrella de neutrones en rotación que emite pulsos de radiación regulares.",
+      "tematica": "Procesos periódicos: plazos, tareas programadas y monitorización."
+    },
+    {
+      "nombre": "ROSETTA",
+      "descripcion": "Misión de la ESA al cometa 67P/Churyumov-Gerasimenko, nombrada por la piedra de Rosetta.",
+      "tematica": "Documentación y transferencia de conocimiento."
+    },
+    {
+      "nombre": "ANDROMEDA",
+      "descripcion": "Galaxia espiral M31, la gran galaxia más cercana a la Vía Láctea.",
+      "tematica": "Frontend: interfaz web y vistas del trámite."
+    },
+    {
+      "nombre": "VEGA",
+      "descripcion": "Estrella alfa de Lyra, referencia histórica de la escala de magnitudes.",
+      "tematica": "Calidad: pruebas, estándares y criterios de aceptación."
+    },
+    {
+      "nombre": "QUASAR",
+      "descripcion": "Núcleo galáctico activo extremadamente luminoso, alimentado por un agujero negro supermasivo.",
+      "tematica": "Integraciones externas de alto impacto."
+    },
+    {
+      "nombre": "EUROPA",
+      "descripcion": "Luna de Júpiter con un océano de agua bajo su corteza de hielo.",
+      "tematica": "Datos y persistencia: modelo, migraciones e integridad."
+    },
+    {
+      "nombre": "ORBIT",
+      "descripcion": "Trayectoria de un cuerpo alrededor de otro bajo la acción de la gravedad.",
+      "tematica": "Flujos de trabajo y máquina de estados del trámite."
+    },
+    {
+      "nombre": "NOVA",
+      "descripcion": "Aumento súbito del brillo de una enana blanca en un sistema binario.",
+      "tematica": "Funcionalidad nueva: módulos o capacidades inéditas."
+    },
+    {
+      "nombre": "ECLIPSE",
+      "descripcion": "Ocultación total o parcial de un astro por otro.",
+      "tematica": "Seguridad: controles, endurecimiento y protección de datos."
+    },
+    {
+      "nombre": "HELIOS",
+      "descripcion": "Personificación griega del Sol; nombre también de dos sondas solares.",
+      "tematica": "Integridad y estabilidad del núcleo del sistema."
+    },
+    {
+      "nombre": "TRAPPIST",
+      "descripcion": "TRAPPIST-1, enana roja con siete planetas rocosos conocidos.",
+      "tematica": "Integración entre módulos y roles."
+    },
+    {
+      "nombre": "SUPERNOVA",
+      "descripcion": "Explosión estelar que puede superar brevemente el brillo de toda su galaxia.",
+      "tematica": "Entrega mayor de cierre de ciclo (candidata a la versión estable)."
+    },
+    {
+      "nombre": "ATLAS",
+      "descripcion": "Luna de Saturno y titán mitológico que sostiene la bóveda celeste.",
+      "tematica": "Infraestructura y despliegue."
+    },
+    {
+      "nombre": "TITAN",
+      "descripcion": "Mayor luna de Saturno, con una atmósfera densa.",
+      "tematica": "Capacidad y escalabilidad."
+    },
+    {
+      "nombre": "PHOENIX",
+      "descripcion": "Constelación austral del ave fénix.",
+      "tematica": "Resiliencia: recuperación ante fallos y respaldos."
+    },
+    {
+      "nombre": "DRACO",
+      "descripcion": "Constelación boreal del dragón, circumpolar en latitudes medias del norte.",
+      "tematica": "Control de acceso: roles, permisos y aislamiento."
+    },
+    {
+      "nombre": "LYRA",
+      "descripcion": "Constelación de la lira, que contiene a Vega.",
+      "tematica": "Accesibilidad y experiencia de usuario."
+    },
+    {
+      "nombre": "PEGASUS",
+      "descripcion": "Constelación del caballo alado, con el Gran Cuadrado de Pegaso.",
+      "tematica": "Aplicación móvil."
+    },
+    {
+      "nombre": "CYGNUS",
+      "descripcion": "Constelación del cisne, sobre la Vía Láctea, donde se encuentra Cygnus X-1.",
+      "tematica": "Reportes, indicadores y analítica."
+    },
+    {
+      "nombre": "CALLISTO",
+      "descripcion": "Segunda luna más grande de Júpiter, con una superficie muy craterizada.",
+      "tematica": "Mantenimiento: deuda técnica y código heredado."
+    },
+    {
+      "nombre": "GANYMEDE",
+      "descripcion": "Luna de Júpiter, la mayor del sistema solar.",
+      "tematica": "Módulo funcional de gran alcance (por ejemplo, modalidades de titulación)."
+    },
+    {
+      "nombre": "ENCELADUS",
+      "descripcion": "Luna de Saturno con géiseres de agua en su polo sur.",
+      "tematica": "Flujo de datos: importación, exportación y eventos."
+    },
+    {
+      "nombre": "CERES",
+      "descripcion": "Planeta enano, el mayor cuerpo del cinturón de asteroides.",
+      "tematica": "Catálogos y datos maestros."
+    },
+    {
+      "nombre": "ERIS",
+      "descripcion": "Planeta enano del disco disperso, de masa similar a la de Plutón.",
+      "tematica": "Concurrencia y resolución de conflictos."
+    },
+    {
+      "nombre": "ALTAIR",
+      "descripcion": "Estrella alfa de Aquila, de rotación muy rápida.",
+      "tematica": "Búsqueda y consultas."
+    },
+    {
+      "nombre": "CANOPUS",
+      "descripcion": "Segunda estrella más brillante del cielo, usada para orientar sondas espaciales.",
+      "tematica": "Auditoría y trazabilidad."
+    },
+    {
+      "nombre": "ARGO",
+      "descripcion": "Argo Navis, antigua constelación del barco de los argonautas.",
+      "tematica": "Colaboración: trabajo multiusuario y asignaciones."
+    },
+    {
+      "nombre": "IO",
+      "descripcion": "Luna de Júpiter, el cuerpo con mayor actividad volcánica conocida.",
+      "tematica": "Documentos y archivos: carga, almacenamiento y descarga."
+    },
+    {
+      "nombre": "MAKEMAKE",
+      "descripcion": "Planeta enano del cinturón de Kuiper.",
+      "tematica": "Configuración y administración del sistema."
+    },
+    {
+      "nombre": "HAUMEA",
+      "descripcion": "Planeta enano del cinturón de Kuiper, alargado por su rápida rotación.",
+      "tematica": "Cumplimiento normativo y reglas legales."
+    },
+    {
+      "nombre": "BETELGEUSE",
+      "descripcion": "Supergigante roja variable de la constelación de Orión.",
+      "tematica": "Retiro de funcionalidades y fin de ciclo."
+    }
   ],
   "entregas_sin_version": [
-    {
-      "commit": "0e200d9cb490224eaea0870cf457581d4ed93db8",
-      "fecha": "2026-10-20",
-      "hito": "ORION",
-      "descripcion": "Estructura del proyecto y documentación Spec Kit (`chore(orion)`). Inicio del ciclo; sin versión registrada."
-    },
     {
       "commit": "edee296952758740e6231ca6fc4fec8310a459a0",
       "fecha": "2026-11-02",
@@ -45,6 +202,39 @@
   ],
   "versiones": [
     {
+      "version": "v0.1.0",
+      "hito": "ORION",
+      "commit": "0e200d9cb490224eaea0870cf457581d4ed93db8",
+      "fecha": "2026-10-20",
+      "titulo": "Fundación del proyecto y especificaciones Spec Kit",
+      "descripcion": "Inicio del ciclo de desarrollo: estructura del repositorio, constitución del proyecto y especificación SDD del trámite de titulación (spec 001).",
+      "retrospectiva": true,
+      "estado": "publicada",
+      "excepcion_version": "DK-012: versión asignada por decisión expresa del responsable a una entrega exclusivamente documental, que por DK-005 no generaría versión. Excepción histórica no repetible.",
+      "cambios": [
+        "Constitución del proyecto (sgt-siaaf/.specify/memory/constitution.md).",
+        "Spec 001 del trámite de titulación: specify, clarify, plan y tasks.",
+        "Plantillas Spec Kit y ADR-001/ADR-002 (archivos vacíos en el commit).",
+        "Retirada de docs/01-problema-contexto.md."
+      ],
+      "validaciones": [
+        "Entrega documental: no incluye código ni pruebas automatizadas.",
+        "Contenido verificado el 2026-11-12 con git diff --stat 0e200d9^1 0e200d9: 11 archivos, 3415 inserciones y 31 eliminaciones."
+      ],
+      "pendientes": [
+        "Las plantillas Spec Kit y los ADR se incorporaron vacíos."
+      ],
+      "referencias": [
+        "Commit 0e200d9 chore(orion): merge de abe9a40 en main.",
+        "La release reutiliza, sin borrarlo, el borrador 431772180 creado el 2026-11-02 con el título 'v0.1.0 — SATURN | Initial Backend Implementation' (cuerpo vacío). El responsable descartó esa intención el 2026-11-12 (DK-012) y SATURN queda disponible."
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "b47e1d259e063f74ee040117419cc4e8b4b45fed",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.1.0"
+      }
+    },
+    {
       "version": "v0.2.0",
       "hito": "ANDROMEDA",
       "commit": "b6b953aa313e858218eb71ac6163e4873395e066",
@@ -52,7 +242,7 @@
       "titulo": "Base funcional del frontend: F0–F2.5 y V-01",
       "descripcion": "Primera entrega versionada: base funcional del frontend (andamiaje, autenticación, UI Kit, estados de error y pantalla de login). El merge también incorporó documentación y prototipos de diseño.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "cambios": [
         "F0: andamiaje, configuración y estructura del frontend.",
         "F1: autenticación, gestión de sesión y cliente HTTP.",
@@ -61,16 +251,23 @@
         "V-01: pantalla de login."
       ],
       "validaciones": [
-        "226/226 pruebas superadas (reportado en 467ec3b).",
-        "ESLint, TypeScript y build sin errores (reportado en 467ec3b)."
+        "Reportado en 467ec3b: 226/226 pruebas, ESLint, TypeScript y build sin errores.",
+        "Re-ejecutado el 2026-11-12 sobre el árbol del commit: 146 pruebas aprobadas, pero 9 de 40 archivos de prueba no cargan y typecheck falla, porque falta frontend/src/lib/.",
+        "Diagnóstico: añadiendo la frontend/src/lib/ actual (no versionada) pasan 239/239 y typecheck; no reproduce exactamente el estado de la entrega."
       ],
       "pendientes": [
-        "FE-T1213 (InlineAlert 409/412/428) bloqueada por BE-11."
+        "FE-T1213 (InlineAlert 409/412/428) bloqueada por BE-11.",
+        "frontend/src/lib/ (15 archivos importados por 24 módulos) nunca se ha versionado: la regla 'lib/' del .gitignore raíz (plantilla de Python) lo ignora. El frontend de esta etiqueta no compila ni pasa sus pruebas a partir de Git."
       ],
       "referencias": [
         "Rama release/0.2.0-andromeda; commit 467ec3b `feat(frontend): integrar F0–F2.5 y V-01`.",
         "Merge en main b6b953a."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "5d36ee102160dfb63c8596c87db82c2fef597f0c",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.2.0"
+      }
     },
     {
       "version": "v0.3.0",
@@ -80,7 +277,7 @@
       "titulo": "Gestión de expedientes y requisitos",
       "descripcion": "Vista V-04 (FE-T401–FE-T411): detalle de expedientes, checklist de requisitos, envío, observaciones, evaluación, subsanación y descargas, sobre los contratos reales del backend.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "excepcion_hito": "ANDROMEDA abarcó v0.2.0 y v0.3.0 antes de DK-011; reutilización histórica aceptada y no repetible.",
       "cambios": [
         "Consulta del detalle de expedientes.",
@@ -89,20 +286,26 @@
         "Matriz de acciones por rol y estado."
       ],
       "validaciones": [
-        "328/328 pruebas superadas; 51 nuevas (reportado en f279090).",
-        "Cobertura de features/expediente superior al 80 % en las cuatro métricas (reportado).",
-        "ESLint, TypeScript y build satisfactorios (reportado)."
+        "Reportado en f279090: 328/328 pruebas, cobertura de features/expediente superior al 80 %, ESLint, TypeScript y build satisfactorios.",
+        "Re-ejecutado el 2026-11-12 sobre el árbol del commit: 22 de 51 archivos de prueba no cargan y typecheck falla, porque falta frontend/src/lib/.",
+        "Diagnóstico: añadiendo la frontend/src/lib/ actual (no versionada) pasan 328/328 y typecheck, la cifra reportada."
       ],
       "pendientes": [
         "INC-21 (P1): algunos errores de reglas de negocio responden HTTP 500.",
         "FE-T407 (P1): el estudiante no puede descubrir el checklist_verification_id para subsanar.",
         "Incidencia heredada P2 en queryClient.ts (status 0).",
-        "V-05 fuera de la entrega."
+        "V-05 fuera de la entrega.",
+        "frontend/src/lib/ (15 archivos importados por 24 módulos) nunca se ha versionado: la regla 'lib/' del .gitignore raíz (plantilla de Python) lo ignora. El frontend de esta etiqueta no compila ni pasa sus pruebas a partir de Git."
       ],
       "referencias": [
         "Rama release/0.3.0-andromeda; PR #14.",
         "afdd989 es un merge previo sin cambios; la entrega es f279090."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "a9042fa790c96c3ea7e79429ec8746f9e0e571d4",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.3.0"
+      }
     },
     {
       "version": "v0.4.0",
@@ -112,7 +315,7 @@
       "titulo": "Implementación de seguridad del backend SGT-SIAAF",
       "descripcion": "Controles de seguridad del backend: configuración de producción, throttling, JWT, validación y almacenamiento privado de PDF, RBAC con aislamiento de expedientes, máquina de estados, logging estructurado y restricción de la documentación de la API en producción.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "cambios": [
         "HTTPS, HSTS, CSP, CORS, cookies y cabeceras de seguridad.",
         "Throttling de autenticación y de carga de documentos.",
@@ -123,19 +326,27 @@
         "Logging JSON con filtros de datos sensibles y request_id."
       ],
       "validaciones": [
-        "497 pruebas aprobadas según la matriz de trazabilidad (reportado en 8e1e1a2)."
+        "Reportado en 8e1e1a2: 497 pruebas aprobadas según la matriz de trazabilidad.",
+        "Re-ejecutado el 2026-11-12 (backend, SQLite) sobre el árbol de d020592: 484 aprobadas y 13 fallidas, 497 en total. Las 13 fallan en test_pdf_generator.py porque falta pypdf; con un lector pdftotext pasan 30/30."
       ],
       "pendientes": [
         "SEC-T014 bloqueada por DEC-009.",
         "SEC-T015: verificación real de FirmaEC.",
         "SEC-T016: migración a RS256.",
         "VULN-001 a VULN-014 con coberturas diferenciadas.",
-        "SEC-T017 a SEC-T024 pendientes."
+        "SEC-T017 a SEC-T024 pendientes.",
+        "pypdf no declarado en las dependencias de desarrollo.",
+        "frontend/src/lib/ (15 archivos importados por 24 módulos) nunca se ha versionado: la regla 'lib/' del .gitignore raíz (plantilla de Python) lo ignora. El frontend de esta etiqueta no compila ni pasa sus pruebas a partir de Git."
       ],
       "referencias": [
         "Rama release/0.4.0-eclipse; commit 8e1e1a2; PR #16 (a develop) y PR #17 (a main).",
         "4ac69d1 ('Merge branch release/0.4.0-eclipse into main') no incorporó cambios; la entrega llega a main en d020592."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "004ac4c11d1301e99633f21235f4f182c2fe9201",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.4.0"
+      }
     },
     {
       "version": "v0.5.0",
@@ -144,8 +355,8 @@
       "fecha": "2026-11-12",
       "titulo": "Integridad de archivos privados, errores de dominio y endurecimiento de seguridad",
       "descripcion": "Endurecimiento de seguridad P0 e inicio de la verificación, errores de dominio uniformes con bloqueo ordenado y corrección de archivos privados huérfanos con conciliación segura.",
-      "retrospectiva": false,
-      "estado": "preparada",
+      "retrospectiva": true,
+      "estado": "publicada",
       "cambios": [
         "INC-01: throttling de operaciones mutantes, ámbito 'asignado' y verificación SHA-256 al servir PDF (d1fa86e).",
         "E2-06: registrar_transicion() como único punto de cambio de estado (d1fa86e).",
@@ -168,12 +379,18 @@
         "pypdf no declarado en dependencias de desarrollo (E0-01).",
         "H-30: 8 pruebas de índices fallan en PostgreSQL.",
         "Decisión funcional O-1 (hoy 409) e I-4 (contracts/openapi.yaml difiere de openapi.yaml).",
-        "AUT-01, AUT-03 y VULN-005/006/010 registradas como abiertas en d1fa86e."
+        "AUT-01, AUT-03 y VULN-005/006/010 registradas como abiertas en d1fa86e.",
+        "frontend/src/lib/ (15 archivos importados por 24 módulos) nunca se ha versionado: la regla 'lib/' del .gitignore raíz (plantilla de Python) lo ignora. El frontend de esta etiqueta no compila ni pasa sus pruebas a partir de Git."
       ],
       "referencias": [
         "Merges en main d1fa86e, 3317231 y 025de78.",
         "Rama fix/i3-archivos-huerfanos (00d7802), integrada en develop con 063f07e."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "863ceba2d81202575f8d2138d285e9662f9f0d2c",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.5.0"
+      }
     }
   ]
 }

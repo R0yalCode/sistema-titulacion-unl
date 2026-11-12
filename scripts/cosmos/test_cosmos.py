@@ -1,8 +1,9 @@
 """Pruebas de scripts/cosmos/cosmos.py sobre repositorios Git temporales.
 
 Ejecutar: python3 -m unittest discover -s scripts/cosmos -p 'test_*.py'
-No usan red ni el repositorio real: cada prueba crea su propio repositorio y
-un remoto local desnudo.
+No usan red, GitHub ni el repositorio real: cada prueba crea su propio
+repositorio, un remoto local desnudo y un `gh` falso que guarda las releases
+en un directorio temporal.
 """
 
 from __future__ import annotations
@@ -16,12 +17,16 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cosmos  # noqa: E402
 
-CATALOGO = ["ORION", "ANDROMEDA", "ECLIPSE", "HELIOS", "TRAPPIST"]
+CATALOGO = [
+    {"nombre": n, "descripcion": f"Astro {n}", "tematica": f"Temática {n}"}
+    for n in ("ORION", "ANDROMEDA", "ECLIPSE", "HELIOS", "TRAPPIST")
+]
 DOC = """# Versionado
 
 <!-- cosmos:catalogo:inicio -->
@@ -32,6 +37,42 @@ DOC = """# Versionado
 <!-- cosmos:sin-version:fin -->
 <!-- cosmos:detalle:inicio -->
 <!-- cosmos:detalle:fin -->
+"""
+GH_FALSO = r"""#!/usr/bin/env python3
+import json, os, pathlib, sys
+d = pathlib.Path(os.environ["FAKE_GH_DIR"])
+estado = d / "releases.json"
+rel = json.loads(estado.read_text()) if estado.exists() else {}
+a = sys.argv[1:]
+with (d / "llamadas.log").open("a") as f:
+    f.write(json.dumps(a) + "\n")
+if a[:2] == ["release", "create"]:
+    tag = a[2]
+    titulo = a[a.index("--title") + 1]
+    latest = [x for x in a if x.startswith("--latest=")][0].endswith("true")
+    if tag in rel:
+        sys.exit(1)
+    if latest:
+        for r in rel.values():
+            r["latest"] = False
+    rel[tag] = {"tagName": tag, "name": titulo, "isDraft": False,
+                "url": "https://example.invalid/releases/tag/" + tag,
+                "isPrerelease": False, "publishedAt": "2026-11-12T12:00:00Z",
+                "latest": latest}
+    estado.write_text(json.dumps(rel))
+    print(rel[tag]["url"])
+    sys.exit(0)
+if a[:2] == ["release", "view"]:
+    tag = a[2] if len(a) > 2 and not a[2].startswith("--") else None
+    if tag is None:
+        r = next((r for r in rel.values() if r["latest"]), None)
+    else:
+        r = rel.get(tag)
+    if r is None:
+        sys.exit(1)
+    print(json.dumps({k: v for k, v in r.items() if k != "latest"}))
+    sys.exit(0)
+sys.exit(2)
 """
 
 
@@ -50,9 +91,7 @@ class RepoTemporal:
             "GIT_COMMITTER_NAME": "Prueba",
             "GIT_COMMITTER_EMAIL": "prueba@example.invalid",
         }
-        (base / "gitconfig").write_text(
-            "[tag]\n\tgpgSign = false\n[commit]\n\tgpgSign = false\n"
-        )
+        (base / "gitconfig").write_text("[tag]\n\tgpgSign = false\n[commit]\n\tgpgSign = false\n")
         self.git_base("init", "-q", "--bare", "-b", "main", str(self.remoto), cwd=base)
         self.git_base("init", "-q", "-b", "main", str(self.dir), cwd=base)
         self.git("remote", "add", "origin", str(self.remoto))
@@ -63,9 +102,7 @@ class RepoTemporal:
         env = dict(self.env)
         if fecha:
             env["GIT_AUTHOR_DATE"] = env["GIT_COMMITTER_DATE"] = fecha
-        r = subprocess.run(
-            ["git", *args], cwd=cwd, env=env, capture_output=True, text=True
-        )
+        r = subprocess.run(["git", *args], cwd=cwd, env=env, capture_output=True, text=True)
         if r.returncode:
             raise RuntimeError(r.stderr)
         return r.stdout.strip()
@@ -117,16 +154,25 @@ class BaseCosmos(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         base = Path(self._tmp.name)
+        self.base = base
+        bin_dir, self.gh_dir = base / "bin", base / "gh"
+        bin_dir.mkdir()
+        self.gh_dir.mkdir()
+        (bin_dir / "gh").write_text(GH_FALSO)
+        (bin_dir / "gh").chmod(0o755)
+        entorno = {
+            "PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}",
+            "FAKE_GH_DIR": str(self.gh_dir),
+            "COSMOS_FECHA_HOY": "2026-11-12",
+        }
+        parche = mock.patch.dict(os.environ, entorno)
+        parche.start()
+        self.addCleanup(parche.stop)
+        os.environ.pop("GITHUB_TOKEN", None)
         self.r = RepoTemporal(base)
-        self.c1 = self.r.entrega(
-            "f1", "src/a.py", "feat: uno", "2026-11-05T09:00:00-05:00"
-        )
-        self.c2 = self.r.entrega(
-            "f2", "src/b.py", "feat: dos", "2026-11-06T20:00:00-05:00"
-        )
-        self.c3 = self.r.entrega(
-            "f3", "src/c.py", "fix: tres", "2026-11-10T08:00:00-05:00"
-        )
+        self.c1 = self.r.entrega("f1", "src/a.py", "feat: uno", "2026-11-05T09:00:00-05:00")
+        self.c2 = self.r.entrega("f2", "src/b.py", "feat: dos", "2026-11-06T20:00:00-05:00")
+        self.c3 = self.r.entrega("f3", "src/c.py", "fix: tres", "2026-11-10T08:00:00-05:00")
         self.r.publicar_main()
         self.registro_ruta = base / "registro.json"
         self.doc_ruta = base / "doc.md"
@@ -135,12 +181,10 @@ class BaseCosmos(unittest.TestCase):
             "rama_principal": "main",
             "remoto": "origin",
             "primera_version_estable": None,
-            "catalogo": list(CATALOGO),
+            "catalogo": [dict(h) for h in CATALOGO],
             "entregas_sin_version": [],
             "versiones": [
-                version(
-                    "v0.2.0", "ANDROMEDA", self.c1, "2026-11-05", retrospectiva=True
-                ),
+                version("v0.2.0", "ANDROMEDA", self.c1, "2026-11-05", retrospectiva=True),
                 version("v0.3.0", "ECLIPSE", self.c2, "2026-11-06"),
             ],
         }
@@ -155,12 +199,13 @@ class BaseCosmos(unittest.TestCase):
         if documentar:
             cosmos.documentar(self.ctx())
 
-    def ctx(self, remoto=True):
+    def ctx(self, remoto=True, releases=False):
         return cosmos.Contexto(
             repo=self.r.dir,
             registro_ruta=self.registro_ruta,
             doc_ruta=self.doc_ruta,
             remoto_activo=remoto,
+            releases_activas=releases,
         )
 
     def ejecutar(self, *argv):
@@ -179,27 +224,22 @@ class BaseCosmos(unittest.TestCase):
             )
         return codigo, salida.getvalue()
 
-    def errores(self, remoto=True):
-        return cosmos.verificar(self.ctx(remoto)).errores
+    def errores(self, remoto=True, releases=False):
+        return cosmos.verificar(self.ctx(remoto, releases)).errores
 
-    def assertError(self, fragmento, remoto=True):
-        errores = self.errores(remoto)
-        self.assertTrue(
-            any(fragmento in e for e in errores), f"'{fragmento}' no está en {errores}"
-        )
+    def assertError(self, fragmento, remoto=True, releases=False):
+        errores = self.errores(remoto, releases)
+        self.assertTrue(any(fragmento in e for e in errores), f"'{fragmento}' no está en {errores}")
+
+    def releases_falsas(self):
+        ruta = self.gh_dir / "releases.json"
+        return json.loads(ruta.read_text()) if ruta.exists() else {}
 
 
 class TestSemVer(unittest.TestCase):
     def test_formatos(self):
         self.assertEqual(cosmos.parsear_version("v0.5.0"), (0, 5, 0))
-        for malo in (
-            "V0.5.0",
-            "0.5.0",
-            "v0.5",
-            "v0.5.0-helios",
-            "v0.5.0+helios",
-            "v01.2.3",
-        ):
+        for malo in ("V0.5.0", "0.5.0", "v0.5", "v0.5.0-helios", "v0.5.0+helios", "v01.2.3"):
             with self.assertRaises(ValueError, msg=malo):
                 cosmos.parsear_version(malo)
 
@@ -214,13 +254,11 @@ class TestSemVer(unittest.TestCase):
     def test_clasificacion(self):
         c = cosmos.clasificar_cambios
         self.assertEqual(c([], "", []), "ninguno")
-        self.assertEqual(
-            c(["docs: x"], "", ["docs/a.md", "SIAAF-KNOWLEDGE/b.json"]), "documental"
-        )
-        self.assertEqual(c(["fix: x"], "", ["src/a.py"]), "patch")
+        self.assertEqual(c(["docs: x"], "", ["docs/a.md", "SIAAF-KNOWLEDGE/b.json"]), "documental")
         self.assertEqual(
             c(["feat: x"], "", ["scripts/cosmos/cosmos.py", "CLAUDE.md"]), "documental"
         )
+        self.assertEqual(c(["fix: x"], "", ["src/a.py"]), "patch")
         self.assertEqual(c(["fix: x", "feat(api): y"], "", ["src/a.py"]), "minor")
         self.assertEqual(c(["feat(api)!: y"], "", ["src/a.py"]), "major")
         self.assertEqual(c(["feat: y"], "BREAKING CHANGE: z", ["src/a.py"]), "major")
@@ -230,6 +268,14 @@ class TestVerificar(BaseCosmos):
     def test_registro_coherente(self):
         self.assertEqual(self.errores(), [])
         self.assertEqual(self.ejecutar("verificar")[0], 0)
+
+    def test_catalogo_requiere_descripcion_y_tematica(self):
+        self.registro["catalogo"][4]["tematica"] = ""
+        self.guardar()
+        self.assertError("sin descripción o temática")
+        self.registro["catalogo"][4] = {"nombre": "Trap pist", "descripcion": "x", "tematica": "y"}
+        self.guardar()
+        self.assertError("mayúsculas y sin espacios")
 
     def test_hito_fuera_del_catalogo(self):
         self.registro["versiones"][1]["hito"] = "KRYPTON"
@@ -244,24 +290,18 @@ class TestVerificar(BaseCosmos):
         self.guardar()
         self.assertEqual(self.errores(), [])
 
-    def test_hito_fuera_de_secuencia(self):
-        self.registro["versiones"][0]["hito"] = "ECLIPSE"
-        self.registro["versiones"][1]["hito"] = "ANDROMEDA"
+    def test_hito_fuera_de_orden_permitido(self):
+        # DK-012: el hito se elige por propósito, no por el orden del catálogo.
+        self.registro["versiones"][0]["hito"] = "TRAPPIST"
+        self.registro["versiones"][1]["hito"] = "ORION"
         self.guardar()
-        self.assertError("no sigue la secuencia")
+        self.assertEqual(self.errores(), [])
 
     def test_hito_usado_sin_version(self):
         self.registro["entregas_sin_version"] = [
-            {
-                "commit": self.c3,
-                "fecha": "2026-11-10",
-                "hito": "HELIOS",
-                "descripcion": "doc",
-            }
+            {"commit": self.c3, "fecha": "2026-11-10", "hito": "HELIOS", "descripcion": "doc"}
         ]
-        self.registro["versiones"].append(
-            version("v0.4.0", "HELIOS", self.c3, "2026-11-10")
-        )
+        self.registro["versiones"].append(version("v0.4.0", "HELIOS", self.c3, "2026-11-10"))
         self.guardar()
         self.assertError("ya estaba asignado")
 
@@ -279,8 +319,7 @@ class TestVerificar(BaseCosmos):
         self.assertError("no es un incremento SemVer válido")
 
     def test_commit_fuera_de_la_historia_principal(self):
-        lateral = self.r.lateral["f2"]
-        self.registro["versiones"][1]["commit"] = lateral
+        self.registro["versiones"][1]["commit"] = self.r.lateral["f2"]
         self.guardar()
         self.assertError("no pertenece a la historia principal")
 
@@ -298,23 +337,16 @@ class TestVerificar(BaseCosmos):
         self.assertError("distinta de la del commit")
 
     def test_orden_de_commits(self):
-        self.registro["versiones"][0]["commit"] = self.c2
-        self.registro["versiones"][0]["fecha"] = "2026-11-06"
-        self.registro["versiones"][1]["commit"] = self.c1
-        self.registro["versiones"][1]["fecha"] = "2026-11-05"
+        self.registro["versiones"][0].update(commit=self.c2, fecha="2026-11-06")
+        self.registro["versiones"][1].update(commit=self.c1, fecha="2026-11-05")
         self.guardar()
         self.assertError("no desciende")
 
     def test_version_estable_requiere_declaracion(self):
-        self.registro["versiones"].append(
-            version("v1.0.0", "HELIOS", self.c3, "2026-11-10")
-        )
+        self.registro["versiones"].append(version("v1.0.0", "HELIOS", self.c3, "2026-11-10"))
         self.guardar()
         self.assertError("sin primera versión estable declarada")
-        self.registro["primera_version_estable"] = {
-            "version": "v1.0.0",
-            "decision": "DK-999",
-        }
+        self.registro["primera_version_estable"] = {"version": "v1.0.0", "decision": "DK-999"}
         self.guardar()
         self.assertEqual(self.errores(), [])
 
@@ -365,12 +397,13 @@ class TestEtiquetas(BaseCosmos):
         self.etiquetar("v0.9.0", self.c3)
         self.assertError("no está en el registro")
 
-    def test_publicada_sin_etiqueta_remota(self):
+    def test_publicada_sin_etiqueta_remota_ni_datos(self):
         v = self.registro["versiones"][1]
         self.etiquetar("v0.3.0", self.c2, cosmos.mensaje_etiqueta(v))
         v["estado"] = "publicada"
         self.guardar()
         self.assertError("no existe la etiqueta en 'origin'")
+        self.assertError("sin datos de publicación")
 
     def test_remota_distinta_de_local(self):
         v = self.registro["versiones"][1]
@@ -382,70 +415,107 @@ class TestEtiquetas(BaseCosmos):
 
 
 class TestPublicar(BaseCosmos):
+    def publicar(self, v, *extra):
+        return self.ejecutar("publicar", v, "--ejecutar", "--confirmar", v, *extra)
+
     def test_simulacion_no_crea_nada(self):
-        codigo, salida = self.ejecutar("publicar", "v0.3.0", "--sin-release")
+        codigo, salida = self.ejecutar("publicar", "v0.3.0")
         self.assertEqual(codigo, 0, salida)
         self.assertIn("SIMULACIÓN superada", salida)
+        self.assertIn("--latest=true", salida)
         self.assertEqual(self.r.git("tag", "-l"), "")
         self.assertEqual(self.r.git("ls-remote", "--tags", "origin"), "")
+        self.assertEqual(self.releases_falsas(), {})
 
     def test_ejecutar_sin_confirmacion_rechaza(self):
         for extra in ([], ["--confirmar", "v0.2.0"]):
-            codigo, salida = self.ejecutar(
-                "publicar", "v0.3.0", "--ejecutar", "--sin-release", *extra
-            )
+            codigo, salida = self.ejecutar("publicar", "v0.3.0", "--ejecutar", *extra)
             self.assertEqual(codigo, 2, salida)
             self.assertIn("RECHAZADO", salida)
         self.assertEqual(self.r.git("tag", "-l"), "")
+        self.assertEqual(self.releases_falsas(), {})
 
-    def test_ejecucion_completa_y_no_repetible(self):
-        codigo, salida = self.ejecutar(
-            "publicar", "v0.2.0", "--ejecutar", "--confirmar", "v0.2.0", "--sin-release"
-        )
-        self.assertEqual(codigo, 0, salida)
-        tipo = self.r.git("cat-file", "-t", "v0.2.0")
-        self.assertEqual(tipo, "tag")
+    def test_ejecucion_completa_latest_y_no_repetible(self):
+        for v in ("v0.2.0", "v0.3.0"):
+            codigo, salida = self.publicar(v)
+            self.assertEqual(codigo, 0, salida)
+        self.assertEqual(self.r.git("cat-file", "-t", "v0.2.0"), "tag")
         self.assertEqual(self.r.git("rev-parse", "v0.2.0^{commit}"), self.c1)
         mensaje = self.r.git("tag", "-l", "--format=%(contents)", "v0.2.0")
         self.assertTrue(mensaje.startswith("ANDROMEDA v0.2.0 — Entrega v0.2.0"))
-        self.assertIn("Etiqueta retrospectiva", mensaje)
+        self.assertIn("Publicación retrospectiva", mensaje)
         self.assertIn("2026-11-05", mensaje)
-        remota = self.r.git("ls-remote", "--tags", "origin")
-        self.assertIn(self.c1, remota)
+        self.assertIn("2026-11-12", mensaje)
+        self.assertIn(self.c1, self.r.git("ls-remote", "--tags", "origin"))
+        llamadas = [
+            json.loads(linea) for linea in (self.gh_dir / "llamadas.log").read_text().splitlines()
+        ]
+        creadas = {c[2]: c for c in llamadas if c[:2] == ["release", "create"]}
+        self.assertIn("--latest=false", creadas["v0.2.0"])
+        self.assertIn("--latest=true", creadas["v0.3.0"])
+        releases = self.releases_falsas()
+        self.assertFalse(releases["v0.2.0"]["latest"])
+        self.assertTrue(releases["v0.3.0"]["latest"])
+        self.assertEqual(releases["v0.3.0"]["name"], "ECLIPSE v0.3.0 — Entrega v0.3.0")
 
         objeto = self.r.git("rev-parse", "v0.2.0")
-        codigo, salida = self.ejecutar(
-            "publicar", "v0.2.0", "--ejecutar", "--confirmar", "v0.2.0", "--sin-release"
-        )
+        codigo, salida = self.publicar("v0.2.0")
         self.assertEqual(codigo, 1)
         self.assertIn("no se mueve ni se reemplaza", salida)
+        self.assertIn("ya existe una GitHub Release", salida)
         self.assertEqual(self.r.git("rev-parse", "v0.2.0"), objeto)
 
-        self.assertEqual(self.ejecutar("marcar-publicada", "v0.2.0")[0], 0)
+        for v in ("v0.2.0", "v0.3.0"):
+            self.assertEqual(self.ejecutar("marcar-publicada", v)[0], 0)
         datos = json.loads(self.registro_ruta.read_text())
-        self.assertEqual(datos["versiones"][0]["estado"], "publicada")
-        self.assertEqual(self.errores(), [])
+        pub = datos["versiones"][0]["publicacion"]
+        self.assertEqual(pub["etiqueta_objeto"], objeto)
+        self.assertEqual(pub["fecha"], "2026-11-12")
+        self.assertTrue(pub["release_url"].endswith("/v0.2.0"))
+        self.assertEqual(self.errores(releases=True), [])
+        self.assertEqual(self.ejecutar("verificar", "--releases")[0], 0)
+
+    def test_verificar_releases_detecta_latest_y_titulo(self):
+        for v in ("v0.2.0", "v0.3.0"):
+            self.publicar(v)
+            self.ejecutar("marcar-publicada", v)
+        ruta = self.gh_dir / "releases.json"
+        rel = json.loads(ruta.read_text())
+        rel["v0.3.0"]["latest"], rel["v0.2.0"]["latest"] = False, True
+        rel["v0.2.0"]["name"] = "otro título"
+        ruta.write_text(json.dumps(rel))
+        self.registro = json.loads(self.registro_ruta.read_text())
+        self.assertError("se esperaba v0.3.0", releases=True)
+        self.assertError("título de la release", releases=True)
+
+    def test_marcar_publicada_sin_release_falla(self):
+        self.publicar("v0.3.0", "--sin-release")
+        codigo, salida = self.ejecutar("marcar-publicada", "v0.3.0")
+        self.assertEqual(codigo, 1)
+        self.assertIn("no existe la GitHub Release", salida)
+        datos = json.loads(self.registro_ruta.read_text())
+        self.assertEqual(datos["versiones"][1]["estado"], "preparada")
 
     def test_bloquea_si_main_remoto_no_contiene_el_commit(self):
-        c4 = self.r.entrega(
-            "f4", "src/d.py", "feat: cuatro", "2026-11-12T06:00:00-05:00"
-        )
+        c4 = self.r.entrega("f4", "src/d.py", "feat: cuatro", "2026-11-12T06:00:00-05:00")
         self.registro["versiones"].append(version("v0.4.0", "HELIOS", c4, "2026-11-12"))
         self.guardar()
-        codigo, salida = self.ejecutar(
-            "publicar", "v0.4.0", "--ejecutar", "--confirmar", "v0.4.0"
-        )
+        codigo, salida = self.publicar("v0.4.0")
         self.assertEqual(codigo, 1)
         self.assertIn("historia principal publicada", salida)
         self.assertEqual(self.r.git("tag", "-l"), "")
 
-    def test_marcar_publicada_sin_etiqueta_falla(self):
-        codigo, _ = self.ejecutar("marcar-publicada", "v0.3.0")
+    def test_exige_asignacion_confirmada_en_commit(self):
+        dentro = self.r.dir / "registro.json"
+        cosmos.guardar_registro(dentro, self.registro)
+        self.registro_ruta = dentro
+        codigo, salida = self.ejecutar("publicar", "v0.3.0")
         self.assertEqual(codigo, 1)
-        self.assertEqual(
-            json.loads(self.registro_ruta.read_text())["versiones"][1]["estado"],
-            "preparada",
-        )
+        self.assertIn("no está confirmada en un commit", salida)
+        self.r.git("add", "--", "registro.json")
+        self.r.git("commit", "-q", "-m", "docs: registro")
+        codigo, salida = self.ejecutar("publicar", "v0.3.0")
+        self.assertEqual(codigo, 0, salida)
 
     def test_sin_remoto_no_publica(self):
         codigo, _ = self.ejecutar("--sin-remoto", "publicar", "v0.3.0")
@@ -454,9 +524,7 @@ class TestPublicar(BaseCosmos):
 
 class TestProponerYRegistrar(BaseCosmos):
     def test_sin_cambios(self):
-        self.registro["versiones"].append(
-            version("v0.4.0", "HELIOS", self.c3, "2026-11-10")
-        )
+        self.registro["versiones"].append(version("v0.4.0", "HELIOS", self.c3, "2026-11-10"))
         self.guardar()
         codigo, salida = self.ejecutar("proponer")
         self.assertEqual(codigo, 0)
@@ -464,9 +532,7 @@ class TestProponerYRegistrar(BaseCosmos):
 
     def test_solo_documentacion(self):
         self.r.entrega("d1", "docs/guia.md", "docs: guía", "2026-11-11T09:00:00-05:00")
-        self.registro["versiones"].append(
-            version("v0.4.0", "HELIOS", self.c3, "2026-11-10")
-        )
+        self.registro["versiones"].append(version("v0.4.0", "HELIOS", self.c3, "2026-11-10"))
         self.guardar()
         codigo, salida = self.ejecutar("proponer")
         self.assertEqual(codigo, 0)
@@ -474,31 +540,30 @@ class TestProponerYRegistrar(BaseCosmos):
 
     def test_patch_minor_y_major_en_0x(self):
         codigo, salida = self.ejecutar("--sin-remoto", "proponer")
+        self.assertEqual(codigo, 0, salida)
         self.assertIn("PATCH", salida)  # desde v0.3.0 (c2) solo hay un fix
         self.assertIn("v0.3.1", salida)
-        self.assertIn("Hito: HELIOS", salida)
-        self.assertEqual(codigo, 0, salida)
-        self.r.entrega(
-            "f5", "src/e.py", "feat(api)!: rompe", "2026-11-12T06:00:00-05:00"
-        )
+        self.assertIn("propósito dominante", salida)
+        self.assertIn("- ORION: Temática ORION", salida)
+        self.assertNotIn("- ANDROMEDA:", salida)
+        self.r.entrega("f5", "src/e.py", "feat(api)!: rompe", "2026-11-12T06:00:00-05:00")
         codigo, salida = self.ejecutar("--sin-remoto", "proponer")
         self.assertIn("MINOR (cambio incompatible en 0.x", salida)
         self.assertIn("v0.4.0", salida)
-        codigo, salida = self.ejecutar(
-            "--sin-remoto", "proponer", "--incremento", "major"
-        )
+        codigo, salida = self.ejecutar("--sin-remoto", "proponer", "--incremento", "major")
         self.assertEqual(codigo, 1)
         self.assertIn("primera versión estable", salida)
 
-    def test_hito_no_disponible(self):
-        codigo, salida = self.ejecutar(
-            "--sin-remoto", "proponer", "--hito", "ANDROMEDA"
-        )
+    def test_hito_elegido(self):
+        codigo, salida = self.ejecutar("--sin-remoto", "proponer", "--hito", "ORION")
+        self.assertEqual(codigo, 0, salida)
+        self.assertIn("Hito elegido: ORION", salida)
+        codigo, salida = self.ejecutar("--sin-remoto", "proponer", "--hito", "ANDROMEDA")
         self.assertEqual(codigo, 1)
         self.assertIn("no está disponible", salida)
 
     def test_catalogo_agotado(self):
-        self.registro["catalogo"] = ["ANDROMEDA", "ECLIPSE"]
+        self.registro["catalogo"] = [h for h in CATALOGO if h["nombre"] in ("ANDROMEDA", "ECLIPSE")]
         self.guardar()
         codigo, salida = self.ejecutar("--sin-remoto", "proponer")
         self.assertEqual(codigo, 1)
@@ -534,7 +599,7 @@ class TestProponerYRegistrar(BaseCosmos):
             "--version",
             "v0.6.0",
             "--hito",
-            "ORION",
+            "ANDROMEDA",
             "--commit",
             self.c3,
             "--titulo",
@@ -557,9 +622,7 @@ class TestRepositorioReal(unittest.TestCase):
         registro = raiz / cosmos.RUTA_REGISTRO
         if not registro.exists() or not (raiz / ".git").exists():
             self.skipTest("fuera del repositorio del proyecto")
-        ctx = cosmos.Contexto(
-            raiz, registro, raiz / cosmos.RUTA_DOC, remoto_activo=False
-        )
+        ctx = cosmos.Contexto(raiz, registro, raiz / cosmos.RUTA_DOC, remoto_activo=False)
         self.assertEqual(cosmos.verificar(ctx).errores, [])
 
 
