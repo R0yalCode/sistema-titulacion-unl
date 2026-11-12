@@ -1,0 +1,56 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.datos dt {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.datos dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+}
+
+.codigo {
+  color: var(--color-text-secondary);
+}
+
+.documento {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nota {
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
