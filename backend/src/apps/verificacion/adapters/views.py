@@ -81,6 +81,27 @@ class ChecklistViewSet(
     scope_carrera_field = "expediente__carrera_id"
     scope_facultad_field = "expediente__facultad_id"
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema; PLB-E1-04).
+    openapi_respuestas_extra = {
+        "update": {
+            "400": (
+                "expediente_not_in_verification, verification_already_done, "
+                "invalid_checklist_state o transicion_invalida; sin efectos."
+            ),
+            "404": "checklist_no_encontrado.",
+        },
+        "subsanar": {
+            "400": (
+                "subsanacion_no_permitida, transicion_invalida o un código de "
+                "validación del PDF; sin efectos."
+            ),
+            "404": "checklist_no_encontrado o peticion_no_encontrada.",
+            "500": (
+                "inconsistencia_observacion: ítem y petición OBSERVADO sin "
+                "observación pendiente (D-3)."
+            ),
+        },
+    }
 
     def get_serializer_class(self):
         if self.action == "update":

@@ -111,11 +111,30 @@ class PeticionViewSet(
     # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema).
     openapi_respuestas_extra = {
         "descargar_documento": {
+            # INC-01 sin cambios: cuerpo {"detail"} (ErrorSimple).
+            "500": {
+                "descripcion": (
+                    "documento_integridad_comprometida: el SHA-256 del archivo "
+                    "almacenado no coincide con el registrado en la carga "
+                    "(VULN-003); el archivo no se entrega."
+                ),
+                "esquema": "simple",
+            },
+        },
+        "solicitar_emision": {
+            "400": "estado_peticion_invalido o expediente_estado_invalido.",
+            "404": "peticion_no_encontrada.",
             "500": (
-                "documento_integridad_comprometida: el SHA-256 del archivo "
-                "almacenado no coincide con el registrado en la carga "
-                "(VULN-003); el archivo no se entrega."
+                "emisor_no_configurado: no hay usuario con el rol emisor "
+                "(configuración institucional, D-4)."
             ),
+        },
+        "cargar_documento": {
+            "400": (
+                "expediente_estado_invalido, pdf_validation_error o errores de "
+                "validación de campos."
+            ),
+            "404": "peticion_no_encontrada.",
         },
     }
     parser_classes = [MultiPartParser, FormParser, JSONParser]

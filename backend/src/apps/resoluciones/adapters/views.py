@@ -77,6 +77,22 @@ class InformeViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, HasRolePermission]
     throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "informes"
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema; PLB-E1-04).
+    openapi_respuestas_extra = {
+        "create": {
+            "400": (
+                "informe_ya_emitido, expediente_invalido_para_informe o "
+                "transicion_invalida; o validación (checklist incompleto con "
+                "requisitos_pendientes, dictamen, estado)."
+            ),
+            "404": "expediente_no_encontrado.",
+            "409": (
+                "regla_pendiente_o1: emisión desde OBSERVADA pendiente de decisión "
+                "funcional (O-1). No es BE-11: no usa ETag ni If-Match. Sin PDF "
+                "ni cambios."
+            ),
+        },
+    }
     queryset = InformeAptitud.objects.select_related("expediente", "emisor")
     serializer_class = InformeAptitudSerializer
 
@@ -167,6 +183,16 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, HasRolePermission]
     throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "declaratorias"
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema; PLB-E1-04).
+    openapi_respuestas_extra = {
+        "create": {
+            "400": (
+                "declaratoria_ya_emitida, expediente_invalido_para_declaratoria, "
+                "pdf_invalido o transicion_invalida; o validación de campos."
+            ),
+            "404": "expediente_no_encontrado.",
+        },
+    }
     queryset = DeclaratoriaAptitud.objects.select_related("expediente", "decano")
     serializer_class = DeclaratoriaAptitudSerializer
     parser_classes = [MultiPartParser, FormParser]

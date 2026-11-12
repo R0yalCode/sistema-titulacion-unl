@@ -77,13 +77,45 @@ class ExpedienteViewSet(
     scope_facultad_field = "facultad_id"
     # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema).
     openapi_respuestas_extra = {
+        "create": {
+            "400": "expediente_activo_existente, o errores de validación de campos.",
+            "500": (
+                "configuracion_catalogo_incompleta: el catálogo base del Art. 235 "
+                "no tiene los 5 requisitos vigentes (D-2)."
+            ),
+        },
+        "enviar": {
+            "400": (
+                "estado_invalido (no está en BORRADOR) o transicion_invalida; "
+                "sin efectos."
+            ),
+            "404": "Expediente inexistente o ajeno.",
+            "422": "requisitos_incompletos: requisitos sin documento en firme.",
+        },
         "iniciar_verificacion": {
             "400": (
-                "El expediente no esta en ENVIADA (p. ej. ya en verificacion, "
-                "incluida una segunda llamada concurrente); sin efectos."
+                "transicion_invalida: el expediente no esta en ENVIADA (p. ej. ya "
+                "en verificacion, incluida una segunda llamada concurrente); "
+                "sin efectos."
             ),
-            "403": "Rol sin la celda expedientes:iniciar_verificacion (AUT-02).",
-            "404": "Expediente inexistente o fuera de la facultad del usuario.",
+            "403": {
+                "descripcion": (
+                    "Rol sin la celda expedientes:iniciar_verificacion (AUT-02)."
+                ),
+                "esquema": "simple",
+            },
+            "404": (
+                "expediente_no_encontrado, o expediente fuera de la facultad del "
+                "usuario."
+            ),
+            "500": "configuracion_catalogo_incompleta (D-2).",
+        },
+        "observar": {
+            "400": (
+                "expediente_no_en_verificacion, observacion_ya_existe, "
+                "peticion_ya_observada o transicion_invalida; sin efectos."
+            ),
+            "404": "peticion_no_encontrada o expediente_no_encontrado.",
         },
     }
 
