@@ -23,6 +23,7 @@ import {
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { esEstadoFinal, puedeIniciarVerificacion } from './accionesFuncionario'
 import { useIniciarVerificacion, useInvalidarTrasAccion } from './queries'
+import { ResolucionesSection } from './ResolucionesSection'
 import styles from './DetalleFuncionarioPage.module.css'
 
 /**
@@ -149,6 +150,9 @@ export default function DetalleFuncionarioPage() {
         )}
       </div>
       {accionError && <Alert variant="danger">{accionError}</Alert>}
+
+      {/* Siempre montada: tras la declaratoria el estado pasa a final y el resultado debe seguir visible. */}
+      <ResolucionesSection checklistQuery={checklistQuery} estado={expediente.estado} expedienteId={id} roles={roles} />
 
       <Card title="Peticiones documentales">
         <PeticionesSection numeroExpediente={expediente.numero_expediente} peticiones={expediente.peticiones} roles={roles} />
