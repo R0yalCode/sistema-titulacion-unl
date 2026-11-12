@@ -25,7 +25,7 @@ Ruta base: `frontend/src/`. Estructura definida en `sgt-siaaf/specs/003-frontend
 | `features/expediente/` | `ExpedientePage`, `ExpedienteHeader`, `ChecklistSection`, `PeticionesSection`, `ObservarDialog`, `DescargaButton`, `accionesPorRolEstado.ts`, `errors.ts`, `queries.ts` | detalle, enviar, checklist, observar, subsanar, descarga | V-04 Hecha |
 | `features/peticiones/` | `PeticionesPage`, `PeticionesTabla`, `SolicitarEmisionDialog`, `CargarDocumentoDialog`, `accionesPeticion`, `queries`; `SeguimientoPeticionPage` | `api/endpoints/peticiones.ts` | V-05 **implementada** (FE-T501–506); V-06 **implementada** (FE-T601–605: `SeguimientoPeticionPage`, `seguimiento`; limitada por BE-02) |
 | `features/bandeja/` | `BandejaPage`, `BandejaTable`, `BandejaFilters`, `bandejaReglas`, `queries`; `DetalleFuncionarioPage` | `listBandejaOperativa` (`api/endpoints/expedientes.ts`) | V-07 **implementada** (FE-T701–706); V-08 **stub** (FE-T801…T810) |
-| `features/no-habilitado/` | `NoHabilitadoPage` | — | V-09 Hecha |
+| `features/no-habilitado/` | `NoHabilitadoPage`, `motivos` | `auth/guards.tsx` (`RequireRole`) | V-09 **implementada** (FE-T901–904, 2026-11-12) |
 | `lib/` | `apiErrorPresentation.ts`, `dates.ts`, `download.ts`, `env.ts`, `files.ts`, `logger.ts`, `queryClient.ts`, `storage.ts` | — | Hecho |
 | `mocks/` | Handlers MSW para pruebas | — | Hecho |
 | `styles/` | `tokens.css` (FE-T006) | — | Hecho |
