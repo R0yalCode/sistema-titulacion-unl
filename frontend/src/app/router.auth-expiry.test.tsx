@@ -72,4 +72,30 @@ describe('expiración de sesión (401 global)', () => {
 
     expect(await screen.findByText('Su sesión ha expirado. Inicie sesión nuevamente.')).toBeInTheDocument()
   })
+
+  it('FE-T1001: un 401 justo después de pintar el dashboard nunca se pierde', async () => {
+    for (let intento = 0; intento < 5; intento += 1) {
+      sessionStorage.setItem(
+        'sgt.access',
+        buildToken({ cedula: '1104567890', roles: ['ESTUDIANTE'], exp: Math.floor(Date.now() / 1000) + 3600 }),
+      )
+      server.use(http.get(EXPIRING_URL, () => HttpResponse.json({ detail: 'Token expirado.' }, { status: 401 })))
+      const { unmount } = renderWithProviders(
+        <AuthProvider>
+          <ToastProvider>
+            <AppRouter />
+          </ToastProvider>
+        </AuthProvider>,
+        { route: '/estudiante' },
+      )
+
+      await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })
+      await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
+
+      expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+      expect(getAccessToken()).toBeNull()
+      unmount()
+    }
+  })
 })
+

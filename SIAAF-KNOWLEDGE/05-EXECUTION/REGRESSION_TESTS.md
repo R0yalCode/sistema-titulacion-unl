@@ -48,6 +48,25 @@ La suite frontend tiene **fallos intermitentes**: 1 de 3 ejecuciones consecutiva
   2. En la prueba, esperar a que se vacíe la cola de efectos (`await act(async () => {})`) antes de lanzar `request()`.
 - **Relación con 2026-11-11:** probablemente explica parte de los 6 fallos sin identificar de esa fecha, pero no está verificado.
 
+## Corrección aplicada (FE-T1001/FE-T1008, 2026-11-12, rama `fix/auth-expiry-401`)
+
+- **Causa decisiva, verificada:** `AuthExpiryBootstrap` estaba **dentro del `Suspense`** de las rutas lazy. Si la ruta inicial suspendía, el componente no se montaba hasta que cargaba la ruta, y un 401 en esa ventana se perdía.
+- **Prueba de carrera determinista:** `router.auth-expiry.inicializacion.test.tsx`, en un archivo propio para que la ruta lazy no esté en caché. Lanza el 401 sin esperar al dashboard. Resultados con 3 ejecuciones por variante:
+
+| Variante | Resultado |
+|---|---|
+| `useEffect` dentro del `Suspense` (anterior) | 0/3 |
+| Solo `useLayoutEffect`, dentro del `Suspense` | 0/3: **no basta** |
+| Solo fuera del `Suspense` | 3/3 |
+| **`useLayoutEffect` + fuera del `Suspense` (adoptada)** | **3/3** |
+
+- **Por qué no se eligió sincronizar la prueba:** solo ocultaba la ventana.
+- **Por qué `useLayoutEffect` se mantiene además:** registra el manejador en el mismo *commit* que pinta, antes de cualquier efecto pasivo, también en *commits* fuera de `act`. Así ningún 401 lanzado desde un efecto llega sin manejador.
+- **Pruebas nuevas:**
+  - La de carrera.
+  - Un 401 justo después de pintar el dashboard, repetido 5 veces, en `router.auth-expiry.test.tsx`.
+- **Suite completa tras la corrección:** 10 de 10 ejecuciones sin fallos (408/408). Antes fallaba 2 de cada 11 en esta prueba.
+
 ## Comandos de verificación obligatorios (DoD)
 
 Frontend: `npm run lint` → `npm run typecheck` → `npm run test` (+ `npm run build`). Backend: `pytest` (ver `backend/pyproject.toml`).

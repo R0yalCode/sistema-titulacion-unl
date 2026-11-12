@@ -1,4 +1,4 @@
-import { lazy, Suspense, useContext, useEffect } from 'react'
+import { lazy, Suspense, useContext, useLayoutEffect } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AuthContext } from '@/auth/AuthContext'
@@ -48,7 +48,10 @@ function AuthExpiryBootstrap() {
   const toast = useContext(ToastContext)
   const navigate = useNavigate()
 
-  useEffect(() => {
+  // FE-T1001/FE-T1008: useLayoutEffect registra el manejador en el mismo commit
+  // que pinta la interfaz, antes de cualquier efecto pasivo (donde se lanzan
+  // las consultas), para que ningún 401 llegue sin manejador.
+  useLayoutEffect(() => {
     setUnauthorizedHandler(() => {
       auth?.logout()
       queryClient.clear()
@@ -64,32 +67,36 @@ function AuthExpiryBootstrap() {
 
 export function AppRouter() {
   return (
-    <Suspense fallback={<RouteLoadingFallback />}>
+    <>
+      {/* Fuera del Suspense: si una ruta lazy suspende, el manejador del 401 no
+          debe esperar a que cargue (FE-T1001; ver REGRESSION_TESTS.md). */}
       <AuthExpiryBootstrap />
-      <Routes>
-        <Route element={<LoginRoute />} path="/login" />
-        <Route element={<RequireAuth />}>
-          <Route element={<AppLayout />}>
-            <Route element={<IndexRedirect />} path="/" />
-            <Route element={<RequireRole roles={['ESTUDIANTE']} />}>
-              <Route element={<StudentDashboardPage />} path="/estudiante" />
-              <Route element={<NuevaSolicitudPage />} path="/estudiante/solicitud/nueva" />
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <Routes>
+          <Route element={<LoginRoute />} path="/login" />
+          <Route element={<RequireAuth />}>
+            <Route element={<AppLayout />}>
+              <Route element={<IndexRedirect />} path="/" />
+              <Route element={<RequireRole roles={['ESTUDIANTE']} />}>
+                <Route element={<StudentDashboardPage />} path="/estudiante" />
+                <Route element={<NuevaSolicitudPage />} path="/estudiante/solicitud/nueva" />
+              </Route>
+              <Route element={<ExpedientePage />} path="/expedientes/:id" />
+              <Route element={<PeticionesPage />} path="/expedientes/:id/peticiones" />
+              <Route
+                element={<SeguimientoPeticionPage />}
+                path="/expedientes/:id/peticiones/:peticionId"
+              />
+              <Route element={<RequireRole roles={OPERATIONAL_ROLES} />}>
+                <Route element={<BandejaPage />} path="/bandeja" />
+                <Route element={<DetalleFuncionarioPage />} path="/bandeja/:id" />
+              </Route>
+              <Route element={<NoHabilitadoPage />} path="/no-habilitado" />
             </Route>
-            <Route element={<ExpedientePage />} path="/expedientes/:id" />
-            <Route element={<PeticionesPage />} path="/expedientes/:id/peticiones" />
-            <Route
-              element={<SeguimientoPeticionPage />}
-              path="/expedientes/:id/peticiones/:peticionId"
-            />
-            <Route element={<RequireRole roles={OPERATIONAL_ROLES} />}>
-              <Route element={<BandejaPage />} path="/bandeja" />
-              <Route element={<DetalleFuncionarioPage />} path="/bandeja/:id" />
-            </Route>
-            <Route element={<NoHabilitadoPage />} path="/no-habilitado" />
           </Route>
-        </Route>
-        <Route element={<NotFoundPage />} path="*" />
-      </Routes>
-    </Suspense>
+          <Route element={<NotFoundPage />} path="*" />
+        </Routes>
+      </Suspense>
+    </>
   )
 }
