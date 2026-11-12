@@ -1,12 +1,14 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getExpedienteDetalle,
+  iniciarVerificacion,
   listBandejaOperativa,
   type BandejaOperativaItem,
+  type ExpedienteDetalle,
 } from '@/api/endpoints/expedientes'
 import type { ApiRequestError } from '@/api/errors'
 import type { Paginated } from '@/api/types/api'
-import { EXPEDIENTE_DETALLE_QUERY_KEY } from '@/features/expediente'
+import { CHECKLIST_QUERY_KEY, EXPEDIENTE_DETALLE_QUERY_KEY } from '@/features/expediente'
 
 export const BANDEJA_OPERATIVA_QUERY_KEY = 'bandeja-operativa'
 
@@ -29,4 +31,27 @@ export function usePrecargarExpediente() {
       retry: false,
     })
   }
+}
+
+/**
+ * FE-T809: tras una acción que cambia el estado se refrescan el detalle, el
+ * checklist y la bandeja operativa (su `staleTime` de 30 s no basta).
+ */
+export function useInvalidarTrasAccion(expedienteId: string) {
+  const queryClient = useQueryClient()
+  return () => {
+    void queryClient.invalidateQueries({ queryKey: [EXPEDIENTE_DETALLE_QUERY_KEY, expedienteId] })
+    void queryClient.invalidateQueries({ queryKey: [CHECKLIST_QUERY_KEY, expedienteId] })
+    void queryClient.invalidateQueries({ queryKey: [BANDEJA_OPERATIVA_QUERY_KEY] })
+  }
+}
+
+/** E2-01: ENVIADA → EN_VERIFICACION (solo SECRETARIO_ABOGADO). */
+export function useIniciarVerificacion(expedienteId: string) {
+  const invalidar = useInvalidarTrasAccion(expedienteId)
+  return useMutation<ExpedienteDetalle, ApiRequestError, void>({
+    mutationFn: () => iniciarVerificacion(expedienteId),
+    retry: false,
+    onSuccess: invalidar,
+  })
 }
