@@ -7,13 +7,15 @@ export type FileUploadProps = {
   label: string
   hint?: string
   onFileSelected: (file: File) => void
+  /** Se invoca cuando el archivo elegido no supera la validación, para que el consumidor descarte uno previo. */
+  onInvalidFile?: (message: string) => void
 }
 
 function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
-export function FileUpload({ label, hint, onFileSelected }: FileUploadProps) {
+export function FileUpload({ label, hint, onFileSelected, onInvalidFile }: FileUploadProps) {
   const inputId = useId()
   const errorId = `${inputId}-error`
   const inputRef = useRef<HTMLInputElement>(null)
@@ -27,6 +29,7 @@ export function FileUpload({ label, hint, onFileSelected }: FileUploadProps) {
     if (!result.valid) {
       setError(result.message)
       setSelectedFile(null)
+      onInvalidFile?.(result.message)
       return
     }
 
