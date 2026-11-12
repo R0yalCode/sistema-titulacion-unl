@@ -209,7 +209,7 @@
       "titulo": "Fundación del proyecto y especificaciones Spec Kit",
       "descripcion": "Inicio del ciclo de desarrollo: estructura del repositorio, constitución del proyecto y especificación SDD del trámite de titulación (spec 001).",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "excepcion_version": "DK-012: versión asignada por decisión expresa del responsable a una entrega exclusivamente documental, que por DK-005 no generaría versión. Excepción histórica no repetible.",
       "cambios": [
         "Constitución del proyecto (sgt-siaaf/.specify/memory/constitution.md).",
@@ -227,7 +227,12 @@
       "referencias": [
         "Commit 0e200d9 chore(orion): merge de abe9a40 en main.",
         "La release reutiliza, sin borrarlo, el borrador 431772180 creado el 2026-11-02 con el título 'v0.1.0 — SATURN | Initial Backend Implementation' (cuerpo vacío). El responsable descartó esa intención el 2026-11-12 (DK-012) y SATURN queda disponible."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "b47e1d259e063f74ee040117419cc4e8b4b45fed",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.1.0"
+      }
     },
     {
       "version": "v0.2.0",
@@ -237,7 +242,7 @@
       "titulo": "Base funcional del frontend: F0–F2.5 y V-01",
       "descripcion": "Primera entrega versionada: base funcional del frontend (andamiaje, autenticación, UI Kit, estados de error y pantalla de login). El merge también incorporó documentación y prototipos de diseño.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "cambios": [
         "F0: andamiaje, configuración y estructura del frontend.",
         "F1: autenticación, gestión de sesión y cliente HTTP.",
@@ -257,7 +262,12 @@
       "referencias": [
         "Rama release/0.2.0-andromeda; commit 467ec3b `feat(frontend): integrar F0–F2.5 y V-01`.",
         "Merge en main b6b953a."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "5d36ee102160dfb63c8596c87db82c2fef597f0c",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.2.0"
+      }
     },
     {
       "version": "v0.3.0",
@@ -267,7 +277,7 @@
       "titulo": "Gestión de expedientes y requisitos",
       "descripcion": "Vista V-04 (FE-T401–FE-T411): detalle de expedientes, checklist de requisitos, envío, observaciones, evaluación, subsanación y descargas, sobre los contratos reales del backend.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "excepcion_hito": "ANDROMEDA abarcó v0.2.0 y v0.3.0 antes de DK-011; reutilización histórica aceptada y no repetible.",
       "cambios": [
         "Consulta del detalle de expedientes.",
@@ -290,7 +300,12 @@
       "referencias": [
         "Rama release/0.3.0-andromeda; PR #14.",
         "afdd989 es un merge previo sin cambios; la entrega es f279090."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "a9042fa790c96c3ea7e79429ec8746f9e0e571d4",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.3.0"
+      }
     },
     {
       "version": "v0.4.0",
@@ -300,7 +315,7 @@
       "titulo": "Implementación de seguridad del backend SGT-SIAAF",
       "descripcion": "Controles de seguridad del backend: configuración de producción, throttling, JWT, validación y almacenamiento privado de PDF, RBAC con aislamiento de expedientes, máquina de estados, logging estructurado y restricción de la documentación de la API en producción.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "cambios": [
         "HTTPS, HSTS, CSP, CORS, cookies y cabeceras de seguridad.",
         "Throttling de autenticación y de carga de documentos.",
@@ -326,7 +341,12 @@
       "referencias": [
         "Rama release/0.4.0-eclipse; commit 8e1e1a2; PR #16 (a develop) y PR #17 (a main).",
         "4ac69d1 ('Merge branch release/0.4.0-eclipse into main') no incorporó cambios; la entrega llega a main en d020592."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "004ac4c11d1301e99633f21235f4f182c2fe9201",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.4.0"
+      }
     },
     {
       "version": "v0.5.0",
@@ -336,7 +356,7 @@
       "titulo": "Integridad de archivos privados, errores de dominio y endurecimiento de seguridad",
       "descripcion": "Endurecimiento de seguridad P0 e inicio de la verificación, errores de dominio uniformes con bloqueo ordenado y corrección de archivos privados huérfanos con conciliación segura.",
       "retrospectiva": true,
-      "estado": "preparada",
+      "estado": "publicada",
       "cambios": [
         "INC-01: throttling de operaciones mutantes, ámbito 'asignado' y verificación SHA-256 al servir PDF (d1fa86e).",
         "E2-06: registrar_transicion() como único punto de cambio de estado (d1fa86e).",
@@ -365,7 +385,12 @@
       "referencias": [
         "Merges en main d1fa86e, 3317231 y 025de78.",
         "Rama fix/i3-archivos-huerfanos (00d7802), integrada en develop con 063f07e."
-      ]
+      ],
+      "publicacion": {
+        "fecha": "2026-11-12",
+        "etiqueta_objeto": "863ceba2d81202575f8d2138d285e9662f9f0d2c",
+        "release_url": "https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.5.0"
+      }
     }
   ]
 }

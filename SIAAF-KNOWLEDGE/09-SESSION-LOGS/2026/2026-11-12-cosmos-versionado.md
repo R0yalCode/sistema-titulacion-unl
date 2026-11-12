@@ -64,3 +64,23 @@ branch: docs/cosmos-versionado
   - `marcar-publicada` comprueba la etiqueta y la GitHub Release.
   - `verificar --releases`.
   - 40 pruebas.
+
+## Fase E — Publicación (2026-11-12)
+
+- **GitHub CLI:** el responsable instaló `gh` 2.103.3 desde el repositorio apt oficial, con el keyring verificado por SHA-256 y huellas, y se autenticó por navegador con la cuenta R0yalCode.
+- **Conflicto:** existía el borrador de release 431772180, «v0.1.0 — SATURN | Initial Backend Implementation», del 2026-11-02. Por decisión del responsable se mantuvo ORION y se reutilizó el borrador, editándolo sin borrarlo.
+- **Etiquetas anotadas**, publicadas con push normal:
+
+| Versión | Commit | Objeto de etiqueta |
+|---|---|---|
+| v0.1.0 | `0e200d9` | `b47e1d2` |
+| v0.2.0 | `b6b953a` | `5d36ee1` |
+| v0.3.0 | `f279090` | `a9042fa` |
+| v0.4.0 | `d020592` | `004ac4c` |
+| v0.5.0 | `025de78` | `863ceba` |
+
+- **Releases:**
+  - Las cinco están publicadas; ninguna es borrador ni pre-release.
+  - Latest es v0.5.0.
+  - Todas las notas incluyen la nota retrospectiva y la fecha de entrega junto a la de publicación.
+- **Verificación:** `marcar-publicada` correcto en las cinco; `verificar --releases`: 0 errores; unittest 40/40.

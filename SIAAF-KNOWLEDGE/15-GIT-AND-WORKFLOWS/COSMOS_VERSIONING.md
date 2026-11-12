@@ -98,11 +98,11 @@ last_updated: 2026-11-12
 <!-- cosmos:versiones:inicio -->
 | Versión | Hito | Commit | Entrega | Título | Tipo | Estado | Publicación |
 |---|---|---|---|---|---|---|---|
-| `v0.1.0` | ORION | `0e200d9` | 2026-10-20 | Fundación del proyecto y especificaciones Spec Kit | retrospectiva | preparada | — |
-| `v0.2.0` | ANDROMEDA | `b6b953a` | 2026-11-05 | Base funcional del frontend: F0–F2.5 y V-01 | retrospectiva | preparada | — |
-| `v0.3.0` | ANDROMEDA | `f279090` | 2026-11-06 | Gestión de expedientes y requisitos | retrospectiva | preparada | — |
-| `v0.4.0` | ECLIPSE | `d020592` | 2026-11-10 | Implementación de seguridad del backend SGT-SIAAF | retrospectiva | preparada | — |
-| `v0.5.0` | HELIOS | `025de78` | 2026-11-12 | Integridad de archivos privados, errores de dominio y endurecimiento de seguridad | retrospectiva | preparada | — |
+| `v0.1.0` | ORION | `0e200d9` | 2026-10-20 | Fundación del proyecto y especificaciones Spec Kit | retrospectiva | publicada | [2026-11-12](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.1.0) |
+| `v0.2.0` | ANDROMEDA | `b6b953a` | 2026-11-05 | Base funcional del frontend: F0–F2.5 y V-01 | retrospectiva | publicada | [2026-11-12](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.2.0) |
+| `v0.3.0` | ANDROMEDA | `f279090` | 2026-11-06 | Gestión de expedientes y requisitos | retrospectiva | publicada | [2026-11-12](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.3.0) |
+| `v0.4.0` | ECLIPSE | `d020592` | 2026-11-10 | Implementación de seguridad del backend SGT-SIAAF | retrospectiva | publicada | [2026-11-12](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.4.0) |
+| `v0.5.0` | HELIOS | `025de78` | 2026-11-12 | Integridad de archivos privados, errores de dominio y endurecimiento de seguridad | retrospectiva | publicada | [2026-11-12](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.5.0) |
 <!-- cosmos:versiones:fin -->
 
 **Entregas sin versión:**
@@ -121,7 +121,9 @@ last_updated: 2026-11-12
 
 Inicio del ciclo de desarrollo: estructura del repositorio, constitución del proyecto y especificación SDD del trámite de titulación (spec 001).
 
-Commit `0e200d9cb490224eaea0870cf457581d4ed93db8` · entrega 2026-10-20 · estado **preparada** · **retrospectiva**
+Commit `0e200d9cb490224eaea0870cf457581d4ed93db8` · entrega 2026-10-20 · estado **publicada** · **retrospectiva**
+
+Publicada el 2026-11-12 · etiqueta `b47e1d259e063f74ee040117419cc4e8b4b45fed` · [GitHub Release](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.1.0)
 
 Excepción de versión: DK-012: versión asignada por decisión expresa del responsable a una entrega exclusivamente documental, que por DK-005 no generaría versión. Excepción histórica no repetible.
 
@@ -150,7 +152,9 @@ Excepción de versión: DK-012: versión asignada por decisión expresa del resp
 
 Primera entrega versionada: base funcional del frontend (andamiaje, autenticación, UI Kit, estados de error y pantalla de login). El merge también incorporó documentación y prototipos de diseño.
 
-Commit `b6b953aa313e858218eb71ac6163e4873395e066` · entrega 2026-11-05 · estado **preparada** · **retrospectiva**
+Commit `b6b953aa313e858218eb71ac6163e4873395e066` · entrega 2026-11-05 · estado **publicada** · **retrospectiva**
+
+Publicada el 2026-11-12 · etiqueta `5d36ee102160dfb63c8596c87db82c2fef597f0c` · [GitHub Release](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.2.0)
 
 **Cambios:**
 
@@ -180,7 +184,9 @@ Commit `b6b953aa313e858218eb71ac6163e4873395e066` · entrega 2026-11-05 · estad
 
 Vista V-04 (FE-T401–FE-T411): detalle de expedientes, checklist de requisitos, envío, observaciones, evaluación, subsanación y descargas, sobre los contratos reales del backend.
 
-Commit `f2790908f256a932528b0036b3a07258776b4cfc` · entrega 2026-11-06 · estado **preparada** · **retrospectiva**
+Commit `f2790908f256a932528b0036b3a07258776b4cfc` · entrega 2026-11-06 · estado **publicada** · **retrospectiva**
+
+Publicada el 2026-11-12 · etiqueta `a9042fa790c96c3ea7e79429ec8746f9e0e571d4` · [GitHub Release](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.3.0)
 
 Excepción de hito: ANDROMEDA abarcó v0.2.0 y v0.3.0 antes de DK-011; reutilización histórica aceptada y no repetible.
 
@@ -214,7 +220,9 @@ Excepción de hito: ANDROMEDA abarcó v0.2.0 y v0.3.0 antes de DK-011; reutiliza
 
 Controles de seguridad del backend: configuración de producción, throttling, JWT, validación y almacenamiento privado de PDF, RBAC con aislamiento de expedientes, máquina de estados, logging estructurado y restricción de la documentación de la API en producción.
 
-Commit `d02059255d87b1dfd6839da1bbf604c47c7923c2` · entrega 2026-11-10 · estado **preparada** · **retrospectiva**
+Commit `d02059255d87b1dfd6839da1bbf604c47c7923c2` · entrega 2026-11-10 · estado **publicada** · **retrospectiva**
+
+Publicada el 2026-11-12 · etiqueta `004ac4c11d1301e99633f21235f4f182c2fe9201` · [GitHub Release](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.4.0)
 
 **Cambios:**
 
@@ -250,7 +258,9 @@ Commit `d02059255d87b1dfd6839da1bbf604c47c7923c2` · entrega 2026-11-10 · estad
 
 Endurecimiento de seguridad P0 e inicio de la verificación, errores de dominio uniformes con bloqueo ordenado y corrección de archivos privados huérfanos con conciliación segura.
 
-Commit `025de7887dca9acacf296e629703381ba6734ce1` · entrega 2026-11-12 · estado **preparada** · **retrospectiva**
+Commit `025de7887dca9acacf296e629703381ba6734ce1` · entrega 2026-11-12 · estado **publicada** · **retrospectiva**
+
+Publicada el 2026-11-12 · etiqueta `863ceba2d81202575f8d2138d285e9662f9f0d2c` · [GitHub Release](https://github.com/R0yalCode/sistema-titulacion-unl/releases/tag/v0.5.0)
 
 **Cambios:**
 
