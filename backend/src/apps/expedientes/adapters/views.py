@@ -7,17 +7,18 @@ operativa paginada filtrada por rol y dependencia (HU-005; T017).
 El detalle por ID (IDOR generalizado) es sucesor (T018).
 """
 
+import uuid
+
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import (
     pagination,
 )
-from rest_framework import serializers as drf_serializers
 from rest_framework import (
     status,
     viewsets,
 )
-from rest_framework.exceptions import APIException, NotFound, PermissionDenied
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -31,6 +32,13 @@ from apps.expedientes.services import (
 )
 from apps.expedientes.services.transiciones import TransicionNoPermitidaError
 from apps.verificacion.services import registrar_observacion
+from core.adapters.api_errors import (
+    ConfiguracionInconsistenteAPI,
+    RecursoNoEncontradoAPI,
+    RequisitosIncompletosAPI,
+    SolicitudInvalidaAPI,
+    TransicionInvalidaAPI,
+)
 from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
@@ -47,24 +55,9 @@ from apps.verificacion.adapters.serializers import (
 )
 
 
-class ReqIncompletosAPI(APIException):
-    """Excepcion HTTP 422 para envio con requisitos incompletos (EX-007 analogo)."""
-
-    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-    default_detail = "Envio incompleto: requisitos sin documento en firme."
-    default_code = "requisitos_incompletos"
-
-
-class TransicionInvalidaAPI(APIException):
-    """HTTP 400 para una transicion de estado invalida (PLB-E2-01; O-2).
-
-    Cuerpo `{"detail": "..."}` con codigo `transicion_invalida`: el estado
-    vigente (leido con bloqueo) no admite la operacion. Sin efectos.
-    """
-
-    status_code = status.HTTP_400_BAD_REQUEST
-    default_detail = "Transicion de estado no permitida."
-    default_code = "transicion_invalida"
+# Compatibilidad: los nombres anteriores apuntan a las clases comunes de
+# `core.adapters.api_errors` (PLB-E1-04), que añaden `code` al cuerpo JSON.
+ReqIncompletosAPI = RequisitosIncompletosAPI
 
 
 class ExpedienteViewSet(
@@ -130,11 +123,15 @@ class ExpedienteViewSet(
                 estudiante=request.user,
                 carrera_id=serializer_in.validated_data["carrera_id"],
             )
-        except (
-            crear_expediente.ExpedienteActivoExistenteError,
-            crear_expediente.CatalogoIncompletoError,
-        ) as error:
-            raise drf_serializers.ValidationError(str(error))
+        except crear_expediente.ExpedienteActivoExistenteError as error:
+            raise SolicitudInvalidaAPI(str(error), code="expediente_activo_existente")
+        except crear_expediente.CatalogoIncompletoError as error:
+            # D-2: fallo de configuración institucional, no del cliente.
+            raise ConfiguracionInconsistenteAPI(
+                str(error),
+                code="configuracion_catalogo_incompleta",
+                contexto={"operacion": "crear_expediente"},
+            )
         serializer_out = ExpedienteBorradorSerializer(
             expediente,
             context={"request": request},
@@ -160,9 +157,11 @@ class ExpedienteViewSet(
         try:
             enviado = enviar_expediente.execute(expediente, actor=request.user)
         except enviar_expediente.EstadoInvalidoError as error:
-            raise drf_serializers.ValidationError(str(error))
+            raise SolicitudInvalidaAPI(str(error), code="estado_invalido")
         except enviar_expediente.RequisitosIncompletosError as error:
-            raise ReqIncompletosAPI(str(error))
+            raise RequisitosIncompletosAPI(str(error))
+        except TransicionNoPermitidaError as error:
+            raise TransicionInvalidaAPI(str(error))
         serializer_out = ExpedienteEnviadoSerializer(
             enviado,
             context={"request": request},
@@ -191,9 +190,17 @@ class ExpedienteViewSet(
         except iniciar_verificacion.UsuarioNoAutorizadoError as error:
             raise PermissionDenied(str(error))
         except iniciar_verificacion.ExpedienteNoEncontradoError as error:
-            raise NotFound(str(error))
+            raise RecursoNoEncontradoAPI(str(error), code="expediente_no_encontrado")
         except iniciar_verificacion.CatalogoIncompletoError as error:
-            raise APIException(str(error))
+            # D-2: 500 explícito, con código y registro técnico.
+            raise ConfiguracionInconsistenteAPI(
+                str(error),
+                code="configuracion_catalogo_incompleta",
+                contexto={
+                    "operacion": "iniciar_verificacion",
+                    "expediente_id": str(expediente.pk),
+                },
+            )
         serializer_out = ExpedienteDetalleSerializer(
             actualizado,
             context={"request": request},
@@ -214,24 +221,37 @@ class ExpedienteViewSet(
         serializer_in.is_valid(raise_exception=True)
 
         motivo = serializer_in.validated_data["motivo_observacion"]
+        peticion_id = request.data.get("peticion_id")
+        try:
+            uuid.UUID(str(peticion_id))
+        except (TypeError, ValueError, AttributeError):
+            # Antes: el ORM lanzaba ValidationError de Django -> 500 genérico.
+            raise RecursoNoEncontradoAPI(
+                "La petición no existe o no pertenece al expediente.",
+                code="peticion_no_encontrada",
+            )
 
         try:
             observacion = registrar_observacion.execute(
                 usuario=request.user,
                 expediente_id=expediente.id,
-                peticion_id=request.data.get("peticion_id"),
+                peticion_id=peticion_id,
                 motivo_observacion=motivo,
             )
         except registrar_observacion.ExpedienteNoEnVerificacionError as error:
-            raise APIException(str(error))
+            raise SolicitudInvalidaAPI(str(error), code="expediente_no_en_verificacion")
+        except registrar_observacion.ExpedienteNoEncontradoError as error:
+            raise RecursoNoEncontradoAPI(str(error), code="expediente_no_encontrado")
         except registrar_observacion.PeticionNoEncontradaError as error:
-            raise APIException(str(error))
+            raise RecursoNoEncontradoAPI(str(error), code="peticion_no_encontrada")
         except registrar_observacion.ObservacionYaExisteError as error:
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError(str(error))
+            raise SolicitudInvalidaAPI(str(error), code="observacion_ya_existe")
+        except registrar_observacion.PeticionYaObservadaError as error:
+            raise SolicitudInvalidaAPI(str(error), code="peticion_ya_observada")
         except registrar_observacion.UsuarioNoAutorizadoError as error:
-            from rest_framework.exceptions import PermissionDenied
             raise PermissionDenied(str(error))
+        except TransicionNoPermitidaError as error:
+            raise TransicionInvalidaAPI(str(error))
 
         serializer_out = ObservacionAccionableSerializer(
             observacion,
