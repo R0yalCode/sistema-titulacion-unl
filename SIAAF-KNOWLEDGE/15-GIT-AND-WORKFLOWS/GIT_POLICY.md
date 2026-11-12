@@ -3,7 +3,7 @@ system: SGT-SIAAF
 type: workflow
 status: active
 source: user-directive 2026-11-11 (confirmada; DK-010 equipo y autoría) + repository-history
-last_updated: 2026-11-11
+last_updated: 2026-11-12
 ---
 
 # Política Git
@@ -35,6 +35,13 @@ Remoto: `origin` → `git@github.com:R0yalCode/sistema-titulacion-unl.git`.
 3. `git switch develop && git merge --no-ff <rama> -F <mensaje>` → `git push origin develop` → borrar la rama (local y remota) una vez integrada.
 4. **Preguntar:** "¿Quieres fusionar `develop` con `main`?"
 5. Solo con un "sí" explícito: `main` ← `git merge --no-ff develop -F <mensaje>` → `git push origin main` → en `develop`: `git merge --ff-only main` → `git push origin develop`.
+6. **Versionado COSMOS (DK-011):** `python3 scripts/cosmos/cosmos.py proponer` sobre el nuevo `main`.
+   - **Solo documentación:** no genera versión (DK-005).
+   - **Con cambios funcionales:**
+     1. Anotar las validaciones.
+     2. **Preguntar:** "¿Autorizas publicar `HITO vX.Y.Z` sobre `<commit>`?".
+     3. Con un "sí" explícito: `registrar` → `publicar vX.Y.Z` (simulación) → `publicar vX.Y.Z --ejecutar --confirmar vX.Y.Z` → `marcar-publicada vX.Y.Z`.
+     4. Commit del registro en una rama `docs/`. Procedimiento completo en [[COSMOS_VERSIONING]] §5.
 
 Si el árbol de trabajo tiene cambios locales ajenos, se puede fusionar en `main` desde un `git worktree` temporal para no tocarlos.
 
@@ -69,7 +76,13 @@ Tipos: `feat`, `fix`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `perf`
 - Nunca `git add .`: rutas explícitas; no incluir cambios locales ajenos.
 - Nada de `--force`, reescribir historial publicado, desactivar protecciones ni resolver conflictos de forma destructiva.
 - Pull Request cuando haya herramienta (`gh` **no está instalada** en esta máquina; hoy los merges son locales con `--no-ff`).
-- Tags y releases: solo entregas funcionales validadas ([[COSMOS_VERSIONING]]).
+- **Etiquetas y releases** ([[COSMOS_VERSIONING]], DK-011):
+  - Se crean solo para entregas funcionales validadas y con autorización explícita.
+  - Etiqueta anotada `vX.Y.Z` sobre el commit exacto de la historia principal de `main`.
+  - Son inmutables: nunca se mueven, borran ni reemplazan, ni se publican con `--force`.
+  - Las retrospectivas solo se crean tras verificar el commit histórico.
+  - `v1.0.0` solo cuando el equipo declare formalmente la primera versión estable.
+  - Herramienta: `scripts/cosmos/cosmos.py`, de solo lectura o simulación por defecto.
 - La prohibición de `--force` y de reescribir historial publicado es **absoluta**: tampoco se reescribe para añadir o corregir autores de forma retroactiva.
 
 ## Equipo y autoría
