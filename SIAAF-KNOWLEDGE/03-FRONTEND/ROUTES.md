@@ -22,7 +22,7 @@ last_verified: 2026-11-11
 | V-05 | `/expedientes/:id/peticiones` | `features/peticiones/PeticionesPage.tsx` | `RequireAuth` | **Implementada** (FE-T501–506, 2026-11-12) |
 | V-06 | `/expedientes/:id/peticiones/:peticionId` | `features/peticiones/SeguimientoPeticionPage.tsx` | `RequireAuth` | **Implementada** (FE-T601–605, 2026-11-12; limitada por BE-02) |
 | V-07 | `/bandeja` | `features/bandeja/BandejaPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Implementada** (FE-T701–706, 2026-11-12; limitada por BE-09) |
-| V-08 | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Stub** (178 B) |
+| V-08 | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Implementada** (FE-T801–810, 2026-11-12) |
 | V-09 | `/no-habilitado` | `features/no-habilitado/NoHabilitadoPage.tsx` | `RequireAuth` | **Implementada** (FE-T901–904, 2026-11-12): motivo, dependencia `BE-xx`, código de referencia y salidas; destino de `RequireRole` con `?motivo=rol-no-autorizado` |
 | 404 | `*` | `app/NotFoundPage.tsx` | — | Hecha (FE-T1211) |
 

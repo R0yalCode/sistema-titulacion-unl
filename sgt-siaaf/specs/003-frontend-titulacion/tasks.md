@@ -1284,7 +1284,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** informe registrado; estado refrescado.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08b) con desviaciones verificadas: solo SECRETARIO_ABOGADO en EN_VERIFICACION (el servicio rechaza a ANALISTA_APOYO aunque RBAC le dé ámbito BORRADOR); dictamen **solo APTO** («NO APTO» siempre devuelve 400, así que no se ofrece); deshabilitado con explicación si el checklist no está 100 % VERIFICADO; desde OBSERVADA el backend responde 409 `regla_pendiente_o1` (O-1) y no se ofrece. **Sin GET ni descarga del informe:** el resultado solo se muestra con la respuesta de creación.
 
 ### FE-T805 — Declarar aptitud
 
@@ -1301,7 +1301,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** declaratoria registrada; expediente `DECLARADA_APTA`.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08b): DECANO en INFORME_EMITIDO; multipart `expediente_id`, `archivo_memorando` (PDF validado) y `numero_memorando` opcional (si se omite, lo genera el backend); 400/403/404 con el mensaje real. **Sin GET ni descarga de la declaratoria.**
 
 ### FE-T806 — Descarga de documentos (funcionario)
 
@@ -1369,7 +1369,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `DetalleFuncionarioPage.test.tsx`, `accionesFuncionario.test.ts` (V-08a, 14) y `ResolucionesSection.test.tsx` (V-08b, 11); `router.test.tsx` adaptado. Suite 431/431; axe; mutaciones detectadas. Las pruebas de V-08b hallaron y corrigieron dos defectos reales (salto de foco por `onClose` inestable en `Modal` y pérdida del resultado de la declaratoria al pasar a estado final).
 
 ---
 
@@ -1797,7 +1797,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 10. **V-06:** FE-T601 → FE-T605 — Hechas (2026-11-12: seguimiento desde el detalle del expediente, estado actual real, descarga vigente y errores; 16 pruebas nuevas, 374/374; responsable JuanCalopinoo, implementación centralizada DK-010). **BE-02 sigue sin autorizar**: sin detalle, historial ni versiones de la petición.
 11. **V-02:** FE-T201 → FE-T206 — Hechas (2026-11-05: dashboard del estudiante completo; FE-T203 con desviación de contrato documentada —notificaciones sin paginar en el backend real—; FE-T204 con alcance acotado a expedientes visitados, el registro al crear queda pendiente de V-03).
 12. **V-07:** FE-T701 → FE-T706 — Hechas (2026-11-12: bandeja real paginada, filtros de página, vacíos por rol, plazos locales y navegación a V-08 con precarga; 20 pruebas nuevas; responsable Dan1el17, implementación centralizada DK-010). **BE-09** sigue sin autorizar.
-13. **V-08:** FE-T801 → FE-T810.
+13. **V-08:** FE-T801 → FE-T810 — Hechas (2026-11-12: V-08a, detalle, checklist, observar, iniciar verificación, descargas, solo lectura e invalidación, responsable JJOC3S; V-08b, informe APTO y declaratoria, responsable R0yalCode; implementación centralizada DK-010). Dependencias: sin GET ni descarga de informes y declaratorias (nueva, sin ID), BE-07.
 14. **Transversal:** FE-T1001 → FE-T1010.
 15. **Calidad:** FE-T1101 → FE-T1105.
 
