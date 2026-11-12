@@ -180,3 +180,40 @@ def test_sin_enlaces_duros_usa_reserva_exclusiva_y_no_sobrescribe():
     assert _sha(_raiz() / primera) == hash_primera
     assert (_raiz() / segunda).read_bytes() == b"%PDF-2"
     assert _archivos() == sorted([primera, segunda])
+
+
+# --- Auditoría independiente: D-05 y D-08 -----------------------------------
+
+
+def test_d05_fallo_de_chmod_tras_publicar_no_deja_huerfano():
+    """D-05: si un paso posterior a publicar falla, el archivo publicado se borra."""
+    with pytest.raises(PermissionError):
+        with compensacion_de_archivos() as archivos:
+            with mock.patch.object(
+                local_storage.os, "chmod", side_effect=PermissionError(1, "chmod")
+            ):
+                archivos.guardar(io.BytesIO(PDF), EXPEDIENTE, "doc.pdf")
+    assert _archivos() == []
+
+
+def test_d05_fallo_al_borrar_el_temporal_no_convierte_el_exito_en_error():
+    """D-05: si el temporal no se puede borrar tras publicar, la escritura sigue
+    siendo válida (se devuelve la ruta y el archivo publicado se conserva)."""
+    real_unlink = local_storage.os.unlink
+
+    def unlink(ruta, *args, **kwargs):
+        if os.path.basename(str(ruta)).startswith(PREFIJO_TEMPORAL):
+            raise PermissionError(1, "unlink temporal")
+        return real_unlink(ruta, *args, **kwargs)
+
+    with mock.patch.object(local_storage.os, "unlink", side_effect=unlink):
+        ruta = guardar_archivo_privado(io.BytesIO(PDF), EXPEDIENTE, "doc.pdf")
+    assert (_raiz() / ruta).read_bytes() == PDF
+
+
+def test_d08_respeta_directory_permissions_mode(settings):
+    """D-08: los directorios nuevos usan FILE_UPLOAD_DIRECTORY_PERMISSIONS."""
+    settings.FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o750
+    ruta = guardar_archivo_privado(io.BytesIO(PDF), EXPEDIENTE, "doc.pdf")
+    directorio = (_raiz() / ruta).parent
+    assert (os.stat(directorio).st_mode & 0o777) == 0o750

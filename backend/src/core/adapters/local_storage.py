@@ -121,12 +121,38 @@ def _publicar_sin_sobrescribir(temporal: str, destino: str) -> None:
             raise
 
 
+def _crear_directorio(storage: FileSystemStorage, directorio: str) -> None:
+    """Crea el directorio respetando `directory_permissions_mode` (D-08).
+
+    Mismo criterio que `FileSystemStorage._save()` de Django: si el modo está
+    configurado (`FILE_UPLOAD_DIRECTORY_PERMISSIONS`), se aplica con un umask
+    temporal; si no, se usan los permisos por defecto del proceso.
+    """
+    modo = storage.directory_permissions_mode
+    if modo is None:
+        os.makedirs(directorio, exist_ok=True)
+        return
+    umask_anterior = os.umask(0o777 & ~modo)
+    try:
+        os.makedirs(directorio, modo, exist_ok=True)
+    finally:
+        os.umask(umask_anterior)
+
+
 def _escribir_atomico(storage: FileSystemStorage, nombre: str, contenido) -> str:
-    """Escribe `contenido` en `nombre` sin parciales ni sobrescritura (H-I3-03)."""
+    """Escribe `contenido` en `nombre` sin parciales ni sobrescritura (H-I3-03).
+
+    Si un paso posterior a la publicación falla (p. ej. `chmod`), el archivo
+    publicado se borra antes de propagar el error (D-05): la operación nunca
+    deja un archivo final cuya ruta no haya devuelto. Un fallo al borrar el
+    temporal tras una publicación correcta no convierte el éxito en error: se
+    registra y `reconciliar_archivos` lo listará como temporal.
+    """
     destino = storage.path(nombre)
     directorio = os.path.dirname(destino)
-    os.makedirs(directorio, exist_ok=True)
+    _crear_directorio(storage, directorio)
     descriptor, temporal = tempfile.mkstemp(prefix=PREFIJO_TEMPORAL, dir=directorio)
+    publicado = None
     try:
         with os.fdopen(descriptor, "wb") as salida:
             for bloque in _bloques(contenido):
@@ -140,13 +166,33 @@ def _escribir_atomico(storage: FileSystemStorage, nombre: str, contenido) -> str
                 nombre = storage.get_available_name(nombre)
                 destino = storage.path(nombre)
                 continue
+            publicado = destino
             break
         if storage.file_permissions_mode is not None:
             os.chmod(destino, storage.file_permissions_mode)
         return nombre.replace("\\", "/")
+    except BaseException:
+        if publicado is not None:
+            try:
+                os.unlink(publicado)
+            except OSError:
+                logger.warning(
+                    "No se pudo retirar el archivo publicado tras un fallo: %s",
+                    publicado,
+                    exc_info=True,
+                )
+        raise
     finally:
-        with contextlib.suppress(FileNotFoundError):
+        try:
             os.unlink(temporal)
+        except FileNotFoundError:
+            pass
+        except OSError:
+            logger.warning(
+                "No se pudo eliminar el temporal de escritura %s",
+                temporal,
+                exc_info=True,
+            )
 
 
 def guardar_archivo_privado(
