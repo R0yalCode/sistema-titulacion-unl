@@ -68,7 +68,7 @@ Las rutas de evidencia son relativas a `backend/src/` salvo indicación contrari
 | RQ-API-03 | D01 §7.2, D02 FE-05 | Búsqueda universal `GET /buscar/` | core | **NI** | — | PLB-E6-01 | P2 |
 | RQ-API-04 | D01 §7.2, D02 FE-06 | Exportación PDF/Excel/CSV | core | **NI** | — | PLB-E6-02 (CSV/PDF con `reportlab`); Excel → DP-17 | P2 |
 | RQ-API-05 | D08 §6 (INC-19) | Paginación de notificaciones | notificaciones | **IM** | `pagination_class = None` | PLB-E4-06 (compatible) | P2 |
-| RQ-API-06 | D08 §6 (INC-21) | Errores de dominio como 4xx | expedientes / peticiones | **IM** | `APIException` (500) en observar y carga | PLB-E1-04 | P1 |
+| RQ-API-06 | D08 §6 (INC-21) | Errores de dominio como 4xx | expedientes / peticiones / verificacion / resoluciones | **I** (2026-11-11, PLB-E1-04 + O-2; integración local en `develop`) | Respuesta común `{detail, code}` (`core/adapters/api_errors.py`); 400/404/409/422 y 500 solo explícitos; contrato `ErrorDominio`. Antes: `APIException` (500) en observar y carga | PLB-E1-04 | P1 |
 | RQ-API-07 | D07 §2 | API de auditoría (Admin) | notificaciones | **NI** | — | PLB-E7-04 | P2 |
 | RQ-API-08 | D07 §2 | Gestión de usuarios/roles por API | authentication | **NI** (solo `/admin/`) | `config/urls.py` | Fuera de alcance mientras baste `/admin/` (DT-09) | P3 |
 | RQ-API-09 | D02 API-07 | OpenAPI sincronizado con el código | config | **IV** | `openapi.yaml` regenerado 2026-11-11; `test_openapi_declara_429_y_500_de_integridad` | Regenerar en cada cambio de contrato | — |

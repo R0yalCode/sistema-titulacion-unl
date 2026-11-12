@@ -59,11 +59,30 @@ ROL_MAX_LEN = 32
 
 
 class TransicionNoPermitidaError(Exception):
-    """La transición solicitada no está en `TRANSICIONES_PERMITIDAS`."""
+    """La transición solicitada no está en `TRANSICIONES_PERMITIDAS`.
+
+    Expone `estado_anterior` (leído con bloqueo) y `estado_nuevo` para que
+    las vistas distingan su causa sin interpretar el mensaje (E1-04).
+    """
+
+    def __init__(self, mensaje, *, estado_anterior=None, estado_nuevo=None):
+        super().__init__(mensaje)
+        self.estado_anterior = estado_anterior
+        self.estado_nuevo = estado_nuevo
 
 
 class ActorRequeridoError(Exception):
     """La transición exige un usuario autenticado explícito."""
+
+
+def transicion_permitida(estado_actual: str, nuevo_estado: str) -> bool:
+    """Indica si la transición está en `TRANSICIONES_PERMITIDAS` (solo lectura).
+
+    Permite a un servicio prevalidar la transición **antes** de producir
+    efectos que la transacción no revierte (p. ej. archivos), sin modificar
+    la tabla. La validación definitiva sigue en `registrar_transicion()`.
+    """
+    return (estado_actual, nuevo_estado) in TRANSICIONES_PERMITIDAS
 
 
 def _rol_actuante(actor, roles_transicion: tuple[str, ...]) -> str:
@@ -117,7 +136,9 @@ def registrar_transicion(
         if clave not in TRANSICIONES_PERMITIDAS:
             raise TransicionNoPermitidaError(
                 f"Transición de estado no permitida: {estado_anterior} -> "
-                f"{nuevo_estado}."
+                f"{nuevo_estado}.",
+                estado_anterior=estado_anterior,
+                estado_nuevo=nuevo_estado,
             )
 
         expediente.estado = nuevo_estado

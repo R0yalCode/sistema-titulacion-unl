@@ -9,7 +9,7 @@ last_verified: 2026-11-11
 
 # Contratos API (verificados contra código)
 
-**Fuentes de verdad:** `backend/src/config/urls.py` (rutas reales) y `backend/openapi.yaml` (contrato). `backend/contracts/openapi.yaml` es **byte a byte idéntico** a `backend/openapi.yaml`.
+**Fuentes de verdad:** `backend/src/config/urls.py` (rutas reales) y `backend/openapi.yaml` (contrato). `backend/contracts/openapi.yaml` era idéntico a `backend/openapi.yaml` hasta `467ec3b`; **desde `0a24109` (INC-01) difieren** (verificado 2026-11-11; pendiente decidir si se sincroniza).
 Rutas y métodos coinciden entre `urls.py` y OpenAPI: **16 rutas, 17 operaciones** bajo `/api/v1/`.
 
 ## 1. Endpoints existentes
@@ -45,9 +45,16 @@ Registradas en `sgt-siaaf/specs/003-frontend-titulacion/clarify.md`; el frontend
 |---|---|---|
 | INC-13 | `POST /auth/token/` devuelve `{access, refresh}`; OpenAPI dice "No response body" | Tipar `TokenPair` |
 | INC-19 | `GET /notificaciones/` devuelve `{results: [...]}` **sin paginación**; OpenAPI/`specify.md` indican otra forma | Implementar contra código real |
-| INC-21 | `POST /expedientes/{id}/observar/` responde 201 (no 200); excepciones de dominio en observar/evaluar/subsanar responden **HTTP 500** con mensaje de regla de negocio | Mostrar siempre `detail` real |
+| INC-21 | `POST /expedientes/{id}/observar/` responde 201 (no 200); excepciones de dominio en observar/evaluar/subsanar respondían **HTTP 500** con mensaje de regla de negocio. **Corregido 2026-11-11 (PLB-E1-04, rama `fix/e1-04-errores-dominio`, sin integrar):** 4xx con `{detail, code}`; ver § Errores de dominio | Mostrar siempre `detail` real |
 | FE-T407 | Subsanar requiere `checklist_verification_id`, pero ESTUDIANTE y SECRETARIA_CARRERA reciben 403 en `GET .../checklist/` → no pueden descubrir el ID | Limitación documentada; no se inventa flujo |
 | GAP-STATE-01 | **No existe operación API que lleve un expediente de `ENVIADA` a `EN_VERIFICACION`**; evaluar checklist y observar exigen `EN_VERIFICACION` | Ver [[BACKEND_ARCHITECTURE#Máquina de estados]] |
+
+## 2.1 Errores de dominio (PLB-E1-04 + O-2, 2026-11-11)
+
+- Cuerpo común `{"detail": "...", "code": "..."}` (componente OpenAPI `ErrorDominio`); `code` es estable.
+- 400 regla/estado o cambio concurrente; 404 recurso inexistente; **409 `regla_pendiente_o1`** en `POST /informes/` desde OBSERVADA (O-1 pendiente; **no es BE-11**: sin ETag/If-Match); 422 `requisitos_incompletos`; 500 **solo explícitos**: `configuracion_catalogo_incompleta`, `emisor_no_configurado`, `inconsistencia_observacion` y `documento_integridad_comprometida` (INC-01, sin cambios, `ErrorSimple`).
+- 404 de `get_object_or_404` y 403 siguen como `{detail}` (`ErrorSimple`); errores de validación de campos como `ErrorValidacion`.
+- Bitácora: [[2026-11-11-e1-04-o2-implementacion]].
 
 ## 3. Endpoints inexistentes citados en la documentación
 

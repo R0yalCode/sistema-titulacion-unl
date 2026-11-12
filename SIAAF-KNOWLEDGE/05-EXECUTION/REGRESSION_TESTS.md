@@ -17,6 +17,11 @@ last_verified: 2026-11-11
 | 2026-11-11 | Frontend | `npx vitest run` (2.ª ejecución) | Sin líneas `FAIL` en la salida filtrada | — | Ídem |
 | 2026-11-11 | Frontend | `npx vitest run` (3.ª ejecución) | **58/58 archivos, 328/328 pruebas aprobadas** | — | Ídem |
 | 2026-11-05 | Frontend | — | 328/328 (según `CLAUDE.md`, cierre de V-04) | — | Registro previo, no reejecutado |
+| 2026-11-11 | Backend (SQLite) | `pytest` | **606 aprobadas, 13 fallidas** (`test_pdf_generator.py`, `pypdf`; lista idéntica a `develop`) | ~10 s | PLB-E1-04 + O-2, rama `fix/e1-04-errores-dominio` |
+| 2026-11-11 | Backend (SQLite) | `pytest src/core` · `pytest tests` | 88/88 · 24 aprobadas, 10 omitidas (`postgres`) | — | Ídem |
+| 2026-11-11 | Backend (PostgreSQL 16.15) | `DJANGO_SETTINGS_MODULE=config.settings.test_postgres pytest -m postgres tests/integration` | **10/10** (C1–C8 + 2 de infraestructura), varias ejecuciones; `tests/` completo 34/34 | ~9 s | Contenedor desechable `postgres:16`; instrucciones en `backend/tests/integration/README.md` |
+| 2026-11-11 | Backend (PostgreSQL 16.15) | `pytest src/apps` | 21 fallos idénticos en `develop` y en la rama (13 `pypdf` + 8 de introspección de índices, H-30) | ~25 s | Auditoría postimplementación |
+| 2026-11-11 | Backend | `test_pdf_generator.py` con lector `pdftotext` (plugin de auditoría, sin instalar `pypdf`) | 30/30 en `develop` y en la rama | — | Evidencia de que los 13 fallos son solo la dependencia ausente |
 | — | Backend | `pytest` | 497 aprobadas, cobertura 93 %; 13 fallos `pypdf` aceptados (DEC-05 de la spec 003) | — | **Según la documentación** (commit ECLIPSE, DP2); **no reejecutado** en esta sesión (necesita entorno con PostgreSQL) |
 
 ## Conclusión

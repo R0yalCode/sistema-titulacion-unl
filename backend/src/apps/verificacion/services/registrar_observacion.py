@@ -39,6 +39,14 @@ class UsuarioNoAutorizadoError(Exception):
     """El usuario no tiene permisos para registrar observaciones."""
 
 
+class ExpedienteNoEncontradoError(ValueError):
+    """El expediente no existe (E1-04: 404, antes ValueError sin capturar)."""
+
+
+class PeticionYaObservadaError(ValueError):
+    """La petición ya está en OBSERVADO (E1-04: 400, antes ValueError -> 500)."""
+
+
 def _create_observacion_and_notify(expediente, peticion, registrada_por, motivo):
     """Crea observación accionable y notifica al estudiante."""
     observacion = ObservacionAccionable.objects.create(
@@ -101,7 +109,7 @@ def execute(usuario, expediente_id, peticion_id, motivo_observacion):
         try:
             expediente = ExpedienteTitulacion.objects.select_for_update().get(pk=expediente_id)
         except ExpedienteTitulacion.DoesNotExist:
-            raise ValueError("El expediente no existe.")
+            raise ExpedienteNoEncontradoError("El expediente no existe.")
 
         # Verificar estado del expediente
         if expediente.estado != ExpedienteTitulacion.ESTADO_EN_VERIFICACION:
@@ -118,9 +126,11 @@ def execute(usuario, expediente_id, peticion_id, motivo_observacion):
                     "El usuario no pertenece a la facultad del expediente."
                 )
 
-        # Obtener petición con bloqueo
+        # Obtener petición con bloqueo, después del expediente (orden canónico
+        # expediente -> petición -> checklist, plan E1-04 §4.2). `of=("self",)`
+        # bloquea solo la fila de la petición.
         try:
-            peticion = PeticionDocumental.objects.select_for_update().get(
+            peticion = PeticionDocumental.objects.select_for_update(of=("self",)).get(
                 pk=peticion_id, expediente=expediente
             )
         except PeticionDocumental.DoesNotExist:
@@ -136,7 +146,7 @@ def execute(usuario, expediente_id, peticion_id, motivo_observacion):
 
         # Verificar que la petición no esté ya en OBSERVADO
         if peticion.estado_peticion == "OBSERVADO":
-            raise ValueError("La petición ya está en estado OBSERVADO.")
+            raise PeticionYaObservadaError("La petición ya está en estado OBSERVADO.")
 
         # PAUSA EL RELOJ DE 8 DÍAS HÁBILES (AP-01)
         PlazoLaboralCalculator().pausar_reloj(expediente)

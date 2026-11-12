@@ -14,6 +14,7 @@ from apps.peticiones.adapters.models import (
     DocumentoEntregado,
     PeticionDocumental,
 )
+from apps.expedientes.adapters.models import ExpedienteTitulacion
 from core.adapters.local_storage import guardar_archivo_privado
 from core.adapters.pdf_validation import (
     PDFValidationError,
@@ -77,15 +78,27 @@ def execute(
         ValidacionPDFError: Si el archivo no pasa validaciones PDF.
     """
     with transaction.atomic():
-        # Obtener petición con bloqueo para evitar condiciones de carrera
+        # Orden de bloqueo canónico (PLB-E1-04 + O-2, plan §4.2): primero el
+        # expediente (bloqueo del agregado) y después la petición, cada uno
+        # en su propia sentencia. Antes, `select_related(...).select_for_update()`
+        # bloqueaba petición y expediente en un orden no controlado.
+        expediente_id = (
+            PeticionDocumental.objects.filter(pk=peticion_id)
+            .values_list("expediente_id", flat=True)
+            .first()
+        )
+        if expediente_id is None:
+            raise PeticionNoEncontradaError("La petición documental no existe.")
+        expediente = ExpedienteTitulacion.objects.select_for_update().get(
+            pk=expediente_id
+        )
         try:
-            peticion = PeticionDocumental.objects.select_related("expediente").select_for_update().get(
-                pk=peticion_id
-            )
+            peticion = PeticionDocumental.objects.select_for_update(
+                of=("self",)
+            ).get(pk=peticion_id, expediente_id=expediente_id)
         except PeticionDocumental.DoesNotExist:
             raise PeticionNoEncontradaError("La petición documental no existe.")
-
-        expediente = peticion.expediente
+        peticion.expediente = expediente
 
         # Validar estado de la petición (permitir carga en PENDIENTE, SOLICITADO, OBSERVADO, CARGADO para versionado)
         estados_permitidos = (ESTADO_PENDIENTE, ESTADO_SOLICITADO, "OBSERVADO", ESTADO_CARGADO)

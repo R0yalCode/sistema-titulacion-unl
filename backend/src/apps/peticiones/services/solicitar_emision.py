@@ -38,16 +38,28 @@ class UsuarioEmisorNoEncontradoError(Exception):
 def execute(usuario, peticion_id):
     """Ejecuta la peticion interna de emision de certificado."""
     with transaction.atomic():
+        # Orden de bloqueo canónico (PLB-E1-04 + O-2, plan §4.2): expediente
+        # y después petición. Antes no había bloqueo: el estado de la
+        # petición podía perderse frente a una carga concurrente.
+        expediente_id = (
+            PeticionDocumental.objects.filter(pk=peticion_id)
+            .values_list("expediente_id", flat=True)
+            .first()
+        )
+        if expediente_id is None:
+            raise PeticionNoEncontradaError("La peticion documental no existe.")
+        expediente = ExpedienteTitulacion.objects.select_for_update().get(
+            pk=expediente_id
+        )
         try:
-            peticion = PeticionDocumental.objects.select_related(
-                "expediente", "requisito"
-            ).get(pk=peticion_id)
-        except PeticionDocumental.DoesNotExist:
-            raise PeticionNoEncontradaError(
-                "La peticion documental no existe."
+            peticion = (
+                PeticionDocumental.objects.select_for_update(of=("self",))
+                .select_related("requisito")
+                .get(pk=peticion_id, expediente_id=expediente_id)
             )
-
-        expediente = peticion.expediente
+        except PeticionDocumental.DoesNotExist:
+            raise PeticionNoEncontradaError("La peticion documental no existe.")
+        peticion.expediente = expediente
 
         if expediente.estado not in (
             ExpedienteTitulacion.ESTADO_BORRADOR,
