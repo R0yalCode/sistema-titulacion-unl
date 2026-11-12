@@ -25,7 +25,7 @@ from apps.expedientes.domain.plazo_calculator import PlazoLaboralCalculator
 from apps.expedientes.services.transiciones import registrar_transicion
 from apps.notificaciones.adapters.models import NotificacionInterna
 from core.adapters.pdf_validation import validar_pdf_completo, PDFValidationError
-from core.adapters.local_storage import guardar_archivo_privado
+from core.adapters.local_storage import compensacion_de_archivos
 
 
 class SubsanacionNoPermitidaError(Exception):
@@ -125,7 +125,10 @@ def execute(usuario, checklist_verification_id, archivo, nombre_original):
     if not archivo:
         raise ValidacionPDFError("No se proporcionó archivo.", code="no_file")
 
-    with transaction.atomic():
+    # I-3 (H-I3-02): la compensación envuelve la transacción; si falla un paso
+    # posterior a la escritura (documento, transición, notificación o commit),
+    # se borra el archivo creado por esta operación y la BD revierte.
+    with compensacion_de_archivos() as archivos, transaction.atomic():
         # Orden de bloqueo canónico (PLB-E1-04 + O-2, plan §4.2; H-29):
         # expediente -> petición -> checklist. Antes: checklist -> petición
         # -> expediente (inverso a registrar_observacion) y validación del
@@ -218,7 +221,7 @@ def execute(usuario, checklist_verification_id, archivo, nombre_original):
         _marcar_anterior_no_vigente(peticion)
 
         # Guardar archivo en almacenamiento privado
-        archivo_path = guardar_archivo_privado(
+        archivo_path = archivos.guardar(
             file=archivo,
             expediente_id=str(expediente.id),
             nombre_original=nombre_original,
