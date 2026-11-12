@@ -105,7 +105,7 @@ Identidad de referencia: no se inventan nombres personales ni se alteran los cor
 2. **Compartida:** si varios integrantes contribuyeron realmente a la misma tarea, el autor es el responsable principal y cada uno de los demás va en un trailer al final del mensaje: `Co-authored-by: Identificador <correo>` (exactos de la tabla).
 3. No se añade por defecto a los cinco integrantes, ni se atribuyen contribuciones no realizadas o tareas no asignadas.
 4. Claude Code es una herramienta de asistencia: **nunca** figura como autor, committer ni coautor.
-5. La identidad de un integrante (`--author`) solo se usa con su conocimiento y la autorización del responsable; sin modificar la configuración Git global ni local.
+5. La identidad de un integrante (`--author`) solo se usa con la autorización del responsable. En la modalidad centralizada, la asignación expresa de la tarea por R0yalCode es esa autorización (enmienda de DK-010, 2026-11-12). No se modifica la configuración Git global ni local.
 6. **Committer:** quien ejecuta el commit. Si un integrante lo hace desde su equipo, es autor y committer; si lo prepara el responsable en su máquina, el committer es el responsable y el autor, el integrante que hizo el trabajo (o, en la modalidad centralizada, el integrante responsable de la tarea).
 
 **Antes de cada commit**
@@ -137,7 +137,7 @@ Objetivo: que los cinco integrantes tengan oportunidades reales de contribuir y 
 2. Propone un responsable para cada tarea según su alcance técnico, sus dependencias y las responsabilidades en curso, con una carga equilibrada entre los cinco.
 3. **Rotación:** no asigna siempre la misma categoría de trabajo (p. ej. pruebas o documentación) a las mismas personas; las categorías rotan entre funcionalidades.
 4. Evita que dos integrantes modifiquen los mismos archivos a la vez sin coordinación; si es inevitable, lo indica y propone el orden de integración.
-5. Las asignaciones son **propuestas** hasta que el equipo las confirme. Una propuesta nunca se registra como trabajo realizado.
+5. Las asignaciones son **propuestas** hasta que el responsable (R0yalCode) las apruebe expresamente. Una propuesta nunca se registra como trabajo realizado.
 6. Modalidad ordinaria: cada integrante desarrolla y valida su parte antes de integrarla. Modalidad centralizada: Claude Code implementa y valida cada bloque (ver § siguiente).
 7. Tras verificar lo realizado (§ Antes de cada commit), y con la autorización correspondiente, Claude prepara el commit individual con la identidad del integrante que lo implementó (ordinaria; coautores si hubo contribución compartida real) o del integrante responsable de la tarea (centralizada).
 8. Se registra quién hizo cada parte: tarea, bitácora de sesión y autoría del commit.
@@ -148,11 +148,11 @@ Objetivo: que los cinco integrantes tengan oportunidades reales de contribuir y 
 |---|---|---|---|---|---|
 | T1 … | Integrante | rutas | criterio verificable | comandos y casos | `tipo(ámbito): …` · autor · — |
 
-Estado de cada fila: *propuesta* → *confirmada por el equipo* → *realizada y verificada* → *commit preparado*.
+Estado de cada fila: *propuesta* → *asignada por el responsable* → *realizada y verificada* → *commit preparado*.
 
 ## Modalidad de implementación centralizada
 
-> Enmienda de **DK-010** (2026-11-11), autorizada expresamente por el responsable del proyecto. Versión operativa: `CLAUDE.md` § "Equipo, autoría y distribución del trabajo".
+> Enmiendas de **DK-010** del 2026-11-11 (modalidad centralizada) y del 2026-11-12 (atribución por asignación), autorizadas expresamente por el responsable del proyecto. Versión operativa: `CLAUDE.md` § "Equipo, autoría y distribución del trabajo".
 
 1. **Habilitación:** solo con autorización expresa del responsable para una funcionalidad concreta y su reparto de tareas aprobado. Sin ella rige la modalidad ordinaria.
 2. **Ejecución:** Claude Code implementa los bloques técnicos asignados a los integrantes; no es obligatorio que cada integrante ejecute personalmente los cambios.
@@ -164,7 +164,21 @@ Estado de cada fila: *propuesta* → *confirmada por el equipo* → *realizada y
    Modalidad: implementación centralizada (DK-010, enmienda 2026-11-11) · Tarea <ID> · responsable <Identificador>
    ```
 
-6. **Conocimiento:** cada integrante es informado de su tarea y de que su identidad se usará como autor Git de ese bloque.
+6. **Autorización por asignación** (enmienda del 2026-11-12, que sustituye el antiguo requisito de «conocimiento»):
+   - La asignación expresa de una tarea por R0yalCode a un integrante es autorización suficiente para atribuirle, como autor Git, los commits de esa tarea.
+   - **No se requiere** notificación individual, confirmación de recepción, respuesta o aceptación del integrante, ni evidencia de comunicación.
+
+   | Elemento | Responsable |
+   |---|---|
+   | Asignación de la tarea | R0yalCode |
+   | Ejecución material del código | Claude Code |
+   | Autor Git (`Author`) | Integrante asignado (identidad exacta de la tabla) |
+   | Committer Git (`Committer`) | R0yalCode |
+   | Revisión y autorización de integración | R0yalCode |
+
+   - Cada commit corresponde solo a la tarea asignada y a su responsable.
+   - Ante una asignación ambigua se detiene y se pregunta; nunca se inventa una atribución.
+   - Trazabilidad: plan de la funcionalidad, bitácora y línea `Modalidad:` del commit (rama, tarea, responsable, commit).
 7. **Sin efectos retroactivos:** solo trabajos futuros autorizados en esta modalidad. Permanecen: prohibición absoluta de `--force` y variantes; prohibición de reescribir historial publicado; sin push, merge ni rebase de ramas publicadas sin autorización expresa; prohibido modificar o eliminar commits históricos para adaptar sus autores.
 
 ## Historial de la política

@@ -62,7 +62,7 @@ Esta política complementa el Flujo Git; no anula ni debilita ninguna de sus res
 - Si varios integrantes contribuyeron realmente al mismo cambio: autor = autor principal, y al final del mensaje un trailer por cada colaborador: `Co-authored-by: Identificador <correo>` (identificador y correo exactos de la tabla).
 - Nunca agregues por defecto a los cinco integrantes, ni atribuyas a nadie contribuciones que no hizo o tareas que no le fueron asignadas.
 - Claude Code es una herramienta de asistencia: **nunca** figura como autor, committer ni coautor.
-- Usa la identidad Git de un integrante (`--author`) solo con su conocimiento y la autorización del responsable (en la modalidad centralizada, según sus reglas). No modifiques la configuración Git (global ni local) para ello.
+- Usa la identidad Git de un integrante (`--author`) solo con la autorización del responsable. En la modalidad centralizada, esa autorización es la asignación expresa de la tarea por R0yalCode (enmienda de DK-010, 2026-11-12). No modifiques la configuración Git (global ni local) para ello.
 - No modifiques commits anteriores ni agregues autores retroactivamente: la regla 5 (prohibido reescribir historial publicado y `--force`) sigue siendo absoluta.
 
 **Antes de cada commit:** `git status` → diff completo → identificar qué archivos/partes hizo cada integrante → comprobar que no entren cambios ajenos → verificar la identidad Git (`git config user.name/user.email`, `git var GIT_AUTHOR_IDENT`/`GIT_COMMITTER_IDENT`) → fijar autor y coautores según contribuciones verificables (si no puedes verificarlas, **pregunta** antes de commitear) → mensaje Conventional Commits descriptivo.
@@ -73,18 +73,28 @@ Esta política complementa el Flujo Git; no anula ni debilita ninguna de sus res
 2. Propón el integrante más adecuado para cada tarea según su alcance técnico, dependencias y responsabilidades en curso, con carga equilibrada entre los cinco. **Rota las categorías**: no asignes siempre el mismo tipo de trabajo a las mismas personas.
 3. Para cada tarea indica: integrante responsable, archivos/componentes, resultado esperado, pruebas y validaciones, y commit individual previsto con su autor real (plantilla en `GIT_POLICY.md` § Distribución de tareas).
 4. Evita que dos integrantes modifiquen los mismos archivos a la vez sin coordinación.
-5. La propuesta **no es trabajo ejecutado**: confírmala con el equipo antes de tratarla como asignada, y nunca registres que alguien hizo algo que no hizo.
+5. La propuesta **no es trabajo ejecutado**: solo pasa a asignada cuando el responsable (R0yalCode) la aprueba expresamente. Nunca registres que alguien hizo algo que no hizo.
 6. Modalidad ordinaria: cada integrante desarrolla y valida su parte antes de integrarla. Solo después de verificar lo realmente realizado, y con autorización, prepara el commit con la identidad (`--author`) del integrante que lo implementó (coautores si la contribución fue compartida). El committer es quien ejecuta el commit. Modalidad centralizada: ver la subsección siguiente.
 7. Registra quién hizo cada parte (tarea, bitácora de sesión y autoría del commit).
 
-**Modalidad de implementación centralizada (enmienda de DK-010, 2026-11-11, autorizada por el responsable):**
+**Modalidad de implementación centralizada (enmiendas de DK-010 del 2026-11-11 y 2026-11-12, autorizadas por el responsable):**
 
 - **Habilitación:** solo cuando el responsable del proyecto la autoriza expresamente para una funcionalidad concreta y su reparto de tareas aprobado. Sin esa autorización rige la modalidad ordinaria.
 - **Ejecución:** Claude Code implementa los bloques técnicos asignados a los integrantes; no es obligatorio que cada integrante ejecute personalmente los cambios de código.
 - **Un commit independiente por tarea del reparto**, con `git commit --author="<Identificador> <correo>"` usando **exclusivamente** la tabla de integrantes. Cada commit contiene solo archivos de su bloque: no se mezclan bloques ni se atribuyen a un integrante cambios de otro bloque. Si un cambio no puede separarse por bloques, se detiene y se pregunta.
 - **Significado de la atribución:** en esta modalidad el autor Git identifica al **integrante responsable de la tarea** (política de contribución delegada del equipo), **no** a quien escribió materialmente el código. La ejecución material corresponde a Claude Code; el committer es la identidad Git configurada en el equipo que ejecuta el commit (hoy, R0yalCode). Nunca se afirma que el integrante escribió personalmente el código.
 - **Constancia obligatoria:** el plan de la funcionalidad y la bitácora de sesión registran que la implementación fue centralizada por Claude Code, la autorización del responsable (fecha) y la correspondencia commit ↔ tarea ↔ integrante. El cuerpo del commit incluye la línea `Modalidad: implementación centralizada (DK-010, enmienda 2026-11-11) · Tarea <ID> · responsable <Identificador>`. Se mantiene la regla 2: Claude Code no figura como autor, committer ni coautor, ni se nombra a la IA en commits, merges, PR o releases.
-- **Conocimiento de los integrantes:** cada integrante es informado de la tarea que se le asigna y de que su identidad se usará como autor Git de ese bloque.
+- **Autorización por asignación (enmienda de DK-010, 2026-11-12, decisión expresa del responsable):** la asignación expresa de una tarea por R0yalCode a un integrante es **autorización suficiente** para atribuirle, como autor Git, los commits de esa tarea. **No se requiere** notificación individual al integrante, confirmación de recepción, respuesta o aceptación, ni evidencia de comunicación (GitHub, correo, chat o reuniones). Reparto de funciones:
+
+  | Elemento | Responsable |
+  |---|---|
+  | Asignación de la tarea | R0yalCode |
+  | Ejecución material del código | Claude Code |
+  | Autor Git (`Author`) | Integrante al que se asignó la tarea (identidad exacta de la tabla) |
+  | Committer Git (`Committer`) | R0yalCode |
+  | Revisión y autorización de integración | R0yalCode |
+
+  Cada commit corresponde **solo** a la tarea asignada y a su responsable. Si la asignación es ambigua (tarea sin responsable, dos responsables posibles o cambios que no pertenecen a ninguna tarea asignada), se detiene y se pregunta: nunca se inventa una atribución.
 - **Sin efectos retroactivos:** solo rige para trabajos futuros autorizados en esta modalidad. Siguen vigentes la regla 5 (prohibidos `--force` y sus variantes y reescribir historial publicado), la prohibición de push, merge y rebase de ramas publicadas sin autorización expresa, y la prohibición de modificar commits históricos para adaptar sus autores.
 
 Detalle y ejemplos: `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md`.

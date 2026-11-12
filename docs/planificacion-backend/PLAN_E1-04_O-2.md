@@ -191,6 +191,7 @@ Conflictos evitados: cada archivo tiene un único propietario; `openapi.yaml` so
 | T5 | JuanCalopinoo | Juan.calopino@unl.edu.ec | **Pendiente**: sin evidencia de notificación |
 
 - En la modalidad centralizada no se exige que cada integrante ejecute personalmente su bloque; sí que sea **informado** de la tarea asignada y de que su identidad figurará como autor Git de ese bloque (DK-010). La comunicación de tareas fue autorizada el 2026-11-11 y los mensajes se prepararon, pero **no consta su envío ni ninguna respuesta**: el estado queda pendiente y no se presume.
+- *(Nota 2026-11-12: requisito suprimido por la enmienda de DK-010 del 2026-11-12. La asignación del responsable es autorización suficiente; no se exige notificación. Ver `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/DK010_REGISTRO_NOTIFICACIONES.md`.)*
 - **Registro de notificación (I-1).** Para cerrarlo, el responsable registra por cada integrante: fecha, medio con constancia escrita (issue o comentario en GitHub, chat del equipo) y respuesta. Texto mínimo de la notificación: *"En PLB-E1-04 + O-2 (rama `fix/e1-04-errores-dominio`) figuras como autor Git del commit de la tarea <ID> (`<hash>`). La implementación fue ejecutada de forma centralizada por Claude Code, autorizada por el responsable (DK-010, enmienda 2026-11-11); el autor Git representa tu responsabilidad delegada sobre la tarea, no que escribieras el código. Detalle: `docs/planificacion-backend/PLAN_E1-04_O-2.md` §10."*
 - La atribución se limita al bloque asignado: no se atribuyen a un integrante cambios de otro bloque.
 - La documentación de cierre (este plan y la bitácora de sesión) dejará constancia de la ejecución centralizada por Claude Code y de la tabla commit ↔ tarea ↔ integrante de §6.1.
@@ -259,5 +260,5 @@ Rama `fix/e1-04-errores-dominio` desde `develop` (`d1fa86e`), ejecutada en un wo
 - O-1 sigue pendiente de decisión funcional (hoy 409 `regla_pendiente_o1`).
 - Solo C1 se ejecutó contra el código previo a la corrección; C2–C8, contra el código final.
 - La protección contra sobrescritura cubre los nombres autogenerados del generador (`archivo_salida` explícito no se reserva); los archivos reservados se crean con permisos 0640.
-- I-1: notificación de cuatro integrantes pendiente (§7).
+- I-1: notificación de cuatro integrantes pendiente (§7). *(Nota 2026-11-12: requisito suprimido por la enmienda de DK-010 del 2026-11-12. La asignación del responsable es autorización suficiente; no se exige notificación. Ver `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/DK010_REGISTRO_NOTIFICACIONES.md`.)*
 - Bitácora: `SIAAF-KNOWLEDGE/09-SESSION-LOGS/2026/2026-11-11-e1-04-o2-implementacion.md`.
