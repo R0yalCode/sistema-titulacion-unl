@@ -41,7 +41,7 @@ Principios: fórmulas solo en `indicadores/services`; las vistas aplican RBAC y 
 | Etapa | Nombre | Origen | Estado | Depende de |
 |---|---|---|---|---|
 | **E0** | Higiene de pruebas y línea base | — | Pendiente (E0-01 requiere autorización) | — |
-| **E1** | Seguridad P0 | INC-01 | **E1-01…03 Hechas** · E1-04/05 pendientes | — |
+| **E1** | Seguridad P0 | INC-01 | **E1-01…04 Hechas** (E1-04 ampliada con O-2, 2026-11-11) · E1-05 pendiente | — |
 | **E2** | Flujo de verificación operable | GAP-STATE-01, INC-21, FE-T407 | E2-01, E2-02a, E2-02b1, E2-02b2, E2-02b3.1 definidas (**no autorizadas**); E2-03 definida + AUT-01; E2-06 definida (DT-12); todas **no autorizadas**; E2-01, E2-02a y E2-03 requieren además AUT-02, AUT-03 y AUT-01; bloqueadas E2-02b3.2 (DP-20), E2-02c (DP-19), E2-04 (DP-08), E2-05 (DP-05b) | E1 |
 | **E3** | Sesiones JWT | INC-02 | Lista para implementar (decidir DP-06) | E1 |
 | **E4** | Indicadores, dashboards y bandeja | INC-04 | Lista (E4-01…04 sin bloqueos) | E1; E2 para que los KPI de verificación tengan datos reales |
@@ -134,6 +134,7 @@ P3 · `tests` por app: enviar campos de solo lectura (`estado`, `estudiante_id`,
 #### PLB-E1-04 — Errores de dominio como 4xx (INC-21)
 | Campo | Valor |
 |---|---|
+| Plan detallado (2026-11-11) | **Ampliada con O-2** (concurrencia y bloqueo uniforme), D-1…D-7 y tareas T1–T5: [PLAN_E1-04_O-2.md](PLAN_E1-04_O-2.md). Estado: **HECHA 2026-11-11** (ejecución autorizada; modalidad centralizada, DK-010 enmienda). Cinco commits en `fix/e1-04-errores-dominio`: `2623685` T1, `daa8b41` T3, `4d02baf` T2, `3cdb47d` T4, `7e87483` T5; integración local en `develop` autorizada (sin publicar). D-1 aprobado (409 `regla_pendiente_o1`). Resultado y riesgos residuales: anexo §10 |
 | Problema | `observar` y la carga envuelven reglas de negocio en `APIException` (500) |
 | Requerimiento / prioridad | RQ-API-06 · P1 · sin dependencias |
 | Archivos | `expedientes/adapters/views.py` (`ExpedienteNoEnVerificacionError`→400 `expediente_not_in_verification`; `PeticionNoEncontradaError`→404); `peticiones/adapters/views.py` (`PeticionNoEncontradaError`→404); también evaluar/subsanar si aplica |
