@@ -15,6 +15,9 @@ downloads/
 eggs/
 .eggs/
 lib/
+# Excepción: frontend/src/lib/ es código fuente del frontend, no un artefacto
+# de Python; la regla lib/ sigue aplicándose a cualquier otro directorio.
+!frontend/src/lib/
 lib64/
 parts/
 sdist/
