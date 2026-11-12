@@ -1241,7 +1241,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** detalle completo para roles operativos.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): `DetalleFuncionarioPage` reutiliza `ExpedienteHeader`, `PeticionesSection` y `ChecklistSection` de V-04 (barrel `@/features/expediente`); checklist solo para roles con RBAC; 404 con salida a la bandeja, 403 con enlace a V-09 y 500 con reintento.
 
 ### FE-T802 — Evaluar checklist (funcionario)
 
@@ -1255,7 +1255,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** evaluación funciona desde V-08.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): evaluación del checklist con `ChecklistSection` de V-04 (SECRETARIO_ABOGADO, ANALISTA_APOYO, ADMINISTRADOR en EN_VERIFICACION).
 
 ### FE-T803 — Observar expediente (funcionario)
 
@@ -1268,7 +1268,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** observación funciona desde V-08.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): observar con `ObservarDialog` (solo SECRETARIO_ABOGADO en EN_VERIFICACION). **Ampliación verificada:** también «Iniciar verificación» (`POST /expedientes/{id}/iniciar-verificacion/`, E2-01, posterior a esta spec; solo SECRETARIO_ABOGADO, ENVIADA → EN_VERIFICACION).
 
 ### FE-T804 — Emitir informe
 
@@ -1314,7 +1314,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** descarga correcta.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): descarga con `DescargaButton` de V-04 (sin DECANO, que no está en la matriz RBAC).
 
 ### FE-T807 — Visibilidad de acciones por rol/estado
 
@@ -1328,7 +1328,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cada rol ve solo lo permitido.
 - **Pruebas:** unitarias.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): `accionesFuncionario.ts` (iniciar verificación, observar, evaluar, descargar) con explicación cuando el rol no tiene acciones de estado.
 
 ### FE-T808 — Estado solo lectura
 
@@ -1342,7 +1342,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** no se ofrecen acciones inválidas.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): DECLARADA_APTA y CANCELADA son de solo lectura, con aviso.
 
 ### FE-T809 — Invalidación y refresco
 
@@ -1355,7 +1355,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** la UI refleja el nuevo estado.
 - **Pruebas:** integración.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12, V-08a): `useInvalidarTrasAccion` invalida detalle, checklist y bandeja operativa (`staleTime` 30 s).
 
 ### FE-T810 — Pruebas de V-08
 
