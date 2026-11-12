@@ -985,7 +985,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** lista correcta y accesible.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `PeticionesTabla` con #, requisito, estado legible, dependencia, acciones y enlace a V-06; vacío con `Table`. Pruebas RTL + axe en `PeticionesPage.test.tsx`.
 
 ### FE-T502 — Solicitar emisión
 
@@ -1001,7 +1001,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** 200 → `SOLICITADO`; errores claros.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `api/endpoints/peticiones.ts` (`solicitarEmision`) + `SolicitarEmisionDialog` (confirmación) + invalidación del expediente. Visible solo para ESTUDIANTE con expediente BORRADOR/OBSERVADA y petición PENDIENTE (RBAC `peticiones` POST excluye a SECRETARIA_CARRERA aunque el servicio la admita: discrepancia registrada). 400/403/404 con el mensaje real.
 
 ### FE-T503 — Cargar documento
 
@@ -1017,7 +1017,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** PDF válido se registra; inválido no se envía.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `CargarDocumentoDialog` con `FileUpload` (+ prop `onInvalidFile`) y POST multipart `archivo`. Estados PENDIENTE/SOLICITADO/OBSERVADO/CARGADO; ESTUDIANTE o SECRETARIA_CARRERA solo en peticiones de la Secretaría (regla del servicio, más estricta que la matriz RBAC: discrepancia registrada). Sin porcentaje de progreso (`fetch` no lo expone): estado «Subiendo…».
 
 ### FE-T504 — Descargar documento
 
@@ -1031,7 +1031,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** descarga correcta.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): reutiliza `DescargaButton` de V-04 (`lib/download`, blob con `Authorization`), solo cuando el estado implica documento; 403/404 con el mensaje real.
 
 ### FE-T505 — Aviso de limitación de creación
 
@@ -1045,7 +1045,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** no se ofrece una acción inexistente.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): aviso «Las peticiones se generan automáticamente», sin botón de creación y con enlace a V-04.
 
 ### FE-T506 — Pruebas de V-05
 
@@ -1059,7 +1059,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `accionesPeticion.test.ts`, `api/endpoints/peticiones.test.ts`, `PeticionesPage.test.tsx` (30 pruebas nuevas, incluida 1 de `FileUpload`). Suite 358/358; typecheck, lint y build en verde; 3 mutaciones de salvaguardas detectadas.
 
 ---
 
@@ -1793,7 +1793,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 6. **V-09:** FE-T901 → FE-T904 (necesaria para degradar).
 7. **V-03:** FE-T301 → FE-T306 — Hechas (2026-11-05: formulario, integración, errores/protección ante duplicados, borrador local, éxito/redirección y pruebas; V-04 confirmada como stub, sin ampliar su alcance).
 8. **V-04:** FE-T401 → FE-T411 — Hechas (2026-11-05: cabecera/timeline, detalle/peticiones, checklist con 403 real, enviar/observar/evaluar/subsanar, descarga, matriz de acciones, invalidación y pruebas; FE-T407 con limitación real severa documentada para ESTUDIANTE —sin `checklist_verification_id` descubrible—, sin modificar el backend; INC-21 documenta discrepancias de código HTTP en observar/evaluar/subsanar).
-9. **V-05:** FE-T501 → FE-T506.
+9. **V-05:** FE-T501 → FE-T506 — Hechas (2026-11-12: lista, solicitar emisión, carga y descarga de PDF, aviso de creación automática y pruebas; 30 pruebas nuevas, 358/358 totales; responsable 7777-C, implementación centralizada DK-010; discrepancias RBAC/servicio en carga y solicitud registradas en `SIAAF-KNOWLEDGE/03-FRONTEND/PLAN_VISTAS_V05_V09.md` §2).
 10. **V-06:** FE-T601 → FE-T605.
 11. **V-02:** FE-T201 → FE-T206 — Hechas (2026-11-05: dashboard del estudiante completo; FE-T203 con desviación de contrato documentada —notificaciones sin paginar en el backend real—; FE-T204 con alcance acotado a expedientes visitados, el registro al crear queda pendiente de V-03).
 12. **V-07:** FE-T701 → FE-T706.

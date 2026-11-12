@@ -19,7 +19,7 @@ last_verified: 2026-11-11
 | V-02 | `/estudiante` | `features/dashboard/StudentDashboardPage.tsx` | `RequireRole ['ESTUDIANTE']` | Hecha |
 | V-03 | `/estudiante/solicitud/nueva` | `features/solicitud/NuevaSolicitudPage.tsx` | `RequireRole ['ESTUDIANTE']` | Hecha (`carrera_id` UUID manual; sin catálogo BE-10; sin modalidad BE-06) |
 | V-04 | `/expedientes/:id` | `features/expediente/ExpedientePage.tsx` | `RequireAuth` | Hecha |
-| V-05 | `/expedientes/:id/peticiones` | `features/peticiones/PeticionesPage.tsx` | `RequireAuth` | **Stub** (182 B) |
+| V-05 | `/expedientes/:id/peticiones` | `features/peticiones/PeticionesPage.tsx` | `RequireAuth` | **Implementada** (FE-T501–506, 2026-11-12) |
 | V-06 | `/expedientes/:id/peticiones/:peticionId` | `features/peticiones/SeguimientoPeticionPage.tsx` | `RequireAuth` | **Stub** (180 B) |
 | V-07 | `/bandeja` | `features/bandeja/BandejaPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Stub** (167 B) |
 | V-08 | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Stub** (178 B) |

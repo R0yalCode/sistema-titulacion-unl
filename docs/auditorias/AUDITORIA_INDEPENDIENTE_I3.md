@@ -110,7 +110,7 @@ Ningún fallo nuevo en las suites del proyecto.
 
 - Cinco commits de implementación, uno por tarea, con el `--author` del reparto autorizado y solo archivos de su bloque; línea de modalidad en cada cuerpo; sin menciones a IA ni coautorías; committer R0yalCode. ✔
 - Constancia documental de la ejecución centralizada (informe §10 y bitácora). ✔
-- **Pendiente:** no hay evidencia de que JJOC3S, JuanCalopinoo, 7777-C y Dan1el17 hayan sido informados de su atribución delegada (requisito de "conocimiento" de DK-010), igual que en E1-04.
+- **Pendiente:** no hay evidencia de que JJOC3S, JuanCalopinoo, 7777-C y Dan1el17 hayan sido informados de su atribución delegada (requisito de "conocimiento" de DK-010), igual que en E1-04. *(Nota 2026-11-12: requisito suprimido por la enmienda de DK-010 del 2026-11-12. La asignación del responsable es autorización suficiente; no se exige notificación. Ver `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/DK010_REGISTRO_NOTIFICACIONES.md`.)*
 
 ## 8. Comparación con los criterios de aceptación (informe I-3 §8)
 
@@ -193,6 +193,6 @@ Según DK-010, las correcciones corresponderían a los responsables de cada bloq
 - D-07: el comando no informa de referencias sin archivo (H-I3-07); pendiente por decisión del responsable.
 - El bloqueo de D-03 solo es efectivo en PostgreSQL (SQLite ignora `select_for_update`); el entorno de producción usa PostgreSQL.
 - D-08 usa un `umask` temporal de proceso cuando `FILE_UPLOAD_DIRECTORY_PERMISSIONS` está configurado (mismo criterio que Django); hoy no está configurado.
-- DK-010: sigue sin evidencia la notificación de la atribución delegada a JJOC3S, JuanCalopinoo, 7777-C y Dan1el17.
+- DK-010: sigue sin evidencia la notificación de la atribución delegada a JJOC3S, JuanCalopinoo, 7777-C y Dan1el17. *(Nota 2026-11-12: requisito suprimido por la enmienda de DK-010 del 2026-11-12. La asignación del responsable es autorización suficiente; no se exige notificación. Ver `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/DK010_REGISTRO_NOTIFICACIONES.md`.)*
 
 **Dictamen final: APROBADA CON OBSERVACIONES.** Los defectos bloqueantes (D-01, D-02, D-03) y los menores autorizados (D-04, D-05, D-06, D-08) están corregidos y verificados en SQLite y PostgreSQL real, sin regresiones. Las observaciones restantes no impiden integrar.

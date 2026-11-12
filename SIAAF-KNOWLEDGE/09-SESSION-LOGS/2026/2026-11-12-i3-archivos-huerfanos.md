@@ -37,7 +37,7 @@ Implementación **centralizada**: el código lo ejecutó materialmente Claude Co
 
 - Revisión y autorización de la integración de la rama en `develop` y `main`.
 - H-I3-05 (cargas repetidas) y H-I3-07 (registro sin archivo): fuera de alcance / riesgo residual.
-- Notificación a los integrantes de su atribución delegada en E1-04 y en I-3 (DK-010): sin evidencia registrada.
+- Notificación a los integrantes de su atribución delegada en E1-04 y en I-3 (DK-010): sin evidencia registrada. *(Nota 2026-11-12: requisito suprimido por la enmienda de DK-010 del 2026-11-12. La asignación del responsable es autorización suficiente; no se exige notificación. Ver `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/DK010_REGISTRO_NOTIFICACIONES.md`.)*
 
 ## Auditoría independiente y correcciones (2026-11-12)
 
