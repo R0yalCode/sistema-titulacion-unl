@@ -9,7 +9,6 @@ from rest_framework import (
     status,
     viewsets,
 )
-from rest_framework.exceptions import APIException
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -19,6 +18,14 @@ from apps.authentication.adapters.permissions import HasRolePermission
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.verificacion.adapters.models import ChecklistVerification
 from apps.verificacion.services import evaluar_checklist, subsanar_requisito
+from apps.expedientes.services.transiciones import TransicionNoPermitidaError
+from core.adapters.api_errors import (
+    ErrorDominioAPI,
+    InconsistenciaDatosAPI,
+    RecursoNoEncontradoAPI,
+    SolicitudInvalidaAPI,
+    TransicionInvalidaAPI,
+)
 from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
@@ -32,26 +39,26 @@ from .serializers import (
 )
 
 
-class InvalidChecklistStateAPI(APIException):
-    """HTTP 400 para estado de checklist inválido."""
+class InvalidChecklistStateAPI(ErrorDominioAPI):
+    """HTTP 400 para estado de checklist inválido (cuerpo con `code`, E1-04)."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "invalid_checklist_state"
 
 
-class ExpedienteNotInVerificationAPI(APIException):
-    """HTTP 400 para expediente no en verificación."""
+class ExpedienteNotInVerificationAPI(ErrorDominioAPI):
+    """HTTP 400 para expediente no en verificación (cuerpo con `code`, E1-04)."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "expediente_not_in_verification"
 
 
-class VerificationAlreadyDoneAPI(APIException):
-    """HTTP 400 para verificación ya realizada."""
+class VerificationAlreadyDoneAPI(ErrorDominioAPI):
+    """HTTP 400 para verificación ya realizada (cuerpo con `code`, E1-04)."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "verification_already_done"
 
 
-class ObservacionRequiredAPI(APIException):
-    """HTTP 400 para motivo de observación requerido."""
+class ObservacionRequiredAPI(ErrorDominioAPI):
+    """HTTP 400 para motivo de observación requerido (cuerpo con `code`, E1-04)."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "observacion_required"
 
@@ -110,7 +117,7 @@ class ChecklistViewSet(
                 motivo_observacion=motivo_observacion,
             )
         except evaluar_checklist.ChecklistVerificationNotFoundError as error:
-            raise APIException(str(error))
+            raise RecursoNoEncontradoAPI(str(error), code="checklist_no_encontrado")
         except evaluar_checklist.InvalidVerificationStateError as error:
             raise InvalidChecklistStateAPI(str(error))
         except evaluar_checklist.ExpedienteNotInVerificationError as error:
@@ -120,6 +127,8 @@ class ChecklistViewSet(
         except evaluar_checklist.UserNotAuthorizedError as error:
             from rest_framework.exceptions import PermissionDenied
             raise PermissionDenied(str(error))
+        except TransicionNoPermitidaError as error:
+            raise TransicionInvalidaAPI(str(error))
 
         serializer_out = ChecklistVerificationSerializer(
             checklist_actualizada,
@@ -148,18 +157,32 @@ class ChecklistViewSet(
                 archivo=archivo,
                 nombre_original=nombre_original,
             )
+        except subsanar_requisito.ChecklistNoEncontradoError as error:
+            raise RecursoNoEncontradoAPI(str(error), code="checklist_no_encontrado")
         except subsanar_requisito.SubsanacionNoPermitidaError as error:
-            raise APIException(str(error))
+            raise SolicitudInvalidaAPI(str(error), code="subsanacion_no_permitida")
         except subsanar_requisito.PeticionNoEncontradaError as error:
-            raise APIException(str(error))
+            raise RecursoNoEncontradoAPI(str(error), code="peticion_no_encontrada")
         except subsanar_requisito.ObservacionNoEncontradaError as error:
-            raise APIException(str(error))
+            # D-3: ítem y petición OBSERVADO sin observación pendiente es una
+            # inconsistencia de datos, no un error del cliente.
+            raise InconsistenciaDatosAPI(
+                str(error),
+                code="inconsistencia_observacion",
+                contexto={
+                    "operacion": "subsanar_requisito",
+                    "checklist_verification_id": str(checklist_verif.id),
+                },
+            )
         except subsanar_requisito.UsuarioNoAutorizadoError as error:
             from rest_framework.exceptions import PermissionDenied
             raise PermissionDenied(str(error))
         except subsanar_requisito.ValidacionPDFError as error:
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError(str(error))
+            raise SolicitudInvalidaAPI(
+                str(error), code=getattr(error, "code", "pdf_validation_error")
+            )
+        except TransicionNoPermitidaError as error:
+            raise TransicionInvalidaAPI(str(error))
 
         serializer_out = SubsanacionResponseSerializer(
             documento,
