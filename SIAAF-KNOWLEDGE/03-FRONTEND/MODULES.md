@@ -23,7 +23,7 @@ Ruta base: `frontend/src/`. Estructura definida en `sgt-siaaf/specs/003-frontend
 | `features/dashboard/` | `StudentDashboardPage`, `ExpedientesCard`, `NotificacionesCard`, `AccesosRapidos`, `queries.ts` | bandeja, notificaciones | V-02 Hecha |
 | `features/solicitud/` | `NuevaSolicitudPage`, `NuevaSolicitudForm`, `queries.ts` | `POST /expedientes/` | V-03 Hecha (sin catálogo de carreras ni modalidad) |
 | `features/expediente/` | `ExpedientePage`, `ExpedienteHeader`, `ChecklistSection`, `PeticionesSection`, `ObservarDialog`, `DescargaButton`, `accionesPorRolEstado.ts`, `errors.ts`, `queries.ts` | detalle, enviar, checklist, observar, subsanar, descarga | V-04 Hecha |
-| `features/peticiones/` | `PeticionesPage`, `PeticionesTabla`, `SolicitarEmisionDialog`, `CargarDocumentoDialog`, `accionesPeticion`, `queries`; `SeguimientoPeticionPage` | `api/endpoints/peticiones.ts` | V-05 **implementada** (FE-T501–506); V-06 **stub** (FE-T601…T605) |
+| `features/peticiones/` | `PeticionesPage`, `PeticionesTabla`, `SolicitarEmisionDialog`, `CargarDocumentoDialog`, `accionesPeticion`, `queries`; `SeguimientoPeticionPage` | `api/endpoints/peticiones.ts` | V-05 **implementada** (FE-T501–506); V-06 **implementada** (FE-T601–605: `SeguimientoPeticionPage`, `seguimiento`; limitada por BE-02) |
 | `features/bandeja/` | `BandejaPage`, `DetalleFuncionarioPage` | — | **Stubs** (V-07/V-08, FE-T701…T810 pendientes) |
 | `features/no-habilitado/` | `NoHabilitadoPage` | — | V-09 Hecha |
 | `lib/` | `apiErrorPresentation.ts`, `dates.ts`, `download.ts`, `env.ts`, `files.ts`, `logger.ts`, `queryClient.ts`, `storage.ts` | — | Hecho |

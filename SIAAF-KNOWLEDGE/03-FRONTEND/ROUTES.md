@@ -20,7 +20,7 @@ last_verified: 2026-11-11
 | V-03 | `/estudiante/solicitud/nueva` | `features/solicitud/NuevaSolicitudPage.tsx` | `RequireRole ['ESTUDIANTE']` | Hecha (`carrera_id` UUID manual; sin catálogo BE-10; sin modalidad BE-06) |
 | V-04 | `/expedientes/:id` | `features/expediente/ExpedientePage.tsx` | `RequireAuth` | Hecha |
 | V-05 | `/expedientes/:id/peticiones` | `features/peticiones/PeticionesPage.tsx` | `RequireAuth` | **Implementada** (FE-T501–506, 2026-11-12) |
-| V-06 | `/expedientes/:id/peticiones/:peticionId` | `features/peticiones/SeguimientoPeticionPage.tsx` | `RequireAuth` | **Stub** (180 B) |
+| V-06 | `/expedientes/:id/peticiones/:peticionId` | `features/peticiones/SeguimientoPeticionPage.tsx` | `RequireAuth` | **Implementada** (FE-T601–605, 2026-11-12; limitada por BE-02) |
 | V-07 | `/bandeja` | `features/bandeja/BandejaPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Stub** (167 B) |
 | V-08 | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | `RequireRole OPERATIONAL_ROLES` | **Stub** (178 B) |
 | V-09 | `/no-habilitado` | `features/no-habilitado/NoHabilitadoPage.tsx` | `RequireAuth` | La página existe y es el destino del 403 en vista, pero **FE-T901…T904 figuran como "Pendiente"** en `tasks.md` (el plan maestro DP2 la da por ✅) |

@@ -1077,7 +1077,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** petición existente se muestra; inexistente → no encontrado.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `seguimiento.ts` (`buscarPeticion`) resuelve la petición entre las anidadas en `GET /expedientes/{id}/`; si no pertenece al expediente → «Petición no encontrada» con salidas. **BE-02 verificado:** no existe `GET /peticiones/{id}/` (`PeticionDocumentalViewSet` está en `views.py` pero no se registra en `config/urls.py`).
 
 ### FE-T602 — Resumen de la petición
 
@@ -1092,7 +1092,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** datos correctos y accesibles.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12) con desviación documentada: badge y descripción del estado **actual** real, requisito/código, dependencia y expediente; aviso «Historial no disponible» (BE-02). La API no devuelve fechas de la petición: solo se muestra la fecha de registro del expediente, rotulada «creada junto con el expediente» (las peticiones se crean con `bulk_create` en `crear_expediente`). Sin hitos inferidos (una petición puede pasar a CARGADO sin SOLICITADO); motivo de observación no disponible (BE-07).
 
 ### FE-T603 — Descarga vigente y por versión
 
@@ -1106,7 +1106,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** descarga correcta; sin versiones inventadas.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): descarga de la versión **vigente** con `DescargaButton` (`GET /peticiones/{id}/documento/`), solo si hay documento y el rol puede descargar. **Sin selector de versión:** no hay endpoint para listar versiones ni la descarga informa la versión (BE-02); no se inventan versiones. 404/403 con el mensaje real.
 
 ### FE-T604 — Estados de error y no encontrado
 
@@ -1120,7 +1120,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el usuario siempre tiene salida.
 - **Pruebas:** RTL + MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): carga, 404 de expediente, 403 (`ForbiddenState`), 500 y error de red con reintento real; enlaces «Volver a las peticiones» y «Volver al expediente».
 
 ### FE-T605 — Pruebas de V-06
 
@@ -1134,7 +1134,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `seguimiento.test.ts` y `SeguimientoPeticionPage.test.tsx` (16 pruebas: encontrada/no encontrada, axe, descarga vigente sin versión, 404 de descarga, roles, 403/404/500 y error de red). Suite 374/374; typecheck, lint y build en verde; 3 mutaciones detectadas.
 
 ---
 
@@ -1794,7 +1794,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 7. **V-03:** FE-T301 → FE-T306 — Hechas (2026-11-05: formulario, integración, errores/protección ante duplicados, borrador local, éxito/redirección y pruebas; V-04 confirmada como stub, sin ampliar su alcance).
 8. **V-04:** FE-T401 → FE-T411 — Hechas (2026-11-05: cabecera/timeline, detalle/peticiones, checklist con 403 real, enviar/observar/evaluar/subsanar, descarga, matriz de acciones, invalidación y pruebas; FE-T407 con limitación real severa documentada para ESTUDIANTE —sin `checklist_verification_id` descubrible—, sin modificar el backend; INC-21 documenta discrepancias de código HTTP en observar/evaluar/subsanar).
 9. **V-05:** FE-T501 → FE-T506 — Hechas (2026-11-12: lista, solicitar emisión, carga y descarga de PDF, aviso de creación automática y pruebas; 30 pruebas nuevas, 358/358 totales; responsable 7777-C, implementación centralizada DK-010; discrepancias RBAC/servicio en carga y solicitud registradas en `SIAAF-KNOWLEDGE/03-FRONTEND/PLAN_VISTAS_V05_V09.md` §2).
-10. **V-06:** FE-T601 → FE-T605.
+10. **V-06:** FE-T601 → FE-T605 — Hechas (2026-11-12: seguimiento desde el detalle del expediente, estado actual real, descarga vigente y errores; 16 pruebas nuevas, 374/374; responsable JuanCalopinoo, implementación centralizada DK-010). **BE-02 sigue sin autorizar**: sin detalle, historial ni versiones de la petición.
 11. **V-02:** FE-T201 → FE-T206 — Hechas (2026-11-05: dashboard del estudiante completo; FE-T203 con desviación de contrato documentada —notificaciones sin paginar en el backend real—; FE-T204 con alcance acotado a expedientes visitados, el registro al crear queda pendiente de V-03).
 12. **V-07:** FE-T701 → FE-T706.
 13. **V-08:** FE-T801 → FE-T810.
