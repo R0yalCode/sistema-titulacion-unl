@@ -94,7 +94,7 @@ Aprobado por el responsable (R0yalCode) el **2026-11-12**.
 - V-05 y V-06 comparten `features/peticiones/`. V-06 reutiliza `accionesPeticion.ts` (`presentarEstadoPeticion`, `tieneDocumento`) sin modificarlo, o lo amplía en un commit propio coordinado.
 - V-08a y V-08b no editan a la vez la misma sección.
 
-**Pendiente DK-010:** dejar constancia de que se informó a cada integrante de su asignación y de que su identidad figura como autor Git. Sigue sin evidencia en el repositorio.
+**Pendiente DK-010:** no hay constancia de que se informara a los integrantes. Ver [[DK010_REGISTRO_NOTIFICACIONES]], incidencia **INC-DK010-01**, abierta: los commits de V-05 de 7777-C se hicieron sin notificación previa registrada. Antes de cada nuevo bloque con autoría delegada, la notificación debe constar en ese registro.
 
 ## 6. Plan por módulo y criterios
 
