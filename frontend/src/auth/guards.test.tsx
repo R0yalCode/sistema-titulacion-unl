@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import { AuthContext, type AuthContextValue, type AuthUser } from './AuthContext'
@@ -71,6 +71,28 @@ describe('RequireRole', () => {
     expect(screen.queryByText('Contenido protegido')).not.toBeInTheDocument()
   })
 
+  it('envía a V-09 con el motivo explícito y sin la ruta solicitada (FE-T902)', () => {
+    let destino = ''
+    renderWithProviders(
+      <AuthContext.Provider value={authValue({ cedula: '1104567890', roles: ['ESTUDIANTE'] })}>
+        <Routes>
+          <Route
+            element={
+              <RequireRole roles={['DECANO']}>
+                <p>Contenido protegido</p>
+              </RequireRole>
+            }
+            path="/protegido"
+          />
+          <Route element={<UbicacionActual onUbicacion={(valor) => (destino = valor)} />} path="/no-habilitado" />
+        </Routes>
+      </AuthContext.Provider>,
+      { route: '/protegido' },
+    )
+
+    expect(destino).toBe('/no-habilitado?motivo=rol-no-autorizado')
+  })
+
   it('renderiza el contenido protegido si el rol coincide', () => {
     renderGuarded(
       '/protegido',
@@ -131,3 +153,9 @@ describe('RedirectIfAuthenticated', () => {
     expect(screen.getByText('Formulario de login')).toBeInTheDocument()
   })
 })
+
+function UbicacionActual({ onUbicacion }: { onUbicacion: (valor: string) => void }) {
+  const location = useLocation()
+  onUbicacion(`${location.pathname}${location.search}`)
+  return <p>No habilitado</p>
+}
