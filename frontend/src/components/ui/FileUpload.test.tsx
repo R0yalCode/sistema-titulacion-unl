@@ -42,6 +42,22 @@ describe('FileUpload', () => {
     expect(onFileSelected).not.toHaveBeenCalled()
   })
 
+  it('avisa con onInvalidFile cuando el archivo elegido no es válido', async () => {
+    const user = userEvent.setup()
+    const onFileSelected = vi.fn()
+    const onInvalidFile = vi.fn()
+    const { container } = render(
+      <FileUpload label="Documento" onFileSelected={onFileSelected} onInvalidFile={onInvalidFile} />,
+    )
+
+    const input = container.querySelector('input[type="file"]') as HTMLInputElement
+    await user.upload(input, makePdf('valido.pdf'))
+    await user.upload(input, new File(['texto'], 'otro.pdf', { type: 'application/pdf' }))
+
+    expect(onFileSelected).toHaveBeenCalledTimes(1)
+    expect(onInvalidFile).toHaveBeenCalledWith('El archivo no parece ser un PDF válido.')
+  })
+
   it('es operable por teclado a través del botón "Seleccionar archivo"', async () => {
     const user = userEvent.setup()
     render(<FileUpload label="Documento" onFileSelected={() => undefined} />)

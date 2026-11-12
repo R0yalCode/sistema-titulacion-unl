@@ -20,7 +20,7 @@ import type { ApiRequestError } from '@/api/errors'
 import { BANDEJA_ESTUDIANTE_QUERY_KEY } from '@/features/dashboard'
 import { puedeVerChecklist } from './accionesPorRolEstado'
 
-const EXPEDIENTE_DETALLE_QUERY_KEY = 'expediente-detalle'
+export const EXPEDIENTE_DETALLE_QUERY_KEY = 'expediente-detalle'
 const CHECKLIST_QUERY_KEY = 'checklist'
 
 export function useExpedienteDetalle(id: string) {
