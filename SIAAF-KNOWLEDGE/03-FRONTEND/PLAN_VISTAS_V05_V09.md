@@ -21,7 +21,7 @@ last_updated: 2026-11-12
 | V-04 Expediente y requisitos | `/expedientes/:id` | `features/expediente/ExpedientePage.tsx` | todos con ámbito | **Implementada** (FE-T401–411) | PNG 05 |
 | V-05 Gestión de peticiones | `/expedientes/:id/peticiones` | `features/peticiones/PeticionesPage.tsx` | ESTUDIANTE, SECRETARIA_CARRERA | **Stub → en implementación** (FE-T501–506) | PNG 05 (tabla y acciones), PNG 06 (modal; parcialmente conceptual) |
 | V-06 Seguimiento de petición | `/expedientes/:id/peticiones/:peticionId` | `features/peticiones/SeguimientoPeticionPage.tsx` | ESTUDIANTE y funcionarios | **Stub** (FE-T601–605) | PNG 07 (conceptual) |
-| V-07 Bandeja del funcionario | `/bandeja` | `features/bandeja/BandejaPage.tsx` | roles operativos | **Stub** (FE-T701–706) | PNG 08 |
+| V-07 Bandeja del funcionario | `/bandeja` | `features/bandeja/BandejaPage.tsx` | roles operativos | **Stub** (FE-T701–706) | **Implementada** (FE-T701–706, 2026-11-12) |
 | V-08 Detalle del funcionario | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | roles operativos | **Stub** (FE-T801–810) | PNG 09 (conceptual) |
 | V-09 No habilitado | `/no-habilitado` | `features/no-habilitado/NoHabilitadoPage.tsx` | todos | **Parcial**: 403 genérico con «Volver al inicio»; faltan motivo/dependencia `BE-xx`, volver atrás y contacto (FE-T901–904) | PNG 02, prototipo B `403.html` |
 | Estados 401/403/404/500/503 | — | `components/ui/*State`, `NotFoundPage` | todos | **Implementados** (F2.5) | prototipo B, doc 08 |
@@ -70,7 +70,7 @@ Los prototipos son **solo referencia visual y de tono**: no se copia su HTML/CSS
 | V-05 | `POST /peticiones/{id}/documento/` (multipart `archivo`, PDF ≤ 10 MB) | ESTUDIANTE propietario; SECRETARIA_CARRERA solo en peticiones de la Secretaría; estados PENDIENTE/SOLICITADO/OBSERVADO/CARGADO | — |
 | V-05/V-06 | `GET /peticiones/{id}/documento/` y `/{version}/` | ESTUDIANTE, SECRETARIA_CARRERA, SECRETARIO_ABOGADO, ANALISTA_APOYO, DIRECTOR_CARRERA, ADMINISTRADOR (sin DECANO) | — |
 | V-06 | Datos de la petición desde `GET /expedientes/{id}/`; descarga vigente `GET /peticiones/{id}/documento/` | por ámbito; descarga sin DECANO | **BE-02**, verificado el 2026-11-12: `PeticionDocumentalViewSet` existe en `views.py` pero **no está registrado** en `config/urls.py`, así que `GET /peticiones/{id}/` no es accesible. No hay listado de documentos ni de versiones, la descarga no informa la versión y la petición anidada no trae fechas. BE-07 (motivo) |
-| V-07 | `GET /expedientes/bandeja/` | roles operativos | BE-09 (roles sin expedientes, filtros en servidor) |
+| V-07 | `GET /expedientes/bandeja/` (`page`, `page_size` ≤ 50; orden por fecha límite) | roles operativos; estados por `MAPA_INTERVENCION_POR_ROL` | **BE-09**, verificado el 2026-11-12: SECRETARIA_CARRERA y DIRECTOR_CARRERA reciben siempre una lista vacía y no hay filtros ni búsqueda en el servidor. **BE-01/BE-05**: solo UUID, sin nombres. **BE-11** no afecta, porque la bandeja es solo de lectura (FE-T1213 sigue bloqueada) |
 | V-08 | `GET /expedientes/{id}/`, `GET /expedientes/{id}/checklist/`, `PUT /checklist/{id}/`, `POST /expedientes/{id}/observar/`, `POST /expedientes/{id}/iniciar-verificacion/`, `POST /informes/`, `POST /declaratorias/` | por rol (SECRETARIO_ABOGADO, ANALISTA_APOYO, DECANO) | BE-07; el perfil del estudiante no se anida |
 | V-09 | — (estado de interfaz) | todos | Recibe el motivo y la dependencia `BE-xx` |
 
@@ -122,6 +122,7 @@ Se actualiza al cerrar cada bloque.
 | Plan (esta nota) | R0yalCode | commit `docs(frontend)` de esta nota | — |
 | V-05 | 7777-C | ver `tasks.md` §10 | ver `tasks.md` §10 |
 | V-06 | JuanCalopinoo | ver `tasks.md` §11 | ver `tasks.md` §11 (limitada por BE-02) |
+| V-07 | Dan1el17 | ver `tasks.md` §12 | ver `tasks.md` §12 (limitada por BE-09) |
 
 ## Relacionado
 

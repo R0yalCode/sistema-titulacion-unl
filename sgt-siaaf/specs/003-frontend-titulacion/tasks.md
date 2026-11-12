@@ -1153,7 +1153,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** datos paginados correctos.
 - **Pruebas:** integración MSW.
 - **Evidencia:** pruebas.
-- **Estimación:** M. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** M. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `listBandejaOperativa()` (tipos reales de `BandejaExpedienteSerializer`; `page_size` ≤ 50) + `useBandejaOperativa`; paginación real; 403 → `ForbiddenState` con enlace a V-09; 401 por el manejador global; 500/red con reintento.
 
 ### FE-T702 — Tabla y tarjetas de bandeja
 
@@ -1167,7 +1167,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** sin overflow; accesible.
 - **Pruebas:** RTL + axe.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `BandejaTable` con número (enlace), estado, fecha límite, plazo, recepción, providencia, ids abreviados de estudiante/carrera/facultad y creación; tabla en escritorio y tarjetas en móvil (`Table`). **Desviación documentada:** la API solo da UUID, no nombres de estudiante/carrera/facultad (BE-01/BE-05).
 
 ### FE-T703 — Filtros de página
 
@@ -1181,7 +1181,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** el filtro no induce a error.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Should. **Estado:** Hecha (2026-11-12): `BandejaFilters` por estado y número, rotulados «solo actúan sobre la página actual (N de M)», sin búsqueda global ni peticiones al backend (BE-09: sin filtros en servidor).
 
 ### FE-T704 — Estados vacíos y vencimientos
 
@@ -1195,7 +1195,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** vacío claro; vencimientos correctos.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Should. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Should. **Estado:** Hecha (2026-11-12): vacío por rol (BE-09 para SECRETARIA_CARRERA/DIRECTOR_CARRERA, cuya bandeja el backend devuelve siempre vacía; «sin pendientes» para el resto) y plazos locales sobre `fecha_limite_atencion`: vencido, vence hoy o días calendario restantes. Sin umbral de «próximo a vencer» porque la spec no lo define; el backend cuenta días laborables.
 
 ### FE-T705 — Navegación a detalle
 
@@ -1209,7 +1209,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** navegación funciona con teclado.
 - **Pruebas:** RTL.
 - **Evidencia:** pruebas.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): enlace accesible por teclado a `/bandeja/:id` (V-08) con precarga de `GET /expedientes/{id}/` al enfocar o pasar el puntero.
 
 ### FE-T706 — Pruebas de V-07
 
@@ -1223,7 +1223,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Criterios de aceptación:** cobertura ≥ 80%.
 - **Pruebas:** `npm run test`.
 - **Evidencia:** reporte.
-- **Estimación:** S. **Prioridad:** Must. **Estado:** Pendiente.
+- **Estimación:** S. **Prioridad:** Must. **Estado:** Hecha (2026-11-12): `bandejaReglas.test.ts` y `BandejaPage.test.tsx` (20 pruebas: CA-V07-01…05, filtros locales, vencimientos, precarga, sin escritura, 403/500/red, axe). Ajuste de `router.test.tsx` y `LoginPage.test.tsx` al h1 real (antes buscaban el título del stub). Suite 394/394; 4 mutaciones detectadas.
 
 ---
 
@@ -1796,7 +1796,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 9. **V-05:** FE-T501 → FE-T506 — Hechas (2026-11-12: lista, solicitar emisión, carga y descarga de PDF, aviso de creación automática y pruebas; 30 pruebas nuevas, 358/358 totales; responsable 7777-C, implementación centralizada DK-010; discrepancias RBAC/servicio en carga y solicitud registradas en `SIAAF-KNOWLEDGE/03-FRONTEND/PLAN_VISTAS_V05_V09.md` §2).
 10. **V-06:** FE-T601 → FE-T605 — Hechas (2026-11-12: seguimiento desde el detalle del expediente, estado actual real, descarga vigente y errores; 16 pruebas nuevas, 374/374; responsable JuanCalopinoo, implementación centralizada DK-010). **BE-02 sigue sin autorizar**: sin detalle, historial ni versiones de la petición.
 11. **V-02:** FE-T201 → FE-T206 — Hechas (2026-11-05: dashboard del estudiante completo; FE-T203 con desviación de contrato documentada —notificaciones sin paginar en el backend real—; FE-T204 con alcance acotado a expedientes visitados, el registro al crear queda pendiente de V-03).
-12. **V-07:** FE-T701 → FE-T706.
+12. **V-07:** FE-T701 → FE-T706 — Hechas (2026-11-12: bandeja real paginada, filtros de página, vacíos por rol, plazos locales y navegación a V-08 con precarga; 20 pruebas nuevas; responsable Dan1el17, implementación centralizada DK-010). **BE-09** sigue sin autorizar.
 13. **V-08:** FE-T801 → FE-T810.
 14. **Transversal:** FE-T1001 → FE-T1010.
 15. **Calidad:** FE-T1101 → FE-T1105.
