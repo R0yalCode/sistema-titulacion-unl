@@ -4,6 +4,9 @@ Emite el informe legal de aptitud (Providencia N° 590) cuando el checklist est�
 Inmutabiliza el registro, cambia el expediente a INFORME_EMITIDO y notifica al Decano/a.
 """
 
+import logging
+import os
+
 from django.db import transaction
 from django.utils import timezone
 
@@ -12,6 +15,12 @@ from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.verificacion.services import validar_checklist_completo
 from apps.resoluciones.adapters.pdf_generator import PDFGeneratorAdapter
 from apps.notificaciones.adapters.models import NotificacionInterna
+from apps.expedientes.services.transiciones import (
+    TransicionNoPermitidaError,
+    transicion_permitida,
+)
+
+logger = logging.getLogger(__name__)
 
 
 class InformeYaExisteError(Exception):
@@ -24,6 +33,29 @@ class ExpedienteNoValidoParaInformeError(Exception):
 
 class UsuarioNoAutorizadoError(Exception):
     """El usuario no tiene permisos para emitir informes."""
+
+
+class ExpedienteNoEncontradoError(ValueError):
+    """El expediente no existe (E1-04: 404; subclase de ValueError por compat.)."""
+
+
+class ReglaPendienteO1Error(Exception):
+    """O-1 pendiente de decisión funcional (D-1).
+
+    `validar_checklist_completo` admite emitir el informe desde OBSERVADA,
+    pero `TRANSICIONES_PERMITIDAS` no define OBSERVADA -> INFORME_EMITIDO.
+    Hasta que el responsable decida, la operación se rechaza de forma
+    explícita (HTTP 409 `regla_pendiente_o1`) sin generar el PDF.
+    """
+
+
+def _eliminar_archivo_propio(ruta):
+    """Borra el PDF creado por esta operación si la transacción falló (D-6)."""
+    try:
+        if ruta and os.path.exists(ruta):
+            os.remove(ruta)
+    except OSError:
+        logger.warning("No se pudo eliminar el PDF huérfano %s", ruta, exc_info=True)
 
 
 def _generar_numero_providencia(expediente: ExpedienteTitulacion) -> str:
@@ -132,85 +164,112 @@ def execute(usuario, expediente_id, dictamen: str = "APTO", fundamentacion: str 
     if dictamen not in ("APTO", "NO APTO"):
         raise ValueError("El dictamen debe ser 'APTO' o 'NO APTO'.")
 
-    with transaction.atomic():
-        # Obtener expediente con bloqueo
-        try:
-            expediente = ExpedienteTitulacion.objects.select_for_update().get(pk=expediente_id)
-        except ExpedienteTitulacion.DoesNotExist:
-            raise ValueError("El expediente no existe.")
+    # D-6: si la operación falla después de crear el PDF, se borra solo ese
+    # archivo (la ruta devuelta por la creación exclusiva de esta llamada).
+    # Sin ATOMIC_REQUESTS, esta transacción es la más externa en HTTP.
+    archivo_creado = None
+    try:
+        with transaction.atomic():
+            # Obtener expediente con bloqueo
+            try:
+                expediente = ExpedienteTitulacion.objects.select_for_update().get(pk=expediente_id)
+            except ExpedienteTitulacion.DoesNotExist:
+                raise ExpedienteNoEncontradoError("El expediente no existe.")
 
-        # Verificar que no tenga informe ya emitido
-        if hasattr(expediente, "informe_aptitud"):
-            raise InformeYaExisteError(
-                f"El expediente {expediente.numero_expediente} ya tiene un informe emitido."
+            # Verificar que no tenga informe ya emitido
+            if hasattr(expediente, "informe_aptitud"):
+                raise InformeYaExisteError(
+                    f"El expediente {expediente.numero_expediente} ya tiene un informe emitido."
+                )
+
+            # Validar que el usuario pertenezca a la facultad del expediente
+            user_facultad = str(usuario.facultad_id) if usuario.facultad_id else None
+            expediente_facultad = str(expediente.facultad_id) if expediente.facultad_id else None
+            if user_facultad != expediente_facultad:
+                raise UsuarioNoAutorizadoError(
+                    "El usuario no pertenece a la facultad del expediente."
+                )
+
+            # Validar checklist completo (T029 / RN-003)
+            validar_checklist_completo.execute(expediente_id)
+
+            # Verificar que el dictamen sea APTO (si es NO APTO, no se debe emitir informe)
+            if dictamen == "NO APTO":
+                raise ExpedienteNoValidoParaInformeError(
+                    "No se puede emitir informe con dictamen NO APTO. "
+                    "El expediente debe ser observado o subsanado."
+                )
+
+            # D-1 / O-1: prevalidar la transición ANTES de cualquier efecto que la
+            # transacción no revierte (el PDF). Lee TRANSICIONES_PERMITIDAS sin
+            # modificarla; la validación definitiva sigue en registrar_transicion.
+            estado_destino = ExpedienteTitulacion.ESTADO_INFORME_EMITIDO
+            if not transicion_permitida(expediente.estado, estado_destino):
+                if expediente.estado == ExpedienteTitulacion.ESTADO_OBSERVADA:
+                    raise ReglaPendienteO1Error(
+                        "La emisión del informe desde OBSERVADA está pendiente de "
+                        "decisión funcional (O-1). Subsane las observaciones y "
+                        "vuelva a verificar el expediente."
+                    )
+                raise TransicionNoPermitidaError(
+                    f"Transición de estado no permitida: {expediente.estado} -> "
+                    f"{estado_destino}.",
+                    estado_anterior=expediente.estado,
+                    estado_nuevo=estado_destino,
+                )
+
+            # Generar número de providencia
+            numero_providencia = _generar_numero_providencia(expediente)
+
+            # Preparar datos para PDF
+            datos_expediente, checklist = _obtener_datos_expediente_para_pdf(expediente)
+            datos_secretario = {
+                "nombre_completo": usuario.get_full_name() or usuario.username,
+                "cargo": "SECRETARIO/A-ABOGADO/A - FEIRNNR",
+                "ci": usuario.cedula or "N/A",
+            }
+
+            # Generar PDF de la Providencia N° 590
+            pdf_generator = PDFGeneratorAdapter()
+            archivo_pdf = pdf_generator.generar_providencia_590(
+                expediente=datos_expediente,
+                secretario=datos_secretario,
+                checklist=checklist,
+                dictamen=dictamen,
+                numero_providencia=numero_providencia,
+                archivo_salida=None,  # Auto-generar
+                es_borrador=False,  # Informe final
+            )
+            archivo_creado = archivo_pdf
+
+            # Crear registro InformeAptitud (inmutable)
+            informe = InformeAptitud.objects.create(
+                expediente=expediente,
+                numero_providencia=numero_providencia,
+                emisor=usuario,
+                dictamen=dictamen,
+                archivo_informe_path=archivo_pdf,
             )
 
-        # Validar que el usuario pertenezca a la facultad del expediente
-        user_facultad = str(usuario.facultad_id) if usuario.facultad_id else None
-        expediente_facultad = str(expediente.facultad_id) if expediente.facultad_id else None
-        if user_facultad != expediente_facultad:
-            raise UsuarioNoAutorizadoError(
-                "El usuario no pertenece a la facultad del expediente."
+            # Actualizar expediente + historial + auditoría en una sola operación
+            # (DT-12). Corrige H-25: el estado anterior se lee antes del cambio.
+            from apps.expedientes.services.transiciones import registrar_transicion
+
+            expediente.numero_providencia = numero_providencia
+            registrar_transicion(
+                expediente,
+                ExpedienteTitulacion.ESTADO_INFORME_EMITIDO,
+                usuario,
+                origen="emitir_informe",
+                campos_adicionales=("numero_providencia",),
             )
 
-        # Validar checklist completo (T029 / RN-003)
-        validar_checklist_completo.execute(expediente_id)
+            # Notificar al Decano/a
+            decanos = _obtener_decanos_facultad(expediente.facultad_id)
+            if decanos.exists():
+                _crear_notificacion_decano(expediente, numero_providencia, decanos)
 
-        # Verificar que el dictamen sea APTO (si es NO APTO, no se debe emitir informe)
-        if dictamen == "NO APTO":
-            raise ExpedienteNoValidoParaInformeError(
-                "No se puede emitir informe con dictamen NO APTO. "
-                "El expediente debe ser observado o subsanado."
-            )
-
-        # Generar número de providencia
-        numero_providencia = _generar_numero_providencia(expediente)
-
-        # Preparar datos para PDF
-        datos_expediente, checklist = _obtener_datos_expediente_para_pdf(expediente)
-        datos_secretario = {
-            "nombre_completo": usuario.get_full_name() or usuario.username,
-            "cargo": "SECRETARIO/A-ABOGADO/A - FEIRNNR",
-            "ci": usuario.cedula or "N/A",
-        }
-
-        # Generar PDF de la Providencia N° 590
-        pdf_generator = PDFGeneratorAdapter()
-        archivo_pdf = pdf_generator.generar_providencia_590(
-            expediente=datos_expediente,
-            secretario=datos_secretario,
-            checklist=checklist,
-            dictamen=dictamen,
-            numero_providencia=numero_providencia,
-            archivo_salida=None,  # Auto-generar
-            es_borrador=False,  # Informe final
-        )
-
-        # Crear registro InformeAptitud (inmutable)
-        informe = InformeAptitud.objects.create(
-            expediente=expediente,
-            numero_providencia=numero_providencia,
-            emisor=usuario,
-            dictamen=dictamen,
-            archivo_informe_path=archivo_pdf,
-        )
-
-        # Actualizar expediente + historial + auditoría en una sola operación
-        # (DT-12). Corrige H-25: el estado anterior se lee antes del cambio.
-        from apps.expedientes.services.transiciones import registrar_transicion
-
-        expediente.numero_providencia = numero_providencia
-        registrar_transicion(
-            expediente,
-            ExpedienteTitulacion.ESTADO_INFORME_EMITIDO,
-            usuario,
-            origen="emitir_informe",
-            campos_adicionales=("numero_providencia",),
-        )
-
-        # Notificar al Decano/a
-        decanos = _obtener_decanos_facultad(expediente.facultad_id)
-        if decanos.exists():
-            _crear_notificacion_decano(expediente, numero_providencia, decanos)
-
-        return informe
+            return informe
+    except Exception:
+        _eliminar_archivo_propio(archivo_creado)
+        raise

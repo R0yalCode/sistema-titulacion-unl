@@ -8,12 +8,43 @@ Usa ReportLab para maquetado programático sin dependencias externas pesadas.
 """
 
 import os
+import uuid
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from django.conf import settings
+
+
+def _reservar_ruta_exclusiva(ruta: str) -> str:
+    """Crea el archivo de forma exclusiva (`O_EXCL`) y devuelve su ruta.
+
+    Nunca sobrescribe un archivo existente (H-28): si el nombre ya existe,
+    usa un sufijo único. La ruta devuelta pertenece a la operación que la
+    reservó, que es la única autorizada a borrarla si falla (D-6).
+    """
+    base, extension = os.path.splitext(ruta)
+    candidata = ruta
+    for _ in range(10):
+        try:
+            descriptor = os.open(candidata, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o640)
+        except FileExistsError:
+            candidata = f"{base}_{uuid.uuid4().hex[:8]}{extension}"
+            continue
+        os.close(descriptor)
+        return candidata
+    raise FileExistsError(f"No se pudo reservar un nombre libre para {ruta}.")
+
+
+def _construir_o_liberar(doc, ruta: str, reservada: bool, **opciones) -> None:
+    """Construye el PDF; si falla, elimina el archivo reservado por esta llamada."""
+    try:
+        doc.build(**opciones)
+    except Exception:
+        if reservada and os.path.exists(ruta):
+            os.remove(ruta)
+        raise
 
 
 def _raiz_almacenamiento_privado() -> str:
@@ -439,11 +470,15 @@ class PDFGeneratorAdapter:
             anio = datetime.now().year
             numero_providencia = f"PROV-590-{anio}-{expediente.get('numero_expediente', '0000').split('-')[-1].zfill(4)}"
 
+        reservada = False
         if not archivo_salida:
             nombre_base = f"providencia_590_{numero_providencia.replace('/', '-').replace(' ', '_')}"
             if es_borrador:
                 nombre_base += "_BORRADOR"
-            archivo_salida = os.path.join(self.output_dir, f"{nombre_base}.pdf")
+            archivo_salida = _reservar_ruta_exclusiva(
+                os.path.join(self.output_dir, f"{nombre_base}.pdf")
+            )
+            reservada = True
 
         # Crear documento
         doc = SimpleDocTemplate(
@@ -594,11 +629,18 @@ class PDFGeneratorAdapter:
         # ===== PIE DE PÁGINA =====
         elements.extend(self._build_footer(numero_providencia, datetime.now(), styles))
 
-        # Construir PDF
+        # Construir PDF (si falla, se libera el archivo reservado)
         if es_borrador:
-            doc.build(elements, onFirstPage=self._build_marca_borrador, onLaterPages=self._build_marca_borrador)
+            _construir_o_liberar(
+                doc,
+                archivo_salida,
+                reservada,
+                flowables=elements,
+                onFirstPage=self._build_marca_borrador,
+                onLaterPages=self._build_marca_borrador,
+            )
         else:
-            doc.build(elements)
+            _construir_o_liberar(doc, archivo_salida, reservada, flowables=elements)
 
         return archivo_salida
 
@@ -632,11 +674,15 @@ class PDFGeneratorAdapter:
             anio = datetime.now().year
             numero_memorando = f"MEM-162-{anio}-{expediente.get('numero_expediente', '0000').split('-')[-1].zfill(4)}"
 
+        reservada = False
         if not archivo_salida:
             nombre_base = f"memorando_162_{numero_memorando.replace('/', '-').replace(' ', '_')}"
             if es_borrador:
                 nombre_base += "_BORRADOR"
-            archivo_salida = os.path.join(self.output_dir, f"{nombre_base}.pdf")
+            archivo_salida = _reservar_ruta_exclusiva(
+                os.path.join(self.output_dir, f"{nombre_base}.pdf")
+            )
+            reservada = True
 
         doc = SimpleDocTemplate(
             archivo_salida,
@@ -745,11 +791,18 @@ class PDFGeneratorAdapter:
         # ===== PIE DE PÁGINA =====
         elements.extend(self._build_footer(numero_memorando, datetime.now(), styles))
 
-        # Construir PDF
+        # Construir PDF (si falla, se libera el archivo reservado)
         if es_borrador:
-            doc.build(elements, onFirstPage=self._build_marca_borrador, onLaterPages=self._build_marca_borrador)
+            _construir_o_liberar(
+                doc,
+                archivo_salida,
+                reservada,
+                flowables=elements,
+                onFirstPage=self._build_marca_borrador,
+                onLaterPages=self._build_marca_borrador,
+            )
         else:
-            doc.build(elements)
+            _construir_o_liberar(doc, archivo_salida, reservada, flowables=elements)
 
         return archivo_salida
 
