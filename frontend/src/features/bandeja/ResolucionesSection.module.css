@@ -1,0 +1,30 @@
+.cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.accion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nota {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.dialogo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

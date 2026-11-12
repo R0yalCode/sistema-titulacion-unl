@@ -22,7 +22,7 @@ last_updated: 2026-11-12
 | V-05 Gestión de peticiones | `/expedientes/:id/peticiones` | `features/peticiones/PeticionesPage.tsx` | ESTUDIANTE, SECRETARIA_CARRERA | **Stub → en implementación** (FE-T501–506) | PNG 05 (tabla y acciones), PNG 06 (modal; parcialmente conceptual) |
 | V-06 Seguimiento de petición | `/expedientes/:id/peticiones/:peticionId` | `features/peticiones/SeguimientoPeticionPage.tsx` | ESTUDIANTE y funcionarios | **Stub** (FE-T601–605) | PNG 07 (conceptual) |
 | V-07 Bandeja del funcionario | `/bandeja` | `features/bandeja/BandejaPage.tsx` | roles operativos | **Stub** (FE-T701–706) | **Implementada** (FE-T701–706, 2026-11-12) |
-| V-08 Detalle del funcionario | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | roles operativos | **Stub** (FE-T801–810) | PNG 09 (conceptual) |
+| V-08 Detalle del funcionario | `/bandeja/:id` | `features/bandeja/DetalleFuncionarioPage.tsx` | roles operativos | **Stub** (FE-T801–810) | **Implementada** (V-08a FE-T801–803 y 806–809; V-08b FE-T804–805; 2026-11-12) |
 | V-09 No habilitado | `/no-habilitado` | `features/no-habilitado/NoHabilitadoPage.tsx` | todos | **Parcial**: 403 genérico con «Volver al inicio»; faltan motivo/dependencia `BE-xx`, volver atrás y contacto (FE-T901–904) | **Implementada** (FE-T901–904, 2026-11-12) |
 | Estados 401/403/404/500/503 | — | `components/ui/*State`, `NotFoundPage` | todos | **Implementados** (F2.5) | prototipo B, doc 08 |
 
@@ -71,7 +71,7 @@ Los prototipos son **solo referencia visual y de tono**: no se copia su HTML/CSS
 | V-05/V-06 | `GET /peticiones/{id}/documento/` y `/{version}/` | ESTUDIANTE, SECRETARIA_CARRERA, SECRETARIO_ABOGADO, ANALISTA_APOYO, DIRECTOR_CARRERA, ADMINISTRADOR (sin DECANO) | — |
 | V-06 | Datos de la petición desde `GET /expedientes/{id}/`; descarga vigente `GET /peticiones/{id}/documento/` | por ámbito; descarga sin DECANO | **BE-02**, verificado el 2026-11-12: `PeticionDocumentalViewSet` existe en `views.py` pero **no está registrado** en `config/urls.py`, así que `GET /peticiones/{id}/` no es accesible. No hay listado de documentos ni de versiones, la descarga no informa la versión y la petición anidada no trae fechas. BE-07 (motivo) |
 | V-07 | `GET /expedientes/bandeja/` (`page`, `page_size` ≤ 50; orden por fecha límite) | roles operativos; estados por `MAPA_INTERVENCION_POR_ROL` | **BE-09**, verificado el 2026-11-12: SECRETARIA_CARRERA y DIRECTOR_CARRERA reciben siempre una lista vacía y no hay filtros ni búsqueda en el servidor. **BE-01/BE-05**: solo UUID, sin nombres. **BE-11** no afecta, porque la bandeja es solo de lectura (FE-T1213 sigue bloqueada) |
-| V-08 | `GET /expedientes/{id}/`, `GET /expedientes/{id}/checklist/`, `PUT /checklist/{id}/`, `POST /expedientes/{id}/observar/`, `POST /expedientes/{id}/iniciar-verificacion/`, `POST /informes/`, `POST /declaratorias/` | por rol (SECRETARIO_ABOGADO, ANALISTA_APOYO, DECANO) | BE-07; el perfil del estudiante no se anida |
+| V-08 | `GET /expedientes/{id}/`, `GET /expedientes/{id}/checklist/`, `PUT /checklist/{id}/`, `POST /expedientes/{id}/observar/`, `POST /expedientes/{id}/iniciar-verificacion/`, `POST /informes/`, `POST /declaratorias/` | por rol, verificado el 2026-11-12: iniciar y observar, SECRETARIO_ABOGADO; evaluar, SECRETARIO_ABOGADO, ANALISTA_APOYO y ADMINISTRADOR; informe, solo SECRETARIO_ABOGADO (el servicio rechaza a la analista) y solo APTO; declaratoria, DECANO | BE-07; el perfil del estudiante no se anida. **Dependencia nueva sin ID:** no hay GET de informes ni de declaratorias ni descarga de sus PDF. Discrepancias RBAC/servicio en informe (ANALISTA_APOYO) y declaratoria (ANALISTA_APOYO) |
 | V-09 | — (estado de interfaz; `?motivo=` y `&dependencia=BE-xx` en lista blanca) | todos | Muestra BE-01…BE-11 cuando se le indica; sin dependencia propia |
 
 ## 5. Reparto aprobado (DK-010, modalidad centralizada)
@@ -124,6 +124,8 @@ Se actualiza al cerrar cada bloque.
 | V-06 | JuanCalopinoo | ver `tasks.md` §11 | ver `tasks.md` §11 (limitada por BE-02) |
 | V-07 | Dan1el17 | ver `tasks.md` §12 | ver `tasks.md` §12 (limitada por BE-09) |
 | V-09 | Dan1el17 | ver `tasks.md` §14 | ver `tasks.md` §14 |
+| V-08a | JJOC3S | ver `tasks.md` §13 | ver `tasks.md` §13 |
+| V-08b | R0yalCode | ver `tasks.md` §13 | ver `tasks.md` §13 (sin GET de resoluciones) |
 
 ## Relacionado
 

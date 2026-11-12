@@ -21,7 +21,7 @@ import { BANDEJA_ESTUDIANTE_QUERY_KEY } from '@/features/dashboard'
 import { puedeVerChecklist } from './accionesPorRolEstado'
 
 export const EXPEDIENTE_DETALLE_QUERY_KEY = 'expediente-detalle'
-const CHECKLIST_QUERY_KEY = 'checklist'
+export const CHECKLIST_QUERY_KEY = 'checklist'
 
 export function useExpedienteDetalle(id: string) {
   return useQuery<ExpedienteDetalle, ApiRequestError>({

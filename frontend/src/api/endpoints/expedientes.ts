@@ -162,6 +162,17 @@ export function enviarExpediente(id: string): Promise<ExpedienteEnviado> {
   return request<ExpedienteEnviado>(`/api/v1/expedientes/${id}/enviar/`, { method: 'POST' })
 }
 
+/**
+ * `POST /api/v1/expedientes/{id}/iniciar-verificacion/` (E2-01, verificado
+ * 2026-11-12): solo SECRETARIO_ABOGADO de la facultad (RBAC
+ * `expedientes:iniciar_verificacion`); ENVIADA → EN_VERIFICACION y creación
+ * atómica del checklist. 200 con `ExpedienteDetalleSerializer`. Errores:
+ * 400 `transicion_invalida`, 403, 404 `expediente_no_encontrado`.
+ */
+export function iniciarVerificacion(id: string): Promise<ExpedienteDetalle> {
+  return request<ExpedienteDetalle>(`/api/v1/expedientes/${id}/iniciar-verificacion/`, { method: 'POST' })
+}
+
 export type ObservarExpedienteRequest = {
   motivo_observacion: string
   peticion_id?: string

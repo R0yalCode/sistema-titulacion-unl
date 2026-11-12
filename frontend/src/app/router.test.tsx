@@ -1,3 +1,4 @@
+import { fixtureExpedienteDetalle } from '@/mocks/fixtures'
 import { screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AuthContext, type AuthContextValue, type AuthUser } from '@/auth/AuthContext'
@@ -59,7 +60,9 @@ describe('AppRouter', () => {
   it('resuelve rutas con parámetros para un rol operativo (/bandeja/:id)', async () => {
     renderRouterAs({ cedula: '1104567890', roles: ['DECANO'] }, '/bandeja/abc-123')
 
-    expect(await screen.findByRole('heading', { name: 'Detalle del funcionario (V-08)' })).toBeInTheDocument()
+    // V-08 ya no es un stub: la ruta resuelve a la página real, que carga el expediente.
+    expect(await screen.findByRole('link', { name: 'Volver a la bandeja' })).toHaveAttribute('href', '/bandeja')
+    expect(await screen.findByText(fixtureExpedienteDetalle.numero_expediente)).toBeInTheDocument()
   })
 
   it('redirige / al inicio por rol cuando hay sesión (ESTUDIANTE)', async () => {

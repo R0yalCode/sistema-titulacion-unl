@@ -1,0 +1,22 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.volver {
+  color: var(--color-brand-red);
+  font-weight: 600;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sinAcciones {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
