@@ -15,7 +15,7 @@ from apps.peticiones.adapters.models import (
     PeticionDocumental,
 )
 from apps.expedientes.adapters.models import ExpedienteTitulacion
-from core.adapters.local_storage import guardar_archivo_privado
+from core.adapters.local_storage import compensacion_de_archivos
 from core.adapters.pdf_validation import (
     PDFValidationError,
     validar_pdf_completo,
@@ -77,7 +77,10 @@ def execute(
         UsuarioNoAutorizadoError: Si el usuario no tiene permisos.
         ValidacionPDFError: Si el archivo no pasa validaciones PDF.
     """
-    with transaction.atomic():
+    # I-3 (H-I3-01): la compensación envuelve la transacción; si cualquier
+    # paso posterior a la escritura (o el commit) falla, se borra el archivo
+    # creado por esta operación y la BD revierte. Nada más se borra.
+    with compensacion_de_archivos() as archivos, transaction.atomic():
         # Orden de bloqueo canónico (PLB-E1-04 + O-2, plan §4.2): primero el
         # expediente (bloqueo del agregado) y después la petición, cada uno
         # en su propia sentencia. Antes, `select_related(...).select_for_update()`
@@ -136,7 +139,7 @@ def execute(
             raise ValidacionPDFError(str(error), code=error.code)
 
         # Guardar archivo en almacenamiento privado
-        archivo_path = guardar_archivo_privado(
+        archivo_path = archivos.guardar(
             file=archivo,
             expediente_id=str(expediente.id),
             nombre_original=nombre_original,
