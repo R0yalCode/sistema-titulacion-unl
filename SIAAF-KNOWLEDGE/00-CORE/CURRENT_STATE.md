@@ -28,7 +28,7 @@ Frontend: 328/328 en la 3.ª ejecución; **1 de 3 ejecuciones falló (6 pruebas)
 
 ## Bloqueos y decisiones humanas pendientes
 
-1. ~~GAP-STATE-01~~ → **resuelta** por E2-01 (2026-11-11). O-2 → **resuelta** por PLB-E1-04 (2026-11-11). Pendientes: **O-1** (decisión funcional; hoy 409 `regla_pendiente_o1`), H-26 (DP-05b), DP-01b, notificación de cuatro integrantes (DK-010, I-1), archivos huérfanos en subsanar/carga (I-3), `contracts/openapi.yaml` divergente desde INC-01 (I-4).
+1. ~~GAP-STATE-01~~ → **resuelta** por E2-01 (2026-11-11). O-2 → **resuelta** por PLB-E1-04 (2026-11-11). Pendientes: **O-1** (decisión funcional; hoy 409 `regla_pendiente_o1`), H-26 (DP-05b), DP-01b, notificación de cuatro integrantes (DK-010, I-1), I-3 (archivos huérfanos) **corregido en `fix/i3-archivos-huerfanos`** (2026-11-12, pendiente de integración), `contracts/openapi.yaml` divergente desde INC-01 (I-4).
 2. RBAC de `RESPONSABLE_DEPENDENCIA` (emite 3 de los 5 requisitos) y `CANCELADA` sin operación.
 3. BE-01…BE-11 no autorizadas; FE-T1213 bloqueada (BE-11).
 4. Validación normativa de los Arts. 39, 40, 212, 216 y 233 para las modalidades.

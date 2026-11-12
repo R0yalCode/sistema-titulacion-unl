@@ -6,7 +6,7 @@ date: 2026-11-12
 
 # Informe I-3: archivos huérfanos en subsanación y carga de documentos
 
-> **Estado:** auditoría terminada; **sin cambios de código**. Las correcciones de §6 son propuestas pendientes de revisión y autorización. Origen: riesgo residual I-3 de PLB-E1-04 + O-2 ([PLAN_E1-04_O-2.md](../planificacion-backend/PLAN_E1-04_O-2.md) §10).
+> **Estado (2026-11-12): CORREGIDO en la rama `fix/i3-archivos-huerfanos`** (cinco commits, §10), pendiente de revisión e integración. La auditoría original (§1–§9) se conserva sin cambios. Origen: riesgo residual I-3 de PLB-E1-04 + O-2 ([PLAN_E1-04_O-2.md](../planificacion-backend/PLAN_E1-04_O-2.md) §10).
 
 ## 1. Alcance y archivos examinados
 
@@ -154,3 +154,33 @@ El *commit* fallido no es reproducible con SQLite (no hay restricciones diferida
 - **Conciliación y operaciones en curso:** borrar un archivo recién escrito cuya transacción aún no confirmó crearía el problema inverso; de ahí la antigüedad mínima y el modo lectura por defecto.
 - **H-I3-05 y H-I3-04** dependen de decisiones funcionales si se opta por rechazar en lugar de normalizar.
 - La reproducción usa inyección de fallos; los disparadores reales (caída de BD, disco lleno) no se provocaron.
+
+## 10. Resolución (2026-11-12)
+
+**Modalidad:** implementación centralizada por Claude Code (DK-010, enmienda 2026-11-11), autorizada por el responsable; autor Git = integrante responsable de la tarea (responsabilidad delegada); committer de todos: R0yalCode. Rama `fix/i3-archivos-huerfanos` desde `develop` = `3317231`; commit documental del informe `647c258`.
+
+| Tarea | Responsable (autor Git) | Commit | Hallazgos |
+|---|---|---|---|
+| T1 almacenamiento atómico, nombres acotados, compensación común | JJOC3S | `070ed29` | H-I3-03, H-I3-04, base de 01/02 |
+| T2 compensación en la carga | JuanCalopinoo | `082c886` | H-I3-01 |
+| T3 compensación en la subsanación | 7777-C | `9e004f0` | H-I3-02 |
+| T4 declaratoria con la compensación común | Dan1el17 | `86acce6` | H-I3-03 (declaratoria) |
+| T5 `reconciliar_archivos`, pruebas PostgreSQL y cierre | R0yalCode | el commit que incorpora esta sección | H-I3-06, H-I3-08 |
+
+**Rojo → verde (cada prueba se ejecutó primero contra la línea base):**
+
+| Escenario | Línea base | Rama |
+|---|---|---|
+| Escritura parcial (carga y declaratoria) | Fragmento de 20 B sin registro | Sin fragmento ni temporal |
+| Nombre multibyte de 420 B | `OSError [Errno 36]`, 500 | 201; nombre físico ≤ 180 B; `nombre_original` intacto; descarga con SHA-256 correcto |
+| Carga: fallo en `create` / `peticion.save` | Archivo huérfano | Sin huérfano; BD revertida |
+| Subsanación: fallo en documento / transición (400) / notificación | Archivo huérfano | Sin huérfano; versión 1 intacta (SHA-256); observación pendiente |
+| **Fallo real de *commit* (PostgreSQL 16.15)**, carga y subsanación | Archivo huérfano | Sin huérfano; BD sin cambios |
+
+**H-I3-05:** fuera de alcance; una prueba fija que dos cargas iguales siguen creando las versiones 1 y 2.
+
+**`reconciliar_archivos`** (`apps/peticiones/adapters/management/commands/`): solo lectura por defecto; clasifica referenciados (rutas relativas de documentos y memorandos, absolutas de informes), huérfanos, temporales, borradores no referenciados, recientes (`--antiguedad-minima-horas`, 24 por defecto) y enlaces; borra solo huérfanos y temporales antiguos con `--eliminar --confirmar`, sin salir de la raíz ni seguir enlaces, registrando cada borrado. Demostración en PostgreSQL real: tras una carga correcta y otra fallida, solo quedó el huérfano antiguo simulado; el comando lo listó, rechazó `--eliminar` sin `--confirmar`, lo borró con confirmación y dejó intacto el referenciado (SHA-256).
+
+**Regresión final:** `pytest` (SQLite) 625 aprobadas, 13 fallidas (las mismas de `pypdf`; 30/30 con `pdftotext`); `src/core` 103/103; `tests/` 24 + 12 omitidas; PostgreSQL: integración 12/12 (C1–C8, infraestructura y los 2 de *commit*), `tests/` 36/36, `src/apps` con los mismos 21 fallos conocidos (13 `pypdf` + 8 H-30); `spectacular --validate` sin errores y `openapi.yaml` sin diferencias; sin cambios en `permissions.py`, `transiciones.py` ni migraciones.
+
+**Riesgos residuales:** H-I3-07 (registro sin archivo por caída sin volcado o borrado externo; lo detecta la descarga); terminación abrupta del proceso entre escritura y *commit* (H-I3-06: la cubre la conciliación periódica); servicio invocado dentro de otra transacción que revierte después (lo detecta la conciliación); H-I3-05 (decisión funcional pendiente).
