@@ -32,6 +32,10 @@ class SubsanacionNoPermitidaError(Exception):
     """El requisito no está en estado OBSERVADO o no tiene observación pendiente."""
 
 
+class ChecklistNoEncontradoError(SubsanacionNoPermitidaError):
+    """La verificación de checklist no existe (E1-04: 404 en lugar de 500)."""
+
+
 class PeticionNoEncontradaError(Exception):
     """La petición no existe o no pertenece al expediente."""
 
@@ -122,15 +126,35 @@ def execute(usuario, checklist_verification_id, archivo, nombre_original):
         raise ValidacionPDFError("No se proporcionó archivo.", code="no_file")
 
     with transaction.atomic():
-        # Bloquear la verificación de checklist
+        # Orden de bloqueo canónico (PLB-E1-04 + O-2, plan §4.2; H-29):
+        # expediente -> petición -> checklist. Antes: checklist -> petición
+        # -> expediente (inverso a registrar_observacion) y validación del
+        # estado del expediente sobre una lectura sin bloqueo.
+        ids = (
+            ChecklistVerification.objects.filter(pk=checklist_verification_id)
+            .values_list("expediente_id", "requisito_id")
+            .first()
+        )
+        if ids is None:
+            raise ChecklistNoEncontradoError("La verificación de checklist no existe.")
+        expediente_id, requisito_id = ids
+        expediente = ExpedienteTitulacion.objects.select_for_update().get(
+            pk=expediente_id
+        )
+        peticion_bloqueada = (
+            PeticionDocumental.objects.select_for_update(of=("self",))
+            .filter(expediente_id=expediente_id, requisito_id=requisito_id)
+            .first()
+        )
         try:
-            checklist_verif = ChecklistVerification.objects.select_for_update().get(
-                pk=checklist_verification_id
+            checklist_verif = (
+                ChecklistVerification.objects.select_for_update(of=("self",))
+                .select_related("requisito")
+                .get(pk=checklist_verification_id, expediente_id=expediente_id)
             )
         except ChecklistVerification.DoesNotExist:
-            raise SubsanacionNoPermitidaError("La verificación de checklist no existe.")
-
-        expediente = checklist_verif.expediente
+            raise ChecklistNoEncontradoError("La verificación de checklist no existe.")
+        checklist_verif.expediente = expediente
         requisito = checklist_verif.requisito
 
         # Verificar estado del expediente (debe estar OBSERVADA)
@@ -158,12 +182,9 @@ def execute(usuario, checklist_verification_id, archivo, nombre_original):
                 "de la misma carrera pueden subsanar."
             )
 
-        # Obtener la petición asociada
-        try:
-            peticion = PeticionDocumental.objects.select_for_update().get(
-                expediente=expediente, requisito=checklist_verif.requisito
-            )
-        except PeticionDocumental.DoesNotExist:
+        # Petición asociada (ya bloqueada arriba, en orden canónico)
+        peticion = peticion_bloqueada
+        if peticion is None:
             raise PeticionNoEncontradaError("La petición no existe o no pertenece al expediente.")
 
         # Verificar que la petición esté en OBSERVADO

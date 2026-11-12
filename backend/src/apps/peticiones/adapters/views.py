@@ -29,6 +29,11 @@ from core.adapters.local_storage import (
     obtener_ruta_absoluta,
 )
 from core.adapters.throttling import MutantOperationThrottle
+from core.adapters.api_errors import (
+    ConfiguracionInconsistenteAPI,
+    ErrorDominioAPI,
+    RecursoNoEncontradoAPI,
+)
 from core.adapters.scope_filter import ScopeFilterMixin
 
 from .serializers import (
@@ -44,15 +49,15 @@ from .serializers import (
 logger = logging.getLogger(__name__)
 
 
-class EstadoPeticionInvalidoAPI(APIException):
-    """HTTP 400 para peticion en estado no valido."""
+class EstadoPeticionInvalidoAPI(ErrorDominioAPI):
+    """HTTP 400 para peticion en estado no valido (cuerpo con `code`, E1-04)."""
 
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "estado_peticion_invalido"
 
 
-class ExpedienteEstadoInvalidoAPI(APIException):
-    """HTTP 400 para expediente en estado no valido."""
+class ExpedienteEstadoInvalidoAPI(ErrorDominioAPI):
+    """HTTP 400 para expediente en estado no valido (cuerpo con `code`, E1-04)."""
 
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "expediente_estado_invalido"
@@ -76,8 +81,8 @@ class DocumentoIntegridadAPI(APIException):
     default_code = "documento_integridad_comprometida"
 
 
-class ValidacionPDF_API(APIException):
-    """HTTP 400 para errores de validación PDF."""
+class ValidacionPDF_API(ErrorDominioAPI):
+    """HTTP 400 para errores de validación PDF (cuerpo con `code`, E1-04)."""
 
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "pdf_validation_error"
@@ -106,11 +111,30 @@ class PeticionViewSet(
     # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema).
     openapi_respuestas_extra = {
         "descargar_documento": {
+            # INC-01 sin cambios: cuerpo {"detail"} (ErrorSimple).
+            "500": {
+                "descripcion": (
+                    "documento_integridad_comprometida: el SHA-256 del archivo "
+                    "almacenado no coincide con el registrado en la carga "
+                    "(VULN-003); el archivo no se entrega."
+                ),
+                "esquema": "simple",
+            },
+        },
+        "solicitar_emision": {
+            "400": "estado_peticion_invalido o expediente_estado_invalido.",
+            "404": "peticion_no_encontrada.",
             "500": (
-                "documento_integridad_comprometida: el SHA-256 del archivo "
-                "almacenado no coincide con el registrado en la carga "
-                "(VULN-003); el archivo no se entrega."
+                "emisor_no_configurado: no hay usuario con el rol emisor "
+                "(configuración institucional, D-4)."
             ),
+        },
+        "cargar_documento": {
+            "400": (
+                "expediente_estado_invalido, pdf_validation_error o errores de "
+                "validación de campos."
+            ),
+            "404": "peticion_no_encontrada.",
         },
     }
     parser_classes = [MultiPartParser, FormParser, JSONParser]
@@ -196,13 +220,25 @@ class PeticionViewSet(
                 peticion_id=peticion.id,
             )
         except solicitar_emision.PeticionNoEncontradaError as error:
-            raise APIException(str(error))
+            raise RecursoNoEncontradoAPI(str(error), code="peticion_no_encontrada")
         except solicitar_emision.ExpedienteEstadoInvalidoError as error:
             raise ExpedienteEstadoInvalidoAPI(str(error))
         except solicitar_emision.EstadoPeticionInvalidoError as error:
             raise EstadoPeticionInvalidoAPI(str(error))
         except solicitar_emision.UsuarioNoAutorizadoError as error:
             raise UsuarioNoAutorizadoAPI(str(error))
+        except solicitar_emision.UsuarioEmisorNoEncontradoError as error:
+            # D-4: configuración institucional incompleta (antes, excepción
+            # sin capturar -> 500 genérico). H-27 queda fuera de E1-04.
+            raise ConfiguracionInconsistenteAPI(
+                str(error),
+                code="emisor_no_configurado",
+                contexto={
+                    "operacion": "solicitar_emision",
+                    "peticion_id": str(peticion.id),
+                    "dependencia_emisora": peticion.dependencia_emisora,
+                },
+            )
 
         serializer_out = SolicitarEmisionResponseSerializer(
             peticion_actualizada,
@@ -232,7 +268,7 @@ class PeticionViewSet(
                 nombre_original=nombre_original,
             )
         except cargar_documento.PeticionNoEncontradaError as error:
-            raise APIException(str(error))
+            raise RecursoNoEncontradoAPI(str(error), code="peticion_no_encontrada")
         except cargar_documento.EstadoPeticionInvalidoError as error:
             raise ExpedienteEstadoInvalidoAPI(str(error))
         except cargar_documento.UsuarioNoAutorizadoError as error:

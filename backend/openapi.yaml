@@ -90,6 +90,23 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: expediente_not_in_verification, verification_already_done,
+            invalid_checklist_state o transicion_invalida; sin efectos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: checklist_no_encontrado.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
   /api/v1/checklist/{id}/subsanar/:
     post:
       operationId: checklist_subsanar_create
@@ -141,6 +158,30 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: subsanacion_no_permitida, transicion_invalida o un código de
+            validación del PDF; sin efectos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: checklist_no_encontrado o peticion_no_encontrada.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
+        '500':
+          description: 'inconsistencia_observacion: ítem y petición OBSERVADO sin
+            observación pendiente (D-3).'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
   /api/v1/declaratorias/:
     post:
       operationId: declaratorias_create
@@ -187,6 +228,23 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: declaratoria_ya_emitida, expediente_invalido_para_declaratoria,
+            pdf_invalido o transicion_invalida; o validación de campos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: expediente_no_encontrado.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
   /api/v1/expedientes/:
     post:
       operationId: expedientes_create
@@ -227,6 +285,21 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: expediente_activo_existente, o errores de validación de campos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '500':
+          description: 'configuracion_catalogo_incompleta: el catálogo base del Art.
+            235 no tiene los 5 requisitos vigentes (D-2).'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
   /api/v1/expedientes/{expediente_id}/checklist/:
     get:
       operationId: expedientes_checklist_list
@@ -323,6 +396,29 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: estado_invalido (no está en BORRADOR) o transicion_invalida;
+            sin efectos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: Expediente inexistente o ajeno.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
+        '422':
+          description: 'requisitos_incompletos: requisitos sin documento en firme.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
   /api/v1/expedientes/{id}/iniciar-verificacion/:
     post:
       operationId: expedientes_iniciar_verificacion_create
@@ -365,17 +461,15 @@ paths:
                 required:
                 - detail
         '400':
-          description: El expediente no esta en ENVIADA (p. ej. ya en verificacion,
-            incluida una segunda llamada concurrente); sin efectos.
+          description: 'transicion_invalida: el expediente no esta en ENVIADA (p.
+            ej. ya en verificacion, incluida una segunda llamada concurrente); sin
+            efectos.'
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                required:
-                - detail
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
         '403':
           description: Rol sin la celda expedientes:iniciar_verificacion (AUT-02).
           content:
@@ -388,16 +482,20 @@ paths:
                 required:
                 - detail
         '404':
-          description: Expediente inexistente o fuera de la facultad del usuario.
+          description: expediente_no_encontrado, o expediente fuera de la facultad
+            del usuario.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                required:
-                - detail
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
+        '500':
+          description: configuracion_catalogo_incompleta (D-2).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
   /api/v1/expedientes/{id}/observar/:
     post:
       operationId: expedientes_observar_create
@@ -449,6 +547,23 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: expediente_no_en_verificacion, observacion_ya_existe, peticion_ya_observada
+            o transicion_invalida; sin efectos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: peticion_no_encontrada o expediente_no_encontrado.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
   /api/v1/expedientes/bandeja/:
     get:
       operationId: expedientes_bandeja_list
@@ -526,6 +641,31 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: informe_ya_emitido, expediente_invalido_para_informe o transicion_invalida;
+            o validación (checklist incompleto con requisitos_pendientes, dictamen,
+            estado).
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: expediente_no_encontrado.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
+        '409':
+          description: 'regla_pendiente_o1: emisión desde OBSERVADA pendiente de decisión
+            funcional (O-1). No es BE-11: no usa ETag ni If-Match. Sin PDF ni cambios.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
   /api/v1/notificaciones/:
     get:
       operationId: notificaciones_list
@@ -664,6 +804,23 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: expediente_estado_invalido, pdf_validation_error o errores
+            de validación de campos.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: peticion_no_encontrada.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
   /api/v1/peticiones/{id}/documento/{version}/:
     get:
       operationId: peticiones_documento_retrieve_2
@@ -744,6 +901,29 @@ paths:
                     type: string
                 required:
                 - detail
+        '400':
+          description: estado_peticion_invalido o expediente_estado_invalido.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorValidacion'
+        '404':
+          description: peticion_no_encontrada.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ErrorDominio'
+                - $ref: '#/components/schemas/ErrorSimple'
+        '500':
+          description: 'emisor_no_configurado: no hay usuario con el rol emisor (configuración
+            institucional, D-4).'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
 components:
   schemas:
     BandejaExpediente:
@@ -1069,6 +1249,32 @@ components:
       - tamanio_bytes
       - tipo_mime
       - version
+    ErrorDominio:
+      type: object
+      description: Error de dominio (PLB-E1-04). `code` es estable y lo consume el
+        cliente; `detail` es un mensaje legible que puede cambiar.
+      properties:
+        detail:
+          type: string
+        code:
+          type: string
+      required:
+      - detail
+      - code
+    ErrorSimple:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    ErrorValidacion:
+      type: object
+      description: Errores de validación de campos de entrada.
+      additionalProperties:
+        type: array
+        items:
+          type: string
     EstadoEnum:
       enum:
       - BORRADOR

@@ -5,6 +5,8 @@ from apps.resoluciones.services.emitir_informe import (
     InformeYaExisteError,
     ExpedienteNoValidoParaInformeError,
     UsuarioNoAutorizadoError,
+    ExpedienteNoEncontradoError,
+    ReglaPendienteO1Error,
 )
 from apps.resoluciones.services.declarar_aptitud import (
     execute as declarar_aptitud,
@@ -12,6 +14,7 @@ from apps.resoluciones.services.declarar_aptitud import (
     ExpedienteNoValidoParaDeclaratoriaError,
     UsuarioNoAutorizadoError as UsuarioNoAutorizadoErrorDeclaratoria,
     PDFInvalidoError,
+    ExpedienteNoEncontradoError as ExpedienteNoEncontradoErrorDeclaratoria,
 )
 
 __all__ = [
@@ -24,4 +27,7 @@ __all__ = [
     "ExpedienteNoValidoParaDeclaratoriaError",
     "UsuarioNoAutorizadoErrorDeclaratoria",
     "PDFInvalidoError",
+    "ExpedienteNoEncontradoError",
+    "ExpedienteNoEncontradoErrorDeclaratoria",
+    "ReglaPendienteO1Error",
 ]

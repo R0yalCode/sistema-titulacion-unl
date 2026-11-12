@@ -6,7 +6,7 @@ Endpoints:
 """
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
-from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -25,36 +25,46 @@ from apps.resoluciones.services import (
     ExpedienteNoValidoParaDeclaratoriaError,
     UsuarioNoAutorizadoErrorDeclaratoria,
     PDFInvalidoError,
+    ExpedienteNoEncontradoError,
+    ExpedienteNoEncontradoErrorDeclaratoria,
+    ReglaPendienteO1Error,
+)
+from apps.expedientes.services.transiciones import TransicionNoPermitidaError
+from core.adapters.api_errors import (
+    ErrorDominioAPI,
+    RecursoNoEncontradoAPI,
+    ReglaPendienteAPI,
+    TransicionInvalidaAPI,
 )
 from core.adapters.throttling import MutantOperationThrottle
 from core.adapters.scope_filter import ScopeFilterMixin
 
 
-class InformeEmitidoAPI(APIException):
+class InformeEmitidoAPI(ErrorDominioAPI):
     """HTTP 400 para informe ya emitido."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "informe_ya_emitido"
 
 
-class ExpedienteInvalidoParaInformeAPI(APIException):
+class ExpedienteInvalidoParaInformeAPI(ErrorDominioAPI):
     """HTTP 400 para expediente no válido para informe."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "expediente_invalido_para_informe"
 
 
-class DeclaratoriaEmitidaAPI(APIException):
+class DeclaratoriaEmitidaAPI(ErrorDominioAPI):
     """HTTP 400 para declaratoria ya emitida."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "declaratoria_ya_emitida"
 
 
-class ExpedienteInvalidoParaDeclaratoriaAPI(APIException):
+class ExpedienteInvalidoParaDeclaratoriaAPI(ErrorDominioAPI):
     """HTTP 400 para expediente no válido para declaratoria."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "expediente_invalido_para_declaratoria"
 
 
-class PDFInvalidoDeclaratoriaAPI(APIException):
+class PDFInvalidoDeclaratoriaAPI(ErrorDominioAPI):
     """HTTP 400 para PDF inválido en declaratoria."""
     status_code = status.HTTP_400_BAD_REQUEST
     default_code = "pdf_invalido"
@@ -67,6 +77,22 @@ class InformeViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, HasRolePermission]
     throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "informes"
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema; PLB-E1-04).
+    openapi_respuestas_extra = {
+        "create": {
+            "400": (
+                "informe_ya_emitido, expediente_invalido_para_informe o "
+                "transicion_invalida; o validación (checklist incompleto con "
+                "requisitos_pendientes, dictamen, estado)."
+            ),
+            "404": "expediente_no_encontrado.",
+            "409": (
+                "regla_pendiente_o1: emisión desde OBSERVADA pendiente de decisión "
+                "funcional (O-1). No es BE-11: no usa ETag ni If-Match. Sin PDF "
+                "ni cambios."
+            ),
+        },
+    }
     queryset = InformeAptitud.objects.select_related("expediente", "emisor")
     serializer_class = InformeAptitudSerializer
 
@@ -131,6 +157,14 @@ class InformeViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
                 "detail": str(error),
                 "requisitos_pendientes": error.requisitos_pendientes,
             })
+        except ReglaPendienteO1Error as error:
+            # D-1: 409 explícito; no es BE-11 (sin ETag/If-Match). La decisión
+            # funcional sobre OBSERVADA -> INFORME_EMITIDO sigue pendiente.
+            raise ReglaPendienteAPI(str(error), code="regla_pendiente_o1")
+        except TransicionNoPermitidaError as error:
+            raise TransicionInvalidaAPI(str(error))
+        except ExpedienteNoEncontradoError as error:
+            raise RecursoNoEncontradoAPI(str(error), code="expediente_no_encontrado")
         except ValueError as error:
             raise ValidationError(str(error))
 
@@ -149,6 +183,16 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, HasRolePermission]
     throttle_classes = [MutantOperationThrottle]  # VULN-001 (INC-01-T01)
     rbac_resource = "declaratorias"
+    # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema; PLB-E1-04).
+    openapi_respuestas_extra = {
+        "create": {
+            "400": (
+                "declaratoria_ya_emitida, expediente_invalido_para_declaratoria, "
+                "pdf_invalido o transicion_invalida; o validación de campos."
+            ),
+            "404": "expediente_no_encontrado.",
+        },
+    }
     queryset = DeclaratoriaAptitud.objects.select_related("expediente", "decano")
     serializer_class = DeclaratoriaAptitudSerializer
     parser_classes = [MultiPartParser, FormParser]
@@ -212,6 +256,10 @@ class DeclaratoriaViewSet(ScopeFilterMixin, viewsets.GenericViewSet):
             raise PermissionDenied(str(error))
         except PDFInvalidoError as error:
             raise PDFInvalidoDeclaratoriaAPI(str(error))
+        except TransicionNoPermitidaError as error:
+            raise TransicionInvalidaAPI(str(error))
+        except ExpedienteNoEncontradoErrorDeclaratoria as error:
+            raise RecursoNoEncontradoAPI(str(error), code="expediente_no_encontrado")
         except ValueError as error:
             raise ValidationError(str(error))
 

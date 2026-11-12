@@ -18,6 +18,9 @@ exclude = ["migrations", "manage.py"]
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 pythonpath = ["src"]
 testpaths = ["src/apps"]
+markers = [
+  "postgres: requiere PostgreSQL real (config.settings.test_postgres); se omite con SQLite",
+]
 
 [tool.coverage.run]
 omit = [

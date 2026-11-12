@@ -4,6 +4,8 @@ Registra la declaratoria de aptitud legal (Memorando N° 162) firmado externamen
 Valida el PDF, asocia al expediente, cambia estado a DECLARADA_APTA y notifica con copia a autoridades y estudiante (DEC-04).
 """
 
+import logging
+
 from django.db import transaction
 from django.utils import timezone
 
@@ -11,7 +13,7 @@ from apps.resoluciones.adapters.models import DeclaratoriaAptitud, InformeAptitu
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.expedientes.services.transiciones import registrar_transicion
 from apps.notificaciones.adapters.models import NotificacionInterna
-from core.adapters.local_storage import guardar_archivo_privado
+from core.adapters.local_storage import PrivateMediaStorage, guardar_archivo_privado
 from core.adapters.pdf_validation import validar_pdf_completo, PDFValidationError
 
 
@@ -33,6 +35,31 @@ class PDFInvalidoError(Exception):
     def __init__(self, message: str, code: str = "invalid_pdf"):
         super().__init__(message)
         self.code = code
+
+
+class ExpedienteNoEncontradoError(ValueError):
+    """El expediente no existe (E1-04: 404; subclase de ValueError por compat.)."""
+
+
+logger = logging.getLogger(__name__)
+
+
+def _eliminar_memorando_propio(ruta_relativa):
+    """Borra el memorando guardado por esta operación si la transacción falló (D-6).
+
+    `guardar_archivo_privado` usa `storage.save()`, que nunca sobrescribe:
+    la ruta devuelta pertenece solo a esta operación.
+    """
+    if not ruta_relativa:
+        return
+    try:
+        PrivateMediaStorage().delete(ruta_relativa)
+    except OSError:
+        logger.warning(
+            "No se pudo eliminar el memorando huérfano %s",
+            ruta_relativa,
+            exc_info=True,
+        )
 
 
 def _generar_numero_memorando(expediente: 'ExpedienteTitulacion') -> str:
@@ -131,84 +158,92 @@ def execute(usuario, expediente_id, archivo_memorando, numero_memorando=None):
     if not archivo_memorando:
         raise PDFInvalidoError("No se proporcionó archivo del memorando.", code="no_file")
 
-    with transaction.atomic():
-        # Obtener expediente con bloqueo
-        try:
-            expediente = ExpedienteTitulacion.objects.select_for_update().get(pk=expediente_id)
-        except ExpedienteTitulacion.DoesNotExist:
-            raise ValueError("El expediente no existe.")
+    # D-6: si la operación falla después de guardar el memorando, se borra
+    # solo ese archivo. Sin ATOMIC_REQUESTS, esta transacción es la externa.
+    memorando_guardado = None
+    try:
+        with transaction.atomic():
+            # Obtener expediente con bloqueo
+            try:
+                expediente = ExpedienteTitulacion.objects.select_for_update().get(pk=expediente_id)
+            except ExpedienteTitulacion.DoesNotExist:
+                raise ExpedienteNoEncontradoError("El expediente no existe.")
 
-        # Verificar que el expediente esté en INFORME_EMITIDO
-        if expediente.estado != ExpedienteTitulacion.ESTADO_INFORME_EMITIDO:
-            raise ExpedienteNoValidoParaDeclaratoriaError(
-                f"El expediente debe estar en INFORME_EMITIDO. Estado actual: {expediente.estado}"
+            # Verificar que el expediente esté en INFORME_EMITIDO
+            if expediente.estado != ExpedienteTitulacion.ESTADO_INFORME_EMITIDO:
+                raise ExpedienteNoValidoParaDeclaratoriaError(
+                    f"El expediente debe estar en INFORME_EMITIDO. Estado actual: {expediente.estado}"
+                )
+
+            # Verificar que existe InformeAptitud (Providencia N° 590 emitida)
+            if not hasattr(expediente, "informe_aptitud"):
+                raise ExpedienteNoValidoParaDeclaratoriaError(
+                    "El expediente no tiene un Informe de Aptitud emitido (Providencia N° 590)."
+                )
+
+            # Verificar que no exista declaratoria previa
+            if hasattr(expediente, "declaratoria_aptitud"):
+                raise DeclaratoriaYaExisteError(
+                    f"El expediente {expediente.numero_expediente} ya tiene una declaratoria registrada."
+                )
+
+            # Verificar pertenencia a facultad
+            user_facultad = str(usuario.facultad_id) if usuario.facultad_id else None
+            expediente_facultad = str(expediente.facultad_id) if expediente.facultad_id else None
+            if user_facultad != expediente_facultad:
+                raise UsuarioNoAutorizadoError(
+                    "El usuario no pertenece a la facultad del expediente."
+                )
+
+            # Validar PDF del memorando firmado (FirmaEC)
+            try:
+                metadata = validar_pdf_completo(archivo_memorando)
+            except PDFValidationError as error:
+                raise PDFInvalidoError(str(error), code=error.code)
+
+            # Generar número de memorando si no se proporciona
+            if not numero_memorando:
+                numero_memorando = _generar_numero_memorando(expediente)
+
+            # Persistir físicamente el memorando firmado en el almacenamiento
+            # privado (P-09, ADR-005). Si el guardado falla, la transacción
+            # completa hace rollback: no queda un registro BD sin archivo.
+            nombre_almacenamiento = (
+                f"memorando_162_{numero_memorando.replace('/', '-').replace(' ', '_')}.pdf"
+            )
+            try:
+                archivo_path = guardar_archivo_privado(
+                    archivo_memorando,
+                    str(expediente.id),
+                    nombre_original=nombre_almacenamiento,
+                )
+            except OSError as error:
+                raise PDFInvalidoError(
+                    "No se pudo almacenar el memorando firmado en el almacenamiento privado.",
+                    code="storage_error",
+                ) from error
+            memorando_guardado = archivo_path
+
+            # Crear registro DeclaratoriaAptitud
+            declaratoria = DeclaratoriaAptitud.objects.create(
+                expediente=expediente,
+                numero_memorando=numero_memorando,
+                decano=usuario,
+                archivo_memorando_firmado_path=archivo_path,
             )
 
-        # Verificar que existe InformeAptitud (Providencia N° 590 emitida)
-        if not hasattr(expediente, "informe_aptitud"):
-            raise ExpedienteNoValidoParaDeclaratoriaError(
-                "El expediente no tiene un Informe de Aptitud emitido (Providencia N° 590)."
+            # Actualizar expediente + historial + auditoría (DT-12, fuente única)
+            registrar_transicion(
+                expediente,
+                ExpedienteTitulacion.ESTADO_DECLARADA_APTA,
+                usuario,
+                origen="declarar_aptitud",
             )
 
-        # Verificar que no exista declaratoria previa
-        if hasattr(expediente, "declaratoria_aptitud"):
-            raise DeclaratoriaYaExisteError(
-                f"El expediente {expediente.numero_expediente} ya tiene una declaratoria registrada."
-            )
+            # Notificar con copia a autoridades y estudiante (DEC-04)
+            _crear_notificaciones_copia(expediente, numero_memorando, usuario)
 
-        # Verificar pertenencia a facultad
-        user_facultad = str(usuario.facultad_id) if usuario.facultad_id else None
-        expediente_facultad = str(expediente.facultad_id) if expediente.facultad_id else None
-        if user_facultad != expediente_facultad:
-            raise UsuarioNoAutorizadoError(
-                "El usuario no pertenece a la facultad del expediente."
-            )
-
-        # Validar PDF del memorando firmado (FirmaEC)
-        try:
-            metadata = validar_pdf_completo(archivo_memorando)
-        except PDFValidationError as error:
-            raise PDFInvalidoError(str(error), code=error.code)
-
-        # Generar número de memorando si no se proporciona
-        if not numero_memorando:
-            numero_memorando = _generar_numero_memorando(expediente)
-
-        # Persistir físicamente el memorando firmado en el almacenamiento
-        # privado (P-09, ADR-005). Si el guardado falla, la transacción
-        # completa hace rollback: no queda un registro BD sin archivo.
-        nombre_almacenamiento = (
-            f"memorando_162_{numero_memorando.replace('/', '-').replace(' ', '_')}.pdf"
-        )
-        try:
-            archivo_path = guardar_archivo_privado(
-                archivo_memorando,
-                str(expediente.id),
-                nombre_original=nombre_almacenamiento,
-            )
-        except OSError as error:
-            raise PDFInvalidoError(
-                "No se pudo almacenar el memorando firmado en el almacenamiento privado.",
-                code="storage_error",
-            ) from error
-
-        # Crear registro DeclaratoriaAptitud
-        declaratoria = DeclaratoriaAptitud.objects.create(
-            expediente=expediente,
-            numero_memorando=numero_memorando,
-            decano=usuario,
-            archivo_memorando_firmado_path=archivo_path,
-        )
-
-        # Actualizar expediente + historial + auditoría (DT-12, fuente única)
-        registrar_transicion(
-            expediente,
-            ExpedienteTitulacion.ESTADO_DECLARADA_APTA,
-            usuario,
-            origen="declarar_aptitud",
-        )
-
-        # Notificar con copia a autoridades y estudiante (DEC-04)
-        _crear_notificaciones_copia(expediente, numero_memorando, usuario)
-
-        return declaratoria
+            return declaratoria
+    except Exception:
+        _eliminar_memorando_propio(memorando_guardado)
+        raise

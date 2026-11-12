@@ -146,20 +146,45 @@ def execute(usuario, checklist_verification_id, nuevo_estado, motivo_observacion
         )
     
     with transaction.atomic():
-        # Bloquear la fila de ChecklistVerification con select_for_update
+        # Orden de bloqueo canónico (PLB-E1-04 + O-2, plan §4.2; H-29):
+        # expediente -> petición -> checklist. Antes se bloqueaba primero el
+        # checklist y el expediente al final (en registrar_transicion), en
+        # orden inverso a `registrar_observacion`: interbloqueo 40P01
+        # reproducido en PostgreSQL. Además el estado del expediente se
+        # validaba sobre una lectura sin bloqueo (obsoleta).
+        ids = (
+            ChecklistVerification.objects.filter(pk=checklist_verification_id)
+            .values_list("expediente_id", "requisito_id")
+            .first()
+        )
+        if ids is None:
+            raise ChecklistVerificationNotFoundError(
+                "La verificación de checklist no existe."
+            )
+        expediente_id, requisito_id = ids
+        expediente = ExpedienteTitulacion.objects.select_for_update().get(
+            pk=expediente_id
+        )
+        peticion = (
+            PeticionDocumental.objects.select_for_update(of=("self",))
+            .filter(expediente_id=expediente_id, requisito_id=requisito_id)
+            .first()
+        )
         try:
-            checklist_verif = ChecklistVerification.objects.select_for_update().get(
-                pk=checklist_verification_id
+            checklist_verif = (
+                ChecklistVerification.objects.select_for_update(of=("self",))
+                .select_related("requisito")
+                .get(pk=checklist_verification_id, expediente_id=expediente_id)
             )
         except ChecklistVerification.DoesNotExist:
             raise ChecklistVerificationNotFoundError(
                 "La verificación de checklist no existe."
             )
-        
-        expediente = checklist_verif.expediente
+        # Las validaciones usan las filas recién bloqueadas, no copias previas.
+        checklist_verif.expediente = expediente
         requisito = checklist_verif.requisito
-        
-# Verificar que el expediente esté en estado EN_VERIFICACION
+
+        # Verificar que el expediente esté en estado EN_VERIFICACION
         if expediente.estado != ExpedienteTitulacion.ESTADO_EN_VERIFICACION:
             raise ExpedienteNotInVerificationError(
                 f"El expediente debe estar en estado EN_VERIFICACION. Estado actual: {expediente.estado}"
@@ -194,10 +219,8 @@ def execute(usuario, checklist_verification_id, nuevo_estado, motivo_observacion
                 f"El requisito ya fue evaluado con estado: {checklist_verif.estado_verificacion}"
             )
         
-        # Obtener la petición asociada
-        try:
-            peticion = expediente.peticiones_documentales.get(requisito=requisito)
-        except PeticionDocumental.DoesNotExist:
+        # Petición asociada (ya bloqueada arriba, en orden canónico)
+        if peticion is None:
             # Crear la petición si no existe (para casos de test con nuevos requisitos)
             peticion = PeticionDocumental.objects.create(
                 expediente=expediente,
