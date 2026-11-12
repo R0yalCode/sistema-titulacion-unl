@@ -37,7 +37,7 @@ Centralizar, digitalizar, controlar y auditar la fase administrativa de la titul
 
 ## Hitos (COSMOS)
 
-ANDROMEDA v0.2.0 (F0–F2.5 + V-01), ANDROMEDA v0.3.0 (V-04), ECLIPSE v0.4.0 (seguridad backend), ROSETTA (documentación maestra, sin versión) → [[COSMOS_VERSIONING]].
+ANDROMEDA v0.2.0 (`b6b953a`, F0–F2.5 + V-01), ANDROMEDA v0.3.0 (`f279090`, V-04), ECLIPSE v0.4.0 (`d020592`, seguridad backend), HELIOS v0.5.0 (`025de78`, integridad de archivos, errores de dominio y seguridad P0). Sin versión: ORION, el backend `edee296` y ROSETTA. Etiquetas pendientes de autorización (DK-011). Registro: `COSMOS_REGISTRO.json` → [[COSMOS_VERSIONING]].
 
 ## Ver también
 

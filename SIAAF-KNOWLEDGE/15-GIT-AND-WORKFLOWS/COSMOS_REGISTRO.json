@@ -1,0 +1,179 @@
+{
+  "esquema": 1,
+  "descripcion": "Registro oficial COSMOS (SemVer + hitos astronómicos) de SGT-SIAAF. Fuente única de verdad: scripts/cosmos/cosmos.py lo valida contra Git y genera las tablas de COSMOS_VERSIONING.md. Decisión DK-011.",
+  "rama_principal": "main",
+  "remoto": "origin",
+  "primera_version_estable": null,
+  "catalogo": [
+    "ORION",
+    "POLARIS",
+    "SATURN",
+    "SIRIUS",
+    "MERCURY",
+    "PULSAR",
+    "ROSETTA",
+    "ANDROMEDA",
+    "VEGA",
+    "QUASAR",
+    "EUROPA",
+    "ORBIT",
+    "NOVA",
+    "ECLIPSE",
+    "HELIOS",
+    "TRAPPIST",
+    "SUPERNOVA"
+  ],
+  "entregas_sin_version": [
+    {
+      "commit": "0e200d9cb490224eaea0870cf457581d4ed93db8",
+      "fecha": "2026-10-20",
+      "hito": "ORION",
+      "descripcion": "Estructura del proyecto y documentación Spec Kit (`chore(orion)`). Inicio del ciclo; sin versión registrada."
+    },
+    {
+      "commit": "edee296952758740e6231ca6fc4fec8310a459a0",
+      "fecha": "2026-11-02",
+      "hito": null,
+      "descripcion": "Backend Fase 1–2, T001–T046 (PR #11). Sin hito ni versión registrados."
+    },
+    {
+      "commit": "fe75d394618a4f0b05c088cc7794339f2dc744cb",
+      "fecha": "2026-11-11",
+      "hito": "ROSETTA",
+      "descripcion": "Documentación maestra DP2 (PR #21). Solo documentación: no genera versión (DK-005)."
+    }
+  ],
+  "versiones": [
+    {
+      "version": "v0.2.0",
+      "hito": "ANDROMEDA",
+      "commit": "b6b953aa313e858218eb71ac6163e4873395e066",
+      "fecha": "2026-11-05",
+      "titulo": "Base funcional del frontend: F0–F2.5 y V-01",
+      "descripcion": "Primera entrega versionada: base funcional del frontend (andamiaje, autenticación, UI Kit, estados de error y pantalla de login). El merge también incorporó documentación y prototipos de diseño.",
+      "retrospectiva": true,
+      "estado": "preparada",
+      "cambios": [
+        "F0: andamiaje, configuración y estructura del frontend.",
+        "F1: autenticación, gestión de sesión y cliente HTTP.",
+        "F2: UI Kit y componentes reutilizables.",
+        "F2.5: estados de error y recuperación.",
+        "V-01: pantalla de login."
+      ],
+      "validaciones": [
+        "226/226 pruebas superadas (reportado en 467ec3b).",
+        "ESLint, TypeScript y build sin errores (reportado en 467ec3b)."
+      ],
+      "pendientes": [
+        "FE-T1213 (InlineAlert 409/412/428) bloqueada por BE-11."
+      ],
+      "referencias": [
+        "Rama release/0.2.0-andromeda; commit 467ec3b `feat(frontend): integrar F0–F2.5 y V-01`.",
+        "Merge en main b6b953a."
+      ]
+    },
+    {
+      "version": "v0.3.0",
+      "hito": "ANDROMEDA",
+      "commit": "f2790908f256a932528b0036b3a07258776b4cfc",
+      "fecha": "2026-11-06",
+      "titulo": "Gestión de expedientes y requisitos",
+      "descripcion": "Vista V-04 (FE-T401–FE-T411): detalle de expedientes, checklist de requisitos, envío, observaciones, evaluación, subsanación y descargas, sobre los contratos reales del backend.",
+      "retrospectiva": true,
+      "estado": "preparada",
+      "excepcion_hito": "ANDROMEDA abarcó v0.2.0 y v0.3.0 antes de DK-011; reutilización histórica aceptada y no repetible.",
+      "cambios": [
+        "Consulta del detalle de expedientes.",
+        "Checklist de requisitos: envío, observaciones, evaluación y subsanación.",
+        "Descarga autenticada de documentos y versiones.",
+        "Matriz de acciones por rol y estado."
+      ],
+      "validaciones": [
+        "328/328 pruebas superadas; 51 nuevas (reportado en f279090).",
+        "Cobertura de features/expediente superior al 80 % en las cuatro métricas (reportado).",
+        "ESLint, TypeScript y build satisfactorios (reportado)."
+      ],
+      "pendientes": [
+        "INC-21 (P1): algunos errores de reglas de negocio responden HTTP 500.",
+        "FE-T407 (P1): el estudiante no puede descubrir el checklist_verification_id para subsanar.",
+        "Incidencia heredada P2 en queryClient.ts (status 0).",
+        "V-05 fuera de la entrega."
+      ],
+      "referencias": [
+        "Rama release/0.3.0-andromeda; PR #14.",
+        "afdd989 es un merge previo sin cambios; la entrega es f279090."
+      ]
+    },
+    {
+      "version": "v0.4.0",
+      "hito": "ECLIPSE",
+      "commit": "d02059255d87b1dfd6839da1bbf604c47c7923c2",
+      "fecha": "2026-11-10",
+      "titulo": "Implementación de seguridad del backend SGT-SIAAF",
+      "descripcion": "Controles de seguridad del backend: configuración de producción, throttling, JWT, validación y almacenamiento privado de PDF, RBAC con aislamiento de expedientes, máquina de estados, logging estructurado y restricción de la documentación de la API en producción.",
+      "retrospectiva": true,
+      "estado": "preparada",
+      "cambios": [
+        "HTTPS, HSTS, CSP, CORS, cookies y cabeceras de seguridad.",
+        "Throttling de autenticación y de carga de documentos.",
+        "JWT stateless con claves SECRET_KEY y JWT_SIGNING_KEY separadas.",
+        "Validación de PDF (magic bytes, SHA-256, 10 MB) y almacenamiento privado.",
+        "RBAC y aislamiento de expedientes con ScopeFilterMixin.",
+        "Máquina de estados, plazos y protección de campos críticos.",
+        "Logging JSON con filtros de datos sensibles y request_id."
+      ],
+      "validaciones": [
+        "497 pruebas aprobadas según la matriz de trazabilidad (reportado en 8e1e1a2)."
+      ],
+      "pendientes": [
+        "SEC-T014 bloqueada por DEC-009.",
+        "SEC-T015: verificación real de FirmaEC.",
+        "SEC-T016: migración a RS256.",
+        "VULN-001 a VULN-014 con coberturas diferenciadas.",
+        "SEC-T017 a SEC-T024 pendientes."
+      ],
+      "referencias": [
+        "Rama release/0.4.0-eclipse; commit 8e1e1a2; PR #16 (a develop) y PR #17 (a main).",
+        "4ac69d1 ('Merge branch release/0.4.0-eclipse into main') no incorporó cambios; la entrega llega a main en d020592."
+      ]
+    },
+    {
+      "version": "v0.5.0",
+      "hito": "HELIOS",
+      "commit": "025de7887dca9acacf296e629703381ba6734ce1",
+      "fecha": "2026-11-12",
+      "titulo": "Integridad de archivos privados, errores de dominio y endurecimiento de seguridad",
+      "descripcion": "Endurecimiento de seguridad P0 e inicio de la verificación, errores de dominio uniformes con bloqueo ordenado y corrección de archivos privados huérfanos con conciliación segura.",
+      "retrospectiva": false,
+      "estado": "preparada",
+      "cambios": [
+        "INC-01: throttling de operaciones mutantes, ámbito 'asignado' y verificación SHA-256 al servir PDF (d1fa86e).",
+        "E2-06: registrar_transicion() como único punto de cambio de estado (d1fa86e).",
+        "E2-01: POST /expedientes/{id}/iniciar-verificacion/ con checklist atómico (d1fa86e).",
+        "PLB-E1-04 + O-2: errores de dominio {detail, code} y bloqueo expediente → petición → checklist (3317231).",
+        "I-3: almacenamiento privado atómico, compensación de archivos y comando reconciliar_archivos (025de78).",
+        "Documentación incluida sin versión propia (DK-005): DP2/ROSETTA, bóveda SIAAF-KNOWLEDGE y política DK-010."
+      ],
+      "validaciones": [
+        "pytest SQLite sobre main 025de78: 637 aprobadas, 13 fallidas (test_pdf_generator.py, pypdf ausente; 30/30 con lector pdftotext).",
+        "PostgreSQL 16.15: tests/integration 13/13, tests/ 37/37, src/apps 629 aprobadas y 21 fallos conocidos (13 pypdf + 8 H-30).",
+        "manage.py spectacular --validate: 0 errores; esquema idéntico al de develop.",
+        "Auditoría independiente I-3: APROBADA CON OBSERVACIONES (docs/auditorias/AUDITORIA_INDEPENDIENTE_I3.md)."
+      ],
+      "pendientes": [
+        "D-07: reconciliar_archivos no informa de registros sin archivo (H-I3-07).",
+        "D-09: test_postgres_infra.py depende del orden de ejecución.",
+        "El bloqueo de reconciliar_archivos solo es efectivo en PostgreSQL.",
+        "DK-010: sin evidencia de la notificación a los integrantes de su atribución delegada.",
+        "pypdf no declarado en dependencias de desarrollo (E0-01).",
+        "H-30: 8 pruebas de índices fallan en PostgreSQL.",
+        "Decisión funcional O-1 (hoy 409) e I-4 (contracts/openapi.yaml difiere de openapi.yaml).",
+        "AUT-01, AUT-03 y VULN-005/006/010 registradas como abiertas en d1fa86e."
+      ],
+      "referencias": [
+        "Merges en main d1fa86e, 3317231 y 025de78.",
+        "Rama fix/i3-archivos-huerfanos (00d7802), integrada en develop con 063f07e."
+      ]
+    }
+  ]
+}
