@@ -127,6 +127,20 @@ Se actualiza al cerrar cada bloque.
 | V-08a | JJOC3S | ver `tasks.md` §13 | ver `tasks.md` §13 |
 | V-08b | R0yalCode | ver `tasks.md` §13 | ver `tasks.md` §13 (sin GET de resoluciones) |
 
+## 8. Tareas transversales
+
+| Tarea | Responsable | Estado | Evidencia |
+|---|---|---|---|
+| FE-T1001/FE-T1008: ningún 401 se pierde en la inicialización | R0yalCode | Integrada en `develop` (`ab2f560`) | [[REGRESSION_TESTS]] |
+| Endurecer `Modal` (UI Kit) | R0yalCode | Rama `fix/modal-foco-estable` (pendiente de revisión) | `Modal.test.tsx` (+8); el código anterior falla 3 |
+
+**`Modal`: causa raíz y alcance auditado (2026-11-12).**
+- **Causa raíz:** el efecto dependía de `[open, onClose]`. Los cuatro padres pasan `onClose` en línea (`ExpedientePage`, `PeticionesPage` ×2, `DetalleFuncionarioPage`), así que cualquier re-render del padre con el diálogo abierto reiniciaba el foco. V-08b lo hizo visible y se retiró su parche provisional.
+- **Corregido en el mismo cambio:** el retorno del foco a un elemento que ya no está en el documento.
+- **Se mantiene, por decisión:** el foco inicial va al botón «Cerrar», el primer elemento enfocable. Es aceptable según WAI-ARIA y las pruebas existentes lo fijan.
+
+**Tarea independiente propuesta, no implementada:** `ObservarDialog` (V-04) y `ResolucionesSection` (V-08b) conservan el texto escrito si se cierra y se vuelve a abrir el diálogo, porque el componente que guarda el estado sigue montado. `CargarDocumentoDialog` (V-05) se reinicia con `key`. Propuesta: reiniciar el estado al abrir, ya sea con `key` en el consumidor o con un reinicio explícito. Está fuera del alcance de `Modal`.
+
 ## Relacionado
 
 [[ROUTES]] · [[MODULES]] · [[COMPONENTS]] · [[GIT_POLICY]] · [[DECISIONS_LOG]]

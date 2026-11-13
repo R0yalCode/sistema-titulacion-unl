@@ -18,7 +18,7 @@ last_verified: 2026-11-11
 | `EmptyState`, `ErrorState`, `NotFoundState`, `ForbiddenState` | FE-T021 | `ErrorState` con reintento real; `ForbiddenState` → V-09 |
 | `Table` | FE-T022 | Responsive |
 | `Pagination` | FE-T023 | — |
-| `Modal` | FE-T024 | Focus trap |
+| `Modal` | FE-T024; endurecido el 2026-11-12 (rama `fix/modal-foco-estable`) | Trampa de foco, Escape, bloqueo de scroll y retorno del foco. El ciclo de apertura depende solo de `open`; `onClose` se lee de una referencia, así que un `onClose` en línea no reinicia el foco. El foco inicial va al primer elemento enfocable (el botón «Cerrar») |
 | `Timeline` | FE-T025 | Estados del expediente |
 | `FileUpload` | FE-T026 | Solo PDF |
 | `Button` | — | — |
