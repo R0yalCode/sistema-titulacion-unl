@@ -34,8 +34,7 @@ title: "Anexos — Referencias"
 
 ## Contrato de API
 
-- `backend/openapi.yaml` (canónico, generado con drf-spectacular)
-- `backend/contracts/openapi.yaml` (copia versionada)
+- `backend/openapi.yaml` (canónico y único, generado con drf-spectacular; la copia `backend/contracts/openapi.yaml` se retiró el 2026-11-12, DK-014)
 - Servido en vivo: `/api/v1/schema/`, `/api/v1/docs/`, `/api/v1/redoc/`
 
 ## Documentación de diseño UI

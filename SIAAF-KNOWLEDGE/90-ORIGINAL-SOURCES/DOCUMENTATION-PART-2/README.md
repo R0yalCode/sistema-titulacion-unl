@@ -7,7 +7,7 @@ last_verified: 2026-11-11
 
 # Documentacion-parte-2: copias íntegras
 
-Copias **byte a byte** (SHA-256 verificado el 2026-11-11) de `Documentacion-parte-2/*.md`. **No editar aquí**: el original canónico está en `Documentacion-parte-2/` (raíz del repo). Cada documento tiene su nota de análisis en `10-REFERENCES/DOCUMENTATION-PART-2/DP2-*`.
+Copias **byte a byte** (SHA-256 verificado el 2026-11-11) de `Documentacion-parte-2/*.md`. **Desde el 2026-11-12 esta carpeta es la ubicación canónica** (DK-014): `Documentacion-parte-2/` se eliminó de la raíz del repositorio tras comprobar que 11 archivos eran idénticos y el duodécimo solo difería en el espaciado de una tabla (la versión original sigue en el historial Git, p. ej. `5ef0dbd`). **No editar el contenido**, salvo corrección registrada. Cada documento tiene su nota de análisis en `10-REFERENCES/DOCUMENTATION-PART-2/DP2-*`.
 
 Catálogo, hashes y estados: [[SOURCE_CATALOG]].
 

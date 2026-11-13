@@ -43,12 +43,16 @@ Crea `09-SESSION-LOGS/AAAA/AAAA-MM-DD-tema.md` (plantilla: [[SESSION_TEMPLATE]])
 
 ## Integridad de fuentes copiadas
 
+Desde el 2026-11-12 (DK-014), `Documentacion-parte-2/` ya no existe en la raíz: la copia de `90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2/` es la canónica. Para comprobar que no ha derivado del original histórico:
+
 ```bash
-cd Documentacion-parte-2 && sha256sum *.md > /tmp/dp2.sha256
-cd ../SIAAF-KNOWLEDGE/90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2 && sha256sum -c /tmp/dp2.sha256
+for f in SIAAF-KNOWLEDGE/90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2/*.md; do
+  b=$(basename "$f"); [ "$b" = README.md ] && continue
+  git show "5ef0dbd:Documentacion-parte-2/$b" | cmp -s - "$f" || echo "difiere: $b"
+done
 ```
 
-Si un original cambia: vuelve a copiarlo, actualiza los hashes en [[SOURCE_CATALOG]] y revisa su nota `DP2-*`.
+Si un documento cambia: registra la corrección y su motivo en [[SOURCE_CATALOG]] y revisa su nota `DP2-*`.
 
 ## Enlaces
 

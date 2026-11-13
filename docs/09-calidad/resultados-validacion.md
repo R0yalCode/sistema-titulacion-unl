@@ -13,7 +13,7 @@ Resultados **reproducibles** obtenidos durante la auditoría. Comandos exactos e
 | Backend: cobertura | **93 %** |
 | Backend: migraciones (`makemigrations --check`) | Sin cambios pendientes |
 | Backend: OpenAPI regenerado vs `openapi.yaml` | **Idéntico** (0 errores, 2 advertencias de spectacular) |
-| Backend: `openapi.yaml` vs `contracts/openapi.yaml` | Idénticas (byte a byte) |
+| Backend: `openapi.yaml` vs `contracts/openapi.yaml` | Idénticas (byte a byte) en la fecha de esta validación. *La copia `contracts/` divergió desde INC-01 y se retiró el 2026-11-12 (DK-014).* |
 | Backend: flake8 | 854 hallazgos (estilo: E501 530, W292 44, W293 41, F811 ~39) |
 | Frontend: `npm run lint` | Sin errores |
 | Frontend: `npm run typecheck` | Sin errores |

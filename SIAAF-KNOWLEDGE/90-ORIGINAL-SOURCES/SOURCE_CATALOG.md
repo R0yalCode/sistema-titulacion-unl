@@ -3,7 +3,7 @@ system: SGT-SIAAF
 type: source-catalog
 status: verified
 source: repository-inspection
-last_verified: 2026-11-11
+last_verified: 2026-11-12
 ---
 
 # Catálogo de fuentes originales
@@ -12,7 +12,7 @@ Política: [[ADR-KB-001-fuentes-originales]]. **Incorporación**: *Incorporado* 
 
 ## 1. Documentacion-parte-2 (12 MD): incorporados
 
-Origen: `Documentacion-parte-2/` · Commit `bf74d4d` (ROSETTA, 2026-11-11) · Versión 1.0, fecha 2026-11-09 en todos · Copia: `90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2/` · Integridad: SHA-256 idéntico (EV-001).
+Origen: `Documentacion-parte-2/` (**eliminada de la raíz el 2026-11-12**, DK-014; la copia de la bóveda es ahora la canónica y el original sigue en el historial, `5ef0dbd`) · Commit `bf74d4d` (ROSETTA, 2026-11-11) · Versión 1.0, fecha 2026-11-09 en todos · Copia: `90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2/` · Integridad: SHA-256 idéntico (EV-001).
 
 | Archivo | Líneas | Tamaño | SHA-256 (16) | Tema / módulo | Nota derivada | Importancia | Estado |
 |---|---|---|---|---|---|---|---|
@@ -40,7 +40,7 @@ Otras copias idénticas fuera del repo: `~/Documentos/sgt-siaaf-backup-antes-de-
 | Constitución | `sgt-siaaf/.specify/memory/constitution.md`, `sgt-siaaf/specs/001-tramite-titulacion/constitucion.md` | MD | Gobierno del proyecto | Sí | [[SPECIFY]] |
 | Spec 001 (backend) | `sgt-siaaf/specs/001-tramite-titulacion/` | 5 MD + 2 ADR vacíos | Requisitos, RN, flujos | Sí | [[SPECIFY]], [[ARTICLES_AND_PROVISIONS]] |
 | Spec 003 (frontend) | `sgt-siaaf/specs/003-frontend-titulacion/` | 4 MD | Vistas, tareas, decisiones | Sí | [[TASKS]], [[BLOCKED_TASKS]] |
-| OpenAPI | `backend/openapi.yaml` (= `backend/contracts/openapi.yaml`) | YAML | Contrato | Sí | [[API_CONTRACTS]] |
+| OpenAPI | `backend/openapi.yaml` (único; `backend/contracts/openapi.yaml` retirado el 2026-11-12, DK-014) | YAML | Contrato | Sí | [[API_CONTRACTS]] |
 | ADR | `backend/docs/adr/`, `docs/adr/` | 4 + 2 MD | Decisiones | Sí | [[ADR_INDEX]] |
 | Docs Quarto | `docs/01-introduccion` … `docs/11-inteligencia-artificial`, `docs/index.qmd`, `docs/_quarto.yml` | ≈ 70 MD/QMD | Documentación técnica publicada | Sí | Varias |
 | Auditoría backend y seguridad | `docs/auditoria-backend/**` | 21 MD | Seguridad, refactorización | Sí | [[06-AUDITS/SECURITY/SECURITY_AUDIT|Auditoría de seguridad]], [[06-AUDITS/BACKEND/BACKEND_AUDITS|Auditorías backend]] |
@@ -48,14 +48,14 @@ Otras copias idénticas fuera del repo: `~/Documentos/sgt-siaaf-backup-antes-de-
 | KPI | `docs/indicadores/INFORME_DISENO_KPI.md` | MD | 40/47 KPIs | Sí | [[KPI_CATALOG]] |
 | Firma electrónica | `docs/02-arquitectura/funcionalidades-futuras/firma-electronica/` | 9 MD | Propuesta diferida | Sí | [[FIRMA_EC]] |
 | Sprint S1 | `docs/sprint-S1/` | 7 MD | Validación de hallazgos | Sí | [[06-AUDITS/BACKEND/BACKEND_AUDITS|Auditorías backend]] |
-| Auditoría general | `auditoria/01…08` | 8 MD | — | Sí | Ídem |
+| Auditoría general | `auditoria/01…08` | 8 MD | — | **Eliminada** el 2026-11-12 por decisión del responsable (DK-014); recuperable desde el historial Git (`5ef0dbd`) | Ídem |
 | Diseño UI | `diseno-ui/ui/titulacion-v2/especificaciones/01…08`, `GUIA_VISTAS_TITULACION.md` | 9 MD + 10 imágenes | Diseño | Sí | [[COMPONENTS]] |
-| Prototipos A/B | `SGT_SIAAF_Prototipo_HTML_CSS_JS/`, `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/` | HTML/CSS/JS/PNG | Referencia visual (no copiar código) | Sí | [[COMPONENTS]] |
+| Prototipos A/B | `prototipos/prototipo-general/`, `prototipos/vistas-errores-unl/` | HTML/CSS/JS/PNG | Referencia visual (no copiar código) | Sí | [[COMPONENTS]] |
 | Paquete DOCUMENTACION | `DOCUMENTACION/00_AUDITORIA` … `11_PUBLICACION_GITHUB_PAGES.md`, `CONTROL_MAESTRO_DOCUMENTACION.md` | 45 MD + diagramas | Documentación consolidada | **No** (local) | Varias |
-| Académico | `docs/academico/ACD_3_CLINICA_ARQUITECTURA_Y_CONTRATO_API.md` | MD 112 KB | Actividad académica | **No** (local) | — |
+| Académico | `docs/academico/ACD_3_CLINICA_ARQUITECTURA_Y_CONTRATO_API.md` | MD 112 KB | Actividad académica | **Eliminado** el 2026-11-12 por decisión del responsable (DK-014); nunca estuvo en Git | — |
 | Diagramas | `DOCUMENTACION/03_ARQUITECTURA/diagramas/{clases_dominio.puml,workspace.dsl}`, `DOCUMENTACION/02_PROCESOS/diagramas/proceso_principal.bpmn` | PUML/DSL/BPMN | Idénticos a `docs/10-auditoria-2026-11/assets/` | Mixto | [[GENERAL_ARCHITECTURE]] |
 | Instrucciones de agentes | `AGENTS.md`, `CLAUDE.md`, `.github/PULL_REQUEST_TEMPLATE.md` | MD | Flujo de trabajo | Sí | [[CLAUDE_CODE_OPENCODE_GUIDE]] |
-| README | `README.md`, `backend/README.md`, `frontend/README.md` | MD | Instalación | Sí | [[DOCKER]] |
+| README | `README.md`, `backend/README.md`, `frontend/README.md` (`backend/README.md` contenía el README de gitleaks hasta el 2026-11-12; sustituido por el README real del backend) | MD | Instalación | Sí | [[DOCKER]] |
 
 ## 3. Exclusiones
 
@@ -63,10 +63,10 @@ Otras copias idénticas fuera del repo: `~/Documentos/sgt-siaaf-backup-antes-de-
 |---|---|
 | `.env`, `frontend/.env.local` | Secretos / configuración local: **no se leyeron** |
 | `backend/src/media/private/**` (PDF de expedientes y resoluciones) | Datos de expedientes (posibles datos personales); ignorado por Git |
-| `gh-pages/`, `gh-pages.zip`, `docs/_site/`, `docs/.quarto/`, `Documentacion-parte-2/index.html` | Artefactos generados |
+| `gh-pages/`, `gh-pages.zip`, `docs/_site/`, `docs/.quarto/`, `Documentacion-parte-2/index.html` | Artefactos generados. `gh-pages/` eliminada el 2026-11-12 (copia exacta de `docs/_site` de `HEAD`); `docs/_site/`, `docs/.quarto/` y `gh-pages/` en `.gitignore` (DK-014) |
 | `node_modules/`, `.venv/`, `__pycache__/`, `coverage/`, `dist/` | Dependencias y cachés |
-| `backend/gitleaks.exe` | Binario de herramienta |
-| `audit_*.py`, `verify_*.py`, `check_*.py` (raíz) | Scripts; no son documentación |
+| `backend/gitleaks.exe` | Binario de herramienta; retirado del árbol el 2026-11-12 junto con su `LICENSE` (DK-014) |
+| `scripts/spec001/{audit_complete,audit_tasks,check_t047,verify_matrix}.py` (trasladados desde la raíz el 2026-11-12, DK-014); `check_files.py` y `verify_all_tasks.py` (raíz, ruta de Windows fija, no funcionan) | Scripts; no son documentación |
 | Papelera (`~/.local/share/Trash/files/SIAAF-KNOWLEDGE`, `…/documentacion-original*`) | Bóvedas vacías ya descartadas por el usuario |
 | Plantillas vacías (`.specify/templates/*`, `FRONTEND_IMPLEMENTATION_PLAN.md`, ADR-001/002 de la spec 001) | 0 bytes |
 

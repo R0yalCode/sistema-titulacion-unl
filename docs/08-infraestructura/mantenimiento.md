@@ -13,7 +13,7 @@ title: "Mantenimiento"
 | Suite de pruebas | Pre-merge | `pytest -q` + suite extendida (ver calidad) |
 | Lint backend | Pre-merge | `flake8 src` |
 | Lint/typecheck/test/build frontend | Pre-merge | `npm run lint && npm run typecheck && npm run test && npm run build` |
-| Regeneración del contrato OpenAPI | Al cambiar la API | `manage.py spectacular --file openapi.yaml` + revisión del diff con `contracts/` |
+| Regeneración del contrato OpenAPI | Al cambiar la API | `manage.py spectacular --validate --file openapi.yaml` + revisión del diff con `git diff backend/openapi.yaml` |
 | Backup de PostgreSQL | Diario (pendiente de automatizar) | `pg_dump` — **sin procedimiento documentado aún** |
 | Backup de `media_data` | Diario (pendiente) | Copia del volumen de PDFs privados |
 | Rotación de logs | Pendiente | Requiere configurar `LOGGING` |

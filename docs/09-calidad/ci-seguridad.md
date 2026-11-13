@@ -5,7 +5,8 @@ title: "CI de seguridad (SEC-T014)"
 # CI de seguridad
 
 **Estado: implementado (2026-11-05).** Pipeline `.github/workflows/security.yml`
-con tres jobs independientes, ejecutados en cada PR y en cada push a `main`.
+con tres jobs independientes, ejecutados en cada PR y en cada push a `main` y `develop`
+(ampliado a `develop` el 2026-11-12, DK-014).
 
 ## Jobs
 
@@ -13,7 +14,7 @@ con tres jobs independientes, ejecutados en cada PR y en cada push a `main`.
 |---|---|---|---|
 | `safety` | `safety check` (deprecado por el proveedor, pero funcional; ver nota abajo) | Vulnerabilidades conocidas en `requirements.txt`/`requirements-dev.txt` | Cualquier vulnerabilidad reportada, incluidas las que solo afectan a parte de un rango de versiones no fijado (`.github/safety-policy.yml`) |
 | `bandit` | `bandit -r src/ -c .bandit` | Patrones de código inseguro (SAST) | Por defecto de bandit (no se configuró un umbral de severidad explícito en el workflow; recomendado revisar hallazgos manualmente hasta fijar uno) |
-| `gitleaks` | `gitleaks/gitleaks-action@v2` | Secretos commiteados al repositorio | Cualquier hallazgo no cubierto por `backend/.gitleaksignore` |
+| `gitleaks` | `gitleaks/gitleaks-action@v2` | Secretos commiteados al repositorio | Cualquier hallazgo no cubierto por `.gitleaks.toml` (raíz; sustituye desde el 2026-11-12 a `backend/.gitleaksignore`, cuyo formato inválido anulaba todas las reglas, DK-014) |
 
 ## Hallazgo real durante la implementación: `.bandit` estaba en formato incorrecto
 
