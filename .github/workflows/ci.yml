@@ -1,0 +1,153 @@
+name: CI
+
+# Validación de cada cambio: frontend (lint, tipos, pruebas y compilación,
+# igual que el DoD de tasks.md §19), pruebas del backend (SQLite en memoria y
+# PostgreSQL 16 desechable) y contrato OpenAPI del backend (backend/openapi.yaml
+# debe coincidir con el esquema generado desde el código).
+# Ningún job usa secretos del repositorio ni accede a servicios externos.
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+
+  # Suite unitaria y de integración con config.settings.test (SQLite en
+  # memoria). Las pruebas marcadas `postgres` se omiten aquí (backend/conftest.py)
+  # y las ejecuta el job backend-postgres.
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DB_PASSWORD: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+      # Claves aleatorias y desechables (ver el job openapi).
+      - name: Generar claves desechables
+        run: |
+          echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+          echo "JWT_SIGNING_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Pruebas (src/apps, src/core y tests/)
+        run: python -m pytest -ra src/apps src/core tests --junitxml=pytest-backend.xml
+      - name: Publicar informe JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-backend
+          path: backend/pytest-backend.xml
+          if-no-files-found: warn
+
+  # Pruebas marcadas `postgres` y flujo e2e contra un PostgreSQL 16 desechable
+  # (contenedor de servicio del runner, sin volumen ni datos reales; se destruye
+  # al terminar el job). Ver backend/tests/integration/README.md.
+  backend-postgres:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          # Credencial de un contenedor efímero y aislado, no de un entorno real.
+          POSTGRES_PASSWORD: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test_postgres
+      DB_PASSWORD: ci
+      PG_TEST_HOST: localhost
+      PG_TEST_PORT: "5432"
+      PG_TEST_USER: postgres
+      PG_TEST_PASSWORD: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+      - name: Generar claves desechables
+        run: |
+          echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+          echo "JWT_SIGNING_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      # Solo tests/: las pruebas de src/apps que inspeccionan índices consultan
+      # `sqlite_master` y solo son válidas con SQLite (las cubre el job backend).
+      - name: Pruebas con PostgreSQL (tests/)
+        run: python -m pytest -ra tests --junitxml=pytest-backend-postgres.xml
+      - name: Publicar informe JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-backend-postgres
+          path: backend/pytest-backend-postgres.xml
+          if-no-files-found: warn
+
+  openapi:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DB_PASSWORD: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      # Claves aleatorias y desechables, solo para cargar la configuración (la
+      # generación del esquema no abre conexión con la base de datos). Se generan
+      # en el runner para no versionar literales con forma de secreto, que
+      # gitleaks (security.yml) marcaría como fuga.
+      - name: Generar claves desechables
+        run: |
+          echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+          echo "JWT_SIGNING_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+      - run: pip install -r requirements.txt
+      - name: Validar y comparar el contrato
+        run: |
+          python manage.py spectacular --validate --file /tmp/openapi.generado.yaml
+          diff -u openapi.yaml /tmp/openapi.generado.yaml
