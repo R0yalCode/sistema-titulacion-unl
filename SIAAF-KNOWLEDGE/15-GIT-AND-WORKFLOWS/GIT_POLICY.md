@@ -32,7 +32,7 @@ Remoto: `origin` → `git@github.com:R0yalCode/sistema-titulacion-unl.git`.
 
 1. `git switch develop && git pull --ff-only origin develop && git switch -c <tipo>/<descripcion>`
 2. Commits en la rama (formato abajo) → `git push -u origin <rama>`
-3. `git switch develop && git merge --no-ff <rama> -F <mensaje>` → `git push origin develop` → borrar la rama (local y remota) una vez integrada.
+3. `git switch develop && git merge --no-ff <rama> -F <mensaje>` → `git push origin develop` → validar el resultado integrado → eliminar la rama solo según § "Limpieza de ramas tras la integración" (DK-013).
 4. **Preguntar:** "¿Quieres fusionar `develop` con `main`?"
 5. Solo con un "sí" explícito: `main` ← `git merge --no-ff develop -F <mensaje>` → `git push origin main` → en `develop`: `git merge --ff-only main` → `git push origin develop`.
 6. **Versionado COSMOS (DK-011, DK-012):** `python3 scripts/cosmos/cosmos.py proponer` sobre el nuevo `main`.
@@ -44,6 +44,42 @@ Remoto: `origin` → `git@github.com:R0yalCode/sistema-titulacion-unl.git`.
      4. Commit del registro en una rama `docs/`. Procedimiento completo en [[COSMOS_VERSIONING]] §5.
 
 Si el árbol de trabajo tiene cambios locales ajenos, se puede fusionar en `main` desde un `git worktree` temporal para no tocarlos.
+
+## Limpieza de ramas tras la integración
+
+> Política permanente **DK-013** (2026-11-12, decisión expresa del responsable). Versión operativa: `CLAUDE.md` § "Flujo Git", regla 7.
+
+**Condiciones.** Una rama de trabajo integrada en `develop` puede eliminarse local y remotamente **solo si se cumplen todas**:
+
+1. La integración está confirmada en `develop` local **y** remoto (`develop` = `origin/develop`, y contiene el merge).
+2. Todos los commits de la rama están incorporados en `develop`.
+3. No hay commits exclusivos ni cambios pendientes en la rama.
+4. Las validaciones posteriores a la integración (typecheck, lint, pruebas, accesibilidad y build, o las de la tarea) terminaron correctamente.
+5. La rama no contiene trabajo adicional que deba conservarse.
+6. La eliminación no afecta a `main`, `develop`, ramas históricas, ramas de referencia ni a otras tareas.
+
+**Procedimiento obligatorio:**
+
+```bash
+git fetch origin
+git rev-parse develop origin/develop                # 1: iguales y con el merge publicado
+git rev-list --count origin/develop..<rama>         # 2-3: debe ser 0
+git branch -d <rama>                                 # local primero; -d se niega si hay trabajo sin integrar
+git push origin --delete <rama>                      # remota, solo con la integración ya publicada (push normal)
+git fetch --prune origin
+git branch --list <rama>; git ls-remote --heads origin <rama>   # ambas vacías
+git merge-base --is-ancestor <commit> develop        # cada commit de la rama sigue accesible
+```
+
+Después se registran la integración y la eliminación (rama, último commit, merge, fecha y validaciones) en la bitácora de la sesión o en el informe de la tarea. La rama que está activa en el árbol de trabajo no se puede borrar: antes hay que cambiar a `develop`.
+
+**Restricciones:**
+- Nunca eliminar `main` ni `develop`.
+- Nunca eliminar ramas con trabajo pendiente o commits exclusivos.
+- No eliminar ramas históricas o de referencia sin autorización expresa (p. ej. `integracion/develop-en-main` o `release/*`).
+- No borrar etiquetas ni releases.
+- Prohibidos `git branch -D`, `git push --force` (y variantes), `git clean`, `reset --hard` y `git add .`.
+- Durante una integración solo se elimina la rama integrada; no se eliminan otras ramas porque parezcan antiguas.
 
 ## Mensajes (mismo modelo que el historial)
 
@@ -189,6 +225,7 @@ Estado de cada fila: *propuesta* → *asignada por el responsable* → *realizad
 - 2026-11-11: con autorización expresa y puntual del responsable, el commit de E2-01 `2954a21` se rehízo como `c0d75b6` (autor y committer JuanCalopinoo, mismo árbol) y el merge de `develop` `a9e79ac` como `1a1093c`, con `--force-with-lease`; después se integró en `main` (`d1fa86e`).
 - 2026-11-11: **DK-010** sustituye a DK-009: autoría individual y compartida para los cinco integrantes, distribución equilibrada de tareas y prohibición absoluta de reescribir historial, también para corregir autoría.
 - 2026-11-11: **enmienda de DK-010** (autorizada por el responsable): modalidad de implementación centralizada por Claude Code con commits independientes por tarea y `--author` del integrante responsable (atribución delegada, documentada). No modifica las restricciones Git ni tiene efectos retroactivos.
+- 2026-11-12: **DK-013**, limpieza de ramas de trabajo tras su integración en `develop`, con condiciones, procedimiento y restricciones (§ "Limpieza de ramas tras la integración"). Sustituye la instrucción anterior «borrar la rama (local y remota) una vez integrada», que no exigía comprobaciones previas. Primera aplicación: `fix/modal-foco-estable` (merge `78af6a9`).
 - Práctica histórica: ramas `release/0.2.0-andromeda`, `release/0.3.0-andromeda` y `release/0.4.0-eclipse` fusionadas en `main` (PR #14, #16); no hay tags.
 
 ## Relacionado
