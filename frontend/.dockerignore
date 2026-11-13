@@ -1,0 +1,10 @@
+# Contexto de build de frontend/Dockerfile: solo el código fuente necesario.
+node_modules
+dist
+coverage
+.env
+.env.*
+!.env.example
+*.log
+.vscode
+.idea

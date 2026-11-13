@@ -37,10 +37,13 @@ POSTGRES_DB=sgt_siaaf
 POSTGRES_USER=sgt_user
 POSTGRES_PASSWORD=una_clave_segura_para_produccion
 SECRET_KEY=django-insecure-clave-secreta-muy-larga-y-aleatoria
-DEBUG=0
+JWT_SIGNING_KEY=otra-clave-distinta-de-SECRET_KEY
+DEBUG=1
+# Opcional: URL de la API compilada en el frontend (por defecto http://localhost:8000)
+# VITE_API_BASE_URL=http://localhost:8000
 ```
 
-> **Nota:** En desarrollo local puede usar valores por defecto; en producción **cambie obligatoriamente** `SECRET_KEY` y `POSTGRES_PASSWORD`.
+> **Nota:** `SECRET_KEY`, `JWT_SIGNING_KEY` y `POSTGRES_PASSWORD` son obligatorias: `docker compose` no arranca sin ellas. `SECRET_KEY` y `JWT_SIGNING_KEY` deben ser distintas (SEC-T004). En desarrollo, `DEBUG=1` (valor por defecto de compose) permite que `runserver` sirva los estáticos del admin y de Swagger. En producción **cambie obligatoriamente** las claves (ver `docker-compose.prod.yml`).
 
 ### 3. Levantar el entorno
 ```bash
@@ -56,7 +59,21 @@ Servicios esperados:
 |----------|--------|-------------|
 | `db` (PostgreSQL 16) | 5432 (interno) | `pg_isready` |
 | `backend` (Django) | 8000 (interno) | - |
-| `nginx` | **8000** (expuesto) | - |
+| `nginx` (frontend React + proxy a Django) | **8000** (expuesto) | - |
+
+### Arquitectura de desarrollo: un único origen en http://localhost:8000
+
+```
+navegador ──► nginx :8000 ──┬─► /, /login, /bandeja/…   → frontend React compilado (index.html + /assets/)
+                            ├─► /api/, /admin/, /health/ → backend Django :8000
+                            └─► /static/, /media/         → backend Django :8000
+```
+
+- **Frontend:** la imagen de `nginx` se construye con `frontend/Dockerfile`. Una etapa `node` ejecuta `npm ci` y `npm run build` (que incluye `tsc -b`) y la etapa `nginx` sirve el resultado desde `/usr/share/nginx/html`. Así, `docker compose up --build` **siempre recompila el frontend actual**; no se usa la carpeta `frontend/dist` del host.
+- **React Router:** cualquier ruta que no sea del backend devuelve `index.html` (`try_files … /index.html`), así que recargar `/bandeja/<id>` funciona. Un recurso que no existe en `/assets/` responde 404.
+- **Backend:** `/api/` (incluidas Swagger, ReDoc y el esquema), `/admin/`, `/health/` y `/static/` se reenvían a `backend:8000`. `/media/` también, pero Django no lo publica: los PDF del trámite son privados y solo se entregan por la API autenticada.
+- **Mismo origen:** el frontend se compila con `VITE_API_BASE_URL=http://localhost:8000`. Abra la aplicación en **http://localhost:8000**: si entra por `http://127.0.0.1:8000`, el navegador lo trata como otro origen y las llamadas a la API pueden fallar por CORS.
+- **Configuración de Nginx:** `nginx/nginx.conf` está montado desde el host. Tras editarlo ejecute `docker compose restart nginx`: un archivo montado suelto conserva el contenido anterior hasta que se reinicia el contenedor, y ni `nginx -s reload` ni `up --build` lo actualizan.
 
 ### 4. Ejecutar migraciones y cargar datos iniciales
 ```bash
@@ -68,9 +85,27 @@ docker compose exec backend python manage.py seed_initial_data
 ```
 
 ### 5. Verificar despliegue
+- **Aplicación (frontend React):** http://localhost:8000
 - **Swagger UI:** http://localhost:8000/api/v1/docs/
 - **ReDoc:** http://localhost:8000/api/v1/redoc/
 - **OpenAPI Schema (YAML):** http://localhost:8000/api/v1/schema/
+- **Administración de Django:** http://localhost:8000/admin/
+- **Salud:** http://localhost:8000/health/
+
+Comprobación rápida desde la terminal:
+
+```bash
+curl -s http://localhost:8000/ | grep -o '<div id="root">'          # HTML de React (no el 404 de Django)
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8000/bandeja/x  # 200: fallback de React Router
+curl -s http://localhost:8000/health/                                 # {"status": "ok"}
+docker compose exec nginx nginx -T | grep -A2 'location / '           # try_files … /index.html
+```
+
+### Reconstruir el frontend
+
+```bash
+docker compose up --build -d nginx    # recompila el frontend y recrea solo nginx; no toca la base de datos
+```
 
 ---
 

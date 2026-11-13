@@ -44,12 +44,24 @@ services:
     networks:
       - backend_net
 
+  # Punto de acceso único (http://localhost:8000): sirve el frontend React
+  # compilado dentro de la imagen y envía /api/, /admin/, /health/, /static/ y
+  # /media/ a Django. Ver nginx/nginx.conf y frontend/Dockerfile.
   nginx:
-    image: nginx:1.24-alpine
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
     restart: unless-stopped
+    depends_on:
+      - backend
     ports:
       - "8000:80"
     volumes:
+      # Montado para editarlo en desarrollo. Tras editarlo: `docker compose
+      # restart nginx` (un archivo montado suelto conserva el inodo antiguo).
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - backend_net
