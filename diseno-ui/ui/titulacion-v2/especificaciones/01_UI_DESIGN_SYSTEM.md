@@ -62,7 +62,7 @@ Familia: Sans-serif del sistema (`Inter`, `Roboto` o equivalente; sin cargar web
 
 ## 1.6. Referencias
 
-- Prototipo A: `SGT_SIAAF_Prototipo_HTML_CSS_JS/SGT_SIAAF_Prototipo_Web/` (vista de referencia).
-- Prototipo B: `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/` (kit de errores).
+- Prototipo A: `prototipos/prototipo-general/` (vista de referencia).
+- Prototipo B: `prototipos/vistas-errores-unl/` (kit de errores).
 - Implementación: `frontend/src/styles/tokens.css`, `global.css`, `utilities.css`.
 - SDD: `specs/003-frontend-titulacion/specify.md` (§4, §6.1), `clarify.md` (DEC-11, PQ-13).

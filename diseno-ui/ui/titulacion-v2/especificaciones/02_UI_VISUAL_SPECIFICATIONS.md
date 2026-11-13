@@ -60,11 +60,11 @@
 
 ## Kit de errores (transversal)
 
-Las 9 vistas comparten estados de error y operativos (401/403/404/409/412/428/500/503, loading, empty, success, read-only). Su especificación completa está en `08_UI_ERROR_STATES_SPEC.md`; el prototipo de referencia es el kit B: `SGT_SIAAF_Errores_HTML_UNL/paginas/{401,403,404,409,412,428,500,503}.html` y `acceso.html`.
+Las 9 vistas comparten estados de error y operativos (401/403/404/409/412/428/500/503, loading, empty, success, read-only). Su especificación completa está en `08_UI_ERROR_STATES_SPEC.md`; el prototipo de referencia es el kit B: `prototipos/vistas-errores-unl/paginas/{401,403,404,409,412,428,500,503}.html` y `acceso.html`.
 
 ## Referencias
 
-- Prototipo A: `SGT_SIAAF_Prototipo_HTML_CSS_JS/SGT_SIAAF_Prototipo_Web/index.html` (páginas generadas por `app.js`: funciones listadas arriba).
-- Prototipo B: `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/`.
+- Prototipo A: `prototipos/prototipo-general/index.html` (páginas generadas por `app.js`: funciones listadas arriba).
+- Prototipo B: `prototipos/vistas-errores-unl/`.
 - SDD de vistas: `specs/003-frontend-titulacion/specify.md` §6 (IDs y rutas), §9.1 (CA-G-01), §9.2 (V-03/DEC-14), §9.3 (estados de error).
 - Tareas React: `specs/003-frontend-titulacion/tasks.md` (FE-T1xx…FE-T9xx).

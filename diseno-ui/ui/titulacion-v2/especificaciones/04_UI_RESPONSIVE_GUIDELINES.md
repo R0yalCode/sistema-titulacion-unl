@@ -32,4 +32,4 @@ En el repositorio coexisten dos escalas de breakpoints:
 
 - SDD: `specs/003-frontend-titulacion/plan.md` §10.1 (breakpoints oficiales), `tasks.md` §19 (DoD con 320/768/1024/1440).
 - Tokens implementados: `frontend/src/styles/tokens.css`.
-- Prototipo A (referencia de comportamiento de collapsar/empilar, no de valores): `SGT_SIAAF_Prototipo_Web/app.js` (media queries observadas `1190/1000/760/510`).
+- Prototipo A (referencia de comportamiento de collapsar/empilar, no de valores): `prototipos/prototipo-general/app.js` (media queries observadas `1190/1000/760/510`).

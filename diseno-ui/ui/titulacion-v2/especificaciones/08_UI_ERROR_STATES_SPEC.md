@@ -15,7 +15,7 @@ Reglas de páginas vs. componentes: 401 **no es página**; 403 no es página (es
 
 ## 8.1. Catálogo errores — ERR-01…ERR-09
 
-Referencia visual: prototipo B `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/paginas/*.html` (colores observados: rojo `#bb0920`, azul `#155bb7`; ver doc 01).
+Referencia visual: prototipo B `prototipos/vistas-errores-unl/paginas/*.html` (colores observados: rojo `#bb0920`, azul `#155bb7`; ver doc 01).
 
 | ID | Código | Disparador | Presentación (UI) | Acción del usuario | Tarea | Estado |
 |---|---|---|---|---|---|---|
@@ -63,5 +63,5 @@ Bloqueo registrado: OpenAPI (`backend/openapi.yaml`) declara únicamente respues
 
 ## 8.5. Referencias
 
-- Prototipo B: `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/` (`paginas/401.html`…`503.html`, `acceso.html`).
+- Prototipo B: `prototipos/vistas-errores-unl/` (`paginas/401.html`…`503.html`, `acceso.html`).
 - SDD: `specify.md` §9.3 (tabla y reglas), RFF-004/005/013/014/017, CA-G-02…CA-G-04; `clarify.md` DEC-11, DEC-12, DEC-13, CL-21/CL-22, D-FE-01…D-FE-04; `plan.md` §11.1 (fase F2.5) y matriz HTTP; `tasks.md` §5.bis y §17.
