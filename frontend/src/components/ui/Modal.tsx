@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from './Button'
 import styles from './Modal.module.css'
@@ -15,15 +15,25 @@ const FOCUSABLE_SELECTOR =
 
 export function Modal({ open, title, onClose, children }: ModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null)
+  const onCloseRef = useRef(onClose)
   const titleId = useId()
 
+  // La función de cierre más reciente, sin reiniciar el ciclo de apertura: los
+  // consumidores suelen pasar `onClose` en línea y su identidad cambia en cada
+  // render del padre (p. ej., en cada tecla de un campo controlado).
+  useLayoutEffect(() => {
+    onCloseRef.current = onClose
+  })
+
+  // Ciclo de apertura: depende solo de `open`. Si dependiera de `onClose`, cada
+  // re-render del padre devolvería el foco fuera del diálogo y lo movería al
+  // primer elemento enfocable (defecto detectado en V-08b).
   useEffect(() => {
     if (!open) {
       return
     }
 
-    previouslyFocusedRef.current = document.activeElement as HTMLElement | null
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null
 
     const dialog = dialogRef.current
     const focusables = dialog ? Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)) : []
@@ -36,7 +46,7 @@ export function Modal({ open, title, onClose, children }: ModalProps) {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        onClose()
+        onCloseRef.current()
         return
       }
 
@@ -70,9 +80,12 @@ export function Modal({ open, title, onClose, children }: ModalProps) {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = originalOverflow
-      previouslyFocusedRef.current?.focus()
+      // Solo si el elemento que abrió el diálogo sigue en el documento.
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus()
+      }
     }
-  }, [open, onClose])
+  }, [open])
 
   if (!open) {
     return null
