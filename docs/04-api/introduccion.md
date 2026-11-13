@@ -6,7 +6,7 @@ title: "API — Introducción"
 
 ## Contrato canónico
 
-- **Fuente de verdad**: `backend/openapi.yaml` (generado con drf-spectacular desde el código) — copia versionada en `backend/contracts/openapi.yaml` (idénticas, verificado por `diff`).
+- **Fuente de verdad**: `backend/openapi.yaml` (generado con drf-spectacular desde el código; contrato único del repositorio). La antigua copia `backend/contracts/openapi.yaml` se retiró el 2026-11-12 por estar desactualizada desde INC-01 (DK-014).
 - **Servido en vivo**: `GET /api/v1/schema/` (OpenAPI), `GET /api/v1/docs/` (Swagger UI), `GET /api/v1/redoc/` (Redoc).
 - **17 operaciones** de negocio + 3 de documentación. Sin rutas documentadas que no existan en `config/urls.py` (verificado).
 

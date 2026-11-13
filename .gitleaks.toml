@@ -1,0 +1,25 @@
+# Configuración de gitleaks del repositorio SGT-SIAAF (detectada por defecto
+# en la raíz). Mantiene todas las reglas oficiales y solo exime falsos
+# positivos verificados el 2026-11-12 (ninguno es una credencial real).
+title = "SGT-SIAAF"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Constantes ficticias de prueba, sitio Quarto generado y ejemplo histórico de terceros"
+paths = [
+    # Archivos de prueba del backend (contraseñas ficticias).
+    '''(^|/)[^/]*test[^/]*\.py$''',
+    # Salida generada por Quarto (no es código ni configuración). El prefijo
+    # opcional cubre las rutas absolutas del modo `gitleaks dir`.
+    '''(^|/)docs/(_site|\.quarto)/''',
+]
+regexes = [
+    # Contraseñas ficticias de las pruebas citadas en la documentación.
+    '''pwd_[a-z]+_t\d{3}''',
+    # Valor de ejemplo del README de gitleaks, que estuvo en backend/README.md
+    # hasta el 2026-11-12 (commit 19c98fe). Ya no está en el árbol, pero el
+    # análisis del historial en CI (fetch-depth: 0) lo sigue encontrando.
+    '''cafebabe:deadbeef''',
+]

@@ -490,7 +490,7 @@ Comandos ejecutados sobre `frontend/`: `npm run lint` ✅ · `npm run typecheck`
 - **Fase:** F2.5.
 - **Vista/módulo:** transversal (`*`).
 - **Requisitos:** RFF-004, RFF-017, RNFF-001.
-- **Referencia:** prototipo B `SGT_SIAAF_Errores_HTML_UNL/paginas/404.html` (ERR-03 en la especificación 08); `specify.md` §9.3.
+- **Referencia:** prototipo B `prototipos/vistas-errores-unl/paginas/404.html` (ERR-03 en la especificación 08); `specify.md` §9.3.
 - **Depende de:** FE-T009, FE-T006.
 - **Descripción:** título/mensaje sin filtrar detalles internos (incl. nota de privacidad: un recurso ajeno puede responder 404); CTA "Volver al inicio por rol" y "Ir a `/login`" según sesión; mensaje accesible (role/aria y jerarquía de encabezados); estructura `src/app/NotFoundPage.tsx` (+ CSS module).
 - **Archivos esperados:** `src/app/NotFoundPage.tsx` (+ CSS module).

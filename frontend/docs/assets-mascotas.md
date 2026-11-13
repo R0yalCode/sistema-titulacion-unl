@@ -4,7 +4,7 @@ Ilustraciones gráficas complementarias de la identidad visual de SGT-SIAAF, int
 
 ## Procedencia
 
-- **Origen:** `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/assets/img/` (prototipo B, referencia visual no normativa — DEC-11).
+- **Origen:** `prototipos/vistas-errores-unl/assets/img/` (prototipo B, referencia visual no normativa — DEC-11).
 - **Copia:** idéntica byte a byte al original (verificada con `sha256sum`); sin recompresión ni edición.
 - **Autorización de uso:** explícita del usuario, 2026-11-05 (ver `README.md` actualizado del prototipo B, sección "Autorización de uso en SGT-SIAAF").
 

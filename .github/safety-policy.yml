@@ -1,0 +1,9 @@
+# Política de safety (SEC-T014). Por defecto, `safety check` IGNORA
+# vulnerabilidades que solo aplican a parte del rango de versiones de un
+# requirement no fijado a una versión exacta (p. ej. Django>=5.2,<5.3
+# permite instalar cualquier 5.2.x, incluidas versiones antiguas con CVEs
+# ya corregidos en versiones más nuevas dentro del mismo rango). Eso
+# ocultaría hallazgos reales en CI. Esta política fuerza a que también se
+# evalúen esos rangos.
+security:
+  ignore-unpinned-requirements: false

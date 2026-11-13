@@ -8,7 +8,7 @@ Decisiones tomadas durante la elaboración de esta documentación (no modifican 
 
 | ID | Decisión | Justificación |
 |---|---|---|
-| DOC-01 | El contrato OpenAPI canónico sigue siendo `backend/openapi.yaml` (y su copia en `contracts/`); esta documentación lo **referencia** en lugar de duplicarlo | Evita desincronización; el archivo ya es válido y está verificado |
+| DOC-01 | El contrato OpenAPI canónico sigue siendo `backend/openapi.yaml` (su antigua copia en `contracts/` se retiró el 2026-11-12, DK-014); esta documentación lo **referencia** en lugar de duplicarlo | Evita desincronización; el archivo ya es válido y está verificado |
 | DOC-02 | La documentación de endpoints se organiza por grupos de módulo en `04-api/endpoints/` | Navegabilidad; cada página documenta parámetros, cuerpos y respuestas reales |
 | DOC-03 | Los KPI quedan como **propuesta** sin implementación | Restricción de la auditoría: no se autorizó código nuevo |
 | DOC-04 | Se recomienda un único endpoint `GET /dashboard/me/` en lugar de 7 dashboards separados | Menor superficie, menos duplicación de fórmulas; decisión final pendiente |

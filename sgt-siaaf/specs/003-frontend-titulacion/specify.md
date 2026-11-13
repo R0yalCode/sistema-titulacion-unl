@@ -59,8 +59,8 @@ La especificación es **honesta sobre las limitaciones del backend actual**: var
 | `diseno-ui/ui/titulacion-v2/especificaciones/01…07_*.md` | Referencia visual/UX | No |
 | `diseno-ui/ui/titulacion-v2/eferencias-visuales/00…09*` | Referencia visual | No |
 | `diseno-ui/ui/titulacion-v2/GUIA_VISTAS_TITULACION.md` | Guía de vistas | No |
-| `SGT_SIAAF_Prototipo_HTML_CSS_JS/SGT_SIAAF_Prototipo_Web/` (prototipo A) | Referencia visual y de comportamiento, no normativa (DEC-11). Sus datos, flujos y paleta son demostrativos; **no** modera requisitos ni contratos. | No |
-| `SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/` (prototipo B) | Referencia visual de estados de error; los HTTP 409/412/428 son **escenarios propuestos** condicionados a BE-11 (DEC-13). | No |
+| `prototipos/prototipo-general/` (prototipo A) | Referencia visual y de comportamiento, no normativa (DEC-11). Sus datos, flujos y paleta son demostrativos; **no** modera requisitos ni contratos. | No |
+| `prototipos/vistas-errores-unl/` (prototipo B) | Referencia visual de estados de error; los HTTP 409/412/428 son **escenarios propuestos** condicionados a BE-11 (DEC-13). | No |
 | Reglamento de Régimen Académico UNL (RRA-UNL) | Fuente normativa de modalidades/elegibilidad de titulación (arts. 39, 40, 212, 216, 233 según referencias preliminares). Las síntesis de análisis externas (p. ej. NotebookLM) son referencias secundarias que deben contrastarse con el texto vigente. | Sí (pendiente de contrastación directa: PQ-13) |
 
 ---
@@ -167,7 +167,7 @@ Los prototipos (A y B) y la documentación visual usan UI-01…UI-09. La numerac
 
 | UI (prototipos/documentos visuales) | Nombre en documentos visuales | ID oficial SDD | Ruta oficial | Archivo de referencia prototipo A |
 |---|---|---|---|---|
-| **UI-01** | Acceso / Inicio de sesión | **V-01** | `/login` | `SGT_SIAAF_Prototipo_Web/index.html` → `accessPage()` (app.js) |
+| **UI-01** | Acceso / Inicio de sesión | **V-01** | `/login` | `prototipos/prototipo-general/index.html` → `accessPage()` (app.js) |
 | **UI-02** | Estudiante no habilitado | **V-09** | `/no-habilitado` | `index.html` → `undergradPage()` |
 | **UI-03** | Dashboard del estudiante | **V-02** | `/estudiante` | `index.html` → `dashboard()` |
 | **UI-04** | Crear solicitud | **V-03** | `/estudiante/solicitud/nueva` | `index.html` → `createApplication()` (wizard 3 pasos) |
@@ -992,5 +992,5 @@ Reglas:
 - `../001-tramite-titulacion/specify.md` — requisitos funcionales del backend.
 - `../../backend/openapi.yaml` — contrato.
 - `../../diseno-ui/ui/titulacion-v2/especificaciones/08_UI_ERROR_STATES_SPEC.md` — clasificación de estados de error (referencia visual).
-- `../../SGT_SIAAF_Prototipo_HTML_CSS_JS/SGT_SIAAF_Prototipo_Web/` — prototipo A (referencia visual y de comportamiento, DEC-11).
-- `../../SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/SGT_SIAAF_Errores_HTML_UNL/` — prototipo B, kit de errores (referencia visual, DEC-11/DEC-13).
+- `../../prototipos/prototipo-general/` — prototipo A (referencia visual y de comportamiento, DEC-11).
+- `../../prototipos/vistas-errores-unl/` — prototipo B, kit de errores (referencia visual, DEC-11/DEC-13).

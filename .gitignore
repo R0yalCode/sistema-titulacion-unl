@@ -236,3 +236,22 @@ SIAAF-KNOWLEDGE/.obsidian/plugins/
 SIAAF-KNOWLEDGE/.obsidian/cache
 SIAAF-KNOWLEDGE/.obsidian/graph.json
 SIAAF-KNOWLEDGE/.trash/
+
+# Artefactos generados (reorganización estructural 2026-11-12, DK-014).
+# Quarto: la fuente es docs/; el sitio se genera en el runner de GitHub
+# Actions (publish-quarto.yml) y no se versiona ninguna copia renderizada.
+# Los artefactos que estaban rastreados (docs/_site, docs/.quarto y
+# frontend/coverage) se retiraron del índice dentro de DK-014.
+docs/_site/
+docs/.quarto/
+gh-pages/
+# Informes de cobertura de Vitest (npm run test:coverage).
+frontend/coverage/
+# Binarios de herramientas (p. ej. gitleaks.exe): se usan las Actions oficiales.
+*.exe
+
+# Archivos personales de editores y sistema operativo.
+.DS_Store
+*.swp
+# Informes JUnit de las pruebas del backend (ci.yml).
+backend/pytest-backend*.xml

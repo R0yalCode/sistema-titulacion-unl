@@ -35,7 +35,7 @@ Contradicciones y afirmaciones no verificables detectadas al contrastar la docum
 | C-20 | Flujo FL-03 operativo extremo a extremo | specify 001 §8; DP2 | Sin transición `ENVIADA→EN_VERIFICACION` | Servicios; `test_expediente_state_machine.py:118` |
 | C-21 | 328/328 pruebas frontend en verde | `CLAUDE.md` | 2 de 3 ejecuciones en verde; 1 con 6 fallos | [[REGRESSION_TESTS]] |
 | C-22 | `CLAUDE.md` remite a `ESTADO-ACTUAL-PROYECTO.md` | Sección añadida al `CLAUDE.md` local | La nota se llama [[CURRENT_STATE]] (corregido en `CLAUDE.md`) | — |
-| C-23 | `backend/contracts/openapi.yaml` es "byte a byte idéntico" a `backend/openapi.yaml` | [[API_CONTRACTS]]; EV-003 | Difieren desde `0a24109` (INC-01); PLB-E1-04 no lo introdujo y no se sincroniza (decisión pendiente, I-4) | EV-016 |
+| C-23 | `backend/contracts/openapi.yaml` es "byte a byte idéntico" a `backend/openapi.yaml` | [[API_CONTRACTS]]; EV-003 | Difieren desde `0a24109` (INC-01); PLB-E1-04 no lo introdujo. **Resuelta 2026-11-12:** copia retirada; canónico `backend/openapi.yaml` (DK-014) | EV-016 |
 
 ## Relacionado
 

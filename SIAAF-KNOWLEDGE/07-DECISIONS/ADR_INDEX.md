@@ -22,6 +22,8 @@ last_verified: 2026-11-11
 | ADR-001 / ADR-002 (spec 001) | Arquitectura / límites modulares | `sgt-siaaf/specs/001-tramite-titulacion/adr/` | **Vacíos (0 bytes)** | — |
 | Consolidado | ADR del paquete documental | `DOCUMENTACION/03_ARQUITECTURA/ADR.md` (sin seguimiento Git) | — | — |
 
+**Copia canónica de 0001/0002 (análisis del 2026-11-12, [[2026-11-12-reorganizacion-estructural]]):** `backend/docs/adr/`. Es el conjunto completo (0001, 0002, 0003 y 0009), incluye fecha, tarea de origen y alternativas evaluadas, y es la ruta que fija la jerarquía de fuentes de `clarify.md` §2 («ADRs (`backend/docs/adr/`)»). `docs/adr/0001` y `0002` son versiones anteriores y más breves, creadas en los mismos commits (`795d6a7`, `19c98fe`), y no difieren solo en el formato: tienen otro texto de contexto y la tabla de versiones de 0002 es distinta. **No se consolidaron:** ambas rutas tienen consumidores, entre ellos `specs/001` (`plan.md`, `tasks.md`, `specify.md`), que es intocable, además de `docs/02-arquitectura/decisiones-arquitectonicas.md` y `DOCUMENTACION/`. Retirar `docs/adr/` requiere una decisión expresa del responsable.
+
 Registro y resumen previos: `docs/02-arquitectura/decisiones-arquitectonicas.md`, `docs/anexos/decisiones.md`.
 
 ## 2. Decisiones de clarificación (ojo: los identificadores se repiten)

@@ -18,6 +18,7 @@ La bóveda debe dar acceso a las fuentes originales desde Obsidian sin crear dos
 1. **Copiar íntegros**, con verificación SHA-256, los 12 Markdown de `Documentacion-parte-2/` en `90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2/`. Son documentos cerrados (versión 1.0, 2026-11-09), prioritarios y explícitamente pedidos.
 2. **No copiar** el resto: specs, `docs/`, `DOCUMENTACION/`, `auditoria/`, `diseno-ui/`. Se **referencian por ruta relativa al repositorio** desde [[SOURCE_CATALOG]] y desde las notas derivadas.
 3. La copia **no sustituye** al original: la ruta canónica sigue siendo `Documentacion-parte-2/`. Si el original cambia, la copia se actualiza y se registra el nuevo hash.
+   *Modificado por DK-014 (2026-11-12):* `Documentacion-parte-2/` se eliminó de la raíz por duplicada; la copia de `90-ORIGINAL-SOURCES/DOCUMENTATION-PART-2/` pasa a ser la ubicación canónica. El original sigue recuperable desde el historial Git (`5ef0dbd`).
 
 ## Consecuencias
 

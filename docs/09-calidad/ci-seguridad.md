@@ -5,7 +5,8 @@ title: "CI de seguridad (SEC-T014)"
 # CI de seguridad
 
 **Estado: implementado (2026-11-05).** Pipeline `.github/workflows/security.yml`
-con tres jobs independientes, ejecutados en cada PR y en cada push a `main`.
+con tres jobs independientes, ejecutados en cada PR y en cada push a `main` y `develop`
+(ampliado a `develop` el 2026-11-12, DK-014).
 
 ## Jobs
 
@@ -13,7 +14,7 @@ con tres jobs independientes, ejecutados en cada PR y en cada push a `main`.
 |---|---|---|---|
 | `safety` | `safety check` (deprecado por el proveedor, pero funcional; ver nota abajo) | Vulnerabilidades conocidas en `requirements.txt`/`requirements-dev.txt` | Cualquier vulnerabilidad reportada, incluidas las que solo afectan a parte de un rango de versiones no fijado (`.github/safety-policy.yml`) |
 | `bandit` | `bandit -r src/ -c .bandit` | Patrones de código inseguro (SAST) | Por defecto de bandit (no se configuró un umbral de severidad explícito en el workflow; recomendado revisar hallazgos manualmente hasta fijar uno) |
-| `gitleaks` | `gitleaks/gitleaks-action@v2` | Secretos commiteados al repositorio | Cualquier hallazgo no cubierto por `backend/.gitleaksignore` |
+| `gitleaks` | `gitleaks/gitleaks-action@v2` | Secretos commiteados al repositorio | Cualquier hallazgo no cubierto por `.gitleaks.toml` (raíz; sustituye desde el 2026-11-12 a `backend/.gitleaksignore`, cuyo formato inválido anulaba todas las reglas, DK-014) |
 
 ## Hallazgo real durante la implementación: `.bandit` estaba en formato incorrecto
 
@@ -36,6 +37,10 @@ Verificado localmente tras la corrección: `bandit -r src/ -c .bandit` →
 **0 HIGH, 0 MEDIUM, 1 LOW** (contraseña de la cuenta demo
 `seed_initial_data.py`, ya documentada en otros lugares como no
 productiva — no es un secreto real, es un dato de siembra de desarrollo).
+*Actualización 2026-11-13 (DK-014):* el hallazgo B105 se resolvió de raíz.
+La contraseña ya no está en el código: se lee de la variable obligatoria
+`SEED_DEMO_PASSWORD`. bandit vuelve a 0 hallazgos sin `# nosec` ni
+exclusiones.
 
 ## Hallazgo real: `safety check` ignora por defecto vulnerabilidades en rangos no fijados
 

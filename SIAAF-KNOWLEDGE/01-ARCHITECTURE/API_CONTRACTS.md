@@ -9,7 +9,7 @@ last_verified: 2026-11-11
 
 # Contratos API (verificados contra código)
 
-**Fuentes de verdad:** `backend/src/config/urls.py` (rutas reales) y `backend/openapi.yaml` (contrato). `backend/contracts/openapi.yaml` era idéntico a `backend/openapi.yaml` hasta `467ec3b`; **desde `0a24109` (INC-01) difieren** (verificado 2026-11-11; pendiente decidir si se sincroniza).
+**Fuentes de verdad:** `backend/src/config/urls.py` (rutas reales) y `backend/openapi.yaml` (contrato). `backend/contracts/openapi.yaml` era idéntico a `backend/openapi.yaml` hasta `467ec3b` y difería desde `0a24109` (INC-01). **Retirado el 2026-11-12** ([[DECISIONS_LOG]] DK-014): era un subconjunto desactualizado del contrato (17 de 18 operaciones, 31 de 34 esquemas, sin respuestas de error), sin consumidores en código ni CI; `backend/openapi.yaml` coincide exactamente con `manage.py spectacular --validate` (0 errores).
 Rutas y métodos coinciden entre `urls.py` y OpenAPI: **16 rutas, 17 operaciones** bajo `/api/v1/`.
 
 ## 1. Endpoints existentes

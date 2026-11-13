@@ -16,7 +16,7 @@ title: "Seguridad — Consideraciones"
 | Bloqueo pesimista en escrituras críticas | todos los servicios |
 | Sin secretos en el código (gitleaks 0 hallazgos) | `docs/security_report.md` |
 | `SECRET_KEY` obligatoria, `DEBUG=False` por defecto | `settings/base.py` |
-| Cuentas demo marcadas como no productivas | `seed_initial_data.py:6-9` |
+| Cuentas demo marcadas como no productivas; contraseña desde `SEED_DEMO_PASSWORD`, obligatoria y sin valor por defecto | `seed_initial_data.py` (docstring y `_clave_demo()`) |
 
 ## Brechas abiertas (priorizadas; detalle en el plan de mejora)
 

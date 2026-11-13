@@ -27,8 +27,8 @@ last_updated: 2026-11-12
 | Estados 401/403/404/500/503 | — | `components/ui/*State`, `NotFoundPage` | todos | **Implementados** (F2.5) | prototipo B, doc 08 |
 
 **Referencias revisadas:**
-- Prototipo A (`SGT_SIAAF_Prototipo_HTML_CSS_JS/`).
-- Prototipo B de errores (`SGT_SIAAF_8_Vistas_Errores_UNL_HTML_CSS_JS/`).
+- Prototipo A (`prototipos/prototipo-general/`).
+- Prototipo B de errores (`prototipos/vistas-errores-unl/`).
 - `diseno-ui/ui/titulacion-v2/`: guía, especificaciones 01–08 y PNG 01–09 en `eferencias-visuales/`.
 - Documentación DP2.
 - Notas de la bóveda.
