@@ -206,3 +206,22 @@ Autoría asignada por el responsable a sí mismo en los cinco grupos: autor y co
   - los 4 archivos protegidos;
   - `docs/ENTORNO_DESARROLLO.md` (borrado preexistente);
   - `.claude/`, `DOCUMENTACION/` y `.github/dependabot.yml`.
+
+## Sexto commit: correcciones de seguridad para la CI (2026-11-13)
+
+Autorizado por el responsable: corregir los hallazgos de `safety` y `bandit` en un commit independiente (autor y committer R0yalCode), sin `# nosec`, sin excluir B105 y sin rebajar umbrales.
+
+- **Dependencias (`backend/requirements-dev.txt`):** `pytest>=9.0.3,<10.0` y `black>=26.3.1,<27.0`. `requirements.txt` (producción) no cambia. Versiones resueltas: pytest 9.2.0, pytest-django 4.14.0, pytest-cov 7.1.0, black 26.10.1 y pypdf 7.0.1; `pip check` sin errores.
+- **Bandit B105:** `seed_initial_data.py` ya no tiene la contraseña literal.
+  - La lee de la variable de entorno obligatoria **`SEED_DEMO_PASSWORD`**, sin valor por defecto.
+  - Si falta o solo contiene espacios, lanza `CommandError` antes de crear nada.
+  - El valor nunca se escribe en la salida.
+  - Se mantienen la idempotencia y que solo las cuentas nuevas reciben la contraseña.
+- **Pruebas nuevas** (`authentication/tests/test_seed_initial_data.py`, 5 casos): variable ausente, vacía o con solo espacios; creación de las 8 cuentas con sus roles; la clave no aparece en la salida; idempotencia sin cambiar las claves existentes. No había pruebas previas del comando y no se modificó ninguna prueba existente.
+- **Documentación:** `backend/README.md`, `backend/.env.example` (variable vacía), `docs/08-infraestructura/{entorno-desarrollo,docker,despliegue}.md`, `docs/03-modulos/modulo-authentication.md`, `docs/06-seguridad/consideraciones-seguridad.md` y `docs/09-calidad/ci-seguridad.md`. El `README.md` raíz (protegido) **sigue citando la contraseña antigua** `SgtDemo2026!` en su tabla de cuentas demo y debe actualizarlo su autor.
+- **Resultados:**
+  - con SQLite: `src/apps`, `src/core` y `tests/` dan 785 aprobadas y 13 omitidas; la suite configurada, 655/655;
+  - con PostgreSQL 16 desechable: `tests/` 37/37, `-m postgres` 13/13 y `seed` 5/5;
+  - `safety check` (con la política del repositorio): código 0, 0 vulnerabilidades;
+  - `bandit -r src/ -c .bandit`: código 0, 0 hallazgos, 0 líneas `#nosec`;
+  - flake8, black e isort sin hallazgos en los archivos tocados; gitleaks sin fugas en los 825 archivos versionables.

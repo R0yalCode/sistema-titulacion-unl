@@ -20,7 +20,7 @@ title: "Despliegue"
 1. `export POSTGRES_PASSWORD=… SECRET_KEY=…`
 2. `docker compose up -d --build`
 3. `docker compose exec backend python manage.py migrate`
-4. (Opcional demo) `seed_initial_data`
+4. (Opcional demo) `seed_initial_data`, con la variable obligatoria `SEED_DEMO_PASSWORD` (ver `backend/README.md`)
 5. Verificar `http://localhost:8000/api/v1/docs/`
 
 ## Despliegue de producción (SEC-T001, implementado 2026-11-05)

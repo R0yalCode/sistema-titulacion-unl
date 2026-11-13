@@ -21,7 +21,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env            # definir SECRET_KEY, JWT_SIGNING_KEY y DB_PASSWORD
 python manage.py migrate
-python manage.py seed_initial_data   # 8 cuentas demo (solo desarrollo)
+SEED_DEMO_PASSWORD='<clave-local>' python manage.py seed_initial_data   # 8 cuentas demo (solo desarrollo)
 python manage.py runserver
 ```
 
@@ -37,7 +37,7 @@ Variables (`frontend/.env`): `VITE_API_BASE_URL` (obligatoria, p. ej. `http://lo
 
 ## Cuentas demo (solo desarrollo)
 
-`seed_initial_data` crea 8 usuarios (uno por rol) con contraseña `SgtDemo2026!`. Están marcados explícitamente como no productivos. **No usar en un despliegue real.**
+`seed_initial_data` crea 8 usuarios (uno por rol) con la contraseña que indique la variable de entorno obligatoria `SEED_DEMO_PASSWORD`. No tiene valor por defecto y el comando se detiene si falta o está vacía. Desde el 2026-11-13 (DK-014) la contraseña ya no está escrita en el código. Están marcados explícitamente como no productivos. **No usar en un despliegue real.**
 
 ## Verificaciones locales
 

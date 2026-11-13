@@ -41,7 +41,7 @@ Ninguna externa (es la base). `core.scope_filter` consume los roles para filtrar
 
 ## Administración
 
-`seed_initial_data` (management command idempotente): 8 cuentas demo (`SgtDemo2026!`) con advertencia explícita de no producción.
+`seed_initial_data` (management command idempotente): 8 cuentas demo cuya contraseña se toma de la variable de entorno obligatoria `SEED_DEMO_PASSWORD` (sin valor por defecto ni literal en el código), con advertencia explícita de no producción.
 
 ## Estado y limitaciones
 

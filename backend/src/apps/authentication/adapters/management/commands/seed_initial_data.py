@@ -4,12 +4,17 @@ Crea las 8 cuentas demo del MVP (specify.md 2.2) con su rol institucional
 asignado. Es idempotente: re-ejecutar no duplica usuarios ni roles ni
 reemplaza datos existentes.
 
-ADVERTENCIA: las contrasenas son de demostracion y estan en claro aca a
-proposito; NINGUNA cuenta con esta contrasena debe existir en produccion
-(C-012). Las cedulas son ficticias y validas para el validador de digitos.
+La contrasena de las cuentas demo NO esta en el codigo: se lee de la
+variable de entorno SEED_DEMO_PASSWORD, que es obligatoria y no tiene valor
+por defecto. Si falta o esta vacia, el comando se detiene sin crear nada.
+Su valor nunca se escribe en la salida. NINGUNA cuenta demo debe existir en
+produccion (C-012). Las cedulas son ficticias y validas para el validador de
+digitos.
 """
 
-from django.core.management.base import BaseCommand, CommandError  # noqa: F401
+import os
+
+from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from apps.authentication.adapters.models import Role, User, UserRole
@@ -57,7 +62,20 @@ CUENTAS_DEMO = [
     ),
 ]
 
-PASSWORD_DEMO = "SgtDemo2026!"
+# Nombre de la variable de entorno con la contrasena de las cuentas demo.
+VARIABLE_CLAVE_DEMO = "SEED_DEMO_PASSWORD"
+
+
+def _clave_demo() -> str:
+    """Devuelve la contrasena demo de la variable de entorno o detiene el comando."""
+    clave = os.environ.get(VARIABLE_CLAVE_DEMO, "")
+    if not clave.strip():
+        raise CommandError(
+            f"La variable de entorno {VARIABLE_CLAVE_DEMO} es obligatoria y no "
+            f"puede estar vacia: define la contrasena de las cuentas demo antes "
+            f"de ejecutar seed_initial_data. No se creo ninguna cuenta."
+        )
+    return clave
 
 
 class Command(BaseCommand):
@@ -65,6 +83,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
+        clave_demo = _clave_demo()
         creadas = []
         for username, cedula, rol in CUENTAS_DEMO:
             user, created = User.objects.get_or_create(
@@ -72,7 +91,7 @@ class Command(BaseCommand):
                 defaults={"cedula": cedula},
             )
             if created:
-                user.set_password(PASSWORD_DEMO)
+                user.set_password(clave_demo)
                 user.save()
                 creadas.append(username)
             role, _ = Role.objects.get_or_create(name=rol)
@@ -81,7 +100,7 @@ class Command(BaseCommand):
             self.style.SUCCESS(
                 f"seed_initial_data completo: {len(creadas)} nuevas, "
                 f"{len(CUENTAS_DEMO)} cuentas demo garantizadas "
-                f"(idempotente). Contrasena demo estandar aplicada solo a "
-                f"cuentas nuevas."
+                f"(idempotente). Contrasena demo de {VARIABLE_CLAVE_DEMO} "
+                f"aplicada solo a cuentas nuevas."
             )
         )

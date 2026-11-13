@@ -37,6 +37,10 @@ Verificado localmente tras la corrección: `bandit -r src/ -c .bandit` →
 **0 HIGH, 0 MEDIUM, 1 LOW** (contraseña de la cuenta demo
 `seed_initial_data.py`, ya documentada en otros lugares como no
 productiva — no es un secreto real, es un dato de siembra de desarrollo).
+*Actualización 2026-11-13 (DK-014):* el hallazgo B105 se resolvió de raíz.
+La contraseña ya no está en el código: se lee de la variable obligatoria
+`SEED_DEMO_PASSWORD`. bandit vuelve a 0 hallazgos sin `# nosec` ni
+exclusiones.
 
 ## Hallazgo real: `safety check` ignora por defecto vulnerabilidades en rangos no fijados
 

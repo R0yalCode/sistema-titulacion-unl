@@ -30,7 +30,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env      # completar SECRET_KEY, JWT_SIGNING_KEY y DB_* (distintas entre sí)
 python manage.py migrate
-python manage.py seed_initial_data    # cuentas de demostración (idempotente)
+SEED_DEMO_PASSWORD='<clave-local>' python manage.py seed_initial_data   # cuentas demo (idempotente)
 python manage.py runserver 0.0.0.0:8000
 ```
 
@@ -39,6 +39,19 @@ resto y sus valores por defecto están documentados en `.env.example`. Nunca
 versiones `.env`.
 
 Comandos de gestión propios: `seed_initial_data` y `reconciliar_archivos`.
+
+`seed_initial_data` crea las 8 cuentas de demostración (una por rol) con la
+contraseña de la variable de entorno **`SEED_DEMO_PASSWORD`**, que es
+obligatoria y no tiene valor por defecto. Si falta o está vacía, el comando
+se detiene sin crear nada. Su valor no aparece en la salida. Solo cambia la
+contraseña de las cuentas que crea: las que ya existían se conservan. Se
+puede definir en `backend/.env` o, con Docker:
+
+```bash
+docker compose exec -e SEED_DEMO_PASSWORD="$SEED_DEMO_PASSWORD" backend python manage.py seed_initial_data
+```
+
+Las cuentas demo nunca deben existir en producción (C-012).
 
 ## Pruebas y calidad
 

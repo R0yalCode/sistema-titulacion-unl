@@ -36,7 +36,7 @@ El compose de **desarrollo** sigue fijando `DJANGO_SETTINGS_MODULE: config.setti
 export POSTGRES_PASSWORD=… SECRET_KEY=…
 docker compose up -d --build
 docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py seed_initial_data   # opcional, demo
+docker compose exec -e SEED_DEMO_PASSWORD="$SEED_DEMO_PASSWORD" backend python manage.py seed_initial_data   # opcional, demo
 # API: http://localhost:8000/api/v1/docs/
 ```
 
