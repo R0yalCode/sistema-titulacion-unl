@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import type { UseQueryResult } from '@tanstack/react-query'
 import type { ChecklistItem } from '@/api/endpoints/checklist'
 import type { EstadoExpediente } from '@/api/endpoints/expedientes'
@@ -44,13 +44,11 @@ export function ResolucionesSection({ expedienteId, estado, roles, checklistQuer
   const [error, setError] = useState<string | null>(null)
   const [resultado, setResultado] = useState<Resultado | null>(null)
 
-  // `Modal` repite su efecto de foco si cambia `onClose`: debe ser estable para
-  // que el foco no salte fuera del campo en cada tecla.
-  const cerrar = useCallback(() => {
+  function cerrar() {
     setInformeAbierto(false)
     setDeclaratoriaAbierta(false)
     setError(null)
-  }, [])
+  }
 
   const mostrarInforme = puedeEmitirInforme(roles, estado)
   const mostrarDeclaratoria = puedeDeclararAptitud(roles, estado)
