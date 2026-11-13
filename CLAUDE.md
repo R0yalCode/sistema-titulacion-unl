@@ -29,7 +29,7 @@ Jerarquía de ramas: **`main`** (principal) → **`develop`** (se deriva de `mai
 
 1. **Rama de trabajo**: parte de `develop` actualizada (`git switch develop && git pull --ff-only origin develop`, luego `git switch -c <tipo>/<descripcion>`). Tipos: `feat/`, `fix/`, `docs/`, `refactor/`, `security/`, `test/`, `build/`, `ci/`. Nunca trabajes ni hagas commits directamente sobre `main` o `develop`.
 2. **Commits** en la rama de trabajo, en formato Conventional Commits: título `tipo(ámbito): descripción breve` + **descripción técnica** en el cuerpo (qué se hizo, archivos/módulos afectados, validaciones *realmente ejecutadas* con su resultado, limitaciones y pendientes). Agrega rutas explícitas (nunca `git add .`) y no incluyas cambios locales ajenos a la tarea. **Autoría:** según la sección "Equipo, autoría y distribución del trabajo" (autor real + `Co-authored-by` solo entre integrantes que contribuyeron). Es un repositorio de trabajo académico: **no añadas** menciones a Claude/IA, coautoría de Claude ni firmas de herramientas en commits, merges, PR ni releases.
-3. **Fusión en `develop`**: al terminar y verificar la tarea, publica la rama y fusiónala en `develop` con `git merge --no-ff`, con un mensaje de merge que tenga título y descripción (qué integra la rama y cómo se validó). Publica `develop` y elimina la rama de trabajo (local y remota) cuando quede integrada.
+3. **Fusión en `develop`**: al terminar y verificar la tarea, publica la rama y fusiónala en `develop` con `git merge --no-ff`, con un mensaje de merge que tenga título y descripción (qué integra la rama y cómo se validó). Publica `develop`. La rama de trabajo solo se elimina siguiendo la regla 7.
 4. **Fusión `develop` → `main`: SIEMPRE PREGUNTA ANTES.** Tras integrar en `develop`, pregunta expresamente al responsable: "¿Quieres fusionar `develop` con `main`?". **Solo con su confirmación explícita** fusiona con `git merge --no-ff develop` en `main`, usando un mensaje profesional con título (p. ej. `release(<hito>): <resumen>` o `Merge develop into main: <resumen>`) y una descripción que liste los cambios integrados, las validaciones y los pendientes. Publica `main` y luego alinea `develop` con `main` (`git merge --ff-only main` en `develop` + push). Sin confirmación, `main` no se toca.
 5. **Prohibido** `--force`, reescribir historial publicado, desactivar protecciones o resolver conflictos con operaciones destructivas. Si algo bloquea (permisos, conflictos, protección de ramas), detente y reporta.
 6. **Versionado COSMOS (SemVer + hitos astronómicos; DK-011, detalle en `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/COSMOS_VERSIONING.md`).** La fuente única de verdad es `COSMOS_REGISTRO.json`, que valida `scripts/cosmos/cosmos.py`.
@@ -41,6 +41,29 @@ Jerarquía de ramas: **`main`** (principal) → **`develop`** (se deriva de `mai
    - **Retrospectivas:** solo con el commit histórico verificado y autorización expresa; se identifican como tales y conservan la fecha real de la entrega.
    - **Serie `0.x`:** es la etapa previa a la versión estable. `v1.0.0` solo cuando el equipo declare formalmente la primera versión estable (decisión registrada y campo `primera_version_estable`).
    - **Coherencia:** `cosmos.py verificar` debe pasar antes de cualquier publicación. Las tablas de `COSMOS_VERSIONING.md` se generan con `documentar`, nunca a mano.
+7. **Limpieza de ramas tras integrar en `develop` (DK-013; detalle en `SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GIT_POLICY.md` § "Limpieza de ramas tras la integración").** Una rama de trabajo puede eliminarse local y remotamente **solo si se cumplen todas** estas condiciones:
+   1. La integración está confirmada en `develop` local **y** remoto.
+   2. Todos los commits de la rama están en `develop` (`git rev-list --count origin/develop..<rama>` = 0).
+   3. No hay commits exclusivos ni cambios pendientes en la rama.
+   4. Las validaciones posteriores a la integración terminaron correctamente.
+   5. La rama no contiene trabajo adicional que deba conservarse.
+   6. La eliminación no afecta a `main`, `develop`, ramas históricas, ramas de referencia ni a otras tareas.
+
+   **Procedimiento:**
+   1. Comprobar el estado de la rama.
+   2. Eliminar primero la rama local con `git branch -d <rama>`, que se niega a borrar si queda trabajo sin integrar.
+   3. Eliminar la remota con `git push origin --delete <rama>`, solo después de confirmar que la integración está publicada.
+   4. Verificar que ambas referencias desaparecieron.
+   5. Confirmar que sus commits siguen accesibles desde `develop`.
+   6. Registrar la integración y la eliminación en la bitácora de la sesión o en el informe de la tarea.
+
+   **Restricciones:**
+   - Nunca eliminar `main` ni `develop`.
+   - Nunca eliminar ramas con trabajo pendiente o commits exclusivos.
+   - No eliminar ramas históricas o de referencia sin autorización expresa (p. ej. `integracion/develop-en-main` o `release/*`).
+   - No borrar etiquetas ni releases.
+   - Prohibido `git branch -D`, `git push --force`, `git clean`, `reset --hard` y `git add .`.
+   - Durante una integración solo se elimina la rama integrada, ninguna otra.
 
 ### Equipo, autoría y distribución del trabajo (política permanente, DK-010)
 
