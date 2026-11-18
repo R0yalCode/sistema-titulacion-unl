@@ -7,6 +7,7 @@ y rechazo 401 de token valido con expiracion pasada.
 import datetime
 
 import jwt
+import pyotp
 import pytest
 from django.urls import reverse
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +18,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
-from apps.authentication.adapters.models import Role, User, UserRole
+from apps.authentication.adapters.models import MfaDevice, Role, User, UserRole
+from apps.authentication.services.mfa import descifrar_secreto
 
 PASSWORD = "pwd_seguro_t012"
 
@@ -42,15 +44,35 @@ class VistaProtegidaSandbox(APIView):
         return Response({"acceso": True})
 
 
-def test_obtener_token_credenciales_validas(client, estudiante):
-    respuesta = APIClient().post(
-        reverse("auth-token"),
+def _tokens_con_mfa(cliente: APIClient) -> dict:
+    """Flujo completo: contraseña, registro TOTP y primer código (AUTH-B).
+
+    Desde AUTH-B el JWT solo se emite tras el segundo factor; antes lo
+    entregaba `POST /api/v1/auth/token/` solo con contraseña.
+    """
+    paso1 = cliente.post(
+        reverse("auth-login"),
         data={"username": "t012_est", "password": PASSWORD},
+        format="json",
+    ).json()
+    assert paso1["status"] == "mfa_setup_required"
+    cliente.post(
+        reverse("auth-mfa-setup"), {"challenge": paso1["challenge"]}, format="json"
+    )
+    device = MfaDevice.objects.get(user__username="t012_est")
+    codigo = pyotp.TOTP(descifrar_secreto(device.secret_encrypted)).now()
+    respuesta = cliente.post(
+        reverse("auth-mfa-setup-confirm"),
+        {"challenge": paso1["challenge"], "code": codigo},
         format="json",
     )
     assert respuesta.status_code == 200
-    cuerpo = respuesta.json()
-    assert set(cuerpo.keys()) == {"access", "refresh"}
+    return respuesta.json()
+
+
+def test_obtener_token_credenciales_validas(client, estudiante):
+    cuerpo = _tokens_con_mfa(APIClient())
+    assert cuerpo["status"] == "authenticated"
     claims = jwt.decode(cuerpo["access"], options={"verify_signature": False})
     assert claims["cedula"] == "7200000001"
     assert claims["roles"] == ["ESTUDIANTE"]
@@ -59,23 +81,15 @@ def test_obtener_token_credenciales_validas(client, estudiante):
 
 def test_obtener_token_credenciales_invalidas(client, estudiante):
     respuesta = client.post(
-        reverse("auth-token"),
+        reverse("auth-login"),
         data={"username": "t012_est", "password": "incorrecta"},
-        format="json",
+        content_type="application/json",
     )
     assert respuesta.status_code == 401
 
 
 def test_refresh_tokens_no_renovacion_por_defecto(client, estudiante):
-    par = (
-        APIClient()
-        .post(
-            reverse("auth-token"),
-            data={"username": "t012_est", "password": PASSWORD},
-            format="json",
-        )
-        .json()
-    )
+    par = _tokens_con_mfa(APIClient())
     serializador = TokenRefreshSerializer(data={"refresh": par["refresh"]})
     assert serializador.is_valid()
     nuevo = serializador.validated_data

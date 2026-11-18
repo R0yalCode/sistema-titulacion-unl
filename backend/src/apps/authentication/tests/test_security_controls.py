@@ -90,7 +90,7 @@ def fixture_limpiar_cache_throttle_login():
 
 def _login(client, **extra):
     return client.post(
-        reverse("auth-token"),
+        reverse("auth-login"),
         {"username": "sec_t004_est", "password": PASSWORD},
         format="json",
         **extra,

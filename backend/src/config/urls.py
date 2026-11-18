@@ -7,10 +7,15 @@ from drf_spectacular.views import (
 )
 
 from apps.authentication.adapters.views import (
+    LoginView,
+    LogoutView,
+    MfaRecoveryView,
+    MfaSetupConfirmView,
+    MfaSetupView,
+    MfaVerifyView,
     PasswordResetConfirmView,
     PasswordResetRequestView,
     PasswordResetValidateView,
-    TokenPairView,
 )
 from apps.expedientes.adapters.views import (
     BandejaExpedienteViewSet,
@@ -35,7 +40,22 @@ urlpatterns = [
     # Consola interna de administración (ADR-0009): solo staff/superuser,
     # sin exposición operativa del trámite.
     path("admin/", admin.site.urls),
-    path("api/v1/auth/token/", TokenPairView.as_view(), name="auth-token"),
+    # Inicio de sesión en dos pasos (AUTH-B). Sustituye a /auth/token/, que
+    # emitía el JWT sin segundo factor.
+    path("api/v1/auth/login/", LoginView.as_view(), name="auth-login"),
+    path("api/v1/auth/mfa/setup/", MfaSetupView.as_view(), name="auth-mfa-setup"),
+    path(
+        "api/v1/auth/mfa/setup/confirm/",
+        MfaSetupConfirmView.as_view(),
+        name="auth-mfa-setup-confirm",
+    ),
+    path("api/v1/auth/mfa/verify/", MfaVerifyView.as_view(), name="auth-mfa-verify"),
+    path(
+        "api/v1/auth/mfa/recovery/",
+        MfaRecoveryView.as_view(),
+        name="auth-mfa-recovery",
+    ),
+    path("api/v1/auth/logout/", LogoutView.as_view(), name="auth-logout"),
     # Recuperación de contraseña (AUTH-RC): públicos, throttle por IP.
     path(
         "api/v1/auth/password-reset/",

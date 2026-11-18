@@ -72,7 +72,7 @@ def _validar(client, uid, token):
 
 def _login(client, password):
     return client.post(
-        reverse("auth-token"),
+        reverse("auth-login"),
         {"username": "rc_estudiante", "password": password},
         format="json",
     )

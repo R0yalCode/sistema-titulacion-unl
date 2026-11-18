@@ -9,6 +9,164 @@ info:
   license:
     name: Proprietary
 paths:
+  /api/v1/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Paso 1: usuario y contraseña (throttle `auth`, 5/min por IP).
+
+        Nunca devuelve JWT sin segundo factor, salvo que la cookie de confianza
+        del dispositivo sea válida y vigente (política de 5 días).
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResult'
+          description: ''
+  /api/v1/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      description: |-
+        Cierre de sesión: revoca en el servidor la confianza del dispositivo
+        y borra su cookie (política aprobada el 2026-11-18).
+
+        Público a propósito: debe funcionar aunque el JWT ya haya caducado. Solo
+        actúa sobre la cookie del propio navegador (SameSite=Strict). El JWT
+        vigente no se invalida en el servidor (sin lista de revocación); caduca
+        según `SIMPLE_JWT`.
+      tags:
+      - auth
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensaje'
+          description: ''
+  /api/v1/auth/mfa/recovery/:
+    post:
+      operationId: auth_mfa_recovery_create
+      description: |-
+        Pérdida del autenticador: un código de recuperación retira el
+        autenticador anterior y exige registrar uno nuevo
+        (`status=mfa_setup_required`).
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaRecoveryRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MfaRecoveryRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MfaRecoveryRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResult'
+          description: ''
+  /api/v1/auth/mfa/setup/:
+    post:
+      operationId: auth_mfa_setup_create
+      description: |-
+        Registro: genera el secreto pendiente y devuelve el QR (SVG).
+
+        Llamarlo de nuevo con el mismo reto reinicia el registro con un secreto
+        nuevo (reanudación segura de un registro incompleto).
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaChallengeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MfaChallengeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MfaChallengeRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaSetup'
+          description: ''
+  /api/v1/auth/mfa/setup/confirm/:
+    post:
+      operationId: auth_mfa_setup_confirm_create
+      description: |-
+        Registro: activa el MFA tras el primer código válido y entrega los
+        códigos de recuperación una única vez.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaCodeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MfaCodeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MfaCodeRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResult'
+          description: ''
+  /api/v1/auth/mfa/verify/:
+    post:
+      operationId: auth_mfa_verify_create
+      description: 'Paso 2: código TOTP actual de Google Authenticator.'
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaCodeRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MfaCodeRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MfaCodeRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResult'
+          description: ''
   /api/v1/auth/password-reset/:
     post:
       operationId: auth_password_reset_create
@@ -92,36 +250,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Mensaje'
           description: ''
-  /api/v1/auth/token/:
-    post:
-      operationId: auth_token_create
-      description: |-
-        Login (T012). Throttling por IP (SEC-T002, DEC-002: 5/min).
-
-        `TrustedProxyScopedRateThrottle` (no `AnonRateThrottle` ni
-        `ScopedRateThrottle` genérica): `AnonRateThrottle` tiene un `scope`
-        fijo ('anon') que ignora `throttle_scope` de la vista, y el
-        `get_ident()` por defecto de DRF confía ciegamente en
-        `X-Forwarded-For` sin validar contra `TRUSTED_PROXIES` (SEC-T005).
-      tags:
-      - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPairRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPairRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPairRequest'
-        required: true
-      security:
-      - BearerAuth: []
-      responses:
-        '200':
-          description: No response body
   /api/v1/checklist/{id}/:
     put:
       operationId: checklist_update
@@ -1009,6 +1137,41 @@ paths:
                 $ref: '#/components/schemas/ErrorDominio'
 components:
   schemas:
+    AuthResult:
+      type: object
+      description: |-
+        Respuesta común del flujo. `access`/`refresh` solo con
+        `status=authenticated`; `challenge` con `mfa_required` o
+        `mfa_setup_required`; `recovery_codes` solo al completar el registro.
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+        challenge:
+          type: string
+          readOnly: true
+        expires_in:
+          type: integer
+          readOnly: true
+        recovery_codes:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - access
+      - challenge
+      - expires_in
+      - recovery_codes
+      - refresh
+      - status
     BandejaExpediente:
       type: object
       description: Item de la bandeja operativa (T017; HU-005, RF-012).
@@ -1562,6 +1725,21 @@ components:
       required:
       - dictamen
       - expediente_id
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+      required:
+      - password
+      - username
     Mensaje:
       type: object
       properties:
@@ -1570,6 +1748,71 @@ components:
           readOnly: true
       required:
       - detail
+    MfaChallengeRequest:
+      type: object
+      properties:
+        challenge:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+      required:
+      - challenge
+    MfaCodeRequest:
+      type: object
+      properties:
+        challenge:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        code:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 16
+        trust_device:
+          type: boolean
+          default: false
+      required:
+      - challenge
+      - code
+    MfaRecoveryRequest:
+      type: object
+      properties:
+        challenge:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        recovery_code:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 32
+      required:
+      - challenge
+      - recovery_code
+    MfaSetup:
+      type: object
+      properties:
+        qr_svg:
+          type: string
+          readOnly: true
+        manual_key:
+          type: string
+          readOnly: true
+        issuer:
+          type: string
+          readOnly: true
+        account:
+          type: string
+          readOnly: true
+      required:
+      - account
+      - issuer
+      - manual_key
+      - qr_svg
     NotificacionInterna:
       type: object
       description: Serializador de notificación interna.
@@ -1740,6 +1983,16 @@ components:
       - dependencia_emisora
       - requisito_codigo
       - requisito_nombre
+    StatusEnum:
+      enum:
+      - authenticated
+      - mfa_required
+      - mfa_setup_required
+      type: string
+      description: |-
+        * `authenticated` - authenticated
+        * `mfa_required` - mfa_required
+        * `mfa_setup_required` - mfa_setup_required
     Subsanacion:
       type: object
       description: Entrada para POST /api/v1/checklist/{id}/subsanar/ (T030).
@@ -1758,20 +2011,6 @@ components:
           format: binary
       required:
       - archivo
-    TokenObtainPairRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          writeOnly: true
-          minLength: 1
-        password:
-          type: string
-          writeOnly: true
-          minLength: 1
-      required:
-      - password
-      - username
   securitySchemes:
     jwtAuth:
       type: http

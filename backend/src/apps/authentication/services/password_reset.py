@@ -127,4 +127,9 @@ def confirmar_restablecimiento(uid, token, nueva_contrasena):
         raise ContrasenaInvalida(error.messages) from None
     usuario.set_password(nueva_contrasena)
     usuario.save(update_fields=["password"])
+    # AUTH-B: un cambio de contraseña retira la confianza de todos los
+    # dispositivos; el siguiente ingreso vuelve a pedir el segundo factor.
+    from apps.authentication.services.mfa import revocar_todas_las_confianzas
+
+    revocar_todas_las_confianzas(usuario, motivo="cambio_contrasena")
     logger.info("Contraseña restablecida", extra={"usuario_id": str(usuario.pk)})
