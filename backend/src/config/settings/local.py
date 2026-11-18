@@ -20,3 +20,10 @@ if not MFA_ENCRYPTION_KEYS:  # noqa: F405
             ).digest()
         ).decode()
     ]
+
+# AUTH-A: base.py calcula la bandera Secure de la cookie de confianza con el
+# DEBUG del entorno, antes de que este archivo fije DEBUG=True. Sin la
+# variable DEBUG la cookie saldría Secure y no viajaría por http://localhost.
+MFA_TRUSTED_DEVICE_COOKIE_SECURE = env.bool(  # noqa: F405
+    "MFA_TRUSTED_DEVICE_COOKIE_SECURE", default=False
+)
