@@ -9,6 +9,7 @@ import { setUnauthorizedHandler } from '@/api/client'
 import { ToastContext } from '@/components/feedback/ToastProvider'
 import { queryClient } from '@/lib/queryClient'
 
+const LandingPage = lazy(() => import('@/features/landing/LandingPage'))
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'))
 const ForgotPasswordPage = lazy(() => import('@/features/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('@/features/auth/ResetPasswordPage'))
@@ -30,9 +31,16 @@ function RouteLoadingFallback() {
   )
 }
 
-function IndexRedirect() {
+/**
+ * `/` es pública (AUTH-E): sin sesión muestra la página informativa; con
+ * sesión redirige al inicio que corresponde a los roles del JWT.
+ */
+function HomeRoute() {
   const auth = useContext(AuthContext)
-  return <Navigate replace to={getHomeRouteForRoles(auth?.user?.roles ?? [])} />
+  if (!auth?.isAuthenticated) {
+    return <LandingPage />
+  }
+  return <Navigate replace to={getHomeRouteForRoles(auth.user?.roles ?? [])} />
 }
 
 function LoginRoute() {
@@ -75,13 +83,13 @@ export function AppRouter() {
       <AuthExpiryBootstrap />
       <Suspense fallback={<RouteLoadingFallback />}>
         <Routes>
+          <Route element={<HomeRoute />} path="/" />
           <Route element={<LoginRoute />} path="/login" />
           {/* Recuperación de contraseña: públicas; no dependen de la sesión. */}
           <Route element={<ForgotPasswordPage />} path="/recuperar-contrasena" />
           <Route element={<ResetPasswordPage />} path="/restablecer-contrasena" />
           <Route element={<RequireAuth />}>
             <Route element={<AppLayout />}>
-              <Route element={<IndexRedirect />} path="/" />
               <Route element={<RequireRole roles={['ESTUDIANTE']} />}>
                 <Route element={<StudentDashboardPage />} path="/estudiante" />
                 <Route element={<NuevaSolicitudPage />} path="/estudiante/solicitud/nueva" />

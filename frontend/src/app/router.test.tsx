@@ -33,10 +33,11 @@ describe('AppRouter', () => {
     expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
   })
 
-  it('redirige / a /login cuando no hay sesión', async () => {
+  it('muestra la página pública en / cuando no hay sesión (AUTH-E)', async () => {
     renderRouterAs(null, '/')
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Sistema de Gestión de Titulación' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Ingreso' })).not.toBeInTheDocument()
   })
 
   it('redirige una ruta protegida a /login cuando no hay sesión', async () => {
