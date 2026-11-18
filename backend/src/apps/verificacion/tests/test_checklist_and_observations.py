@@ -142,7 +142,8 @@ def secretaria_carrera(rol_secretaria_carrera):
 def secretario_abogado(rol_secretario_abogado):
     user = User.objects.create_user(
         username="secretario_test",
-        email="sec@test.com",
+        # Correo único (restricción unique_user_email_ci).
+        email="secretario.abogado@test.com",
         password=PASSWORD,
         cedula="1234567893",
         carrera_id=CARRERA_1,

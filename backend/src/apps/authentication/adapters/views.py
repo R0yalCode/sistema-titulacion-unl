@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.authentication.services import mfa, password_reset
+from apps.authentication.services import mfa, mfa_reset, password_reset
 from core.adapters.api_errors import ErrorDominioAPI
 
 from .serializers import (
@@ -16,6 +16,8 @@ from .serializers import (
     MfaChallengeSerializer,
     MfaCodeSerializer,
     MfaRecoverySerializer,
+    MfaResetConfirmSerializer,
+    MfaResetRequestSerializer,
     MfaSetupSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetLinkSerializer,
@@ -130,7 +132,7 @@ class LoginView(_VistaPublicaAuth):
         serializer.is_valid(raise_exception=True)
         resultado = mfa.iniciar_sesion(
             request,
-            serializer.validated_data["username"],
+            serializer.validated_data["email"],
             serializer.validated_data["password"],
             _cookie_confianza(request),
         )
@@ -205,6 +207,71 @@ class MfaRecoveryView(_VistaPublicaAuth):
             request, datos["challenge"], datos["recovery_code"]
         )
         return _respuesta(resultado)
+
+
+class EnlaceMfaInvalidoAPI(ErrorDominioAPI):
+    default_code = "enlace_mfa_invalido"
+    default_detail = (
+        "El enlace para restablecer el doble factor no es válido o ha "
+        "caducado. Solicite uno nuevo."
+    )
+
+
+class MfaResetRequestView(_VistaPublicaAuth):
+    """Restablecimiento del 2FA, paso 1 (MFA-RST): correo institucional,
+    cédula y contraseña actual. Responde siempre igual; si los datos
+    corresponden a una cuenta con 2FA, envía un enlace de un solo uso al
+    correo registrado. No retira el 2FA por sí misma."""
+
+    throttle_scope = "password_reset"
+
+    @extend_schema(
+        request=MfaResetRequestSerializer, responses={200: MensajeSerializer}, auth=[]
+    )
+    def post(self, request):
+        serializer = MfaResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        datos = serializer.validated_data
+        mfa_reset.solicitar_restablecimiento(
+            request, datos["email"], datos["cedula"], datos["password"]
+        )
+        return Response(
+            {
+                "detail": (
+                    "Si los datos corresponden a una cuenta con doble factor "
+                    "activo, enviaremos un enlace de vigencia limitada al "
+                    "correo registrado."
+                )
+            }
+        )
+
+
+class MfaResetConfirmView(_VistaPublicaAuth):
+    """Restablecimiento del 2FA, paso 2: confirma el enlace recibido por
+    correo y retira el autenticador; el siguiente ingreso exige registrar
+    uno nuevo."""
+
+    throttle_scope = "password_reset"
+
+    @extend_schema(
+        request=MfaResetConfirmSerializer, responses={200: MensajeSerializer}, auth=[]
+    )
+    def post(self, request):
+        serializer = MfaResetConfirmSerializer(data=request.data)
+        if not serializer.is_valid():
+            raise EnlaceMfaInvalidoAPI()
+        try:
+            mfa_reset.confirmar_restablecimiento(request, **serializer.validated_data)
+        except mfa_reset.EnlaceMfaInvalido:
+            raise EnlaceMfaInvalidoAPI() from None
+        return Response(
+            {
+                "detail": (
+                    "El doble factor se restableció. Inicie sesión para "
+                    "registrar su nuevo autenticador."
+                )
+            }
+        )
 
 
 class LogoutView(_VistaPublicaAuth):

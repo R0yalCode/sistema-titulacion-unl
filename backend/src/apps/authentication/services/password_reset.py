@@ -129,7 +129,14 @@ def confirmar_restablecimiento(uid, token, nueva_contrasena):
     usuario.save(update_fields=["password"])
     # AUTH-B: un cambio de contraseña retira la confianza de todos los
     # dispositivos; el siguiente ingreso vuelve a pedir el segundo factor.
-    from apps.authentication.services.mfa import revocar_todas_las_confianzas
+    from apps.authentication.adapters.models import EventoAutenticacion
+    from apps.authentication.services.mfa import (
+        registrar_evento,
+        revocar_todas_las_confianzas,
+    )
 
     revocar_todas_las_confianzas(usuario, motivo="cambio_contrasena")
+    # Inicia la espera de MFA_RESET_COOLDOWN_HOURS para el restablecimiento
+    # del 2FA por enlace (services/mfa_reset.py).
+    registrar_evento(EventoAutenticacion.Tipo.CONTRASENA_RESTABLECIDA, None, usuario)
     logger.info("Contraseña restablecida", extra={"usuario_id": str(usuario.pk)})

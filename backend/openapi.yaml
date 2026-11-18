@@ -86,6 +86,63 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthResult'
           description: ''
+  /api/v1/auth/mfa/reset/:
+    post:
+      operationId: auth_mfa_reset_create
+      description: |-
+        Restablecimiento del 2FA, paso 1 (MFA-RST): correo institucional,
+        cédula y contraseña actual. Responde siempre igual; si los datos
+        corresponden a una cuenta con 2FA, envía un enlace de un solo uso al
+        correo registrado. No retira el 2FA por sí misma.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaResetRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MfaResetRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MfaResetRequestRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensaje'
+          description: ''
+  /api/v1/auth/mfa/reset/confirm/:
+    post:
+      operationId: auth_mfa_reset_confirm_create
+      description: |-
+        Restablecimiento del 2FA, paso 2: confirma el enlace recibido por
+        correo y retira el autenticador; el siguiente ingreso exige registrar
+        uno nuevo.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaResetConfirmRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MfaResetConfirmRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MfaResetConfirmRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensaje'
+          description: ''
   /api/v1/auth/mfa/setup/:
     post:
       operationId: auth_mfa_setup_create
@@ -1728,18 +1785,18 @@ components:
     LoginRequest:
       type: object
       properties:
-        username:
+        email:
           type: string
           minLength: 1
-          maxLength: 150
+          maxLength: 254
         password:
           type: string
           writeOnly: true
           minLength: 1
           maxLength: 128
       required:
+      - email
       - password
-      - username
     Mensaje:
       type: object
       properties:
@@ -1793,6 +1850,41 @@ components:
       required:
       - challenge
       - recovery_code
+    MfaResetConfirmRequest:
+      type: object
+      properties:
+        uid:
+          type: string
+          minLength: 1
+          maxLength: 128
+        token:
+          type: string
+          minLength: 1
+          maxLength: 128
+      required:
+      - token
+      - uid
+    MfaResetRequestRequest:
+      type: object
+      description: Solicitud de restablecimiento del 2FA (MFA-RST).
+      properties:
+        email:
+          type: string
+          minLength: 1
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+        cedula:
+          type: string
+          minLength: 1
+          maxLength: 20
+      required:
+      - cedula
+      - email
+      - password
     MfaSetup:
       type: object
       properties:

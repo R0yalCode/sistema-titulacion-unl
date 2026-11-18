@@ -1,4 +1,11 @@
+from django.conf import settings
 from rest_framework import serializers
+
+from apps.authentication.domain.correo_institucional import (
+    MENSAJE_CORREO_INVALIDO,
+    es_correo_institucional,
+    normalizar_correo,
+)
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer as BaseTokenObtainPairSerializer,
 )
@@ -35,11 +42,55 @@ class MensajeSerializer(serializers.Serializer):
 # --- Inicio de sesión en dos pasos (AUTH-B) ------------------------------
 
 
+class CorreoInstitucionalField(serializers.CharField):
+    """Correo `@<INSTITUTIONAL_EMAIL_DOMAIN>` normalizado (espacios y
+    mayúsculas). Segunda barrera tras la validación del frontend."""
+
+    default_error_messages = {
+        "required": "El nombre de usuario es un campo requerido.",
+        "blank": "El nombre de usuario es un campo requerido.",
+        "invalid": MENSAJE_CORREO_INVALIDO,
+    }
+
+    def __init__(self, **kwargs):
+        kwargs.setdefault("max_length", 254)
+        super().__init__(**kwargs)
+
+    def to_internal_value(self, data):
+        valor = normalizar_correo(super().to_internal_value(data))
+        if not es_correo_institucional(valor, settings.INSTITUTIONAL_EMAIL_DOMAIN):
+            self.fail("invalid")
+        return valor
+
+
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150)
+    email = CorreoInstitucionalField()
     password = serializers.CharField(
-        max_length=128, write_only=True, trim_whitespace=False
+        max_length=128,
+        write_only=True,
+        trim_whitespace=False,
+        error_messages={
+            "required": "La contraseña es un campo requerido.",
+            "blank": "La contraseña es un campo requerido.",
+        },
     )
+
+
+class MfaResetRequestSerializer(LoginSerializer):
+    """Solicitud de restablecimiento del 2FA (MFA-RST)."""
+
+    cedula = serializers.CharField(
+        max_length=20,
+        error_messages={
+            "required": "El número de cédula es un campo requerido.",
+            "blank": "El número de cédula es un campo requerido.",
+        },
+    )
+
+
+class MfaResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField(max_length=128)
+    token = serializers.CharField(max_length=128)
 
 
 class MfaChallengeSerializer(serializers.Serializer):

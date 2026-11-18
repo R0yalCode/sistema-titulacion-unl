@@ -59,7 +59,7 @@ def _cliente(ua=UA):
 def _login(cliente):
     return cliente.post(
         reverse("auth-login"),
-        {"username": USERNAME, "password": PASSWORD},
+        {"email": "authd_conf@unl.edu.ec", "password": PASSWORD},
         format="json",
     )
 
@@ -144,7 +144,9 @@ def test_cookie_manipulada_no_concede_confianza(usuario):
 def test_cookie_de_otro_usuario_no_sirve(usuario):
     cliente = _cliente()
     _registrar_confiando(cliente, usuario)
-    otro = User.objects.create_user(username="authd_otro", password=PASSWORD)
+    otro = User.objects.create_user(
+        username="authd_otro", email="authd.otro@unl.edu.ec", password=PASSWORD
+    )
     MfaDevice.objects.create(
         user=otro,
         secret_encrypted=mfa.cifrar_secreto(pyotp.random_base32()),
@@ -152,7 +154,7 @@ def test_cookie_de_otro_usuario_no_sirve(usuario):
     )
     respuesta = cliente.post(
         reverse("auth-login"),
-        {"username": "authd_otro", "password": PASSWORD},
+        {"email": "authd.otro@unl.edu.ec", "password": PASSWORD},
         format="json",
     )
     assert respuesta.json()["status"] == "mfa_required"

@@ -35,6 +35,7 @@ from apps.authentication.services import identity_providers, mfa
 
 PASSWORD = "pwd_mfa_authd_2026"
 USERNAME = "authd_est"
+EMAIL = "authd.est@unl.edu.ec"
 
 
 @pytest.fixture(autouse=True)
@@ -47,7 +48,7 @@ def _limpiar_throttle():
 @pytest.fixture(name="usuario")
 def fixture_usuario(db):
     user = User.objects.create_user(
-        username=USERNAME, password=PASSWORD, cedula="7300000001"
+        username=USERNAME, email=EMAIL, password=PASSWORD, cedula="7300000001"
     )
     role, _ = Role.objects.get_or_create(name="ESTUDIANTE")
     UserRole.objects.get_or_create(user=user, role=role)
@@ -57,7 +58,7 @@ def fixture_usuario(db):
 def _login(cliente, password=PASSWORD):
     return cliente.post(
         reverse("auth-login"),
-        {"username": USERNAME, "password": password},
+        {"email": EMAIL, "password": password},
         format="json",
     )
 
@@ -124,7 +125,7 @@ def test_usuario_inactivo_recibe_el_mismo_401(usuario):
 def test_endpoint_token_sin_segundo_factor_ya_no_existe(usuario):
     respuesta = APIClient().post(
         "/api/v1/auth/token/",
-        {"username": USERNAME, "password": PASSWORD},
+        {"email": EMAIL, "password": PASSWORD},
         format="json",
     )
     assert respuesta.status_code == 404
@@ -448,7 +449,7 @@ def test_proveedor_con_mfa_propio_no_pide_totp_adicional(usuario, monkeypatch):
         name = "prueba"
         provides_mfa = True
 
-        def authenticate(self, request, username, password):
+        def authenticate(self, request, email, password):
             return usuario
 
     monkeypatch.setattr(mfa, "get_identity_provider", lambda: ProveedorConMfa())

@@ -24,9 +24,11 @@ class IdentityProvider(Protocol):
     provides_mfa: bool
 
     def authenticate(
-        self, request, username: str, password: str
+        self, request, email: str, password: str
     ) -> AbstractBaseUser | None:
         """Devuelve el usuario local verificado o None.
+
+        `email` es el correo institucional ya normalizado y validado.
 
         No revela el motivo del rechazo (usuario inexistente, contraseña
         incorrecta o cuenta inactiva) para no permitir enumeración.

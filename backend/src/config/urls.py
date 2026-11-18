@@ -10,6 +10,8 @@ from apps.authentication.adapters.views import (
     LoginView,
     LogoutView,
     MfaRecoveryView,
+    MfaResetConfirmView,
+    MfaResetRequestView,
     MfaSetupConfirmView,
     MfaSetupView,
     MfaVerifyView,
@@ -54,6 +56,17 @@ urlpatterns = [
         "api/v1/auth/mfa/recovery/",
         MfaRecoveryView.as_view(),
         name="auth-mfa-recovery",
+    ),
+    # Restablecimiento del 2FA por enlace (MFA-RST).
+    path(
+        "api/v1/auth/mfa/reset/",
+        MfaResetRequestView.as_view(),
+        name="auth-mfa-reset",
+    ),
+    path(
+        "api/v1/auth/mfa/reset/confirm/",
+        MfaResetConfirmView.as_view(),
+        name="auth-mfa-reset-confirm",
     ),
     path("api/v1/auth/logout/", LogoutView.as_view(), name="auth-logout"),
     # Recuperación de contraseña (AUTH-RC): públicos, throttle por IP.
@@ -144,7 +157,9 @@ urlpatterns = [
     ),
     path(
         "api/v1/peticiones/<uuid:pk>/documento/",
-        PeticionViewSet.as_view({"get": "descargar_documento", "post": "cargar_documento"}),
+        PeticionViewSet.as_view(
+            {"get": "descargar_documento", "post": "cargar_documento"}
+        ),
         name="peticiones-documento",
     ),
     path(

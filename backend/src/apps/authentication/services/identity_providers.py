@@ -7,7 +7,7 @@ listada en docs/autenticacion/arquitectura-cas.md.
 """
 
 from django.conf import settings
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.exceptions import ImproperlyConfigured
 
@@ -15,19 +15,30 @@ from apps.authentication.ports.identity_provider import IdentityProvider
 
 
 class LocalIdentityProvider:
-    """Credenciales locales verificadas por los backends de Django.
+    """Correo institucional + contraseña verificados contra la BD local.
 
-    `django.contrib.auth.authenticate` usa el hasher configurado
-    (PBKDF2 por defecto) y `ModelBackend` rechaza cuentas inactivas.
+    El acceso es por correo, pero `USERNAME_FIELD` sigue siendo `username`
+    (no se migra el modelo): se localiza la cuenta por `email` sin distinguir
+    mayúsculas (restricción única `unique_user_email_ci`) y se delega en
+    `django.contrib.auth.authenticate`, que usa el hasher configurado y
+    rechaza cuentas inactivas. Los roles salen de `UserRole` (RBAC local), no
+    del SAC.
     """
 
     name = "local"
     provides_mfa = False
 
     def authenticate(
-        self, request, username: str, password: str
+        self, request, email: str, password: str
     ) -> AbstractBaseUser | None:
-        user = authenticate(request, username=username, password=password)
+        modelo = get_user_model()
+        cuenta = modelo._default_manager.filter(email__iexact=email).first()
+        if cuenta is None:
+            # Igualar el coste temporal con el de una cuenta existente para no
+            # revelar qué correos están registrados (como hace ModelBackend).
+            modelo().set_password(password)
+            return None
+        user = authenticate(request, username=cuenta.get_username(), password=password)
         if user is None or not user.is_active:
             return None
         return user

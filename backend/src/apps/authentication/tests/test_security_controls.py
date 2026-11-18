@@ -22,7 +22,10 @@ PASSWORD = "pwd_seguro_sec_t004"
 @pytest.fixture(name="estudiante")
 def fixture_estudiante(db):
     user = User.objects.create_user(
-        username="sec_t004_est", password=PASSWORD, cedula="7200000099"
+        username="sec_t004_est",
+        email="sec.t004@unl.edu.ec",
+        password=PASSWORD,
+        cedula="7200000099",
     )
     role, _ = Role.objects.get_or_create(name="ESTUDIANTE")
     UserRole.objects.get_or_create(user=user, role=role)
@@ -64,7 +67,9 @@ def test_access_token_lifetime_30_minutes(estudiante):
     token = AccessToken.for_user(estudiante)
     vigencia = token["exp"] - token["iat"]
     assert vigencia == 1800
-    assert settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] == datetime.timedelta(minutes=30)
+    assert settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] == datetime.timedelta(
+        minutes=30
+    )
 
 
 def test_access_token_expired_after_31_minutes_rejected(estudiante):
@@ -91,7 +96,7 @@ def fixture_limpiar_cache_throttle_login():
 def _login(client, **extra):
     return client.post(
         reverse("auth-login"),
-        {"username": "sec_t004_est", "password": PASSWORD},
+        {"email": "sec.t004@unl.edu.ec", "password": PASSWORD},
         format="json",
         **extra,
     )
@@ -140,9 +145,7 @@ def test_login_throttle_respects_trusted_proxies(estudiante):
     directo) el throttle ya aísla por REMOTE_ADDR igual."""
     client = APIClient()
     for _ in range(5):
-        assert (
-            _login(client, HTTP_X_FORWARDED_FOR="203.0.113.30").status_code == 200
-        )
+        assert _login(client, HTTP_X_FORWARDED_FOR="203.0.113.30").status_code == 200
     agotada = _login(client, HTTP_X_FORWARDED_FOR="203.0.113.30")
     assert agotada.status_code == 429
 

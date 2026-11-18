@@ -27,7 +27,10 @@ PASSWORD = "pwd_seguro_t012"
 @pytest.fixture(name="estudiante")
 def fixture_estudiante(db):
     user = User.objects.create_user(
-        username="t012_est", password=PASSWORD, cedula="7200000001"
+        username="t012_est",
+        email="t012.est@unl.edu.ec",
+        password=PASSWORD,
+        cedula="7200000001",
     )
     role, _ = Role.objects.get_or_create(name="ESTUDIANTE")
     UserRole.objects.get_or_create(user=user, role=role)
@@ -52,7 +55,7 @@ def _tokens_con_mfa(cliente: APIClient) -> dict:
     """
     paso1 = cliente.post(
         reverse("auth-login"),
-        data={"username": "t012_est", "password": PASSWORD},
+        data={"email": "t012.est@unl.edu.ec", "password": PASSWORD},
         format="json",
     ).json()
     assert paso1["status"] == "mfa_setup_required"
@@ -82,7 +85,7 @@ def test_obtener_token_credenciales_validas(client, estudiante):
 def test_obtener_token_credenciales_invalidas(client, estudiante):
     respuesta = client.post(
         reverse("auth-login"),
-        data={"username": "t012_est", "password": "incorrecta"},
+        data={"email": "t012.est@unl.edu.ec", "password": "incorrecta"},
         content_type="application/json",
     )
     assert respuesta.status_code == 401

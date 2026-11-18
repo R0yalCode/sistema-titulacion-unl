@@ -165,6 +165,9 @@ SIMPLE_JWT = {
 # Proveedor de identidad activo. Solo existe "local"; "cas" queda documentado
 # en docs/autenticacion/arquitectura-cas.md y no está implementado.
 AUTH_IDENTITY_PROVIDER = env("AUTH_IDENTITY_PROVIDER", default="local")
+# Único dominio admitido para iniciar sesión y para el restablecimiento del
+# 2FA. El correo se normaliza (espacios y mayúsculas) antes de validarlo.
+INSTITUTIONAL_EMAIL_DOMAIN = env("INSTITUTIONAL_EMAIL_DOMAIN", default="unl.edu.ec")
 # Claves Fernet (URL-safe base64, 32 bytes) separadas por comas. La primera
 # cifra; todas descifran (rotación con `manage.py rotate_mfa_keys`).
 # Obligatoria en producción; local.py deriva una clave de desarrollo.
@@ -179,6 +182,11 @@ MFA_USER_MAX_FAILURES = env.int("MFA_USER_MAX_FAILURES", default=10)
 MFA_USER_LOCKOUT_MINUTES = env.int("MFA_USER_LOCKOUT_MINUTES", default=15)
 MFA_RECOVERY_CODES_COUNT = env.int("MFA_RECOVERY_CODES_COUNT", default=10)
 MFA_TRUSTED_DEVICE_DAYS = env.int("MFA_TRUSTED_DEVICE_DAYS", default=5)
+# Restablecimiento del 2FA por enlace (MFA-RST): tras restablecer la
+# contraseña por correo se impone una espera antes de permitir restablecer el
+# 2FA por el mismo canal, para que el acceso solo al buzón no anule ambos
+# factores. Vigencia del enlace: PASSWORD_RESET_TIMEOUT.
+MFA_RESET_COOLDOWN_HOURS = env.int("MFA_RESET_COOLDOWN_HOURS", default=72)
 MFA_TRUSTED_DEVICE_COOKIE_NAME = "sgt_trusted_device"
 # Secure en producción (HTTPS); en desarrollo http://localhost no lo admite.
 MFA_TRUSTED_DEVICE_COOKIE_SECURE = env.bool(
@@ -214,8 +222,16 @@ LOGGING = {
         "apps": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "core": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "django": {"handlers": ["console"], "level": "WARNING", "propagate": False},
-        "django.request": {"handlers": ["console"], "level": "WARNING", "propagate": False},
-        "django.security": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "django.request": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
     },
     "root": {"handlers": ["console"], "level": "WARNING"},
 }

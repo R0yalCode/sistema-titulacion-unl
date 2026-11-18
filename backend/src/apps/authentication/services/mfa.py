@@ -467,11 +467,12 @@ class ResultadoAutenticacion:
 
 
 def iniciar_sesion(
-    request, username: str, password: str, token_confianza: str | None
+    request, email: str, password: str, token_confianza: str | None
 ) -> ResultadoAutenticacion:
-    """Paso 1: credenciales. Nunca emite JWT sin segundo factor."""
+    """Paso 1: correo institucional y contraseña. Nunca emite JWT sin segundo
+    factor. `email` llega normalizado y validado por el serializador."""
     proveedor = get_identity_provider()
-    user = proveedor.authenticate(request, username=username, password=password)
+    user = proveedor.authenticate(request, email=email, password=password)
     if user is None:
         registrar_evento(
             EventoAutenticacion.Tipo.LOGIN_FALLIDO,

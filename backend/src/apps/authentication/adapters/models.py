@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.functions import Lower
 
 ROLE_ESTUDIANTE = "ESTUDIANTE"
 ROLE_SECRETARIA_CARRERA = "SECRETARIA_CARRERA"
@@ -102,6 +103,16 @@ class User(AbstractUser):
         indexes = [
             models.Index(fields=["carrera_id"]),
             models.Index(fields=["facultad_id"]),
+        ]
+        constraints = [
+            # Acceso por correo institucional: un correo identifica a una sola
+            # cuenta, sin distinguir mayúsculas. Los correos vacíos (cuentas
+            # sin correo) quedan fuera de la restricción.
+            models.UniqueConstraint(
+                Lower("email"),
+                condition=~models.Q(email=""),
+                name="unique_user_email_ci",
+            )
         ]
 
     def has_role(self, role_name: str) -> bool:
@@ -245,6 +256,18 @@ class EventoAutenticacion(models.Model):
             "Confianza de dispositivo revocada",
         )
         LOGOUT = "LOGOUT", "Cierre de sesión"
+        CONTRASENA_RESTABLECIDA = (
+            "CONTRASENA_RESTABLECIDA",
+            "Contraseña restablecida por enlace",
+        )
+        MFA_RESTABLECIMIENTO_SOLICITADO = (
+            "MFA_RESTABLECIMIENTO_SOLICITADO",
+            "Restablecimiento del 2FA solicitado",
+        )
+        MFA_RESTABLECIMIENTO_RECHAZADO = (
+            "MFA_RESTABLECIMIENTO_RECHAZADO",
+            "Restablecimiento del 2FA rechazado",
+        )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tipo = models.CharField(max_length=32, choices=Tipo.choices, db_index=True)
