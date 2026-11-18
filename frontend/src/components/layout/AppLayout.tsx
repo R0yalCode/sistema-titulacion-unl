@@ -31,7 +31,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       return
     }
 
-    auth?.logout()
+    auth?.signOut()
     queryClient.clear()
     navigate('/login', { replace: true })
   }

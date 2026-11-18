@@ -11,7 +11,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { server } from '@/test/server'
 import { AppRouter } from '@/app/router'
 
-const TOKEN_URL = '*/api/v1/auth/token/'
+const LOGIN_URL = '*/api/v1/auth/login/'
 
 function base64UrlEncode(value: string): string {
   return btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -40,9 +40,11 @@ function renderAppAt(route: string) {
 
 async function fillAndSubmit(username: string, password: string) {
   const user = userEvent.setup()
-  await user.type(await screen.findByLabelText(/^Usuario/), username)
+  const usernameField = await screen.findByLabelText(/^Nombre de usuario/)
+  await user.clear(usernameField)
+  await user.type(usernameField, `${username}@unl.edu.ec`)
   await user.type(screen.getByLabelText(/^Contraseña/), password)
-  await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+  await user.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
 }
 
 describe('LoginPage (V-01, integración real)', () => {
@@ -61,9 +63,10 @@ describe('LoginPage (V-01, integración real)', () => {
 
   it('redirige a /bandeja cuando el rol real obtenido es operativo', async () => {
     server.use(
-      http.post(TOKEN_URL, () =>
+      http.post(LOGIN_URL, () =>
         HttpResponse.json(
           {
+            status: 'authenticated',
             access: buildToken({ cedula: '1104567890', roles: ['DECANO'], exp: Math.floor(Date.now() / 1000) + 3600 }),
             refresh: 'fixture-refresh-no-se-persiste',
           },
@@ -93,7 +96,7 @@ describe('LoginPage (V-01, integración real)', () => {
 
   it('muestra un mensaje de validación ante un 400 del backend', async () => {
     server.use(
-      http.post(TOKEN_URL, () =>
+      http.post(LOGIN_URL, () =>
         HttpResponse.json({ non_field_errors: ['Debe proporcionar usuario y contraseña.'] }, { status: 400 }),
       ),
     )
@@ -105,7 +108,7 @@ describe('LoginPage (V-01, integración real)', () => {
   })
 
   it('muestra un mensaje de acceso restringido ante un 403', async () => {
-    server.use(http.post(TOKEN_URL, () => HttpResponse.json({ detail: 'Cuenta inactiva.' }, { status: 403 })))
+    server.use(http.post(LOGIN_URL, () => HttpResponse.json({ detail: 'Cuenta inactiva.' }, { status: 403 })))
 
     renderAppAt('/login')
     await fillAndSubmit('estudiante.demo', 'demo-valida')
@@ -114,7 +117,7 @@ describe('LoginPage (V-01, integración real)', () => {
   })
 
   it('muestra un mensaje genérico ante un código de estado no mapeado', async () => {
-    server.use(http.post(TOKEN_URL, () => HttpResponse.json({ detail: 'Conflicto.' }, { status: 409 })))
+    server.use(http.post(LOGIN_URL, () => HttpResponse.json({ detail: 'Conflicto.' }, { status: 409 })))
 
     renderAppAt('/login')
     await fillAndSubmit('estudiante.demo', 'demo-valida')
@@ -124,8 +127,11 @@ describe('LoginPage (V-01, integración real)', () => {
 
   it('muestra un mensaje genérico si el backend devuelve un access token inválido', async () => {
     server.use(
-      http.post(TOKEN_URL, () =>
-        HttpResponse.json({ access: 'token-invalido', refresh: 'fixture-refresh-no-se-persiste' }, { status: 200 }),
+      http.post(LOGIN_URL, () =>
+        HttpResponse.json(
+          { status: 'authenticated', access: 'token-invalido', refresh: 'fixture-refresh-no-se-persiste' },
+          { status: 200 },
+        ),
       ),
     )
 
@@ -139,13 +145,14 @@ describe('LoginPage (V-01, integración real)', () => {
   it('CA-V01-03a: muestra un mensaje de error del servidor ante un 500 y permite reintentar', async () => {
     let attempts = 0
     server.use(
-      http.post(TOKEN_URL, () => {
+      http.post(LOGIN_URL, () => {
         attempts += 1
         if (attempts === 1) {
           return HttpResponse.json({ detail: 'Error interno.' }, { status: 500 })
         }
         return HttpResponse.json(
           {
+            status: 'authenticated',
             access: buildToken({ cedula: '1104567890', roles: ['ESTUDIANTE'], exp: Math.floor(Date.now() / 1000) + 3600 }),
             refresh: 'fixture-refresh-no-se-persiste',
           },
@@ -164,7 +171,7 @@ describe('LoginPage (V-01, integración real)', () => {
   })
 
   it('CA-V01-03b: muestra un estado de error ante una falla de red', async () => {
-    server.use(http.post(TOKEN_URL, () => HttpResponse.error()))
+    server.use(http.post(LOGIN_URL, () => HttpResponse.error()))
 
     renderAppAt('/login')
     await fillAndSubmit('estudiante.demo', 'demo-valida')
@@ -174,10 +181,11 @@ describe('LoginPage (V-01, integración real)', () => {
 
   it('muestra el indicador de carga mientras la petición está en curso', async () => {
     server.use(
-      http.post(TOKEN_URL, async () => {
+      http.post(LOGIN_URL, async () => {
         await new Promise((resolve) => setTimeout(resolve, 50))
         return HttpResponse.json(
           {
+            status: 'authenticated',
             access: buildToken({ cedula: '1104567890', roles: ['ESTUDIANTE'], exp: Math.floor(Date.now() / 1000) + 3600 }),
             refresh: 'fixture-refresh-no-se-persiste',
           },
@@ -189,8 +197,8 @@ describe('LoginPage (V-01, integración real)', () => {
     renderAppAt('/login')
     await fillAndSubmit('estudiante.demo', 'demo-valida')
 
-    expect(screen.getByRole('button', { name: 'Ingresar' })).toHaveAttribute('aria-busy', 'true')
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Ingresar' })).toBeDisabled())
+    expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toHaveAttribute('aria-busy', 'true')
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toBeDisabled())
 
     expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
   })

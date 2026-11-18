@@ -1,0 +1,216 @@
+/*
+ * Composición tomada de las referencias del SAC de la UNL
+ * (docs/autenticacion/referencias/sac-login.png, sac-2fa.png,
+ * restablecer_doble_factor.png). Colores muestreados de esas capturas; se
+ * declaran en el ámbito de las pantallas de autenticación para no alterar
+ * los tokens globales.
+ */
+.page {
+  --auth-navy: #13294b;
+  --auth-navy-overlay: rgba(16, 38, 74, 0.82);
+  --auth-ink: #142844;
+  --auth-gold: #c8a333;
+  --auth-bg: #f2f5f8;
+  --auth-error: #a8123e;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--auth-bg);
+  color: var(--auth-ink);
+}
+
+/* Banda institucional: fotografía del campus (campus.png) bajo un velo azul
+   que garantiza el contraste del texto blanco (WCAG AA). */
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-bottom: 4px solid var(--auth-gold);
+  background-color: var(--auth-navy);
+  background-image: linear-gradient(var(--auth-navy-overlay), var(--auth-navy-overlay)),
+    image-set(url('/assets/auth/campus-960.jpg') 1x, url('/assets/auth/campus.jpg') 2x);
+  background-position: center 40%;
+  background-size: cover;
+  color: #ffffff;
+}
+
+.brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-6);
+}
+
+/* Logotipo oficial sin deformar: se fija la altura y el ancho se deriva. */
+.identity {
+  width: auto;
+  height: 64px;
+}
+
+.divider {
+  display: none;
+  width: 2px;
+  height: 84px;
+  background: var(--auth-gold);
+}
+
+.systemName {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 300;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.systemTag {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 490px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-6) var(--space-4) var(--space-6);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(20, 40, 68, 0.14);
+}
+
+.cardTitle {
+  margin: 0 0 var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 2px solid var(--auth-gold);
+  color: var(--auth-ink);
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Variante "panel" (restablecimiento del 2FA). */
+.titlePanel {
+  padding: var(--space-5, 1.25rem) var(--space-5, 1.25rem);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #13294b, #1d3a61);
+  box-shadow: 0 8px 20px rgba(20, 40, 68, 0.25);
+  color: #ffffff;
+}
+
+.panelTitle {
+  margin: 0 0 var(--space-2);
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.panelText {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.footnote {
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--auth-gold);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.footer {
+  margin: 0 var(--space-4);
+  padding: var(--space-4) 0 var(--space-6);
+  border-top: 1px dashed #c3cad3;
+  color: #4b5563;
+  font-size: var(--font-size-label);
+  text-align: center;
+}
+
+.footer p {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .banner {
+    padding: var(--space-3) var(--space-6) var(--space-4);
+  }
+
+  .brand {
+    flex-wrap: nowrap;
+    gap: var(--space-8);
+  }
+
+  .identity {
+    height: 92px;
+  }
+
+  .divider {
+    display: block;
+  }
+
+  .systemName {
+    font-size: 2.125rem;
+    text-align: left;
+  }
+
+  .systemTag {
+    font-size: 1.25rem;
+  }
+
+  .main {
+    padding: var(--space-10, 2.5rem) var(--space-6);
+  }
+
+  .column {
+    max-width: 490px;
+  }
+
+  .column:has(.titlePanel) {
+    max-width: 740px;
+  }
+
+  .card {
+    padding: var(--space-6) var(--space-6) var(--space-8);
+  }
+
+  .cardTitle {
+    font-size: 1.5rem;
+  }
+
+  .panelTitle {
+    font-size: 1.75rem;
+  }
+
+  .footer {
+    width: min(1320px, calc(100% - var(--space-12)));
+    margin: 0 auto;
+  }
+}

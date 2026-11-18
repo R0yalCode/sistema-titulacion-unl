@@ -15,6 +15,7 @@ function authValue(user: AuthUser | null): AuthContextValue {
     isLoading: false,
     login: vi.fn().mockReturnValue(true),
     logout: vi.fn(),
+    signOut: vi.fn(),
     hasRole: (roles) => user !== null && roles.some((role) => user.roles.includes(role)),
   }
 }
@@ -176,7 +177,8 @@ describe('NoHabilitadoPage', () => {
     expect(screen.queryByRole('button', { name: 'Volver al inicio' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
-    expect(valor.logout).toHaveBeenCalledTimes(1)
+    // Cierre pedido por el usuario: revoca también la confianza del dispositivo.
+    expect(valor.signOut).toHaveBeenCalledTimes(1)
     expect(screen.getByText('Pantalla de login')).toBeInTheDocument()
   })
 

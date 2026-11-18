@@ -12,3 +12,8 @@ DATABASES = {
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
 ]
+# AUTH-A: clave Fernet efímera por proceso de pruebas (nunca persistida).
+if not MFA_ENCRYPTION_KEYS:  # noqa: F405
+    from cryptography.fernet import Fernet
+
+    MFA_ENCRYPTION_KEYS = [Fernet.generate_key().decode()]

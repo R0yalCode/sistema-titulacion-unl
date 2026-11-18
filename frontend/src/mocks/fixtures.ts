@@ -19,6 +19,27 @@ export const fixtureTokenPair = {
   refresh: 'fixture-refresh-no-se-persiste',
 }
 
+// Segundo factor (AUTH-C): valores ficticios solo para pruebas.
+export const fixtureMfaChallenge = {
+  challenge: 'fixture-reto-mfa',
+  expires_in: 300,
+}
+
+export const fixtureMfaSetup = {
+  qr_svg:
+    'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2010%2010%22%2F%3E',
+  manual_key: 'ABCD EFGH IJKL MNOP QRST UVWX YZ23 4567',
+  issuer: 'SGT-SIAAF UNL',
+  account: 'mfa.registro',
+}
+
+export const fixtureRecoveryCodes = ['ABCDE-FGHJK', 'LMNPQ-RSTUV']
+
+export const mfaInvalidCodeBody = {
+  detail: 'El código no es válido. Verifique e intente nuevamente.',
+  code: 'codigo_mfa_invalido',
+}
+
 export const fixtureBandejaExpediente = {
   id: '33333333-3333-3333-3333-333333333333',
   numero_expediente: 'EXP-2026-0001',

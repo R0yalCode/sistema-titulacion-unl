@@ -29,7 +29,7 @@ export default function NoHabilitadoPage() {
   const hayHistorial = location.key !== 'default'
 
   function cerrarSesion() {
-    auth?.logout()
+    auth?.signOut()
     navigate('/login', { replace: true })
   }
 

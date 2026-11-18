@@ -12,6 +12,7 @@ function authValue(user: AuthUser | null): AuthContextValue {
     isLoading: false,
     login: vi.fn().mockReturnValue(true),
     logout: vi.fn(),
+    signOut: vi.fn(),
     hasRole: (roles) => user !== null && roles.some((role) => user.roles.includes(role)),
   }
 }
@@ -32,10 +33,11 @@ describe('AppRouter', () => {
     expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
   })
 
-  it('redirige / a /login cuando no hay sesión', async () => {
+  it('muestra la página pública en / cuando no hay sesión (AUTH-E)', async () => {
     renderRouterAs(null, '/')
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Sistema de Gestión del Trámite de Titulación' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 
   it('redirige una ruta protegida a /login cuando no hay sesión', async () => {

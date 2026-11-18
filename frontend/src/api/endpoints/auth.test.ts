@@ -5,13 +5,13 @@ import { login } from './auth'
 
 describe('login', () => {
   it('devuelve el par de tokens con credenciales válidas', async () => {
-    const result = await login({ username: 'estudiante.demo', password: 'demo-valida' })
+    const result = await login({ email: 'estudiante.demo@unl.edu.ec', password: 'demo-valida' })
 
-    expect(result).toEqual(fixtureTokenPair)
+    expect(result).toEqual({ status: 'authenticated', ...fixtureTokenPair })
   })
 
   it('devuelve un ApiError normalizado con credenciales inválidas', async () => {
-    await expect(login({ username: 'incorrecto', password: 'incorrecto' })).rejects.toMatchObject({
+    await expect(login({ email: 'incorrecto@unl.edu.ec', password: 'incorrecto' })).rejects.toMatchObject({
       error: { status: 401, code: 'UNAUTHORIZED' },
     })
   })
@@ -20,7 +20,7 @@ describe('login', () => {
     const handler = vi.fn()
     setUnauthorizedHandler(handler)
 
-    await login({ username: 'incorrecto', password: 'incorrecto' }).catch(() => undefined)
+    await login({ email: 'incorrecto@unl.edu.ec', password: 'incorrecto' }).catch(() => undefined)
 
     expect(handler).not.toHaveBeenCalled()
     setUnauthorizedHandler(null)

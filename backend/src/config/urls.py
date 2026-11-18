@@ -6,7 +6,19 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-from apps.authentication.adapters.views import TokenPairView
+from apps.authentication.adapters.views import (
+    LoginView,
+    LogoutView,
+    MfaRecoveryView,
+    MfaResetConfirmView,
+    MfaResetRequestView,
+    MfaSetupConfirmView,
+    MfaSetupView,
+    MfaVerifyView,
+    PasswordResetConfirmView,
+    PasswordResetRequestView,
+    PasswordResetValidateView,
+)
 from apps.expedientes.adapters.views import (
     BandejaExpedienteViewSet,
     ExpedienteViewSet,
@@ -30,7 +42,49 @@ urlpatterns = [
     # Consola interna de administración (ADR-0009): solo staff/superuser,
     # sin exposición operativa del trámite.
     path("admin/", admin.site.urls),
-    path("api/v1/auth/token/", TokenPairView.as_view(), name="auth-token"),
+    # Inicio de sesión en dos pasos (AUTH-B). Sustituye a /auth/token/, que
+    # emitía el JWT sin segundo factor.
+    path("api/v1/auth/login/", LoginView.as_view(), name="auth-login"),
+    path("api/v1/auth/mfa/setup/", MfaSetupView.as_view(), name="auth-mfa-setup"),
+    path(
+        "api/v1/auth/mfa/setup/confirm/",
+        MfaSetupConfirmView.as_view(),
+        name="auth-mfa-setup-confirm",
+    ),
+    path("api/v1/auth/mfa/verify/", MfaVerifyView.as_view(), name="auth-mfa-verify"),
+    path(
+        "api/v1/auth/mfa/recovery/",
+        MfaRecoveryView.as_view(),
+        name="auth-mfa-recovery",
+    ),
+    # Restablecimiento del 2FA por enlace (MFA-RST).
+    path(
+        "api/v1/auth/mfa/reset/",
+        MfaResetRequestView.as_view(),
+        name="auth-mfa-reset",
+    ),
+    path(
+        "api/v1/auth/mfa/reset/confirm/",
+        MfaResetConfirmView.as_view(),
+        name="auth-mfa-reset-confirm",
+    ),
+    path("api/v1/auth/logout/", LogoutView.as_view(), name="auth-logout"),
+    # Recuperación de contraseña (AUTH-RC): públicos, throttle por IP.
+    path(
+        "api/v1/auth/password-reset/",
+        PasswordResetRequestView.as_view(),
+        name="auth-password-reset",
+    ),
+    path(
+        "api/v1/auth/password-reset/validate/",
+        PasswordResetValidateView.as_view(),
+        name="auth-password-reset-validate",
+    ),
+    path(
+        "api/v1/auth/password-reset/confirm/",
+        PasswordResetConfirmView.as_view(),
+        name="auth-password-reset-confirm",
+    ),
     path(
         "api/v1/expedientes/",
         ExpedienteViewSet.as_view({"post": "create"}),
@@ -103,7 +157,9 @@ urlpatterns = [
     ),
     path(
         "api/v1/peticiones/<uuid:pk>/documento/",
-        PeticionViewSet.as_view({"get": "descargar_documento", "post": "cargar_documento"}),
+        PeticionViewSet.as_view(
+            {"get": "descargar_documento", "post": "cargar_documento"}
+        ),
         name="peticiones-documento",
     ),
     path(

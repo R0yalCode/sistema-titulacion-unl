@@ -107,6 +107,25 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "authentication.User"
 
+# --- Recuperación de contraseña por correo (AUTH-RC) -------------------
+# Vigencia del enlace (segundos). Tras cambiar la contraseña, el enlace deja
+# de ser válido aunque no haya caducado.
+PASSWORD_RESET_TIMEOUT = env.int("PASSWORD_RESET_TIMEOUT", default=3600)
+# Origen público del frontend con el que se construye el enlace del correo.
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:8000")
+# Por defecto el correo se escribe en la consola del proceso (desarrollo).
+# Un entorno real debe configurar SMTP mediante estas variables.
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="no-reply@unl.edu.ec")
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -116,6 +135,12 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "document_upload": env("DOCUMENT_UPLOAD_THROTTLE", default="10/hour"),
         "auth": env("AUTH_THROTTLE_RATE", default="5/minute"),
+        # AUTH-RC: solicitud, validación y confirmación de restablecimiento
+        # de contraseña, por IP.
+        "password_reset": env("PASSWORD_RESET_THROTTLE_RATE", default="10/hour"),
+        # AUTH-B: endpoints del segundo factor (registro, verificación,
+        # recuperación), por IP. Se suma al límite de intentos por reto.
+        "mfa": env("MFA_THROTTLE_RATE", default="10/minute"),
         # VULN-001 / INC-01-T01: tasa compartida de operaciones mutantes por
         # usuario. Valor técnico provisional (DT-03, pendiente de aprobación).
         "mutante": env("MUTANT_THROTTLE_RATE", default="30/minute"),
@@ -129,6 +154,44 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
     "SIGNING_KEY": JWT_SIGNING_KEY,
 }
+
+# --- Autenticación en dos factores (AUTH-A/AUTH-B) --------------------
+# Ver docs/autenticacion/politica-2fa.md. Separación de conceptos:
+# - Sesión: vida del JWT (SIMPLE_JWT arriba).
+# - Confianza del dispositivo: MFA_TRUSTED_DEVICE_DAYS (cookie HttpOnly con
+#   token aleatorio; el servidor guarda solo su hash y la fecha de expiración).
+# - Reto MFA: ventana para completar el segundo factor tras la contraseña.
+#
+# Proveedor de identidad activo. Solo existe "local"; "cas" queda documentado
+# en docs/autenticacion/arquitectura-cas.md y no está implementado.
+AUTH_IDENTITY_PROVIDER = env("AUTH_IDENTITY_PROVIDER", default="local")
+# Único dominio admitido para iniciar sesión y para el restablecimiento del
+# 2FA. El correo se normaliza (espacios y mayúsculas) antes de validarlo.
+INSTITUTIONAL_EMAIL_DOMAIN = env("INSTITUTIONAL_EMAIL_DOMAIN", default="unl.edu.ec")
+# Claves Fernet (URL-safe base64, 32 bytes) separadas por comas. La primera
+# cifra; todas descifran (rotación con `manage.py rotate_mfa_keys`).
+# Obligatoria en producción; local.py deriva una clave de desarrollo.
+MFA_ENCRYPTION_KEYS = env.list("MFA_ENCRYPTION_KEYS", default=[])
+MFA_ISSUER_NAME = env("MFA_ISSUER_NAME", default="SGT-SIAAF UNL")
+# Tolerancia de deriva de reloj, en periodos de 30 s a cada lado.
+MFA_TOTP_VALID_WINDOW = env.int("MFA_TOTP_VALID_WINDOW", default=1)
+MFA_CHALLENGE_TTL_SECONDS = env.int("MFA_CHALLENGE_TTL_SECONDS", default=300)
+MFA_CHALLENGE_MAX_ATTEMPTS = env.int("MFA_CHALLENGE_MAX_ATTEMPTS", default=5)
+# Bloqueo temporal por usuario tras fallos de segundo factor acumulados.
+MFA_USER_MAX_FAILURES = env.int("MFA_USER_MAX_FAILURES", default=10)
+MFA_USER_LOCKOUT_MINUTES = env.int("MFA_USER_LOCKOUT_MINUTES", default=15)
+MFA_RECOVERY_CODES_COUNT = env.int("MFA_RECOVERY_CODES_COUNT", default=10)
+MFA_TRUSTED_DEVICE_DAYS = env.int("MFA_TRUSTED_DEVICE_DAYS", default=5)
+# Restablecimiento del 2FA por enlace (MFA-RST): tras restablecer la
+# contraseña por correo se impone una espera antes de permitir restablecer el
+# 2FA por el mismo canal, para que el acceso solo al buzón no anule ambos
+# factores. Vigencia del enlace: PASSWORD_RESET_TIMEOUT.
+MFA_RESET_COOLDOWN_HOURS = env.int("MFA_RESET_COOLDOWN_HOURS", default=72)
+MFA_TRUSTED_DEVICE_COOKIE_NAME = "sgt_trusted_device"
+# Secure en producción (HTTPS); en desarrollo http://localhost no lo admite.
+MFA_TRUSTED_DEVICE_COOKIE_SECURE = env.bool(
+    "MFA_TRUSTED_DEVICE_COOKIE_SECURE", default=not DEBUG
+)
 
 # --- Logging estructurado (SEC-T011) ---------------------------------
 # Base segura para TODOS los entornos: solo consola, JSON, con filtros de
@@ -159,8 +222,16 @@ LOGGING = {
         "apps": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "core": {"handlers": ["console"], "level": "INFO", "propagate": False},
         "django": {"handlers": ["console"], "level": "WARNING", "propagate": False},
-        "django.request": {"handlers": ["console"], "level": "WARNING", "propagate": False},
-        "django.security": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "django.request": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
     },
     "root": {"handlers": ["console"], "level": "WARNING"},
 }

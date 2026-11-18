@@ -62,6 +62,13 @@ CUENTAS_DEMO = [
     ),
 ]
 
+
+# Correo de prueba de las cuentas demo: prefijo "sgtdemo." para que no se
+# confunda con buzones reales del dominio institucional.
+def correo_demo(username: str) -> str:
+    return f"sgtdemo.{username}@unl.edu.ec"
+
+
 # Nombre de la variable de entorno con la contrasena de las cuentas demo.
 VARIABLE_CLAVE_DEMO = "SEED_DEMO_PASSWORD"
 
@@ -86,14 +93,20 @@ class Command(BaseCommand):
         clave_demo = _clave_demo()
         creadas = []
         for username, cedula, rol in CUENTAS_DEMO:
+            email = correo_demo(username)
             user, created = User.objects.get_or_create(
                 username=username,
-                defaults={"cedula": cedula},
+                defaults={"cedula": cedula, "email": email},
             )
             if created:
                 user.set_password(clave_demo)
                 user.save()
                 creadas.append(username)
+            elif not user.email:
+                # Acceso por correo institucional: completa el correo de las
+                # cuentas demo previas sin tocar su contraseña ni sus roles.
+                user.email = email
+                user.save(update_fields=["email"])
             role, _ = Role.objects.get_or_create(name=rol)
             UserRole.objects.get_or_create(user=user, role=role)
         self.stdout.write(

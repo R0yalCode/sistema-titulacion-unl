@@ -4,11 +4,25 @@ import {
   fixtureChecklist,
   fixtureExpedienteBorrador,
   fixtureExpedienteDetalle,
+  fixtureMfaChallenge,
+  fixtureMfaSetup,
   fixtureNotificacion,
+  fixtureRecoveryCodes,
   fixtureTokenPair,
+  mfaInvalidCodeBody,
 } from './fixtures'
 
-const TOKEN_URL = '*/api/v1/auth/token/'
+const LOGIN_URL = '*/api/v1/auth/login/'
+const MFA_SETUP_URL = '*/api/v1/auth/mfa/setup/'
+const MFA_SETUP_CONFIRM_URL = '*/api/v1/auth/mfa/setup/confirm/'
+const MFA_VERIFY_URL = '*/api/v1/auth/mfa/verify/'
+const MFA_RECOVERY_URL = '*/api/v1/auth/mfa/recovery/'
+const LOGOUT_URL = '*/api/v1/auth/logout/'
+const MFA_RESET_URL = '*/api/v1/auth/mfa/reset/'
+const MFA_RESET_CONFIRM_URL = '*/api/v1/auth/mfa/reset/confirm/'
+const PASSWORD_RESET_URL = '*/api/v1/auth/password-reset/'
+const PASSWORD_RESET_VALIDATE_URL = '*/api/v1/auth/password-reset/validate/'
+const PASSWORD_RESET_CONFIRM_URL = '*/api/v1/auth/password-reset/confirm/'
 const BANDEJA_URL = '*/api/v1/expedientes/bandeja/'
 const EXPEDIENTES_URL = '*/api/v1/expedientes/'
 const EXPEDIENTE_DETALLE_URL = '*/api/v1/expedientes/:id/'
@@ -22,15 +36,83 @@ const NOTIFICACIONES_URL = '*/api/v1/notificaciones/'
 const NOTIFICACION_MARCAR_LEIDA_URL = '*/api/v1/notificaciones/:id/marcar-leida/'
 
 export const handlers: HttpHandler[] = [
-  http.post(TOKEN_URL, async ({ request }) => {
-    const body = (await request.json()) as { username?: string; password?: string }
+  // Flujo en dos pasos (AUTH-B). Solo para pruebas: "estudiante.demo@unl.edu.ec"
+  // simula un dispositivo de confianza vigente; "mfa.registro@…" y
+  // "mfa.verificar@…" exigen registrar o verificar el segundo factor (123456).
+  http.post(LOGIN_URL, async ({ request }) => {
+    const body = (await request.json()) as { email?: string; password?: string }
+    const user = body.email?.replace(/@unl\.edu\.ec$/, '')
 
-    if (body.username === 'estudiante.demo' && body.password === 'demo-valida') {
-      return HttpResponse.json(fixtureTokenPair, { status: 200 })
+    if (body.password === 'demo-valida') {
+      if (user === 'estudiante.demo') {
+        return HttpResponse.json({ status: 'authenticated', ...fixtureTokenPair }, { status: 200 })
+      }
+      if (user === 'mfa.registro') {
+        return HttpResponse.json({ status: 'mfa_setup_required', ...fixtureMfaChallenge })
+      }
+      if (user === 'mfa.verificar') {
+        return HttpResponse.json({ status: 'mfa_required', ...fixtureMfaChallenge })
+      }
     }
 
-    return HttpResponse.json({ detail: 'No se encontró una cuenta activa con las credenciales dadas.' }, { status: 401 })
+    return HttpResponse.json(
+      { detail: 'Usuario o contraseña incorrectos.', code: 'credenciales_invalidas' },
+      { status: 401 },
+    )
   }),
+  http.post(MFA_SETUP_URL, () => HttpResponse.json(fixtureMfaSetup)),
+  http.post(MFA_SETUP_CONFIRM_URL, async ({ request }) => {
+    const body = (await request.json()) as { code?: string }
+    if (body.code === '123456') {
+      return HttpResponse.json({
+        status: 'authenticated',
+        ...fixtureTokenPair,
+        recovery_codes: fixtureRecoveryCodes,
+      })
+    }
+    return HttpResponse.json(mfaInvalidCodeBody, { status: 400 })
+  }),
+  http.post(MFA_VERIFY_URL, async ({ request }) => {
+    const body = (await request.json()) as { code?: string }
+    if (body.code === '123456') {
+      return HttpResponse.json({ status: 'authenticated', ...fixtureTokenPair })
+    }
+    return HttpResponse.json(mfaInvalidCodeBody, { status: 400 })
+  }),
+  http.post(MFA_RECOVERY_URL, async ({ request }) => {
+    const body = (await request.json()) as { recovery_code?: string }
+    if (body.recovery_code?.toUpperCase() === fixtureRecoveryCodes[0]) {
+      return HttpResponse.json({ status: 'mfa_setup_required', ...fixtureMfaChallenge })
+    }
+    return HttpResponse.json(mfaInvalidCodeBody, { status: 400 })
+  }),
+  http.post(LOGOUT_URL, () => HttpResponse.json({ detail: 'Sesión cerrada.' })),
+  http.post(MFA_RESET_URL, () =>
+    HttpResponse.json({
+      detail:
+        'Si los datos corresponden a una cuenta con doble factor activo, enviaremos un enlace de vigencia limitada al correo registrado.',
+    }),
+  ),
+  http.post(MFA_RESET_CONFIRM_URL, async ({ request }) => {
+    const body = (await request.json()) as { token?: string }
+    if (body.token === 'token-valido') {
+      return HttpResponse.json({ detail: 'El doble factor se restableció.' })
+    }
+    return HttpResponse.json(
+      { detail: 'El enlace no es válido.', code: 'enlace_mfa_invalido' },
+      { status: 400 },
+    )
+  }),
+  http.post(PASSWORD_RESET_URL, () =>
+    HttpResponse.json({
+      detail:
+        'Si existe una cuenta asociada a ese correo, se enviarán las instrucciones para restablecer la contraseña.',
+    }),
+  ),
+  http.post(PASSWORD_RESET_VALIDATE_URL, () => HttpResponse.json({ detail: 'Enlace válido.' })),
+  http.post(PASSWORD_RESET_CONFIRM_URL, () =>
+    HttpResponse.json({ detail: 'La contraseña se restableció correctamente.' }),
+  ),
   http.get(BANDEJA_URL, () =>
     HttpResponse.json({ count: 1, next: null, previous: null, results: [fixtureBandejaExpediente] }),
   ),
