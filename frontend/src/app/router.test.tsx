@@ -36,7 +36,7 @@ describe('AppRouter', () => {
   it('muestra la página pública en / cuando no hay sesión (AUTH-E)', async () => {
     renderRouterAs(null, '/')
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Sistema de Gestión de Titulación' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Sistema de Gestión del Trámite de Titulación' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 

@@ -17,13 +17,44 @@ function renderLanding() {
 }
 
 describe('LandingPage (AUTH-E)', () => {
-  it('presenta el sistema y el botón de ingreso lleva a /login', async () => {
+  it('presenta SGT-SIAAF, la UNL y el propósito del sistema', () => {
+    renderLanding()
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Sistema de Gestión del Trámite de Titulación' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('SGT-SIAAF')).toBeInTheDocument()
+    expect(screen.getByText(/Universidad Nacional de Loja: solicite su titulación/)).toBeInTheDocument()
+  })
+
+  it('el encabezado ofrece Inicio y el acceso, como en la referencia', () => {
+    renderLanding()
+
+    const nav = screen.getByRole('navigation', { name: 'Navegación principal' })
+    expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '#inicio')
+    expect(within(nav).getByRole('link', { name: 'Ingresar al sistema' })).toHaveAttribute('href', '/login')
+  })
+
+  it('el botón principal «Ingresar al sistema» lleva a /login', async () => {
     const user = userEvent.setup()
     renderLanding()
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Sistema de Gestión de Titulación' })).toBeInTheDocument()
-    await user.click(screen.getByRole('link', { name: 'Ingresar al sistema' }))
+    const principal = within(screen.getByRole('main')).getByRole('link', { name: 'Ingresar al sistema' })
+    expect(principal).toHaveAttribute('href', '/login')
+    await user.click(principal)
 
+    expect(screen.getByRole('heading', { name: 'Pantalla de ingreso' })).toBeInTheDocument()
+  })
+
+  it('el botón principal es alcanzable con el teclado', async () => {
+    const user = userEvent.setup()
+    renderLanding()
+
+    await user.tab() // Inicio
+    await user.tab() // Ingresar (encabezado)
+    await user.tab() // Ingresar (principal)
+    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Ingresar al sistema' })).toHaveFocus()
+    await user.keyboard('{Enter}')
     expect(screen.getByRole('heading', { name: 'Pantalla de ingreso' })).toBeInTheDocument()
   })
 
