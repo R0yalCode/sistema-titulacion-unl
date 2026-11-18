@@ -107,6 +107,25 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "authentication.User"
 
+# --- Recuperación de contraseña por correo (AUTH-RC) -------------------
+# Vigencia del enlace (segundos). Tras cambiar la contraseña, el enlace deja
+# de ser válido aunque no haya caducado.
+PASSWORD_RESET_TIMEOUT = env.int("PASSWORD_RESET_TIMEOUT", default=3600)
+# Origen público del frontend con el que se construye el enlace del correo.
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:8000")
+# Por defecto el correo se escribe en la consola del proceso (desarrollo).
+# Un entorno real debe configurar SMTP mediante estas variables.
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="no-reply@unl.edu.ec")
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -116,6 +135,9 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "document_upload": env("DOCUMENT_UPLOAD_THROTTLE", default="10/hour"),
         "auth": env("AUTH_THROTTLE_RATE", default="5/minute"),
+        # AUTH-RC: solicitud, validación y confirmación de restablecimiento
+        # de contraseña, por IP.
+        "password_reset": env("PASSWORD_RESET_THROTTLE_RATE", default="10/hour"),
         # VULN-001 / INC-01-T01: tasa compartida de operaciones mutantes por
         # usuario. Valor técnico provisional (DT-03, pendiente de aprobación).
         "mutante": env("MUTANT_THROTTLE_RATE", default="30/minute"),

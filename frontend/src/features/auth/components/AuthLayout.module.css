@@ -1,0 +1,179 @@
+/*
+ * Colores muestreados de la referencia visual
+ * (diseno-ui/ui/titulacion-v2/eferencias-visuales/referencia_login.png).
+ * Se declaran en el ámbito de las pantallas de autenticación para no alterar
+ * los tokens globales.
+ */
+.page {
+  --auth-navy: #143c5d;
+  --auth-ink: #142844;
+  --auth-gold: #c8a333;
+  --auth-bg: #f4f7f9;
+  --auth-field-border: #cbcbcb;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--auth-bg);
+  color: var(--auth-ink);
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-bottom: 4px solid var(--auth-gold);
+  background-color: var(--auth-navy);
+  color: #ffffff;
+}
+
+.brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3) var(--space-6);
+}
+
+.identity {
+  width: min(322px, 78vw);
+  height: auto;
+}
+
+.divider {
+  display: none;
+  width: 2px;
+  height: 80px;
+  background: var(--auth-gold);
+}
+
+.systemName {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.systemTag {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 490px;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+  border-radius: 16px;
+  background: var(--color-surface);
+  box-shadow: 0 12px 32px rgba(20, 40, 68, 0.14);
+}
+
+.cardTitle {
+  margin: 0 0 var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 2px solid var(--auth-gold);
+  color: var(--auth-ink);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.footer {
+  margin: 0 var(--space-4);
+  padding: var(--space-4) 0 var(--space-6);
+  border-top: 1px dashed #c3cad3;
+  color: #4b5563;
+  font-size: var(--font-size-label);
+  text-align: center;
+}
+
+.footer p {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .banner {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-6) var(--space-4);
+  }
+
+  .brand {
+    flex-wrap: nowrap;
+    gap: var(--space-8);
+  }
+
+  .divider {
+    display: block;
+  }
+
+  .systemName {
+    font-size: 2rem;
+    text-align: left;
+  }
+
+  .systemTag {
+    font-size: 1.25rem;
+  }
+
+  .main {
+    padding: var(--space-12) var(--space-6);
+  }
+
+  .card {
+    padding: var(--space-6) var(--space-6) var(--space-8);
+  }
+
+  .cardTitle {
+    font-size: 1.5rem;
+  }
+
+  .footer {
+    width: min(1320px, calc(100% - var(--space-12)));
+    margin: 0 auto;
+  }
+}
+
+/* La fotografía del campus solo cabe sin solaparse con la identidad en
+   pantallas anchas; se funde hacia el centro con el azul institucional. */
+@media (min-width: 1100px) {
+  .banner {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(20, 60, 93, 0) 0,
+        var(--auth-navy) 440px,
+        var(--auth-navy) calc(100% - 440px),
+        rgba(20, 60, 93, 0) 100%
+      ),
+      url('/assets/auth/campus-izquierda.jpg'), url('/assets/auth/campus-derecha.jpg');
+    background-repeat: no-repeat;
+    background-position:
+      center,
+      left center,
+      right center;
+    background-size:
+      100% 100%,
+      auto 100%,
+      auto 100%;
+  }
+}

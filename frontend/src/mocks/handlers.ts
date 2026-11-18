@@ -9,6 +9,9 @@ import {
 } from './fixtures'
 
 const TOKEN_URL = '*/api/v1/auth/token/'
+const PASSWORD_RESET_URL = '*/api/v1/auth/password-reset/'
+const PASSWORD_RESET_VALIDATE_URL = '*/api/v1/auth/password-reset/validate/'
+const PASSWORD_RESET_CONFIRM_URL = '*/api/v1/auth/password-reset/confirm/'
 const BANDEJA_URL = '*/api/v1/expedientes/bandeja/'
 const EXPEDIENTES_URL = '*/api/v1/expedientes/'
 const EXPEDIENTE_DETALLE_URL = '*/api/v1/expedientes/:id/'
@@ -31,6 +34,16 @@ export const handlers: HttpHandler[] = [
 
     return HttpResponse.json({ detail: 'No se encontró una cuenta activa con las credenciales dadas.' }, { status: 401 })
   }),
+  http.post(PASSWORD_RESET_URL, () =>
+    HttpResponse.json({
+      detail:
+        'Si existe una cuenta asociada a ese correo, se enviarán las instrucciones para restablecer la contraseña.',
+    }),
+  ),
+  http.post(PASSWORD_RESET_VALIDATE_URL, () => HttpResponse.json({ detail: 'Enlace válido.' })),
+  http.post(PASSWORD_RESET_CONFIRM_URL, () =>
+    HttpResponse.json({ detail: 'La contraseña se restableció correctamente.' }),
+  ),
   http.get(BANDEJA_URL, () =>
     HttpResponse.json({ count: 1, next: null, previous: null, results: [fixtureBandejaExpediente] }),
   ),

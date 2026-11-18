@@ -4,37 +4,11 @@ import { AuthContext } from '@/auth/AuthContext'
 import { decodeAccessToken } from '@/auth/jwt'
 import { getHomeRouteForRoles } from '@/auth/redirect'
 import { login } from '@/api/endpoints/auth'
-import { ApiRequestError } from '@/api/errors'
 import { DemoBanner } from '@/components/layout/DemoBanner'
-import { presentApiError } from '@/lib/apiErrorPresentation'
 import { getEnv } from '@/lib/env'
+import { describeLoginError } from './authErrors'
+import { AuthLayout } from './components/AuthLayout'
 import { LoginForm, type LoginFormValues } from './LoginForm'
-import styles from './LoginPage.module.css'
-
-const UNAVAILABLE_STATUSES = [500, 502, 503, 504]
-
-function describeLoginError(error: unknown): string {
-  if (!(error instanceof ApiRequestError)) {
-    return 'No se pudo iniciar sesión. Intente nuevamente.'
-  }
-
-  const { status, isNetworkError, isTimeout, message } = error.error
-
-  if (status === 401) {
-    return 'Usuario o contraseña incorrectos.'
-  }
-  if (status === 403) {
-    return 'No tiene permisos para iniciar sesión con esta cuenta.'
-  }
-  if (status === 400 || status === 422) {
-    return message
-  }
-  if (isNetworkError || isTimeout || UNAVAILABLE_STATUSES.includes(status)) {
-    return presentApiError(error).description
-  }
-
-  return 'No se pudo iniciar sesión. Intente nuevamente.'
-}
 
 export default function LoginPage() {
   const auth = useContext(AuthContext)
@@ -69,16 +43,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className={styles.page}>
-      <div aria-hidden="true" className={styles.visual}>
-        <p className={styles.visualText}>Tu futuro profesional comienza aquí</p>
-      </div>
-      <div className={styles.panel}>
-        <DemoBanner show={getEnv().demoMode} />
-        <h1 className={styles.heading}>Iniciar sesión</h1>
-        <p className={styles.subtitle}>SGT-SIAAF — Sistema de Gestión del Trámite de Titulación</p>
-        <LoginForm serverError={serverError} submitting={submitting} onSubmit={handleSubmit} />
-      </div>
-    </main>
+    <AuthLayout notice={<DemoBanner show={getEnv().demoMode} />} title="Ingreso">
+      <LoginForm serverError={serverError} submitting={submitting} onSubmit={handleSubmit} />
+    </AuthLayout>
   )
 }

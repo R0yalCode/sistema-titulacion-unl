@@ -10,6 +10,8 @@ import { ToastContext } from '@/components/feedback/ToastProvider'
 import { queryClient } from '@/lib/queryClient'
 
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'))
+const ForgotPasswordPage = lazy(() => import('@/features/auth/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('@/features/auth/ResetPasswordPage'))
 const StudentDashboardPage = lazy(() => import('@/features/dashboard/StudentDashboardPage'))
 const NuevaSolicitudPage = lazy(() => import('@/features/solicitud/NuevaSolicitudPage'))
 const ExpedientePage = lazy(() => import('@/features/expediente/ExpedientePage'))
@@ -74,6 +76,9 @@ export function AppRouter() {
       <Suspense fallback={<RouteLoadingFallback />}>
         <Routes>
           <Route element={<LoginRoute />} path="/login" />
+          {/* Recuperación de contraseña: públicas; no dependen de la sesión. */}
+          <Route element={<ForgotPasswordPage />} path="/recuperar-contrasena" />
+          <Route element={<ResetPasswordPage />} path="/restablecer-contrasena" />
           <Route element={<RequireAuth />}>
             <Route element={<AppLayout />}>
               <Route element={<IndexRedirect />} path="/" />

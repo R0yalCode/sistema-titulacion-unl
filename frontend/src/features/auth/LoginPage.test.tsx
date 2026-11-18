@@ -84,7 +84,7 @@ describe('LoginPage (V-01, integración real)', () => {
     await fillAndSubmit('incorrecto', 'incorrecto')
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Usuario o contraseña incorrectos.')
-    expect(screen.getByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
     // Si el 401 del login disparara el manejador global (sin skipAuthHandler),
     // se mostraría este aviso de expiración; su ausencia confirma P2-3.
@@ -205,7 +205,7 @@ describe('LoginPage (V-01, integración real)', () => {
 
     await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
     confirmSpy.mockRestore()
   })
@@ -219,12 +219,12 @@ describe('LoginPage (V-01, integración real)', () => {
     renderAppAt('/login')
 
     expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Ingreso' })).not.toBeInTheDocument()
   })
 
   it('no presenta violaciones de accesibilidad en el estado inicial', async () => {
     const { container } = renderAppAt('/login')
-    await screen.findByRole('heading', { name: 'Iniciar sesión' })
+    await screen.findByRole('heading', { name: 'Ingreso' })
 
     expect(await axe(container)).toHaveNoViolations()
   })

@@ -6,6 +6,6 @@ describe('App', () => {
   it('renderiza sin errores y redirige a /login por defecto', async () => {
     render(<App />)
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
   })
 })

@@ -29,19 +29,19 @@ describe('AppRouter', () => {
   it('resuelve /login sin sesión', async () => {
     renderRouterAs(null, '/login')
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
   })
 
   it('redirige / a /login cuando no hay sesión', async () => {
     renderRouterAs(null, '/')
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
   })
 
   it('redirige una ruta protegida a /login cuando no hay sesión', async () => {
     renderRouterAs(null, '/estudiante')
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).not.toBeInTheDocument()
   })
 

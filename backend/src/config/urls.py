@@ -6,7 +6,12 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-from apps.authentication.adapters.views import TokenPairView
+from apps.authentication.adapters.views import (
+    PasswordResetConfirmView,
+    PasswordResetRequestView,
+    PasswordResetValidateView,
+    TokenPairView,
+)
 from apps.expedientes.adapters.views import (
     BandejaExpedienteViewSet,
     ExpedienteViewSet,
@@ -31,6 +36,22 @@ urlpatterns = [
     # sin exposición operativa del trámite.
     path("admin/", admin.site.urls),
     path("api/v1/auth/token/", TokenPairView.as_view(), name="auth-token"),
+    # Recuperación de contraseña (AUTH-RC): públicos, throttle por IP.
+    path(
+        "api/v1/auth/password-reset/",
+        PasswordResetRequestView.as_view(),
+        name="auth-password-reset",
+    ),
+    path(
+        "api/v1/auth/password-reset/validate/",
+        PasswordResetValidateView.as_view(),
+        name="auth-password-reset-validate",
+    ),
+    path(
+        "api/v1/auth/password-reset/confirm/",
+        PasswordResetConfirmView.as_view(),
+        name="auth-password-reset-confirm",
+    ),
     path(
         "api/v1/expedientes/",
         ExpedienteViewSet.as_view({"post": "create"}),

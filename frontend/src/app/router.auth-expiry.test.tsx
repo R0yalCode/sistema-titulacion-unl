@@ -46,7 +46,7 @@ describe('expiración de sesión (401 global)', () => {
 
     await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
   })
 
@@ -92,7 +92,7 @@ describe('expiración de sesión (401 global)', () => {
       await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })
       await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
-      expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+      expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
       expect(getAccessToken()).toBeNull()
       unmount()
     }

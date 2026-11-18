@@ -1,8 +1,15 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render as rtlRender, screen } from '@testing-library/react'
+import type { ReactElement } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'vitest-axe'
 import { describe, expect, it, vi } from 'vitest'
 import { LoginForm } from './LoginForm'
+
+// LoginForm enlaza a /recuperar-contrasena con <Link>: requiere un router.
+function render(ui: ReactElement) {
+  return rtlRender(ui, { wrapper: MemoryRouter })
+}
 
 describe('LoginForm', () => {
   it('no envía con campos vacíos y enfoca el usuario primero', async () => {
