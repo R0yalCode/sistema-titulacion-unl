@@ -7,7 +7,7 @@ describe('login', () => {
   it('devuelve el par de tokens con credenciales válidas', async () => {
     const result = await login({ username: 'estudiante.demo', password: 'demo-valida' })
 
-    expect(result).toEqual(fixtureTokenPair)
+    expect(result).toEqual({ status: 'authenticated', ...fixtureTokenPair })
   })
 
   it('devuelve un ApiError normalizado con credenciales inválidas', async () => {

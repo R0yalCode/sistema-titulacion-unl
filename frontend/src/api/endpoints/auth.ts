@@ -22,12 +22,86 @@ type DetailResponse = {
 /** `code` que el backend devuelve cuando el enlace no puede usarse. */
 export const INVALID_RESET_LINK_CODE = 'enlace_restablecimiento_invalido'
 
-export function login(payload: LoginRequest): Promise<TokenPair> {
-  // skipAuthHandler: un 401 por credenciales inválidas en login no debe
-  // disparar el cierre de sesión global (corrige P2-3, auditoría F1).
-  return request<TokenPair>('/api/v1/auth/token/', {
+/**
+ * Resultado de cada paso del inicio de sesión (AUTH-B). El JWT solo llega con
+ * `status: 'authenticated'`; los demás estados traen un reto de corta vida que
+ * se conserva únicamente en memoria (nunca en localStorage/sessionStorage).
+ */
+export type AuthenticatedResult = TokenPair & {
+  status: 'authenticated'
+  /** Solo al completar el registro: se muestran una única vez. */
+  recovery_codes?: string[]
+}
+
+export type ChallengeResult = {
+  status: 'mfa_required' | 'mfa_setup_required'
+  challenge: string
+  expires_in: number
+}
+
+export type AuthResult = AuthenticatedResult | ChallengeResult
+
+export type MfaSetup = {
+  /** QR otpauth como `data:image/svg+xml`, generado por el backend. */
+  qr_svg: string
+  manual_key: string
+  issuer: string
+  account: string
+}
+
+export type MfaCodeRequest = {
+  challenge: string
+  code: string
+  trustDevice: boolean
+}
+
+// skipAuthHandler en todo el flujo: un 401 por credenciales inválidas no debe
+// disparar el cierre de sesión global (corrige P2-3, auditoría F1).
+
+export function login(payload: LoginRequest): Promise<AuthResult> {
+  return request<AuthResult>('/api/v1/auth/login/', {
     method: 'POST',
     body: payload,
+    skipAuthHandler: true,
+  })
+}
+
+export function startMfaSetup(challenge: string): Promise<MfaSetup> {
+  return request<MfaSetup>('/api/v1/auth/mfa/setup/', {
+    method: 'POST',
+    body: { challenge },
+    skipAuthHandler: true,
+  })
+}
+
+export function confirmMfaSetup({ challenge, code, trustDevice }: MfaCodeRequest): Promise<AuthResult> {
+  return request<AuthResult>('/api/v1/auth/mfa/setup/confirm/', {
+    method: 'POST',
+    body: { challenge, code, trust_device: trustDevice },
+    skipAuthHandler: true,
+  })
+}
+
+export function verifyMfa({ challenge, code, trustDevice }: MfaCodeRequest): Promise<AuthResult> {
+  return request<AuthResult>('/api/v1/auth/mfa/verify/', {
+    method: 'POST',
+    body: { challenge, code, trust_device: trustDevice },
+    skipAuthHandler: true,
+  })
+}
+
+export function recoverMfa(challenge: string, recoveryCode: string): Promise<AuthResult> {
+  return request<AuthResult>('/api/v1/auth/mfa/recovery/', {
+    method: 'POST',
+    body: { challenge, recovery_code: recoveryCode },
+    skipAuthHandler: true,
+  })
+}
+
+/** Revoca en el servidor la confianza de este dispositivo (cookie HttpOnly). */
+export function logoutSession(): Promise<DetailResponse> {
+  return request<DetailResponse>('/api/v1/auth/logout/', {
+    method: 'POST',
     skipAuthHandler: true,
   })
 }

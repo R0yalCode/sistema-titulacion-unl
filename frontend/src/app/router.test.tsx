@@ -12,6 +12,7 @@ function authValue(user: AuthUser | null): AuthContextValue {
     isLoading: false,
     login: vi.fn().mockReturnValue(true),
     logout: vi.fn(),
+    signOut: vi.fn(),
     hasRole: (roles) => user !== null && roles.some((role) => user.roles.includes(role)),
   }
 }

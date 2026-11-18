@@ -28,6 +28,7 @@ function authValue(user: AuthUser): AuthContextValue {
     isLoading: false,
     login: () => true,
     logout: () => undefined,
+    signOut: () => undefined,
     hasRole: (roles) => roles.some((role) => user.roles.includes(role)),
   }
 }

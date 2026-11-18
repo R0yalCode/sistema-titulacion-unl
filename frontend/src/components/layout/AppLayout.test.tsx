@@ -14,6 +14,7 @@ function mockAuthValue(user: AuthUser): AuthContextValue {
     isLoading: false,
     login: vi.fn().mockReturnValue(true),
     logout: vi.fn(),
+    signOut: vi.fn(),
     hasRole: (roles) => roles.some((role) => user.roles.includes(role)),
   }
 }
@@ -76,7 +77,7 @@ describe('AppLayout', () => {
     await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
     expect(confirmSpy).toHaveBeenCalledWith('¿Desea cerrar sesión?')
-    expect(authValue.logout).toHaveBeenCalledOnce()
+    expect(authValue.signOut).toHaveBeenCalledOnce()
     expect(clearSpy).toHaveBeenCalledOnce()
 
     confirmSpy.mockRestore()
@@ -96,7 +97,7 @@ describe('AppLayout', () => {
 
     await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
-    expect(authValue.logout).not.toHaveBeenCalled()
+    expect(authValue.signOut).not.toHaveBeenCalled()
 
     confirmSpy.mockRestore()
   })
