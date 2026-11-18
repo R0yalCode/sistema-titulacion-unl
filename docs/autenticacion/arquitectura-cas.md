@@ -30,13 +30,19 @@
 - Entorno de pruebas y cuentas de prueba institucionales.
 - Requisitos de TLS y certificados, y las IP de salida si hay listas de control.
 
-## 4. Cambios previstos al integrar
+## 4. Estado actual de la identidad (2026-11-18)
+
+- El acceso local ya usa el **correo institucional** (`@unl.edu.ec`) como identificador, que es previsiblemente el mismo atributo que liberaría el SAC. Así se facilita la asociación de cuentas del paso 5.
+- La pantalla de acceso reproduce la **apariencia** del SAC (banda con la fotografía del campus, logotipo y «Servicio de Autenticación Centralizada»), pero **no es el SAC ni está conectada a él**. La subetiqueta «SGT-SIAAF · Sistema de Gestión de Titulación» identifica el sistema real.
+- Antes de un despliegue fuera del prototipo, la UNL debería confirmar que puede usarse esa identidad visual en un servicio que aún no autentica contra el SAC.
+
+## 5. Cambios previstos al integrar
 
 - `CasIdentityProvider` nuevo con `provides_mfa` condicionado a la evidencia de MFA en la respuesta del SAC.
 - Endpoint de callback en el backend y botón de redirección en el frontend.
 - Retirar o restringir el login local según decida la UNL (p. ej. solo cuentas de servicio).
 
-## 5. Política de confianza bajo CAS
+## 6. Política de confianza bajo CAS
 
 - Si el SAC acredita el MFA, la «confianza del dispositivo» la gestiona el SAC (su SSO y su 2FA). SGT-SIAAF no emite `sgt_trusted_device` ni pide TOTP.
 - Si el SAC **no** acredita el MFA en la respuesta, SGT-SIAAF puede seguir exigiendo su TOTP y la confianza de 5 días tal como funcionan hoy, con `provides_mfa=False`.

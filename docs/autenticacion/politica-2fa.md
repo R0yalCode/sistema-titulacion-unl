@@ -59,7 +59,22 @@ Si se pierde una clave en uso, los secretos que cifraba no se pueden recuperar. 
 ## 6. Recuperación
 
 - **Códigos de recuperación:** 10 códigos de un solo uso (`XXXXX-XXXXX`, alfabeto sin caracteres ambiguos), guardados con el hasher de contraseñas de Django y mostrados una sola vez. Usar uno **anula el autenticador anterior** y obliga a registrar uno nuevo en el mismo paso.
-- **Sin códigos:** el administrador usa la acción «Restablecer doble factor (2FA)» en el admin de Django. Antes debe verificar la identidad del titular por un canal institucional (presencial con cédula o correo institucional). El procedimiento formal queda pendiente de definición por la UNL.
+- **Sin códigos, por autoservicio (MFA-RST):** sigue la referencia `restablecer_doble_factor.png`.
+  - **Solicitud:** correo institucional, cédula y contraseña actual. Solo sirven para **solicitar** un enlace de un solo uso que se envía al correo registrado. Nunca retiran el 2FA por sí mismos.
+  - **Confirmación:** el 2FA se retira al confirmar ese enlace con un botón (POST), lo que requiere acceso al buzón.
+  - **Validez del enlace:** está ligado a la contraseña y al autenticador vigentes; caduca en `PASSWORD_RESET_TIMEOUT` (1 h) y queda invalidado tras usarse o si cambia la contraseña.
+  - **Antienumeración:** la respuesta es idéntica en todos los casos.
+  - **Límite:** 10 solicitudes por hora e IP.
+  - **Espera tras cambiar la contraseña:** después de restablecer la contraseña por correo, durante `MFA_RESET_COOLDOWN_HOURS` (72 h) se rechaza el restablecimiento del 2FA. Así, quien solo controle el buzón no puede anular ambos factores por el mismo canal.
+  - **Auditoría:** `MFA_RESTABLECIMIENTO_SOLICITADO`, `MFA_RESTABLECIMIENTO_RECHAZADO` (con motivo) y `MFA_RESTABLECIDO`, sin correo, cédula, contraseña ni token.
+- **Por soporte:** acción «Restablecer doble factor (2FA)» del admin de Django, o `restablecer_mfa` desde la consola. Hoy ninguna cuenta demo es `is_staff`, así que el admin no es utilizable.
+
+**Pendiente de decisión de la UNL:**
+
+1. **Canal del enlace:** la referencia del SAC lo envía al «correo personal». SGT-SIAAF solo almacena el correo institucional, que es a donde se envía hoy. Hace falta decidir si se incorpora un correo personal verificado y de dónde se obtiene (SGA o SAC).
+2. **Aceptación formal** del procedimiento: correo, cédula y contraseña más el enlace, y la espera de 72 h.
+3. **Verificación presencial** para quien no tenga acceso a su correo.
+4. **Envío real:** SMTP institucional (hoy `EMAIL_BACKEND` de consola en desarrollo: el enlace aparece en `docker compose logs backend`).
 - Ninguna petición no autenticada puede desactivar MFA.
 - Todas las operaciones quedan en `EventoAutenticacion` (consulta de solo lectura en el admin).
 

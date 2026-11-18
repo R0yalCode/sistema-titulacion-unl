@@ -7,7 +7,7 @@
 
 | Responsabilidad | Dónde vive | Notas |
 |---|---|---|
-| Identidad (usuario + contraseña) | `apps/authentication/services/identity_providers.py` (`LocalIdentityProvider`) | Puerto `ports/identity_provider.py`; futuro `CasIdentityProvider` |
+| Identidad (correo institucional + contraseña) | `apps/authentication/services/identity_providers.py` (`LocalIdentityProvider`) | Busca la cuenta por `email` (sin distinguir mayúsculas) y autentica su `username` con `ModelBackend`; puerto `ports/identity_provider.py`; futuro `CasIdentityProvider` |
 | Segundo factor TOTP | `apps/authentication/services/mfa.py` | `pyotp`, secreto cifrado con MultiFernet |
 | Confianza del dispositivo (5 días) | `TrustedDevice` + cookie HttpOnly | Ver `politica-2fa.md` |
 | Sesión | JWT de SimpleJWT (access 30 min) | Solo se emite tras el segundo factor |
@@ -17,9 +17,10 @@
 
 ```text
 Usuario ──► /            Landing pública ──► «Ingresar al sistema» ──► /login
-/login   ──► POST /api/v1/auth/login/ {username, password}
+/login   ──► POST /api/v1/auth/login/ {email, password}   (solo @unl.edu.ec)
               │
-              ├─ 401 credenciales_invalidas (genérico, auditado)
+              ├─ 400 email/password: campo requerido o dominio no institucional
+              ├─ 401 credenciales_invalidas (genérico, auditado; también correo no registrado)
               ├─ status=authenticated     (solo con cookie de confianza vigente)
               ├─ status=mfa_setup_required + challenge (sin autenticador activo)
               └─ status=mfa_required      + challenge (autenticador activo)
@@ -71,3 +72,34 @@ Después de `authenticated`, React guarda el access token (como antes de AUTH-B)
 - El rediseño previo del login (AUTH-RC) dejó 13 pruebas desalineadas. Se corrigieron en el commit de AUTH-RC.
 - El `.venv` del repositorio está roto (no tiene pip ni Django). Las pruebas del backend se ejecutaron en la imagen Docker `sgt-siaaf-backend`.
 - No se ejecutó la variante de pruebas con PostgreSQL (`config.settings.test_postgres`).
+
+## 7. Acceso por correo institucional (2026-11-18)
+
+- El formulario muestra «Nombre de usuario», pero el dato es el **correo institucional**. Solo se admite `@unl.edu.ec` (`INSTITUTIONAL_EMAIL_DOMAIN`).
+- El correo se **normaliza** (quitar espacios y pasar a minúsculas) y se valida **en el frontend** (`features/auth/validation.ts`) **y en el backend** (`CorreoInstitucionalField` en `serializers.py`, que usa `domain/correo_institucional.py`). El backend es la autoridad.
+- Se rechazan otros dominios, dominios parecidos (`unl.edu`, `mail.unl.edu.ec`, `unl.edu.ec.com`) y valores sin dominio.
+- Mensajes exactos:
+  - «El nombre de usuario es un campo requerido.»
+  - «La contraseña es un campo requerido.»
+  - «Ingrese un correo institucional válido (@unl.edu.ec).»
+- No se migró `USERNAME_FIELD`. La migración `0003_acceso_correo_institucional` añade una restricción única de `email` que no distingue mayúsculas y excluye los correos vacíos.
+- Para no revelar qué correos existen, un correo no registrado consume el mismo coste de hash y recibe el mismo 401.
+- Cuentas demo: `sgtdemo.<usuario>@unl.edu.ec` (`seed_initial_data` completa el correo de las cuentas existentes sin cambiar contraseñas ni roles).
+- Los roles salen de `UserRole` y `RBAC_MATRIX` de SGT-SIAAF, **no del SAC**. Destino por rol:
+  - Roles operativos → `/bandeja`.
+  - `ESTUDIANTE` → `/estudiante`.
+  - `RESPONSABLE_DEPENDENCIA` → `/no-habilitado`: ese rol aún no tiene celdas en la matriz RBAC; es una brecha conocida.
+
+## 8. Restablecimiento del doble factor (MFA-RST)
+
+```text
+/restablecer-2fa  ──► POST /auth/mfa/reset/ {email, cedula, password}
+                       → 200 siempre con el mismo mensaje (throttle password_reset, 10/h por IP)
+                       → si correo + cédula + contraseña coinciden, la cuenta tiene 2FA y no
+                         está en espera tras un cambio de contraseña: enlace por correo
+/restablecer-2fa/confirmar?uid&token ──► (botón) POST /auth/mfa/reset/confirm/
+                       → retira autenticador, códigos y confianzas; el siguiente ingreso
+                         pide registrar Google Authenticator
+```
+
+Detalle de seguridad y pendientes de la UNL en `politica-2fa.md` §6.
