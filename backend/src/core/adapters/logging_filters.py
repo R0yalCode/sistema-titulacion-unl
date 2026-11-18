@@ -10,7 +10,19 @@ contexto de usuario no los pueblen); sin esto, el formateador JSON con
 import logging
 import re
 
-_CAMPOS_SENSIBLES = ("password", "token", "authorization", "credit_card", "cedula")
+_CAMPOS_SENSIBLES = (
+    "password",
+    "token",
+    "authorization",
+    "credit_card",
+    "cedula",
+    # AUTH-A: material del segundo factor.
+    "secret",
+    "totp",
+    "otp_code",
+    "recovery_code",
+    "challenge",
+)
 _PATRON_SENSIBLE = re.compile(
     r"(" + "|".join(_CAMPOS_SENSIBLES) + r")=\S+", re.IGNORECASE
 )

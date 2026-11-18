@@ -8,3 +8,9 @@ reportlab>=4.3,<5.0
 django-cors-headers>=4.4,<5.0
 gunicorn>=23.0,<24.0
 python-json-logger>=2.0,<3.0
+# Autenticación MFA (AUTH-A, autorizado por el responsable el 2026-11-18):
+# TOTP RFC 6238 compatible con Google Authenticator, QR en SVG sin Pillow y
+# cifrado de secretos en reposo (Fernet/MultiFernet).
+pyotp>=2.9,<3.0
+segno>=1.6,<2.0
+cryptography>=46.0,<51.0

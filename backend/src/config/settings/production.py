@@ -33,6 +33,12 @@ DEBUG = False
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
+# AUTH-A: claves de cifrado de secretos TOTP. Obligatoria (sin valor por
+# defecto). Generación y rotación: backend/.env.example y
+# docs/autenticacion/politica-2fa.md.
+MFA_ENCRYPTION_KEYS = env.list("MFA_ENCRYPTION_KEYS")
+MFA_TRUSTED_DEVICE_COOKIE_SECURE = True
+
 # --- HTTPS / HSTS -----------------------------------------------------
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
