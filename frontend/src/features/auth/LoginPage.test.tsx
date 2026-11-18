@@ -40,9 +40,11 @@ function renderAppAt(route: string) {
 
 async function fillAndSubmit(username: string, password: string) {
   const user = userEvent.setup()
-  await user.type(await screen.findByLabelText(/^Usuario/), username)
+  const usernameField = await screen.findByLabelText(/^Nombre de usuario/)
+  await user.clear(usernameField)
+  await user.type(usernameField, `${username}@unl.edu.ec`)
   await user.type(screen.getByLabelText(/^Contraseña/), password)
-  await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+  await user.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
 }
 
 describe('LoginPage (V-01, integración real)', () => {
@@ -85,7 +87,7 @@ describe('LoginPage (V-01, integración real)', () => {
     await fillAndSubmit('incorrecto', 'incorrecto')
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Usuario o contraseña incorrectos.')
-    expect(screen.getByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
     // Si el 401 del login disparara el manejador global (sin skipAuthHandler),
     // se mostraría este aviso de expiración; su ausencia confirma P2-3.
@@ -195,8 +197,8 @@ describe('LoginPage (V-01, integración real)', () => {
     renderAppAt('/login')
     await fillAndSubmit('estudiante.demo', 'demo-valida')
 
-    expect(screen.getByRole('button', { name: 'Ingresar' })).toHaveAttribute('aria-busy', 'true')
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Ingresar' })).toBeDisabled())
+    expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toHaveAttribute('aria-busy', 'true')
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toBeDisabled())
 
     expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
   })
@@ -211,7 +213,7 @@ describe('LoginPage (V-01, integración real)', () => {
 
     await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
     confirmSpy.mockRestore()
   })
@@ -225,12 +227,12 @@ describe('LoginPage (V-01, integración real)', () => {
     renderAppAt('/login')
 
     expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'Ingreso' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 
   it('no presenta violaciones de accesibilidad en el estado inicial', async () => {
     const { container } = renderAppAt('/login')
-    await screen.findByRole('heading', { name: 'Ingreso' })
+    await screen.findByRole('heading', { name: 'Iniciar sesión' })
 
     expect(await axe(container)).toHaveNoViolations()
   })

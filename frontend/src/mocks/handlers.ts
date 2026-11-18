@@ -18,6 +18,8 @@ const MFA_SETUP_CONFIRM_URL = '*/api/v1/auth/mfa/setup/confirm/'
 const MFA_VERIFY_URL = '*/api/v1/auth/mfa/verify/'
 const MFA_RECOVERY_URL = '*/api/v1/auth/mfa/recovery/'
 const LOGOUT_URL = '*/api/v1/auth/logout/'
+const MFA_RESET_URL = '*/api/v1/auth/mfa/reset/'
+const MFA_RESET_CONFIRM_URL = '*/api/v1/auth/mfa/reset/confirm/'
 const PASSWORD_RESET_URL = '*/api/v1/auth/password-reset/'
 const PASSWORD_RESET_VALIDATE_URL = '*/api/v1/auth/password-reset/validate/'
 const PASSWORD_RESET_CONFIRM_URL = '*/api/v1/auth/password-reset/confirm/'
@@ -34,20 +36,21 @@ const NOTIFICACIONES_URL = '*/api/v1/notificaciones/'
 const NOTIFICACION_MARCAR_LEIDA_URL = '*/api/v1/notificaciones/:id/marcar-leida/'
 
 export const handlers: HttpHandler[] = [
-  // Flujo en dos pasos (AUTH-B). Solo para pruebas: "estudiante.demo" simula un
-  // dispositivo de confianza vigente; "mfa.registro" y "mfa.verificar" exigen
-  // registrar o verificar el segundo factor con el código 123456.
+  // Flujo en dos pasos (AUTH-B). Solo para pruebas: "estudiante.demo@unl.edu.ec"
+  // simula un dispositivo de confianza vigente; "mfa.registro@…" y
+  // "mfa.verificar@…" exigen registrar o verificar el segundo factor (123456).
   http.post(LOGIN_URL, async ({ request }) => {
-    const body = (await request.json()) as { username?: string; password?: string }
+    const body = (await request.json()) as { email?: string; password?: string }
+    const user = body.email?.replace(/@unl\.edu\.ec$/, '')
 
     if (body.password === 'demo-valida') {
-      if (body.username === 'estudiante.demo') {
+      if (user === 'estudiante.demo') {
         return HttpResponse.json({ status: 'authenticated', ...fixtureTokenPair }, { status: 200 })
       }
-      if (body.username === 'mfa.registro') {
+      if (user === 'mfa.registro') {
         return HttpResponse.json({ status: 'mfa_setup_required', ...fixtureMfaChallenge })
       }
-      if (body.username === 'mfa.verificar') {
+      if (user === 'mfa.verificar') {
         return HttpResponse.json({ status: 'mfa_required', ...fixtureMfaChallenge })
       }
     }
@@ -84,6 +87,22 @@ export const handlers: HttpHandler[] = [
     return HttpResponse.json(mfaInvalidCodeBody, { status: 400 })
   }),
   http.post(LOGOUT_URL, () => HttpResponse.json({ detail: 'Sesión cerrada.' })),
+  http.post(MFA_RESET_URL, () =>
+    HttpResponse.json({
+      detail:
+        'Si los datos corresponden a una cuenta con doble factor activo, enviaremos un enlace de vigencia limitada al correo registrado.',
+    }),
+  ),
+  http.post(MFA_RESET_CONFIRM_URL, async ({ request }) => {
+    const body = (await request.json()) as { token?: string }
+    if (body.token === 'token-valido') {
+      return HttpResponse.json({ detail: 'El doble factor se restableció.' })
+    }
+    return HttpResponse.json(
+      { detail: 'El enlace no es válido.', code: 'enlace_mfa_invalido' },
+      { status: 400 },
+    )
+  }),
   http.post(PASSWORD_RESET_URL, () =>
     HttpResponse.json({
       detail:

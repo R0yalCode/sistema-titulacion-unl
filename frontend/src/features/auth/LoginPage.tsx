@@ -27,7 +27,7 @@ type Step =
   | { kind: 'recovery-codes'; tokens: TokenPair; codes: string[] }
 
 const TITLES: Record<Step['kind'], string> = {
-  credentials: 'Ingreso',
+  credentials: 'Iniciar sesión',
   setup: 'Configurar verificación en dos pasos',
   verify: 'Verificación de seguridad (2FA)',
   'recovery-codes': 'Códigos de recuperación',

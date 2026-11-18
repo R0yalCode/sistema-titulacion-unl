@@ -1,7 +1,8 @@
 import { request } from '../client'
 
 export type LoginRequest = {
-  username: string
+  /** Correo institucional @unl.edu.ec (el backend lo vuelve a validar). */
+  email: string
   password: string
 }
 
@@ -129,6 +130,35 @@ export function confirmPasswordReset(link: PasswordResetLink, newPassword: strin
   return request<DetailResponse>('/api/v1/auth/password-reset/confirm/', {
     method: 'POST',
     body: { ...link, new_password: newPassword },
+    skipAuthHandler: true,
+  })
+}
+
+// --- Restablecimiento del doble factor (MFA-RST) -------------------------
+
+export type MfaResetRequest = {
+  email: string
+  cedula: string
+  password: string
+}
+
+/** Paso 1: responde siempre igual; si procede, envía un enlace al correo. */
+export function requestMfaReset(payload: MfaResetRequest): Promise<DetailResponse> {
+  return request<DetailResponse>('/api/v1/auth/mfa/reset/', {
+    method: 'POST',
+    body: payload,
+    skipAuthHandler: true,
+  })
+}
+
+/** `code` que el backend devuelve cuando el enlace del 2FA no puede usarse. */
+export const INVALID_MFA_RESET_LINK_CODE = 'enlace_mfa_invalido'
+
+/** Paso 2: confirma el enlace y retira el autenticador anterior. */
+export function confirmMfaReset(link: PasswordResetLink): Promise<DetailResponse> {
+  return request<DetailResponse>('/api/v1/auth/mfa/reset/confirm/', {
+    method: 'POST',
+    body: link,
     skipAuthHandler: true,
   })
 }

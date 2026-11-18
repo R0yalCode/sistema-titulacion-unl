@@ -13,6 +13,8 @@ const LandingPage = lazy(() => import('@/features/landing/LandingPage'))
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'))
 const ForgotPasswordPage = lazy(() => import('@/features/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('@/features/auth/ResetPasswordPage'))
+const MfaResetRequestPage = lazy(() => import('@/features/auth/MfaResetRequestPage'))
+const MfaResetConfirmPage = lazy(() => import('@/features/auth/MfaResetConfirmPage'))
 const StudentDashboardPage = lazy(() => import('@/features/dashboard/StudentDashboardPage'))
 const NuevaSolicitudPage = lazy(() => import('@/features/solicitud/NuevaSolicitudPage'))
 const ExpedientePage = lazy(() => import('@/features/expediente/ExpedientePage'))
@@ -88,6 +90,9 @@ export function AppRouter() {
           {/* Recuperación de contraseña: públicas; no dependen de la sesión. */}
           <Route element={<ForgotPasswordPage />} path="/recuperar-contrasena" />
           <Route element={<ResetPasswordPage />} path="/restablecer-contrasena" />
+          {/* Restablecimiento del 2FA (MFA-RST): públicas. */}
+          <Route element={<MfaResetRequestPage />} path="/restablecer-2fa" />
+          <Route element={<MfaResetConfirmPage />} path="/restablecer-2fa/confirmar" />
           <Route element={<RequireAuth />}>
             <Route element={<AppLayout />}>
               <Route element={<RequireRole roles={['ESTUDIANTE']} />}>

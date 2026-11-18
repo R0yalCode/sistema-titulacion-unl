@@ -30,20 +30,20 @@ describe('AppRouter', () => {
   it('resuelve /login sin sesión', async () => {
     renderRouterAs(null, '/login')
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
   })
 
   it('muestra la página pública en / cuando no hay sesión (AUTH-E)', async () => {
     renderRouterAs(null, '/')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Sistema de Gestión de Titulación' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'Ingreso' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 
   it('redirige una ruta protegida a /login cuando no hay sesión', async () => {
     renderRouterAs(null, '/estudiante')
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).not.toBeInTheDocument()
   })
 

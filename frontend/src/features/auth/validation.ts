@@ -81,3 +81,47 @@ export function validatePasswordConfirmation(password: string, confirmation: str
   }
   return undefined
 }
+
+// --- Correo institucional (acceso y restablecimiento del 2FA) -------------
+// Misma regla que el backend (apps/authentication/domain/correo_institucional.py);
+// el backend sigue siendo la autoridad.
+
+export const INSTITUTIONAL_DOMAIN = 'unl.edu.ec'
+export const USERNAME_REQUIRED_MESSAGE = 'El nombre de usuario es un campo requerido.'
+export const PASSWORD_REQUIRED_MESSAGE = 'La contraseña es un campo requerido.'
+export const INSTITUTIONAL_EMAIL_MESSAGE = 'Ingrese un correo institucional válido (@unl.edu.ec).'
+
+const LOCAL_PART_PATTERN = /^[a-z0-9._%+-]+$/
+
+/** Quita espacios exteriores y pasa a minúsculas. */
+export function normalizeInstitutionalEmail(value: string): string {
+  return value.trim().toLowerCase()
+}
+
+export function isInstitutionalEmail(value: string): boolean {
+  const normalized = normalizeInstitutionalEmail(value)
+  const parts = normalized.split('@')
+  if (parts.length !== 2) return false
+  const [local = '', domain = ''] = parts
+  return (
+    local.length > 0 &&
+    normalized.length <= EMAIL_MAX_LENGTH &&
+    LOCAL_PART_PATTERN.test(local) &&
+    !local.startsWith('.') &&
+    !local.endsWith('.') &&
+    !local.includes('..') &&
+    domain === INSTITUTIONAL_DOMAIN
+  )
+}
+
+/** Validación del campo «Nombre de usuario» (correo institucional). */
+export function validateInstitutionalUsername(value: string): string | undefined {
+  if (!value.trim()) {
+    return USERNAME_REQUIRED_MESSAGE
+  }
+  return isInstitutionalEmail(value) ? undefined : INSTITUTIONAL_EMAIL_MESSAGE
+}
+
+export function validateRequiredPassword(value: string): string | undefined {
+  return value ? undefined : PASSWORD_REQUIRED_MESSAGE
+}

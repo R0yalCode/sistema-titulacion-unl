@@ -267,3 +267,67 @@ button.link {
   background: none;
   cursor: pointer;
 }
+
+/* --- Fidelidad SAC: validación y enlaces (login por correo institucional) -- */
+.form [aria-invalid='true'] {
+  border-color: #a8123e;
+  box-shadow: 0 0 0 1px #a8123e;
+}
+
+.form [role='alert']:not([class*='alert']) {
+  margin: var(--space-1) 0 0 var(--space-4);
+  color: #a8123e;
+  font-size: 0.8125rem;
+}
+
+.sacLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 36px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: #142844;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.sacLink svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.sacLink:hover {
+  text-decoration: underline;
+}
+
+.sacLink:focus-visible {
+  outline: 2px solid #c8a333;
+  outline-offset: 2px;
+}
+
+.secondaryButton {
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #142844;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.secondaryButton:hover {
+  background: #f3f6f9;
+  text-decoration: none;
+}
+
+.inlineLink {
+  color: #142844;
+  font-weight: 600;
+}

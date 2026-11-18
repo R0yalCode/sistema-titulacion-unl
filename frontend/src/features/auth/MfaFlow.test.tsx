@@ -35,9 +35,9 @@ function renderAppAt(route: string) {
 
 async function loginAs(username: string) {
   const user = userEvent.setup()
-  await user.type(await screen.findByLabelText(/^Usuario/), username)
+  await user.type(await screen.findByLabelText(/^Nombre de usuario/), `${username}@unl.edu.ec`)
   await user.type(screen.getByLabelText(/^Contraseña/), 'demo-valida')
-  await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+  await user.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
   return user
 }
 
@@ -151,7 +151,7 @@ describe('Ingreso con segundo factor (AUTH-D)', () => {
     await user.type(await screen.findByLabelText(/Código de 6 dígitos/), '123456')
     await user.click(screen.getByRole('button', { name: 'Verificar' }))
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(screen.getByRole('alert')).toHaveTextContent('La verificación caducó o ya no es válida')
     expect(getAccessToken()).toBeNull()
   })
@@ -186,7 +186,7 @@ describe('Ingreso con segundo factor (AUTH-D)', () => {
     const user = await loginAs('mfa.verificar')
     await user.click(await screen.findByRole('button', { name: 'Cancelar' }))
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
   })
 

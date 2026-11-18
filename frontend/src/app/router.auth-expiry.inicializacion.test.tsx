@@ -50,7 +50,7 @@ describe('expiración de sesión durante la inicialización (401 global)', () =>
     // Sin esperar al dashboard: la ruta lazy aún no se ha resuelto (condición de carrera de la inicialización).
     await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
-    expect(await screen.findByRole('heading', { name: 'Ingreso' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
   })
 })

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { recoverMfa, verifyMfa, type AuthResult } from '@/api/endpoints/auth'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
@@ -108,8 +109,11 @@ export function MfaVerifyStep({ challenge, onResult, onRestart, onCancel }: MfaV
           Volver al código de la aplicación
         </Button>
         <p className={styles.helpText}>
-          Si tampoco tiene sus códigos de recuperación, solicite a la administración del sistema el restablecimiento
-          del doble factor; se verificará su identidad antes de hacerlo.
+          Si tampoco tiene sus códigos de recuperación,{' '}
+          <Link className={styles.inlineLink} to="/restablecer-2fa">
+            restablezca el doble factor de autenticación (2FA)
+          </Link>
+          .
         </p>
       </form>
     )
@@ -136,6 +140,9 @@ export function MfaVerifyStep({ challenge, onResult, onRestart, onCancel }: MfaV
         <button className={styles.link} disabled={submitting} type="button" onClick={() => switchMode('recovery')}>
           ¿Perdió su teléfono? Use un código de recuperación
         </button>
+        <Link className={styles.sacLink} to="/restablecer-2fa">
+          Restablecer doble factor de autenticación (2FA)
+        </Link>
       </div>
     </form>
   )

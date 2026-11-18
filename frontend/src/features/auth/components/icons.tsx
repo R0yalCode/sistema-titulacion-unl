@@ -95,3 +95,13 @@ export function CircleIcon(props: IconProps) {
     </Icon>
   )
 }
+
+export function ShieldIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3l7 3v5c0 4.5-3 8.3-7 9.5C8 19.3 5 15.5 5 11V6l7-3z" />
+      <path d="M12 9v3" />
+      <path d="M12 15.5h.01" />
+    </Icon>
+  )
+}
