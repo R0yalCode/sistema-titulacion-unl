@@ -107,7 +107,7 @@ def actores():
 @pytest.fixture
 def listo_para_informe(actores):
     """EN_VERIFICACION con los 5 requisitos VERIFICADO, por el flujo real."""
-    expediente = crear_expediente.execute(actores["estudiante"], CARRERA)
+    expediente = crear_expediente.registrar_expediente(actores["estudiante"], CARRERA)
     PeticionDocumental.objects.filter(expediente=expediente).update(
         estado_peticion="CARGADO"
     )

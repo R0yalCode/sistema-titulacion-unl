@@ -55,6 +55,9 @@ RBAC_MATRIX = {
         },
     },
     "expedientes:enviar": {"POST": {"ESTUDIANTE": SCOPE_OWN}},
+    # Perfil académico (V-03, MockSGA 2026-11-22): solo el propio perfil del
+    # estudiante; la vista no acepta identificadores (alcance own).
+    "perfil_academico": {"GET": {"ESTUDIANTE": SCOPE_OWN}},
     # AUT-02 (2026-11-11): celda nueva, exclusiva de PLB-E2-01. El ANALISTA_APOYO
     # queda excluido hasta DP-01b.
     "expedientes:iniciar_verificacion": {

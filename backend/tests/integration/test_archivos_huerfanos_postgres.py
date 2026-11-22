@@ -108,7 +108,7 @@ def actores():
 
 
 def test_carga_con_commit_fallido_no_deja_huerfano(actores, commit_fallido):
-    expediente = crear_expediente.execute(actores["estudiante"], CARRERA)
+    expediente = crear_expediente.registrar_expediente(actores["estudiante"], CARRERA)
     peticion = PeticionDocumental.objects.filter(expediente=expediente).first()
     estado = commit_fallido()
 
@@ -129,7 +129,7 @@ def test_carga_con_commit_fallido_no_deja_huerfano(actores, commit_fallido):
 
 
 def test_subsanar_con_commit_fallido_no_deja_huerfano(actores, commit_fallido):
-    expediente = crear_expediente.execute(actores["estudiante"], CARRERA)
+    expediente = crear_expediente.registrar_expediente(actores["estudiante"], CARRERA)
     for peticion in PeticionDocumental.objects.filter(expediente=expediente):
         cargar_mod.execute(
             usuario=actores["estudiante"],

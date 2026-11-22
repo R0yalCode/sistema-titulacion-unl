@@ -72,7 +72,7 @@ def escenario():
     UserRole.objects.create(
         user=estudiante, role=Role.objects.get_or_create(name="ESTUDIANTE")[0]
     )
-    expediente = crear_expediente.execute(estudiante, CARRERA)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA)
     peticion = PeticionDocumental.objects.filter(expediente=expediente).first()
     documento = cargar_documento.execute(
         usuario=estudiante,
@@ -208,7 +208,7 @@ def _expediente_con_documento(sufijo):
     UserRole.objects.create(
         user=estudiante, role=Role.objects.get_or_create(name="ESTUDIANTE")[0]
     )
-    expediente = crear_expediente.execute(estudiante, CARRERA)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA)
     peticion = PeticionDocumental.objects.filter(expediente=expediente).first()
     documento = cargar_documento.execute(
         usuario=estudiante,

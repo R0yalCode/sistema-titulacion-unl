@@ -36,7 +36,7 @@ FACULTAD = "bbbbbbbb-c0a7-4111-8111-111111111111"
 _CEDULAS = itertools.count(6010000001)
 
 OPERACIONES = {
-    ("/api/v1/expedientes/", "post"): {"400", "500"},
+    ("/api/v1/expedientes/", "post"): {"400", "422", "500", "503"},
     ("/api/v1/expedientes/{id}/enviar/", "post"): {"400", "404", "422"},
     ("/api/v1/expedientes/{id}/iniciar-verificacion/", "post"): {
         "400",
@@ -155,7 +155,7 @@ def actores(db):
 
 @pytest.fixture
 def enviado(actores):
-    expediente = crear_expediente.execute(actores["estudiante"], CARRERA)
+    expediente = crear_expediente.registrar_expediente(actores["estudiante"], CARRERA)
     PeticionDocumental.objects.filter(expediente=expediente).update(
         estado_peticion="CARGADO"
     )
@@ -206,11 +206,22 @@ def test_404_fuera_de_ambito_sin_code_cumple_el_contrato(esquema, enviado):
     )
 
 
-def test_400_de_validacion_de_campos_cumple_el_contrato(esquema, actores):
+def test_400_campo_no_permitido_cumple_el_contrato(esquema, actores):
+    """V-03: la carrera no la fija el cliente (antes, 400 de validación)."""
+    respuesta = _cliente(actores["estudiante"]).post(
+        "/api/v1/expedientes/", {"carrera_id": CARRERA}, format="json"
+    )
+    assert respuesta.status_code == 400
+    assert respuesta.json()["code"] == "campo_no_permitido"
+    _valida(esquema, "/api/v1/expedientes/", "post", respuesta)
+
+
+def test_422_perfil_no_asociado_cumple_el_contrato(esquema, actores):
     respuesta = _cliente(actores["estudiante"]).post(
         "/api/v1/expedientes/", {}, format="json"
     )
-    assert respuesta.status_code == 400
+    assert respuesta.status_code == 422
+    assert respuesta.json()["code"] == "perfil_academico_no_asociado"
     _valida(esquema, "/api/v1/expedientes/", "post", respuesta)
 
 
@@ -239,7 +250,7 @@ def test_404_de_informe_cumple_el_contrato(esquema, actores):
 
 
 def test_500_explicitos_cumplen_el_contrato(esquema, enviado, actores):
-    otro = crear_expediente.execute(_usuario("ct_est2", "ESTUDIANTE"), CARRERA)
+    otro = crear_expediente.registrar_expediente(_usuario("ct_est2", "ESTUDIANTE"), CARRERA)
     peticion_borrador = PeticionDocumental.objects.filter(
         expediente=otro, dependencia_emisora="SECRETARIA_CARRERA"
     ).first()

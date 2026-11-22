@@ -269,7 +269,7 @@ class TestFlujoCompletoTitulacionE2E:
         # ============================================================
         # FL-01: CREACIÓN DE SOLICITUD EN BORRADOR (HU-001, RF-001)
         # ============================================================
-        expediente = crear_expediente.execute(
+        expediente = crear_expediente.registrar_expediente(
             estudiante=estudiante,
             carrera_id=CARRERA_1,
         )
@@ -581,10 +581,10 @@ class TestFlujoCompletoTitulacionE2E:
         _crear_catalogo_requisitos()
         """Verifica aislamiento IDOR: estudiante no ve expediente ajeno."""
         # Crear expediente del estudiante 1
-        exp1 = crear_expediente.execute(estudiante=estudiante, carrera_id=CARRERA_1)
+        exp1 = crear_expediente.registrar_expediente(estudiante=estudiante, carrera_id=CARRERA_1)
 
         # Crear expediente del estudiante 2
-        exp2 = crear_expediente.execute(estudiante=otro_estudiante, carrera_id=CARRERA_1)
+        exp2 = crear_expediente.registrar_expediente(estudiante=otro_estudiante, carrera_id=CARRERA_1)
 
         # Estudiante 1 intenta acceder a expediente 2
         from core.adapters.scope_filter import ScopeFilterMixin
@@ -620,7 +620,7 @@ class TestFlujoCompletoTitulacionE2E:
         from apps.authentication.adapters.permissions import get_granted_scopes, ALLOW, DENY
 
         # Crear expediente base
-        expediente = crear_expediente.execute(estudiante=estudiante, carrera_id=CARRERA_1)
+        expediente = crear_expediente.registrar_expediente(estudiante=estudiante, carrera_id=CARRERA_1)
 
         # ESTUDIANTE: puede crear expedientes (POST expedientes -> ALLOW)
         scopes_est_crear = get_granted_scopes(estudiante, "expedientes", "POST")

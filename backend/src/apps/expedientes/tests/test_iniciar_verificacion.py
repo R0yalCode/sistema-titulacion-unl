@@ -99,7 +99,7 @@ def jurista_otra_facultad():
 @pytest.fixture
 def enviado(estudiante):
     """Expediente ENVIADA por el flujo real: crear, cargar y enviar."""
-    expediente = crear_expediente.execute(estudiante, CARRERA_1)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA_1)
     PeticionDocumental.objects.filter(expediente=expediente).update(
         estado_peticion="CARGADO"
     )
@@ -371,7 +371,7 @@ def test_endpoint_400_si_ya_esta_en_verificacion(enviado, jurista):
 
 
 def test_endpoint_400_si_esta_en_borrador(estudiante, jurista):
-    borrador = crear_expediente.execute(estudiante, CARRERA_1)
+    borrador = crear_expediente.registrar_expediente(estudiante, CARRERA_1)
 
     response = _cliente(jurista).post(_url(borrador))
 

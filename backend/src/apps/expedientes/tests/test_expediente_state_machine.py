@@ -56,7 +56,7 @@ def cliente(user):
 
 def expediente_completo_para_enviar(estudiante):
     """Crea expediente en BORRADOR y marca las 5 peticiones como CARGADO."""
-    expediente = crear_expediente.execute(estudiante, CARRERA_1)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA_1)
     for peticion in PeticionDocumental.objects.filter(expediente=expediente):
         peticion.estado_peticion = "CARGADO"
         peticion.save()

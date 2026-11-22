@@ -92,6 +92,9 @@ def expediente_post_save(sender, instance, created, **kwargs):
                 "numero_expediente": instance.numero_expediente,
                 "estado_inicial": instance.estado,
                 "fecha_creacion": instance.fecha_creacion.isoformat() if instance.fecha_creacion else None,
+                # Asociación académica del expediente (V-03): carrera, facultad
+                # derivada y fuente del perfil, que fija el caso de uso.
+                **getattr(instance, "_detalles_auditoria_creacion", {}),
             },
         )
 

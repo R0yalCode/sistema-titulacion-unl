@@ -13,6 +13,11 @@ import pytest
 from django.core.cache import cache
 from rest_framework.test import APIClient
 
+from apps.academico.tests.factories import (
+    crear_carrera,
+    crear_facultad,
+    crear_perfil_mock,
+)
 from apps.authentication.adapters.models import Role, User, UserRole
 from apps.expedientes.adapters.models import ExpedienteTitulacion, HistorialEstado
 from apps.expedientes.services import (
@@ -77,7 +82,7 @@ def jurista():
 
 @pytest.fixture
 def borrador(estudiante):
-    return crear_expediente.execute(estudiante, CARRERA)
+    return crear_expediente.registrar_expediente(estudiante, CARRERA)
 
 
 def _cargar(expediente):
@@ -127,10 +132,17 @@ def test_error_de_transicion_expone_estados(borrador, estudiante):
 # --- POST /expedientes/ -----------------------------------------------------
 
 
-def test_crear_con_expediente_activo_400_con_code(borrador, estudiante):
-    respuesta = _cliente(estudiante).post(
-        "/api/v1/expedientes/", {"carrera_id": CARRERA}, format="json"
+def _perfil_validado(estudiante):
+    """Perfil MockSGA coherente con la carrera y facultad de la cuenta."""
+    facultad = crear_facultad("E104-FAC", id=FACULTAD)
+    crear_perfil_mock(
+        estudiante, crear_carrera("E104-CARRERA", id=CARRERA, facultad=facultad)
     )
+
+
+def test_crear_con_expediente_activo_400_con_code(borrador, estudiante):
+    _perfil_validado(estudiante)
+    respuesta = _cliente(estudiante).post("/api/v1/expedientes/", {}, format="json")
     assert respuesta.status_code == 400
     cuerpo = respuesta.json()
     assert cuerpo["code"] == "expediente_activo_existente"
@@ -138,10 +150,11 @@ def test_crear_con_expediente_activo_400_con_code(borrador, estudiante):
 
 
 def test_crear_con_catalogo_incompleto_500_explicito(estudiante):
+    _perfil_validado(estudiante)
     _desactivar_un_requisito_base()
     with mock.patch.object(api_errors.logger, "error") as log_error:
         respuesta = _cliente(estudiante).post(
-            "/api/v1/expedientes/", {"carrera_id": CARRERA}, format="json"
+            "/api/v1/expedientes/", {}, format="json"
         )
     assert respuesta.status_code == 500
     assert respuesta.json()["code"] == "configuracion_catalogo_incompleta"

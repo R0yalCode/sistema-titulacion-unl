@@ -87,7 +87,7 @@ def jurista():
 
 @pytest.fixture
 def en_verificacion(estudiante, jurista):
-    expediente = crear_expediente.execute(estudiante, CARRERA)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA)
     PeticionDocumental.objects.filter(expediente=expediente).update(
         estado_peticion="CARGADO"
     )

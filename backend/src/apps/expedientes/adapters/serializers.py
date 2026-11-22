@@ -1,7 +1,5 @@
 """Serializadores DRF del modulo expedientes (T015/T016; HU-001, HU-004)."""
 
-import uuid
-
 from rest_framework import serializers
 
 from apps.expedientes.adapters.models import ExpedienteTitulacion
@@ -24,19 +22,13 @@ class PeticionInicializadaSerializer(serializers.ModelSerializer):
 
 
 class CrearExpedienteSerializer(serializers.Serializer):
-    """Entrada del caso de uso: `carrera_id` (UUID), HU-001/RF-001."""
+    """Entrada del caso de uso (HU-001/RF-001): cuerpo vacío `{}`.
 
-    carrera_id = serializers.UUIDField(format="hex")
-    estudiante_id = serializers.UUIDField(read_only=True)
-
-    def validate_carrera_id(self, value):
-        try:
-            uuid.UUID(str(value))
-        except (ValueError, AttributeError):
-            raise serializers.ValidationError(
-                "carrera_id debe ser un UUID institucional valido (HU-001)."
-            )
-        return value
+    El estudiante es el usuario autenticado; la carrera y la facultad se
+    obtienen de su perfil académico validado en el servidor. Enviar
+    `carrera_id`, `facultad_id` o `estudiante_id` responde 400
+    `campo_no_permitido`.
+    """
 
 
 class ExpedienteBorradorSerializer(serializers.ModelSerializer):

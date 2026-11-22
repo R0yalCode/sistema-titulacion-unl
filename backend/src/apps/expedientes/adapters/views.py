@@ -23,6 +23,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from apps.academico.adapters.views import error_fuente_academica
+from apps.academico.ports.fuente_academica import FuenteAcademicaNoDisponibleError
 from apps.authentication.adapters.permissions import HasRolePermission
 from apps.expedientes.adapters.models import ExpedienteTitulacion
 from apps.expedientes.services import (
@@ -34,6 +36,7 @@ from apps.expedientes.services.transiciones import TransicionNoPermitidaError
 from apps.verificacion.services import registrar_observacion
 from core.adapters.api_errors import (
     ConfiguracionInconsistenteAPI,
+    PrecondicionNegocioAPI,
     RecursoNoEncontradoAPI,
     RequisitosIncompletosAPI,
     SolicitudInvalidaAPI,
@@ -53,6 +56,19 @@ from apps.verificacion.adapters.serializers import (
     ObservacionAccionableSerializer,
     ObservacionRegistroSerializer,
 )
+
+
+#: Campos que el cliente no puede fijar al crear un expediente (V-03): se
+#: derivan del usuario autenticado y de su perfil académico validado.
+CAMPOS_DERIVADOS_EN_SERVIDOR = frozenset({"carrera_id", "facultad_id", "estudiante_id"})
+
+#: Código de error (422) según el estado del perfil académico no validado.
+CODIGO_POR_ESTADO_PERFIL = {
+    "NO_ASOCIADO": "perfil_academico_no_asociado",
+    "INCOMPLETO": "perfil_academico_incompleto",
+    "INCONSISTENTE": "perfil_academico_inconsistente",
+    "CARRERA_INACTIVA": "carrera_inactiva",
+}
 
 
 # Compatibilidad: los nombres anteriores apuntan a las clases comunes de
@@ -78,10 +94,24 @@ class ExpedienteViewSet(
     # Contrato OpenAPI (core.adapters.openapi.SGTAutoSchema).
     openapi_respuestas_extra = {
         "create": {
-            "400": "expediente_activo_existente, o errores de validación de campos.",
+            "400": (
+                "expediente_activo_existente, o campo_no_permitido (el cuerpo "
+                "incluye carrera_id, facultad_id o estudiante_id: se determinan "
+                "en el servidor a partir del perfil académico)."
+            ),
+            "422": (
+                "Perfil académico no validado: perfil_academico_no_asociado, "
+                "perfil_academico_incompleto, perfil_academico_inconsistente o "
+                "carrera_inactiva."
+            ),
             "500": (
                 "configuracion_catalogo_incompleta: el catálogo base del Art. 235 "
                 "no tiene los 5 requisitos vigentes (D-2)."
+            ),
+            "503": (
+                "servicio_academico_no_configurado o "
+                "servicio_academico_no_disponible: no se pudo obtener el perfil "
+                "académico."
             ),
         },
         "enviar": {
@@ -145,16 +175,30 @@ class ExpedienteViewSet(
         return self.scope_queryset(self.queryset, self.request)
 
     def create(self, request, *args, **kwargs):
+        claves = request.data.keys() if hasattr(request.data, "keys") else ()
+        prohibidos = sorted(CAMPOS_DERIVADOS_EN_SERVIDOR.intersection(claves))
+        if prohibidos:
+            raise SolicitudInvalidaAPI(
+                "La carrera, la facultad y el estudiante del expediente se "
+                "determinan a partir de su perfil académico; no se aceptan en "
+                f"la solicitud ({', '.join(prohibidos)}).",
+                code="campo_no_permitido",
+            )
         serializer_in = CrearExpedienteSerializer(
             data=request.data,
             context={"request": request},
         )
         serializer_in.is_valid(raise_exception=True)
         try:
-            expediente = crear_expediente.execute(
-                estudiante=request.user,
-                carrera_id=serializer_in.validated_data["carrera_id"],
+            expediente = crear_expediente.execute(estudiante=request.user)
+        except FuenteAcademicaNoDisponibleError as error:
+            raise error_fuente_academica(error) from error
+        except crear_expediente.PerfilAcademicoNoValidoError as error:
+            raise PrecondicionNegocioAPI(
+                str(error), code=CODIGO_POR_ESTADO_PERFIL[error.perfil.estado.value]
             )
+        except crear_expediente.CarreraNoVigenteError as error:
+            raise PrecondicionNegocioAPI(str(error), code="carrera_inactiva")
         except crear_expediente.ExpedienteActivoExistenteError as error:
             raise SolicitudInvalidaAPI(str(error), code="expediente_activo_existente")
         except crear_expediente.CatalogoIncompletoError as error:

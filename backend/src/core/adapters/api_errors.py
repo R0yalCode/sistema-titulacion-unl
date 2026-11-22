@@ -14,7 +14,9 @@ Criterio de uso (plan E1-04 §2):
 - 404: recurso inexistente o fuera de ámbito.
 - 409: regla funcional pendiente de decisión (p. ej. O-1). No es BE-11: no
   hay ETag, If-Match ni concurrencia optimista.
-- 422: requisitos del envío incompletos (contrato existente de T016).
+- 422: requisitos del envío incompletos (contrato existente de T016) o
+  precondición de negocio del solicitante no cumplida (perfil académico).
+- 503: fuente externa necesaria no disponible o no configurada.
 - 500 explícito: inconsistencia de datos o de configuración institucional;
   se registra en el log técnico con su `code` y un contexto sin datos
   personales. Nunca se usa para reglas de negocio.
@@ -92,6 +94,26 @@ class RequisitosIncompletosAPI(ErrorDominioAPI):
     default_detail = "Envío incompleto: requisitos sin documento en firme."
 
 
+class PrecondicionNegocioAPI(ErrorDominioAPI):
+    """422: una precondición de negocio del solicitante no se cumple.
+
+    P. ej. perfil académico no validado al crear un expediente. Se produce
+    sin efectos; `code` identifica el motivo.
+    """
+
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    default_code = "precondicion_no_cumplida"
+    default_detail = "No se cumple una precondición necesaria para la operación."
+
+
+class ServicioNoDisponibleAPI(ErrorDominioAPI):
+    """503: una fuente externa necesaria no está disponible o configurada."""
+
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    default_code = "servicio_no_disponible"
+    default_detail = "Un servicio necesario no está disponible. Intente más tarde."
+
+
 class ErrorInternoExplicitoAPI(ErrorDominioAPI):
     """500 explícito y justificado: inconsistencia interna, nunca de negocio.
 
@@ -133,9 +155,11 @@ __all__ = [
     "ErrorDominioAPI",
     "ErrorInternoExplicitoAPI",
     "InconsistenciaDatosAPI",
+    "PrecondicionNegocioAPI",
     "RecursoNoEncontradoAPI",
     "ReglaPendienteAPI",
     "RequisitosIncompletosAPI",
+    "ServicioNoDisponibleAPI",
     "SolicitudInvalidaAPI",
     "TransicionInvalidaAPI",
 ]

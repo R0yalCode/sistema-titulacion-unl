@@ -218,7 +218,7 @@ def actores():
 
 @pytest.fixture
 def borrador(actores):
-    return crear_expediente.execute(actores["estudiante"], CARRERA)
+    return crear_expediente.registrar_expediente(actores["estudiante"], CARRERA)
 
 
 @pytest.fixture

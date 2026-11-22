@@ -2,6 +2,14 @@ from .base import *  # noqa: F401,F403,F405
 
 DEBUG = True
 
+# Desarrollo: simulación MockSGA habilitada salvo que se configure otra fuente.
+ACADEMIC_PROFILE_PROVIDER = env(  # noqa: F405
+    "ACADEMIC_PROFILE_PROVIDER", default="mock_sga"
+)
+ACADEMIC_PROFILE_MOCK_ALLOWED = env.bool(  # noqa: F405
+    "ACADEMIC_PROFILE_MOCK_ALLOWED", default=True
+)
+
 # SEC-T011: en desarrollo, nivel DEBUG en consola (ya es el handler base).
 LOGGING["loggers"]["apps"]["level"] = "DEBUG"
 LOGGING["loggers"]["core"]["level"] = "DEBUG"
