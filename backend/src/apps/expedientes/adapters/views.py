@@ -21,6 +21,7 @@ from rest_framework import (
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.academico.adapters.views import error_fuente_academica
@@ -31,6 +32,7 @@ from apps.expedientes.services import (
     crear_expediente,
     enviar_expediente,
     iniciar_verificacion,
+    resumen_estudiante,
 )
 from apps.expedientes.services.transiciones import TransicionNoPermitidaError
 from apps.verificacion.services import registrar_observacion
@@ -400,3 +402,22 @@ class BandejaExpedienteViewSet(
             "fecha_limite_atencion",
             "fecha_creacion",
         )
+
+
+class MiTramiteView(APIView):
+    """GET /api/v1/expedientes/mi-tramite/ (dashboard del estudiante).
+
+    Solo lectura y solo ESTUDIANTE (celda RBAC `expedientes:mi_tramite`).
+    No recibe identificadores: el resumen se construye siempre sobre
+    `request.user`, por lo que no puede consultarse el trámite de otro
+    estudiante (sin superficie IDOR). Devuelve `expediente: null` si el
+    estudiante aún no registró una solicitud.
+    """
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, HasRolePermission]
+    rbac_resource = "expedientes:mi_tramite"
+
+    @extend_schema(request=None, responses={200: dict})
+    def get(self, request):
+        return Response(resumen_estudiante.execute(request.user), status=status.HTTP_200_OK)

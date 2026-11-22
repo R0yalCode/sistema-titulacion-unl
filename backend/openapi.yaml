@@ -861,6 +861,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBandejaExpedienteList'
           description: ''
+  /api/v1/expedientes/mi-tramite/:
+    get:
+      operationId: expedientes_mi_tramite_retrieve
+      description: |-
+        GET /api/v1/expedientes/mi-tramite/ (dashboard del estudiante).
+
+        Solo lectura y solo ESTUDIANTE (celda RBAC `expedientes:mi_tramite`).
+        No recibe identificadores: el resumen se construye siempre sobre
+        `request.user`, por lo que no puede consultarse el trámite de otro
+        estudiante (sin superficie IDOR). Devuelve `expediente: null` si el
+        estudiante aún no registró una solicitud.
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
   /api/v1/informes/:
     post:
       operationId: informes_create

@@ -55,6 +55,9 @@ RBAC_MATRIX = {
         },
     },
     "expedientes:enviar": {"POST": {"ESTUDIANTE": SCOPE_OWN}},
+    # Dashboard del estudiante (2026-11-19): resumen de solo lectura de su
+    # propio trámite; la vista no acepta identificadores (alcance own).
+    "expedientes:mi_tramite": {"GET": {"ESTUDIANTE": SCOPE_OWN}},
     # Perfil académico (V-03, MockSGA 2026-11-22): solo el propio perfil del
     # estudiante; la vista no acepta identificadores (alcance own).
     "perfil_academico": {"GET": {"ESTUDIANTE": SCOPE_OWN}},
