@@ -13,7 +13,7 @@ last_verified: 2026-11-11
 
 | ID | Dependencia | Vistas | ¿Confirmado ausente en el código? |
 |---|---|---|---|
-| BE-01 | Perfil `/me` o claims `carrera`/`facultad` en el JWT | V-02…V-06 | ✅ Ausente |
+| BE-01 | Perfil `/me` o claims `carrera`/`facultad` en el JWT | V-02…V-06 | Parcial (2026-11-22): `GET /api/v1/perfil-academico/` da carrera y facultad del ESTUDIANTE (fuente simulada MockSGA); sin `/me` general ni claims en el JWT |
 | BE-02 | `GET /peticiones/{id}/` y listado de documentos | V-04, V-06, V-08 | ✅ Ausente |
 | BE-03 | Refresh y logout de servidor | V-01, layout | ✅ Ausente |
 | BE-04 | `GET .../checklist/` para ESTUDIANTE (propios) | V-04 | ✅ 403 para ESTUDIANTE |
@@ -22,7 +22,7 @@ last_verified: 2026-11-11
 | BE-07 | Exponer `motivo_observacion` | V-04, V-08 | No reverificado |
 | BE-08 | CORS para el origen del frontend | Todas | `django-cors-headers` instalado y `CORS_ALLOWED_ORIGINS` en `.env.example` para producción; configuración de desarrollo no reverificada |
 | BE-09 | Bandeja para roles sin expedientes + filtros | V-07 | ✅ `MAPA_INTERVENCION_POR_ROL` vacío para SEC_CAR, DIR_CAR y RESP_DEP |
-| BE-10 | Catálogo de carreras `GET /carreras/` | V-03 | ✅ Ausente |
+| BE-10 | Catálogo de carreras `GET /carreras/` | V-03 | Catálogo interno `Carrera`/`Facultad` creado el 2026-11-22 (datos de demostración `MOCK-…`); sin endpoint público de listado: V-03 ya no lo necesita (la carrera sale de `GET /api/v1/perfil-academico/`) |
 | BE-11 | 409/412/428 con ETag/If-Match | Formularios | ✅ Ausente |
 
 ## Tareas bloqueadas
