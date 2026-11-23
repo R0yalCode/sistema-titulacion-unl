@@ -4,7 +4,7 @@ type: module-catalog
 area: frontend
 status: verified
 source: verified-code
-last_verified: 2026-11-11
+last_verified: 2026-11-23
 ---
 
 # Módulos frontend
@@ -14,7 +14,7 @@ Ruta base: `frontend/src/`. Estructura definida en `sgt-siaaf/specs/003-frontend
 | Módulo | Archivos principales | Endpoints consumidos | Estado |
 |---|---|---|---|
 | `api/` | `endpoints/{auth,expedientes,checklist,notificaciones}.ts`, `types/` | Los de [[API_CONTRACTS]] salvo peticiones (aún sin `endpoints/peticiones.ts`) | Implementado para V-01…V-04 |
-| `auth/` | `AuthContext.tsx`, `useAuth.ts`, `jwt.ts`, `storage.ts`, `guards.tsx`, `redirect.ts`, `roles.ts` | `POST /auth/token/` | Hecho (F1). Sin refresh: re-login al expirar (plan 003 §6) |
+| `auth/` | `AuthContext.tsx`, `useAuth.ts`, `jwt.ts`, `storage.ts`, `guards.tsx`, `redirect.ts`, `roles.ts` | `POST /auth/login/` y flujo MFA ([[API_CONTRACTS]] §0) | Hecho (F1). Sin refresh: re-login al expirar (plan 003 §6) |
 | `app/` | `router.tsx`, `providers.tsx`, `App.tsx`, `NotFoundPage.tsx` | — | Hecho (F0, FE-T1211) |
 | `components/ui/` | Alert, Badge, Button, Card, Checkbox, EmptyState, ErrorState, FileUpload, ForbiddenState, Input, Modal, NotFoundState, Pagination, Radio, Select, Spinner, Table, Textarea, Timeline | — | Hecho (F2; 170 pruebas; cobertura 96,12 % según `CLAUDE.md`) |
 | `components/feedback/` | `ErrorBoundary.tsx`, `ToastProvider.tsx` | — | Hecho |

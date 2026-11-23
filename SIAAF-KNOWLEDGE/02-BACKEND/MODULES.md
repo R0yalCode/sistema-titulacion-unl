@@ -4,7 +4,7 @@ type: module-catalog
 area: backend
 status: verified
 source: verified-code
-last_verified: 2026-11-11
+last_verified: 2026-11-23
 ---
 
 # Módulos backend
@@ -13,7 +13,7 @@ Ruta base: `backend/src/apps/`. Estado según código real; los tests existen pe
 
 | Módulo | Responsabilidad | Servicios (`services/`) | Endpoints | Tests | Estado |
 |---|---|---|---|---|---|
-| `authentication` | Usuario, roles, JWT, RBAC, throttling de login, admin, comando `seed_initial_data` | — (lógica en `adapters/permissions.py`, `throttling.py`) | `POST /auth/token/` | `test_jwt`, `test_rbac_permissions`, `test_security_controls`, `test_swagger_protection`, `test_django_admin` | Implementado; sin refresh/logout (BE-03) |
+| `authentication` | Usuario, roles, JWT, RBAC, throttling de login, admin, comando `seed_initial_data` (rechazado en producción, [[INITIAL_DATA]]) | — (lógica en `adapters/permissions.py`, `throttling.py`) | `POST /auth/login/` y flujo MFA ([[API_CONTRACTS]] §0) | `test_jwt`, `test_rbac_permissions`, `test_security_controls`, `test_swagger_protection`, `test_django_admin` | Implementado; sin refresh (BE-03). `auth/logout/` no invalida un JWT ya emitido |
 | `expedientes` | Expediente de titulación, estados, plazos, bandeja | `crear_expediente`, `enviar_expediente`; `domain/plazo_calculator` | `POST /expedientes/`, `GET bandeja`, `GET {id}`, `POST enviar`, `POST observar` | `test_crear_expediente`, `test_enviar_expediente`, `test_expediente_state_machine`, `test_bandeja_expedientes`, `test_idor_isolation_expediente`, `test_plazo_calculator` | Implementado; **falta transición `ENVIADA→EN_VERIFICACION`** (GAP-STATE-01) y `CANCELADA` |
 | `peticiones` | Catálogo de requisitos, peticiones documentales, carga/descarga PDF versionada | `solicitar_emision`, `cargar_documento` | `POST solicitar-emision`, `POST/GET documento`, `GET documento/{version}` | `test_solicitar_emision`, `test_cargar_documento`, `test_descargar_documento`, `test_pdf_ingestion_and_security`, `test_upload_throttle` | Implementado; `SCOPE_ASIGNADO` manual solo en descarga; sin verificación SHA-256 al descargar (VULN-003, según DP2) |
 | `verificacion` | Checklist digital, observaciones, subsanación | `evaluar_checklist`, `registrar_observacion`, `subsanar_requisito`, `validar_checklist_completo` | `GET checklist`, `PUT checklist/{id}`, `POST subsanar` | `test_evaluar_checklist`, `test_subsanar_requisito`, `test_validar_checklist_completo`, `test_checklist_and_observations` | Implementado; excepciones de dominio → HTTP 500 (INC-21) |

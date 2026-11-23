@@ -4,7 +4,7 @@ type: architecture
 area: api
 status: verified
 source: verified-code
-last_verified: 2026-11-11
+last_verified: 2026-11-23
 ---
 
 # Contratos API (verificados contra código)
@@ -12,11 +12,29 @@ last_verified: 2026-11-11
 **Fuentes de verdad:** `backend/src/config/urls.py` (rutas reales) y `backend/openapi.yaml` (contrato). `backend/contracts/openapi.yaml` era idéntico a `backend/openapi.yaml` hasta `467ec3b` y difería desde `0a24109` (INC-01). **Retirado el 2026-11-12** ([[DECISIONS_LOG]] DK-014): era un subconjunto desactualizado del contrato (17 de 18 operaciones, 31 de 34 esquemas, sin respuestas de error), sin consumidores en código ni CI; `backend/openapi.yaml` coincide exactamente con `manage.py spectacular --validate` (0 errores).
 Rutas y métodos coinciden entre `urls.py` y OpenAPI: **16 rutas, 17 operaciones** bajo `/api/v1/`.
 
+## 0. Inventario actual de rutas (verificado en `urls.py`, 2026-11-23)
+
+Documentación interactiva en desarrollo: `http://localhost:8000/api/v1/docs/` (Swagger), `/api/v1/redoc/` (ReDoc) y `/api/v1/schema/`. En producción requieren `IsAdminUser`.
+
+| Grupo | Endpoints (prefijo `/api/v1/`) |
+|---|---|
+| Autenticación | `auth/login/`, `auth/mfa/setup/`, `auth/mfa/setup/confirm/`, `auth/mfa/verify/`, `auth/mfa/recovery/`, `auth/mfa/reset/`, `auth/mfa/reset/confirm/`, `auth/logout/`, `auth/password-reset/`, `auth/password-reset/validate/`, `auth/password-reset/confirm/` |
+| Perfil académico | `perfil-academico/` |
+| Expedientes | `expedientes/`, `expedientes/bandeja/`, `expedientes/mi-tramite/`, `expedientes/{id}/`, `expedientes/{id}/enviar/`, `expedientes/{id}/iniciar-verificacion/`, `expedientes/{id}/observar/` |
+| Peticiones | `peticiones/{id}/solicitar-emision/`, `peticiones/{id}/documento/`, `peticiones/{id}/documento/{version}/` |
+| Verificación | `expedientes/{id}/checklist/`, `checklist/{id}/`, `checklist/{id}/subsanar/` |
+| Resoluciones | `informes/`, `declaratorias/` |
+| Notificaciones | `notificaciones/`, `notificaciones/{id}/marcar-leida/` |
+
+Fuera de la API: `/health/` y `/admin/`.
+
+> La tabla de la sección 1 y el recuento de la cabecera son de 2026-11-11. **`auth/token/` ya no existe**: el ingreso usa `auth/login/` y el flujo MFA.
+
 ## 1. Endpoints existentes
 
 | # | Método | Ruta | Vista (`urls.py`) | Recurso RBAC | Roles con acceso real (ver [[PERMISSIONS_ROLES]]) |
 |---|---|---|---|---|---|
-| 1 | POST | `/api/v1/auth/token/` | `TokenPairView` (throttle `auth`, 5/min por IP) | — (anónimo) | Todos |
+| 1 | POST | ~~`/api/v1/auth/token/`~~ **Retirada (AUTH-B).** Vigente: `/api/v1/auth/login/` | `LoginView` (throttle `auth`, 5/min por IP) | — (anónimo) | Todos |
 | 2 | POST | `/api/v1/expedientes/` | `ExpedienteViewSet.create` | `expedientes` POST | ESTUDIANTE, ADMINISTRADOR |
 | 3 | GET | `/api/v1/expedientes/bandeja/` | `BandejaExpedienteViewSet.list` | `expedientes` GET + `MAPA_INTERVENCION_POR_ROL` | Según rol y estado |
 | 4 | GET | `/api/v1/expedientes/{id}/` | `ExpedienteViewSet.retrieve` | `expedientes` GET | Todos menos RESPONSABLE_DEPENDENCIA |

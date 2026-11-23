@@ -3,7 +3,7 @@ system: SGT-SIAAF
 type: traceability
 status: verified
 source: verified-code + specs + Documentacion-parte-2
-last_verified: 2026-11-11
+last_verified: 2026-11-23
 aliases: [REQUIREMENTS_IMPLEMENTATION, REQUIREMENTS_TESTS]
 ---
 
@@ -14,7 +14,7 @@ Leyenda: **IV** implementado y verificado en código · **IP** parcial · **DNI*
 
 | Capacidad | Requisito / fuente | Backend | Frontend | Prueba | Estado |
 |---|---|---|---|---|---|
-| Login JWT | specify 001 §6; FE-T011…017, FE-T101…104 | `POST /auth/token/` | V-01 | `test_jwt.py`; pruebas de V-01 | **IV** |
+| Login JWT | specify 001 §6; FE-T011…017, FE-T101…104 | `POST /auth/login/` y flujo MFA | V-01 | `test_jwt.py`; pruebas de V-01 | **IV** |
 | Refresh / logout de servidor | BE-03; INC-02 | — | Logout local | — | **DNI** (BL) |
 | Crear expediente + 5 peticiones | RN-001, HU-001 | `crear_expediente.py` | V-03 | `test_crear_expediente.py` | **IV** |
 | Enviar (plazo de 8 días) | RN-002, RN-010 | `enviar_expediente.py`, `plazo_calculator.py` | V-04 | `test_enviar_expediente.py`, `test_plazo_calculator.py` | **IV** |
