@@ -13,7 +13,8 @@ import { getEnv } from '@/lib/env'
 import { BandejaFilters, aplicarFiltros, type FiltrosBandeja } from './BandejaFilters'
 import { BandejaTable } from './BandejaTable'
 import { estadosAtendidos, explicarBandejaVacia } from './bandejaReglas'
-import { PanelAdministracion, PanelSinBandeja, ResumenPanel } from './PanelesInicio'
+import { AdminDashboard } from './admin/AdminDashboard'
+import { PanelSinBandeja, ResumenPanel } from './PanelesInicio'
 import { useBandejaOperativa, usePrecargarExpediente } from './queries'
 import { contextoRol } from './resumen'
 import styles from './BandejaPage.module.css'
@@ -33,6 +34,7 @@ export default function BandejaPage() {
   const [page, setPage] = useState(1)
   const [filtros, setFiltros] = useState<FiltrosBandeja>(FILTROS_INICIALES)
   const contexto = contextoRol(roles)
+  const esAdministrador = roles.includes('ADMINISTRADOR')
   // BE-09: el backend no asigna bandeja a estos roles; no se consulta en vano.
   const sinBandeja = estadosAtendidos(roles).length === 0
   const bandejaQuery = useBandejaOperativa(page, PAGE_SIZE, { enabled: !sinBandeja })
@@ -99,19 +101,27 @@ export default function BandejaPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <p className={styles.eyebrow}>{contexto.titulo}</p>
-        <h1 className={styles.title}>Bandeja de expedientes</h1>
-        <p className={styles.subtitle}>{contexto.subtitulo}</p>
-      </header>
-
-      {sinBandeja ? (
-        <PanelSinBandeja roles={roles} />
+      {esAdministrador ? (
+        <AdminDashboard
+          accionesRapidas={contexto.accionesRapidas}
+          apiBaseUrl={getEnv().apiBaseUrl}
+          onFiltrarEstado={filtrarEstado}
+        />
       ) : (
-        <ResumenPanel accionesRapidas={contexto.accionesRapidas} onFiltrarEstado={filtrarEstado} />
-      )}
+        <>
+          <header className={styles.header}>
+            <p className={styles.eyebrow}>{contexto.titulo}</p>
+            <h1 className={styles.title}>Bandeja de expedientes</h1>
+            <p className={styles.subtitle}>{contexto.subtitulo}</p>
+          </header>
 
-      {roles.includes('ADMINISTRADOR') && <PanelAdministracion apiBaseUrl={getEnv().apiBaseUrl} />}
+          {sinBandeja ? (
+            <PanelSinBandeja roles={roles} />
+          ) : (
+            <ResumenPanel accionesRapidas={contexto.accionesRapidas} onFiltrarEstado={filtrarEstado} />
+          )}
+        </>
+      )}
 
       {!sinBandeja && (
         <Card

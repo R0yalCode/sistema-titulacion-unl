@@ -20,6 +20,7 @@ import { useNotificaciones } from '@/features/dashboard'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { formatFecha } from '@/lib/dates'
 import { presentarEstado } from '@/lib/estados'
+import { enlacesConsola } from './admin/enlacesConsola'
 import type { AccionRapida } from './resumen'
 import { resumirBandeja } from './resumen'
 import { useResumenBandeja } from './queries'
@@ -225,20 +226,7 @@ export function PanelSinBandeja({ roles }: { roles: string[] }) {
 
 /** Administrador: enlaces a la consola interna existente (Django admin, ADR-0009). */
 export function PanelAdministracion({ apiBaseUrl }: { apiBaseUrl: string }) {
-  const enlaces = [
-    { href: `${apiBaseUrl}/admin/authentication/user/`, titulo: 'Usuarios', descripcion: 'Cuentas del sistema' },
-    { href: `${apiBaseUrl}/admin/authentication/role/`, titulo: 'Roles', descripcion: 'Roles institucionales' },
-    {
-      href: `${apiBaseUrl}/admin/notificaciones/eventoauditoria/`,
-      titulo: 'Auditoría',
-      descripcion: 'Eventos de auditoría del trámite',
-    },
-    {
-      href: `${apiBaseUrl}/admin/authentication/eventoautenticacion/`,
-      titulo: 'Accesos',
-      descripcion: 'Eventos de autenticación',
-    },
-  ]
+  const enlaces = enlacesConsola(apiBaseUrl)
   return (
     <Card
       description="Se abre en la consola interna (requiere una cuenta con acceso de personal)."
