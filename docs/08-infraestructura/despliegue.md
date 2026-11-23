@@ -70,14 +70,35 @@ export $(grep -v '^#' .env.prod | xargs)
 # 2. Certificados TLS reales montados en ./nginx/certs/
 #    (fullchain.pem, privkey.pem) — no provistos por este repositorio.
 
-# 3. Nombre de proyecto propio para no colisionar con una instancia de
-#    desarrollo en el mismo host:
-docker compose -f docker-compose.prod.yml -p sgt-siaaf-prod up -d --build
+# 3. Comprobar el proyecto y desplegar. Si el entorno o un .env seleccionan
+#    otro nombre, la comprobación falla y `up` no se ejecuta:
+[ "$(docker compose -f docker-compose.prod.yml config --no-interpolate | sed -n 's/^name: //p')" = "sgt-siaaf-prod" ] &&
+  docker compose -f docker-compose.prod.yml -p sgt-siaaf-prod up -d --build
 
 # 4. Verificación
 curl -k https://<dominio>/health/              # 200
 curl -k https://<dominio>/api/v1/auth/token/   # 200/401 según credenciales
 ```
+
+### Nombre del proyecto Compose
+
+`docker-compose.prod.yml` declara `name: sgt-siaaf-prod`. El entorno de
+desarrollo del puerto 8000 usa el proyecto `sgt-siaaf` y los mismos nombres de
+servicio (`db`, `backend`, `nginx`): ejecutar el Compose de producción con ese
+proyecto **reemplazaría sus contenedores**.
+
+El nombre se resuelve en este orden, de mayor a menor prioridad:
+
+1. Parámetro `-p`.
+2. `COMPOSE_PROJECT_NAME`, del entorno o de un archivo `.env`.
+3. `name:` del archivo Compose.
+4. Nombre del directorio, que ya no se usa en producción.
+
+`name:` evita el error de omitir `-p`, pero no es una protección absoluta. Por
+eso toda operación (`up`, `down`, `build`, `restart`, `exec`) debe incluir
+`-f docker-compose.prod.yml -p sgt-siaaf-prod`. El repositorio no tiene un
+script de despliegue, así que esta regla y la comprobación del paso 3 son
+manuales.
 
 ### Limitación conocida
 
