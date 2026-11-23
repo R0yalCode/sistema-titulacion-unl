@@ -5,7 +5,7 @@ import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { apiErrorCode, describeTransportError } from './authErrors'
 import { AuthLayout } from './components/AuthLayout'
-import { AlertCircleIcon, CheckCircleIcon } from './components/icons'
+import { AlertCircleIcon, CheckCircleIcon } from '@/components/ui/icons'
 import styles from './components/authForm.module.css'
 
 type Stage = 'confirm' | 'done' | 'invalid'

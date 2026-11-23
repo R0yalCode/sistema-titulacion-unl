@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { describeTransportError } from './authErrors'
 import { AuthLayout } from './components/AuthLayout'
-import { CheckCircleIcon } from './components/icons'
+import { CheckCircleIcon } from '@/components/ui/icons'
 import { PasswordField } from './components/PasswordField'
 import styles from './components/authForm.module.css'
 import {

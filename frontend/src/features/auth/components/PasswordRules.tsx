@@ -1,5 +1,5 @@
 import type { PasswordRule } from '../validation'
-import { CheckCircleIcon, CircleIcon } from './icons'
+import { CheckCircleIcon, CircleIcon } from '@/components/ui/icons'
 import styles from './authForm.module.css'
 
 type PasswordRulesProps = {
