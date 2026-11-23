@@ -8,3 +8,12 @@ coverage
 *.log
 .vscode
 .idea
+
+# Documentos, certificados y claves: nunca deben entrar en una imagen.
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pdf
+**/*.pem
+**/*.key
+**/*.p12

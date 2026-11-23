@@ -8,15 +8,27 @@ Dockerfile
 *.md
 LICENSE
 
-.env
-.env.*
-!.env.example
+**/.env
+**/.env.*
+!**/.env.example
 
+# Documentos y archivos generados: nunca deben entrar en una imagen.
 dataset/
 backend/media/
 backend/staticfiles/
-backend/db.sqlite3
-backend/db.sqlite3-journal
+backend/src/media/
+backend/src/staticfiles/
+**/media/private/
+**/*.pdf
+**/*.sqlite3
+**/*.sqlite3-journal
+**/*.log
+
+# Certificados y claves.
+nginx/certs/
+**/*.pem
+**/*.key
+**/*.p12
 
 **/__pycache__
 **/*.py[codz]
