@@ -62,20 +62,42 @@ services:
       - static_data_prod:/app/backend/staticfiles
     networks:
       - backend_net_prod
+    healthcheck:
+      test: ["CMD", "python", "/app/backend/healthcheck.py"]
+      interval: 10s
+      timeout: 6s
+      retries: 5
+      start_period: 40s
 
+  # Sirve la SPA compilada y los estáticos de Django, y reenvía la API. No monta
+  # el volumen de media: los documentos solo se entregan por la API autenticada.
   nginx:
-    image: nginx:1.24-alpine
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_API_BASE_URL: ${PUBLIC_BASE_URL:?PUBLIC_BASE_URL is required}
+        VITE_APP_NAME: ${VITE_APP_NAME:-SGT-SIAAF}
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
     volumes:
       - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ${NGINX_CERTS_DIR:-./nginx/certs}:/etc/nginx/certs:ro
+      - static_data_prod:/var/www/static:ro
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - backend_net_prod
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 443"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   backend_net_prod:
