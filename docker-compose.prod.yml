@@ -56,6 +56,16 @@ services:
       CSP_CONNECT_SRC_EXTRA: ${CSP_CONNECT_SRC_EXTRA:-}
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
       DOCUMENT_UPLOAD_THROTTLE: ${DOCUMENT_UPLOAD_THROTTLE:-10/hour}
+      # Recuperación de contraseña y 2FA. Los enlaces usan la URL pública.
+      FRONTEND_BASE_URL: ${PUBLIC_BASE_URL:?PUBLIC_BASE_URL is required}
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.smtp.EmailBackend}
+      EMAIL_HOST: ${EMAIL_HOST:?EMAIL_HOST is required}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS:-1}
+      EMAIL_TIMEOUT: ${EMAIL_TIMEOUT:-10}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:?DEFAULT_FROM_EMAIL is required}
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${POSTGRES_DB:?POSTGRES_DB is required}
       DB_USER: ${POSTGRES_USER:?POSTGRES_USER is required}

@@ -21,6 +21,13 @@ import copy
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *  # noqa: F401,F403,F405
+from .correo_produccion import (
+    BACKEND_SMTP,
+    validar_backend_correo,
+    validar_remitente,
+    validar_servidor_correo,
+    validar_url_frontend,
+)
 
 # `from .base import *` liga estos nombres al MISMO objeto dict/list que
 # usa base.py. Mutarlos in-place (LOGGING["handlers"][...] = ...) ensuciaría
@@ -56,6 +63,27 @@ if ACADEMIC_PROFILE_PROVIDER.casefold() == "mock_sga":
         "MockSGA es una simulación. Configure un proveedor académico real o "
         "deje la variable vacía."
     )
+
+# --- Correo y enlaces ---------------------------------------------------
+# La recuperación de contraseña y del 2FA depende de estos valores. Sin ellos
+# el proceso no arranca: base.py usaría la consola y enlaces a localhost.
+EMAIL_BACKEND = validar_backend_correo(
+    env("EMAIL_BACKEND", default=BACKEND_SMTP).strip()  # noqa: F405
+)
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)  # noqa: F405
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")  # noqa: F405
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")  # noqa: F405
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)  # noqa: F405
+EMAIL_HOST = validar_servidor_correo(
+    env("EMAIL_HOST"),  # noqa: F405
+    EMAIL_HOST_USER,
+    EMAIL_HOST_PASSWORD,
+    EMAIL_USE_TLS,
+)
+DEFAULT_FROM_EMAIL = validar_remitente(env("DEFAULT_FROM_EMAIL"))  # noqa: F405
+FRONTEND_BASE_URL = validar_url_frontend(
+    env("FRONTEND_BASE_URL"), ALLOWED_HOSTS  # noqa: F405
+)
 
 # --- Almacenamiento -----------------------------------------------------
 # BASE_DIR es backend/src. docker-compose.prod.yml monta los volúmenes en
