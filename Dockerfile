@@ -48,16 +48,22 @@ COPY backend/manage.py ./
 COPY backend/pyproject.toml ./
 COPY backend/src ./src
 COPY backend/entrypoint.sh ./entrypoint.sh
+COPY backend/gunicorn.conf.py ./gunicorn.conf.py
+COPY backend/healthcheck.py ./healthcheck.py
 
-RUN chmod +x entrypoint.sh && \
+# El código queda como root y de solo lectura para la aplicación: appuser solo
+# escribe en los directorios que Compose monta como volúmenes y en los logs.
+RUN chmod -R u=rwX,go=rX manage.py pyproject.toml gunicorn.conf.py healthcheck.py src && \
+    chmod 755 entrypoint.sh && \
     mkdir -p media/private staticfiles /var/log/sgt-siaaf && \
-    chown -R appuser:appuser /app/backend /var/log/sgt-siaaf
+    chmod -R 750 media && \
+    chown -R appuser:appuser media staticfiles /var/log/sgt-siaaf
 
 USER appuser
 
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health/').status == 200 else 1)"
+    CMD ["python", "/app/backend/healthcheck.py"]
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/app/backend/entrypoint.sh"]

@@ -57,6 +57,28 @@ if ACADEMIC_PROFILE_PROVIDER.casefold() == "mock_sga":
         "deje la variable vacía."
     )
 
+# --- Almacenamiento -----------------------------------------------------
+# BASE_DIR es backend/src. docker-compose.prod.yml monta los volúmenes en
+# backend/media y backend/staticfiles, así que producción debe escribir ahí.
+# Solo se ajusta en este módulo: desarrollo conserva sus rutas.
+_RAIZ_BACKEND = BASE_DIR.parent  # noqa: F405
+MEDIA_ROOT = _RAIZ_BACKEND / "media"
+STATIC_ROOT = _RAIZ_BACKEND / "staticfiles"
+# Documentos privados: solo los lee el usuario de la aplicación.
+FILE_UPLOAD_PERMISSIONS = 0o640
+FILE_UPLOAD_DIRECTORY_PERMISSIONS = 0o750
+# Los estáticos los lee Nginx, con otro usuario, desde un volumen de solo lectura.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "OPTIONS": {
+            "file_permissions_mode": 0o644,
+            "directory_permissions_mode": 0o755,
+        },
+    },
+}
+
 # --- HTTPS / HSTS -----------------------------------------------------
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
