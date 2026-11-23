@@ -114,7 +114,7 @@ Si ve una versión antigua, compruebe la rama y el commit y reconstruya.
 | `docker compose down` | Elimina los contenedores y, con ellos, esos PDF. Conserva la base |
 | `docker compose down -v` | **Elimina también la base de datos y los volúmenes** |
 
-Si necesita conservar los PDF de desarrollo, cópielos antes de reconstruir:
+Si ya cargó documentos y necesita conservarlos, cópielos antes de reconstruir. La carpeta no existe hasta la primera carga:
 
 ```bash
 docker compose cp backend:/app/backend/src/media ./respaldo-media
