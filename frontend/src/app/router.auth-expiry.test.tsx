@@ -42,7 +42,7 @@ describe('expiración de sesión (401 global)', () => {
       { route: '/estudiante' },
     )
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
 
     await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
@@ -66,7 +66,7 @@ describe('expiración de sesión (401 global)', () => {
       { route: '/estudiante' },
     )
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
 
     await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
@@ -89,7 +89,7 @@ describe('expiración de sesión (401 global)', () => {
         { route: '/estudiante' },
       )
 
-      await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })
+      await screen.findByRole('heading', { name: 'Mi proceso de titulación' })
       await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
       expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()

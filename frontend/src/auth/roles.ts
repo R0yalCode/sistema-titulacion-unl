@@ -6,3 +6,17 @@ export const OPERATIONAL_ROLES = [
   'SECRETARIA_CARRERA',
   'DIRECTOR_CARRERA',
 ]
+
+/**
+ * Roles con celda RBAC `notificaciones` GET (backend `RBAC_MATRIX`,
+ * verificado 2026-11-19). RESPONSABLE_DEPENDENCIA no la tiene.
+ */
+export const ROLES_CON_NOTIFICACIONES = [
+  'ESTUDIANTE',
+  'SECRETARIA_CARRERA',
+  'SECRETARIO_ABOGADO',
+  'ANALISTA_APOYO',
+  'DECANO',
+  'DIRECTOR_CARRERA',
+  'ADMINISTRADOR',
+]
