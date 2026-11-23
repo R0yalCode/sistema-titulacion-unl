@@ -16,80 +16,121 @@ function renderLanding() {
   )
 }
 
-describe('LandingPage (AUTH-E)', () => {
-  it('presenta SGT-SIAAF, la UNL y el propósito del sistema', () => {
+describe('LandingPage', () => {
+  it('muestra exactamente el contenido institucional definido', () => {
+    renderLanding()
+
+    const main = screen.getByRole('main')
+    expect(within(main).getByText('SGT-SIAAF')).toBeInTheDocument()
+    expect(
+      within(main).getByRole('heading', {
+        level: 1,
+        name: 'Sistema de Gestión del Trámite de Titulación',
+      }),
+    ).toBeInTheDocument()
+    expect(
+      within(main).getByText(
+        'Solicite su titulación, presente sus requisitos y dé seguimiento a su expediente',
+      ),
+    ).toBeInTheDocument()
+    expect(main).toHaveTextContent(
+      /^SGT-SIAAFSistema de Gestión del Trámite de TitulaciónSolicite su titulación, presente sus requisitos y dé seguimiento a su expedienteIngresar al sistema$/,
+    )
+  })
+
+  it('conserva el logotipo institucional', () => {
     renderLanding()
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Sistema de Gestión del Trámite de Titulación' }),
+      within(screen.getByRole('banner')).getByRole('img', { name: 'Universidad Nacional de Loja' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('SGT-SIAAF')).toBeInTheDocument()
-    expect(screen.getByText(/Universidad Nacional de Loja: solicite su titulación/)).toBeInTheDocument()
   })
 
-  it('el encabezado ofrece Inicio y el acceso, como en la referencia', () => {
+  it('el encabezado ofrece Inicio y Acceder al Sistema con rutas internas', () => {
     renderLanding()
 
-    const nav = screen.getByRole('navigation', { name: 'Navegación principal' })
-    expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '#inicio')
-    expect(within(nav).getByRole('link', { name: 'Ingresar al sistema' })).toHaveAttribute('href', '/login')
+    const nav = within(screen.getByRole('banner')).getByRole('navigation', {
+      name: 'Navegación principal',
+    })
+    expect(within(nav).getAllByRole('link')).toHaveLength(2)
+    expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/')
+    expect(within(nav).getByRole('link', { name: 'Acceder al Sistema' })).toHaveAttribute(
+      'href',
+      '/login',
+    )
   })
 
-  it('el botón principal «Ingresar al sistema» lleva a /login', async () => {
+  it('«Inicio» permanece en el landing y «Acceder al Sistema» abre /login', async () => {
     const user = userEvent.setup()
     renderLanding()
 
-    const principal = within(screen.getByRole('main')).getByRole('link', { name: 'Ingresar al sistema' })
-    expect(principal).toHaveAttribute('href', '/login')
-    await user.click(principal)
+    await user.click(screen.getByRole('link', { name: 'Inicio' }))
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Sistema de Gestión del Trámite de Titulación',
+      }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('link', { name: 'Acceder al Sistema' }))
+    expect(screen.getByRole('heading', { name: 'Pantalla de ingreso' })).toBeInTheDocument()
+  })
+
+  it('ningún enlace apunta a un sistema externo', () => {
+    renderLanding()
+
+    for (const enlace of screen.getAllByRole('link')) {
+      expect(enlace.getAttribute('href')).toMatch(/^\/(login)?$/)
+    }
+  })
+
+  it('el panel central tiene un único enlace, «Ingresar al sistema», que lleva a /login', async () => {
+    const user = userEvent.setup()
+    renderLanding()
+
+    const main = within(screen.getByRole('main'))
+    expect(main.getAllByRole('link')).toHaveLength(1)
+    const enlace = main.getByRole('link', { name: 'Ingresar al sistema' })
+    expect(enlace).toHaveAttribute('href', '/login')
+    await user.click(enlace)
 
     expect(screen.getByRole('heading', { name: 'Pantalla de ingreso' })).toBeInTheDocument()
   })
 
-  it('el botón principal es alcanzable con el teclado', async () => {
+  it('recorre con el teclado Inicio, Acceder al Sistema e Ingresar al sistema', async () => {
     const user = userEvent.setup()
     renderLanding()
 
-    await user.tab() // Inicio
-    await user.tab() // Ingresar (encabezado)
-    await user.tab() // Ingresar (principal)
-    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Ingresar al sistema' })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('link', { name: 'Inicio' })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('link', { name: 'Acceder al Sistema' })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('link', { name: 'Ingresar al sistema' })).toHaveFocus()
     await user.keyboard('{Enter}')
+
     expect(screen.getByRole('heading', { name: 'Pantalla de ingreso' })).toBeInTheDocument()
   })
 
-  it('muestra el proceso de arriba hacia abajo con sus ramas', () => {
-    renderLanding()
+  it('no conserva ningún fragmento del apartado del proceso de titulación', () => {
+    const { container } = renderLanding()
 
-    expect(screen.getByRole('heading', { name: '¿Cómo es el proceso de titulación?' })).toBeInTheDocument()
-    const etapas = screen.getAllByRole('heading', { level: 4 }).map((h) => h.textContent)
-    expect(etapas.slice(0, 4)).toEqual([
-      'Solicitud de titulación',
-      'Requisitos documentales',
-      'Envío del expediente',
-      'Verificación de requisitos',
-    ])
-    expect(screen.getByText('Con observaciones')).toBeInTheDocument()
-    expect(screen.getByText('Trabajo de Integración Curricular')).toBeInTheDocument()
-    expect(screen.getByText('Examen Complexivo')).toBeInTheDocument()
-  })
-
-  it('distingue lo que gestiona el sistema de las etapas referenciales', () => {
-    renderLanding()
-
-    expect(screen.getByText('Disponible en SGT-SIAAF')).toBeInTheDocument()
-    expect(screen.getByText('Referencial')).toBeInTheDocument()
-    expect(screen.getByText(/pendientes de validación con la normativa institucional/)).toBeInTheDocument()
-    // CA-G-01: sin modalidades no documentadas.
-    expect(screen.queryByText(/Emprendimiento/i)).not.toBeInTheDocument()
-  })
-
-  it('tiene encabezado y pie institucionales', () => {
-    renderLanding()
-
-    const banner = screen.getByRole('banner')
-    expect(within(banner).getByRole('img', { name: 'Universidad Nacional de Loja' })).toBeInTheDocument()
-    expect(screen.getByRole('contentinfo')).toHaveTextContent('Universidad Nacional de Loja')
+    for (const texto of [
+      /¿Cómo es el proceso/i,
+      /Recorrido general/i,
+      /Fase \d/i,
+      /Fases 2 y 3/i,
+      /Declaratoria/i,
+      /Requisitos documentales/i,
+      /Envío del expediente/i,
+      /Verificación de requisitos/i,
+      /Informe de aptitud/i,
+      /Trabajo de Integración Curricular/i,
+      /Examen Complexivo/i,
+    ]) {
+      expect(container).not.toHaveTextContent(texto)
+    }
+    expect(container.querySelector('ol, li, h2, h3, h4')).toBeNull()
   })
 
   it('no presenta violaciones de accesibilidad', async () => {
