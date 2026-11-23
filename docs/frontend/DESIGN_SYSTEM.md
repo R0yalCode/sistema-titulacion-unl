@@ -1,7 +1,8 @@
 # Design System SGT-SIAAF
 
-> Estado: implementado en la rama `feat/dashboard-estudiante` (2026-11-19), sin commit.
+> Estado: integrado por bloques el 2026-11-22 (ver `docs/frontend/PLAN_DESIGN_SYSTEM_DK010.md`).
 > Fuente única de tokens: `frontend/src/styles/tokens.css`. Estilos base: `frontend/src/styles/global.css`.
+> Variante del administrador: `frontend/src/styles/siaaf-modern.css` (§11).
 > Autorización: rediseño transversal autorizado expresamente por el responsable del repositorio el 2026-11-19
 > (ver «Relación con CLAUDE.md» al final).
 
@@ -158,10 +159,14 @@ Validado sin scroll horizontal en 320, 360, 390, 768, 1024, 1280, 1440 y 1920 px
 | `ProgressBar` | Progreso real | `role=progressbar` + `aria-valuetext` |
 | `BarChart` | Barras horizontales sin librería | `figure` etiquetada; los valores en texto son la alternativa accesible |
 | `Timeline` | Etapas (vertical u horizontal) | Estado de cada paso en texto para lectores de pantalla |
+| `Checkbox`, `FileUpload` | Selección y carga de archivos | Etiqueta asociada y error descrito |
+| `Pagination` | Paginación real del backend | Botones con nombre accesible y estado deshabilitado |
+| `Spinner` | Carga breve dentro de un control | Acompañado de texto o `aria-busy` |
+| `Table` | Tablas de datos que no usan `DataList` | Encabezados semánticos |
 | `icons.tsx` | Juego único de iconos (trazo 1,8, rejilla 24) | Siempre `aria-hidden`; el texto da el significado |
 
 Estructura (`frontend/src/components/layout`):
-- `AppShell` es el único shell: sidebar institucional (contraíble en escritorio, con la preferencia guardada en `localStorage`), barra superior con notificaciones y perfil, y un único `<main>`.
+- `AppShell` es el único shell: sidebar institucional (contraíble en escritorio, con la preferencia guardada en `localStorage`), barra superior con notificaciones y perfil, y un único `<main>`. Admite `group` en cada enlace, `visual` para una variante con alcance propio y `topbarSlot` para un control adicional.
 - `StudentLayout` y `AppLayout` solo lo configuran con la navegación autorizada de cada rol.
 
 ### Ejemplos
@@ -198,7 +203,7 @@ return <>{dialog}<Button onClick={() => void enviar()}>Enviar expediente</Button
 
 ## 9. Pendientes que dependen de terceros (no se simularon)
 
-- **Búsqueda universal**: el backend no ofrece búsqueda ni filtros en la bandeja (BE-09). Requiere un endpoint de búsqueda con alcance por rol. Hoy solo existe el filtro de la página actual.
+- **Búsqueda universal**: el backend no ofrece búsqueda ni filtros en la bandeja (BE-09). Requiere un endpoint de búsqueda con alcance por rol. Hoy existen el filtro de la página actual y, solo para el administrador, Ctrl/Cmd + K sobre secciones reales y hasta 50 expedientes de la bandeja.
 - **Estadísticas completas**: con más de 50 expedientes en la bandeja, el panel solo muestra el total. Los vencidos y la distribución por estado requieren un endpoint de agregados.
 - **Gráficos temporales (tendencias)**: no hay series históricas expuestas por la API.
 - **Perfil de funcionarios**: sin endpoint de perfil, solo se muestran la cédula y los roles del token.
@@ -212,4 +217,15 @@ Cláusulas afectadas y autorización:
 - Restricción de «no rediseñar otros roles» de tareas previas.
 - Máxima 4 («sin dependencias nuevas»): la fuente se incorporó como archivos estáticos, no como dependencia npm.
 
-El responsable autorizó expresamente el rediseño transversal el 2026-11-19, solo para presentación, componentes y navegación. No autoriza cambios de reglas de negocio, RBAC, MFA, IDOR ni contratos de API, y no se hicieron.
+El responsable autorizó expresamente el rediseño transversal el 2026-11-19, solo para presentación, componentes y navegación. Esa autorización no cubre cambios de reglas de negocio, RBAC, MFA, IDOR ni contratos de API. Los cambios de backend de perfil académico, `mi-tramite` y notificaciones tienen autorizaciones propias del 2026-11-22 y constan en sus bitácoras.
+
+## 11. Variante «SIAAF Modern» (administrador)
+
+- **Alcance:** `AppLayout` aplica `data-visual="siaaf-modern"` solo si el JWT incluye `ADMINISTRADOR`. Los demás roles conservan los tokens base.
+- **Tokens:** `siaaf-modern.css` redefine tokens semánticos dentro de ese atributo. Estructura `#25374a`, acción y enlaces `#3d5871` (7,41:1 sobre blanco), fondo `#f4f7fa`, acento `#e1ab1d` y estados verde, ámbar y rojo con texto o icono.
+- **Contraste:** `#6597c9` (3,08:1 con blanco) no se usa para texto ni botones con texto blanco.
+- **Fuente de la paleta:** las imágenes de `docs/paleta_colores_institucionales/` son material local del responsable y no están versionadas en esta integración. Los valores aplicados quedan en `siaaf-modern.css`.
+- **Navegación:** grupos «Menú principal» y «Gestión y control». La consola de administración enlaza a Django admin y exige una cuenta con `is_staff`.
+- **Búsqueda:** Ctrl/Cmd + K localiza secciones y expedientes de la bandeja; no usa endpoints nuevos.
+- **Panel (`/bandeja`):** indicadores, distribución por estado, atención prioritaria, actividad de la cuenta, accesos rápidos y listado. Con más de 50 expedientes no se muestran cifras parciales de plazos ni la distribución.
+- **Responsive:** KPI en 4, 2 y 2 columnas (escritorio, tablet y móvil); el sidebar pasa a panel lateral en ≤ 1024 px.

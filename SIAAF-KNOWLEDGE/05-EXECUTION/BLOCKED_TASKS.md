@@ -4,7 +4,7 @@ type: execution
 area: blocked
 status: verified
 source: sgt-siaaf/specs/003-frontend-titulacion/tasks.md §2 + verified-code
-last_verified: 2026-11-11
+last_verified: 2026-11-22
 ---
 
 # Tareas bloqueadas y dependencias no autorizadas
@@ -42,6 +42,22 @@ last_verified: 2026-11-11
 | GAP-RBAC-01 | `RESPONSABLE_DEPENDENCIA` sin permisos, aunque emite 3 de los 5 requisitos | Las dependencias no pueden cargar sus certificados |
 
 Requieren **decisión humana** ([[DECISIONS_LOG]] DK-007).
+
+## Incidencias funcionales de notificaciones (registradas el 2026-11-22)
+
+Quedan abiertas y **sin cambio de comportamiento** hasta una decisión específica del responsable.
+
+| ID | Descripción | Impacto | Riesgo | Propuesta de tratamiento |
+|---|---|---|---|---|
+| INC-NOTIF-01 | `declarar_aptitud` envía copia a los directores de toda la facultad, pero el RBAC de Dirección tiene alcance de carrera | Las copias de otra carrera quedan guardadas y no se muestran (5 en los datos locales) | Medio: una autoridad puede creer que no recibió la copia; mostrarla sin decidir ampliaría la visibilidad de expedientes | Decidir la regla normativa. Recomendado: limitar el envío a la carrera del expediente y conservar el Decanato como copia de facultad |
+| INC-NOTIF-02 | `obtener_usuario_emisor` recurre al primer usuario del rol cuando no hay responsable en el ámbito | El aviso puede llegar a alguien de otro ámbito, que no lo verá, y la solicitud puede quedar sin atender | Alto para el flujo documental: pérdida silenciosa de una solicitud; además, el mensaje incluye datos del estudiante | Quitar el respaldo global y registrar un error o una cola de solicitudes sin responsable, previa decisión funcional |
+| INC-NOTIF-03 | Usuarios con roles de carrera o facultad sin ámbito institucional completo | Reciben 200 con lista vacía, aunque tengan avisos guardados | Medio: la ausencia de avisos parece normal y puede ocultar trabajo pendiente | Auditar las cuentas, completar su ámbito y definir un aviso de «ámbito incompleto» en la interfaz |
+
+## Tareas obligatorias antes de `main`
+
+| ID | Tarea | Motivo |
+|---|---|---|
+| PROD-ACAD-01 | Incorporar `settings/production.py` en un cambio independiente, con una prueba que use `DEBUG=1` | Sin ese cambio, `DEBUG=1` en el entorno de producción activa la fuente simulada MockSGA |
 
 ## Relacionado
 
