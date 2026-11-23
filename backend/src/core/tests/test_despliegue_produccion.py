@@ -37,6 +37,9 @@ def _entorno(tmp_path, **extra):
         "ALLOWED_HOSTS": "test.invalid",
         "CSRF_TRUSTED_ORIGINS": "https://test.invalid",
         "CORS_ALLOWED_ORIGINS": "https://test.invalid",
+        "FRONTEND_BASE_URL": "https://test.invalid",
+        "EMAIL_HOST": "smtp.test.invalid",
+        "DEFAULT_FROM_EMAIL": "no-reply@test.invalid",
         "LOG_DIR": str(tmp_path),
     }
     entorno.update(extra)

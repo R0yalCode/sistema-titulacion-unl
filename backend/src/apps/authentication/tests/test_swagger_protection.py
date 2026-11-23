@@ -37,6 +37,9 @@ def test_production_settings_module_restricts_to_admin(monkeypatch):
     monkeypatch.setenv("ALLOWED_HOSTS", "test.invalid")
     monkeypatch.setenv("CSRF_TRUSTED_ORIGINS", "https://test.invalid")
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", "https://test.invalid")
+    monkeypatch.setenv("FRONTEND_BASE_URL", "https://test.invalid")
+    monkeypatch.setenv("EMAIL_HOST", "smtp.test.invalid")
+    monkeypatch.setenv("DEFAULT_FROM_EMAIL", "no-reply@test.invalid")
 
     produccion = importlib.import_module("config.settings.production")
     assert produccion.SPECTACULAR_SETTINGS["SERVE_PERMISSIONS"] == [
