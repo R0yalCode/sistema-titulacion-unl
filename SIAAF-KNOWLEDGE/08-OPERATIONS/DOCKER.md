@@ -30,6 +30,8 @@ El servidor de desarrollo de Vite (`npm --prefix frontend run dev`, puerto 5173)
 
 ## Producción (`docker-compose.prod.yml`)
 
+Proyecto `sgt-siaaf-prod`, declarado con `name:`. Usar siempre `-p sgt-siaaf-prod`: `-p` y `COMPOSE_PROJECT_NAME` tienen precedencia sobre `name:`, y el proyecto `sgt-siaaf` es el entorno de desarrollo de `:8000`.
+
 `db` (postgres:16), `backend` (target `production`), `nginx` con puertos `80` y `443` (`nginx/prod.conf`); volúmenes `postgres_data_prod`, `media_private_prod`, `static_data_prod`; red `backend_net_prod`. Variables obligatorias en producción (`backend/.env.example`): `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `CORS_ALLOWED_ORIGINS`, y opcionales `CSP_CONNECT_SRC_EXTRA`, `TRUSTED_PROXIES`, `LOG_DIR`.
 
 ## Variables (solo nombres)
