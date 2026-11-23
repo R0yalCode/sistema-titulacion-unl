@@ -21,7 +21,9 @@ datos (spec 001 §2).
 3. Mientras no haya integración, la fuente es `MockSGAAdapter`, una
    simulación explícita: solo se activa si `ACADEMIC_PROFILE_MOCK_ALLOWED`
    lo permite (por defecto, solo en desarrollo), sus datos se marcan como
-   simulados y la API lo comunica (`fuente.es_simulada`).
+   simulados y la API lo comunica (`fuente.es_simulada`). En
+   `config.settings.production` está prohibida: el permiso es la constante
+   `False` y configurar `mock_sga` detiene el arranque.
 4. Se expone `GET /api/v1/perfil-academico/`, solo para el propio estudiante.
 
 ## Alternativas descartadas
