@@ -27,13 +27,17 @@ class NotificacionViewSet(ScopeFilterMixin, viewsets.ReadOnlyModelViewSet):
     queryset = NotificacionInterna.objects.select_related("expediente", "peticion", "peticion__requisito")
     serializer_class = NotificacionInternaSerializer
     scope_owner_field = "usuario_destino_id"
+    # `NotificacionInterna` no tiene carrera ni facultad propias: su ámbito
+    # institucional es el del expediente, igual que en peticiones y verificación.
+    scope_carrera_field = "expediente__carrera_id"
+    scope_facultad_field = "expediente__facultad_id"
     pagination_class = None  # Deshabilitar paginación para pruebas simples
 
     def get_rbac_resource(self):
         return "notificaciones"
 
     def get_queryset(self):
-        """Filtrar notificaciones por usuario autenticado."""
+        """Notificaciones dirigidas al usuario y dentro de su ámbito."""
         return self.scope_queryset(self.queryset, self.request).filter(
             usuario_destino=self.request.user
         )
