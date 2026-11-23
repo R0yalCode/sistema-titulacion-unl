@@ -1,4 +1,4 @@
-# Imagen web de desarrollo: compila el frontend React/Vite y lo sirve con Nginx.
+# Imagen web (desarrollo y producción): compila el frontend React/Vite y lo sirve con Nginx.
 #
 # Se usa desde docker-compose.yml (servicio `nginx`) con contexto ./frontend.
 # Cada `docker compose up --build` recompila el código actual, así que nunca se

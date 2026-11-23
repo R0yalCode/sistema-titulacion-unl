@@ -42,14 +42,29 @@ registrada en `DECISION_LOG.md`, no en `backend/`):
 
 - `Dockerfile` — multi-stage, target `production` (gunicorn, usuario `appuser` UID 1000, sin acceso de root).
 - `docker-compose.prod.yml` — servicios `db`, `backend`, `nginx`; variables de entorno obligatorias sin valores reales.
-- `nginx/prod.conf` — TLS + proxy; requiere montar certificados reales en `nginx/certs/` (no incluidos en el repositorio).
+- `nginx/prod.conf` y `nginx/snippets/` — TLS, SPA, estáticos y proxy de la API; requiere montar certificados reales en `nginx/certs/` (no incluidos en el repositorio).
 - `backend/entrypoint.sh` — `migrate` → `collectstatic` → `gunicorn`.
+- `backend/gunicorn.conf.py` — ruta de importación de `config` y parámetros del servidor.
+- `backend/healthcheck.py` — healthcheck con un `Host` admitido por `ALLOWED_HOSTS`.
+
+### Rutas y persistencia
+
+| Dato | Ruta en el backend | Volumen | Quién lo sirve |
+|---|---|---|---|
+| Documentos | `/app/backend/media` | `media_private_prod` | Solo la API autenticada; Nginx responde 404 en `/media/` |
+| Estáticos | `/app/backend/staticfiles` | `static_data_prod` | Nginx, en solo lectura desde `/var/www/static` |
+
+Estas rutas se aplican solo a `config.settings.production`. En desarrollo,
+`MEDIA_ROOT` sigue siendo `backend/src/media`, fuera del volumen `media_data`:
+recrear el contenedor de desarrollo elimina los documentos subidos.
 
 ### Procedimiento
 
 ```bash
 # 1. Definir variables reales (dominio, orígenes, contraseñas, claves) en
 #    un .env.prod — nunca los valores de ejemplo de backend/.env.example.
+#    Incluye PUBLIC_BASE_URL (URL HTTPS pública, sin barra final), que se
+#    compila en el frontend.
 export $(grep -v '^#' .env.prod | xargs)
 
 # 2. Certificados TLS reales montados en ./nginx/certs/
