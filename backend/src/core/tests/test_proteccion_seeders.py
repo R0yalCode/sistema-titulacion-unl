@@ -23,7 +23,13 @@ from apps.authentication.adapters.management.commands.seed_initial_data import (
     CUENTAS_DEMO,
     VARIABLE_CLAVE_DEMO,
 )
-from apps.authentication.adapters.models import Role, User, UserRole
+from apps.authentication.adapters.models import (
+    IdentidadEntornoBD,
+    Role,
+    User,
+    UserRole,
+)
+from core.adapters import entorno_demo
 from core.adapters.entorno_demo import NOMBRE_MARCA_PRODUCCION
 
 BACKEND = Path(__file__).resolve().parents[3]
@@ -131,6 +137,8 @@ def test_seed_mock_conserva_el_rechazo_si_el_mock_no_esta_permitido(settings):
 @pytest.mark.parametrize("modulo", MODULOS_PERMITIDOS)
 def test_carga_e_idempotencia_en_desarrollo_y_pruebas(monkeypatch, clave_demo, modulo):
     monkeypatch.setenv("DJANGO_SETTINGS_MODULE", modulo)
+    if modulo == "config.settings.local":
+        IdentidadEntornoBD.objects.create(entorno="desarrollo", base_registrada="x")
 
     for _ in range(2):
         _ejecutar("seed_initial_data")
@@ -142,6 +150,176 @@ def test_carga_e_idempotencia_en_desarrollo_y_pruebas(monkeypatch, clave_demo, m
     assert Facultad.objects.count() == 1
     assert Carrera.objects.count() == 2
     assert PerfilSGASimulado.objects.count() == 1
+
+
+def _escrituras(consultas):
+    return [
+        q["sql"]
+        for q in consultas.captured_queries
+        if q["sql"].lstrip().upper().startswith(("INSERT", "UPDATE", "DELETE"))
+    ]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("modulo", MODULOS_PERMITIDOS)
+@pytest.mark.parametrize("comando", COMANDOS)
+def test_base_de_produccion_rechaza_cualquier_modulo(
+    monkeypatch, clave_demo, modulo, comando
+):
+    IdentidadEntornoBD.objects.create(entorno="produccion", base_registrada="x")
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", modulo)
+
+    with CaptureQueriesContext(connection) as consultas:
+        with pytest.raises(CommandError, match="registrada como producción"):
+            _ejecutar(*comando)
+
+    assert _escrituras(consultas) == []
+    assert not User.objects.exists()
+    assert not Facultad.objects.exists()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("comando", COMANDOS)
+def test_desarrollo_sin_identidad_se_rechaza(monkeypatch, clave_demo, comando):
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", "config.settings.local")
+
+    with CaptureQueriesContext(connection) as consultas:
+        with pytest.raises(CommandError, match="no tiene identidad de desarrollo"):
+            _ejecutar(*comando)
+
+    assert _escrituras(consultas) == []
+    _sin_datos_demo()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("modulo", sorted(entorno_demo.MODULOS_PRUEBAS))
+def test_modulo_de_pruebas_fuera_del_ejecutor_se_rechaza(
+    monkeypatch, clave_demo, modulo
+):
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", modulo)
+    monkeypatch.delattr(entorno_demo._TestState, "saved_data")
+
+    with pytest.raises(CommandError, match="no tiene identidad de desarrollo"):
+        _ejecutar("seed_initial_data")
+
+    _sin_datos_demo()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("comando", COMANDOS)
+def test_identidad_no_verificable_se_rechaza(monkeypatch, clave_demo, comando):
+    def fallar():
+        raise entorno_demo.IdentidadNoVerificable
+
+    monkeypatch.setattr(entorno_demo, "leer_identidad_base", fallar)
+
+    with pytest.raises(CommandError, match="no se pudo verificar"):
+        _ejecutar(*comando)
+
+    _sin_datos_demo()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("filas", [["otro"], ["desarrollo", "produccion"]])
+def test_identidad_inconsistente_no_es_verificable(filas):
+    with connection.cursor() as cursor:
+        cursor.execute("DROP TABLE sgt_identidad_entorno")
+        cursor.execute("CREATE TABLE sgt_identidad_entorno (entorno varchar(16))")
+        for valor in filas:
+            cursor.execute("INSERT INTO sgt_identidad_entorno VALUES (%s)", [valor])
+
+    with pytest.raises(entorno_demo.IdentidadNoVerificable):
+        entorno_demo.leer_identidad_base()
+
+
+def _preparar_imagen_produccion(monkeypatch, settings, tmp_path):
+    raiz = tmp_path / "backend"
+    (raiz / "src").mkdir(parents=True)
+    (raiz / NOMBRE_MARCA_PRODUCCION).touch()
+    settings.BASE_DIR = raiz / "src"
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", "config.settings.production")
+
+
+@pytest.mark.django_db
+def test_registro_de_produccion_es_idempotente(monkeypatch, settings, tmp_path):
+    _preparar_imagen_produccion(monkeypatch, settings, tmp_path)
+
+    for _ in range(2):
+        _ejecutar("registrar_entorno_bd", "produccion")
+
+    assert IdentidadEntornoBD.objects.get().entorno == "produccion"
+
+
+@pytest.mark.django_db
+def test_produccion_no_acepta_una_base_de_desarrollo(monkeypatch, settings, tmp_path):
+    IdentidadEntornoBD.objects.create(entorno="desarrollo", base_registrada="x")
+    _preparar_imagen_produccion(monkeypatch, settings, tmp_path)
+
+    with pytest.raises(CommandError, match="ya está registrada como desarrollo"):
+        _ejecutar("registrar_entorno_bd", "produccion")
+
+    assert IdentidadEntornoBD.objects.get().entorno == "desarrollo"
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("modulo", MODULOS_PERMITIDOS)
+def test_produccion_solo_se_registra_desde_su_imagen(monkeypatch, modulo):
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", modulo)
+
+    with pytest.raises(CommandError, match="imagen de producción"):
+        _ejecutar("registrar_entorno_bd", "produccion")
+
+    assert not IdentidadEntornoBD.objects.exists()
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("confirmacion", [None, "", "otra-base"])
+def test_desarrollo_exige_confirmar_el_nombre(monkeypatch, confirmacion):
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", "config.settings.local")
+    argumentos = ["registrar_entorno_bd", "desarrollo"]
+    if confirmacion is not None:
+        argumentos += ["--confirmar-base", confirmacion]
+
+    with pytest.raises(CommandError, match="nombre exacto"):
+        _ejecutar(*argumentos)
+
+    assert not IdentidadEntornoBD.objects.exists()
+
+
+@pytest.mark.django_db
+def test_desarrollo_no_reclasifica_una_base_de_produccion(monkeypatch):
+    IdentidadEntornoBD.objects.create(entorno="produccion", base_registrada="x")
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", "config.settings.local")
+    nombre = str(connection.settings_dict["NAME"])
+
+    with pytest.raises(CommandError, match="ya está registrada como produccion"):
+        _ejecutar("registrar_entorno_bd", "desarrollo", "--confirmar-base", nombre)
+
+    assert IdentidadEntornoBD.objects.get().entorno == "produccion"
+
+
+@pytest.mark.django_db
+def test_registro_de_desarrollo_habilita_la_carga(monkeypatch, clave_demo):
+    monkeypatch.setenv("DJANGO_SETTINGS_MODULE", "config.settings.local")
+    nombre = str(connection.settings_dict["NAME"])
+
+    for _ in range(2):
+        _ejecutar("registrar_entorno_bd", "desarrollo", "--confirmar-base", nombre)
+    _ejecutar("seed_initial_data")
+
+    assert IdentidadEntornoBD.objects.get().entorno == "desarrollo"
+    assert User.objects.count() == len(CUENTAS_DEMO)
+
+
+def test_el_arranque_registra_produccion_despues_de_migrar():
+    contenido = (BACKEND / "entrypoint.sh").read_text(encoding="utf-8")
+
+    assert contenido.index("migrate --noinput") < contenido.index(
+        "registrar_entorno_bd produccion"
+    )
+    assert contenido.index("registrar_entorno_bd produccion") < contenido.index(
+        "exec gunicorn"
+    )
 
 
 def _entorno_produccion(tmp_path, **extra):
