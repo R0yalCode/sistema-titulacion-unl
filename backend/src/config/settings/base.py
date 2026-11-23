@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "apps.resoluciones.adapters",
     "apps.notificaciones.adapters",
     "apps.academico.adapters",
+    "apps.entorno_pruebas.adapters",
 ]
 
 MIDDLEWARE = [
