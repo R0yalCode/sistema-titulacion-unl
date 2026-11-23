@@ -129,6 +129,40 @@
   content: '';
 }
 
+.navGroup + .navGroup {
+  margin-top: var(--space-5);
+}
+
+.navGroupLabel {
+  margin: 0 0 var(--space-2);
+  padding-inline: var(--space-3);
+  color: #c1ccd3;
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Variante SIAAF Modern: superficie plana y acento dorado solo en lo activo. */
+.shell[data-visual='siaaf-modern'] .sidebar {
+  background: var(--color-brand);
+}
+
+.shell[data-visual='siaaf-modern'] .brand {
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  border-bottom: 1px solid rgba(193, 204, 211, 0.2);
+}
+
+.shell[data-visual='siaaf-modern'] .navLinkActive {
+  background: rgba(133, 181, 222, 0.2);
+}
+
+.shell[data-visual='siaaf-modern'] .topbar {
+  background: var(--color-surface);
+  backdrop-filter: none;
+}
+
 .navIcon {
   display: inline-flex;
   flex-shrink: 0;
@@ -185,7 +219,8 @@
     object-position: left center;
   }
 
-  .collapsed .system {
+  .collapsed .system,
+  .collapsed .navGroupLabel {
     display: none;
   }
 

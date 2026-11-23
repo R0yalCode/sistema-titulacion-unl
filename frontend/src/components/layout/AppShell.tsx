@@ -19,6 +19,8 @@ export type ShellNavItem = {
   count?: number
   /** Enlace fuera de la SPA (p. ej. consola interna de administración). */
   external?: boolean
+  /** Agrupación visual del menú; sin grupo se muestra una lista simple. */
+  group?: string
 }
 
 export type AppShellProps = {
@@ -32,6 +34,10 @@ export type AppShellProps = {
   unreadCount: number
   userName: string
   userRole: string
+  /** Variante visual con alcance propio (ver styles/siaaf-modern.css). */
+  visual?: 'siaaf-modern'
+  /** Control adicional de la barra superior (p. ej. búsqueda). */
+  topbarSlot?: ReactNode
   children?: ReactNode
 }
 
@@ -74,6 +80,8 @@ export function AppShell({
   unreadCount,
   userName,
   userRole,
+  visual,
+  topbarSlot,
   children,
 }: AppShellProps) {
   const auth = useContext(AuthContext)
@@ -134,9 +142,10 @@ export function AppShell({
   const sidebarClass = [styles.sidebar, drawerOpen && styles.sidebarOpen, collapsed && styles.collapsed]
     .filter(Boolean)
     .join(' ')
+  const grupos = [...new Set(navItems.map((item) => item.group))]
 
   return (
-    <div className={styles.shell}>
+    <div className={styles.shell} data-visual={visual}>
       <SkipLink />
       <DemoBanner show={env.demoMode} />
       <div className={styles.frame}>
@@ -155,38 +164,47 @@ export function AppShell({
             </button>
           </div>
           <nav aria-label="Navegación principal" className={styles.nav}>
-            <ul className={styles.navList}>
-              {navItems.map((item, index) => (
-                <li key={item.to}>
-                  {item.external ? (
-                    <a className={styles.navLink} href={item.to} title={collapsed ? item.label : undefined}>
-                      <span className={styles.navIcon}>{item.icon}</span>
-                      <span className={styles.navLabel}>{item.label}</span>
-                      <span aria-hidden="true" className={styles.navExternal}>
-                        <ExternalLinkIcon size={14} />
-                      </span>
-                    </a>
-                  ) : (
-                    <NavLink
-                      className={({ isActive }) => (isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink)}
-                      end={item.end}
-                      ref={index === 0 ? firstLinkRef : undefined}
-                      title={collapsed ? item.label : undefined}
-                      to={item.to}
-                    >
-                      <span className={styles.navIcon}>{item.icon}</span>
-                      <span className={styles.navLabel}>{item.label}</span>
-                      {item.count !== undefined && item.count > 0 && (
-                        <span className={styles.navCount}>
-                          {item.count}
-                          <span className="sr-only"> sin leer</span>
-                        </span>
-                      )}
-                    </NavLink>
-                  )}
-                </li>
-              ))}
-            </ul>
+            {grupos.map((grupo) => (
+              <div className={styles.navGroup} key={grupo ?? 'menu'}>
+                {grupo && <p className={styles.navGroupLabel}>{grupo}</p>}
+                <ul className={styles.navList}>
+                  {navItems
+                    .filter((item) => item.group === grupo)
+                    .map((item) => (
+                      <li key={item.to}>
+                        {item.external ? (
+                          <a className={styles.navLink} href={item.to} title={collapsed ? item.label : undefined}>
+                            <span className={styles.navIcon}>{item.icon}</span>
+                            <span className={styles.navLabel}>{item.label}</span>
+                            <span aria-hidden="true" className={styles.navExternal}>
+                              <ExternalLinkIcon size={14} />
+                            </span>
+                          </a>
+                        ) : (
+                          <NavLink
+                            className={({ isActive }) =>
+                              isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink
+                            }
+                            end={item.end}
+                            ref={item === navItems[0] ? firstLinkRef : undefined}
+                            title={collapsed ? item.label : undefined}
+                            to={item.to}
+                          >
+                            <span className={styles.navIcon}>{item.icon}</span>
+                            <span className={styles.navLabel}>{item.label}</span>
+                            {item.count !== undefined && item.count > 0 && (
+                              <span className={styles.navCount}>
+                                {item.count}
+                                <span className="sr-only"> sin leer</span>
+                              </span>
+                            )}
+                          </NavLink>
+                        )}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
           </nav>
           <div className={styles.sidebarFooter}>
             <button
@@ -241,6 +259,7 @@ export function AppShell({
             </button>
             <span className={styles.topbarTitle}>{portalLabel}</span>
             <div className={styles.topbarActions}>
+              {topbarSlot}
               {notificationsTo && (
                 <Link aria-label={bellLabel} className={styles.iconButton} to={notificationsTo}>
                   <BellIcon />
