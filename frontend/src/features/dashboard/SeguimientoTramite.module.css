@@ -1,0 +1,174 @@
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+}
+
+/* Línea vertical entre marcadores. */
+.step:not(:last-child)::before {
+  position: absolute;
+  top: 36px;
+  bottom: 0;
+  left: 17px;
+  width: 2px;
+  background: var(--color-border);
+  content: '';
+}
+
+.step.completada:not(:last-child)::before {
+  background: var(--color-success-text);
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+}
+
+.completada .marker {
+  border-color: var(--color-success-text);
+  background: var(--color-success-text);
+  color: var(--color-text-inverse);
+}
+
+.actual .marker {
+  border-color: var(--color-brand-blue);
+  background: var(--color-brand-blue);
+  color: var(--color-text-inverse);
+  box-shadow: 0 0 0 4px var(--color-info-bg);
+}
+
+.observada .marker {
+  border-color: var(--color-warning-solid);
+  background: var(--color-warning-solid);
+  box-shadow: 0 0 0 4px var(--color-warning-bg);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
+
+.name {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-h3);
+}
+
+.pendiente .name {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-label);
+}
+
+.status {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+}
+
+.actual .status {
+  color: var(--color-brand-blue);
+  font-weight: var(--font-weight-button);
+}
+
+.observada .status {
+  color: var(--color-warning-text);
+}
+
+.date {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-label);
+}
+
+.detail,
+.hito {
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-body);
+}
+
+.detail {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+}
+
+.observada .detail {
+  background: var(--color-warning-bg-soft);
+  color: var(--color-warning-text);
+}
+
+.detail p,
+.hito p {
+  margin: 0;
+}
+
+.detail p + p,
+.hito p + p {
+  margin-top: var(--space-1);
+}
+
+.detail a {
+  color: inherit;
+  font-weight: var(--font-weight-button);
+}
+
+.hito {
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.hito strong {
+  color: var(--color-text-primary);
+}
+
+.hitoTag {
+  display: inline-block;
+  margin-bottom: var(--space-1);
+  color: var(--color-brand-blue);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-button);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.notice {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
+
+.updated {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-label);
+}

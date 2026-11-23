@@ -10,32 +10,56 @@
 .item {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: var(--border-divider);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+  animation: sgt-fade-in var(--duration-slow) var(--ease-out);
+}
+
+/* No leída: barra azul + fondo sutil + badge con texto (no solo color). */
+.unread {
+  border-left: 4px solid var(--color-primary);
+  background: var(--color-primary-subtle);
 }
 
 .itemHeader {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-2);
+}
+
+.titulo {
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
 }
 
 .message {
   margin: 0;
   color: var(--color-text-primary);
-  font-size: var(--font-size-body);
+  font-size: var(--text-sm);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .itemFooter {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
 }
 
 .meta {
-  font-size: var(--font-size-label);
   color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+
+.meta a {
+  font-weight: var(--font-weight-semibold);
 }

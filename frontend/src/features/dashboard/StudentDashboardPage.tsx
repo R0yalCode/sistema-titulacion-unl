@@ -1,96 +1,147 @@
-import { useContext, useState } from 'react'
-import { AuthContext } from '@/auth/AuthContext'
-import { ToastContext } from '@/components/feedback/ToastProvider'
-import { Alert } from '@/components/ui/Alert'
+import { Link } from 'react-router-dom'
+import { ErrorState } from '@/components/ui/ErrorState'
+import { ForbiddenState } from '@/components/ui/ForbiddenState'
+import { ClockIcon, DocumentIcon, FlagIcon, FolderIcon, ListCheckIcon } from '@/components/ui/icons'
+import { presentApiError } from '@/lib/apiErrorPresentation'
+import { formatFecha } from '@/lib/dates'
+import { KpiResumen } from './KpiResumen'
 import { Card } from '@/components/ui/Card'
-import type { BandejaExpediente } from '@/api/endpoints/expedientes'
-import { getRecentExpedientes, recordVisitedExpediente } from '@/lib/storage'
-import { AccesosRapidos } from './AccesosRapidos'
-import { ExpedientesCard } from './ExpedientesCard'
-import { NotificacionesCard } from './NotificacionesCard'
-import { useBandejaEstudiante, useMarcarNotificacionLeida, useNotificaciones } from './queries'
+import { AccionesPendientes, DocumentosResumen, UltimosMovimientos } from './Secciones'
+import { SeguimientoTramite } from './SeguimientoTramite'
+import { calcularProximoHito, construirAccionesPendientes } from './presentacion'
+import { useMiTramite } from './queries'
 import styles from './StudentDashboardPage.module.css'
 
+function DashboardSkeleton() {
+  return (
+    <div aria-busy="true" className={styles.skeleton} role="status">
+      <span className="sr-only">Cargando tu proceso de titulación…</span>
+      <div className={styles.skeletonGrid}>
+        {[0, 1, 2, 3].map((index) => (
+          <div aria-hidden="true" className={styles.skeletonCard} key={index} />
+        ))}
+      </div>
+      <div className={styles.skeletonColumns}>
+        <div aria-hidden="true" className={`${styles.skeletonCard} ${styles.skeletonTall}`} />
+        <div aria-hidden="true" className={`${styles.skeletonCard} ${styles.skeletonTall}`} />
+      </div>
+    </div>
+  )
+}
+
 export default function StudentDashboardPage() {
-  const auth = useContext(AuthContext)
-  const toast = useContext(ToastContext)
-  const [page, setPage] = useState(1)
-  const [recent, setRecent] = useState(() => getRecentExpedientes())
-  const [pendingId, setPendingId] = useState<string | null>(null)
+  const query = useMiTramite()
+  const datos = query.data
+  const expediente = datos?.expediente ?? null
+  const nombre = datos?.estudiante.nombre_completo ?? null
 
-  const bandejaQuery = useBandejaEstudiante(page)
-  const notificacionesQuery = useNotificaciones()
-  const markReadMutation = useMarcarNotificacionLeida()
-
-  function handleVisit(expediente: BandejaExpediente) {
-    recordVisitedExpediente(expediente.id, expediente.numero_expediente)
-    setRecent(getRecentExpedientes())
+  let contenido
+  if (query.isLoading) {
+    contenido = <DashboardSkeleton />
+  } else if (query.isError) {
+    const presentation = presentApiError(query.error)
+    contenido =
+      presentation.kind === 'forbidden' ? (
+        <ForbiddenState description={presentation.description} title={presentation.title} />
+      ) : (
+        <div className={styles.errorBox}>
+          <ErrorState
+            description={presentation.description}
+            title="No pudimos cargar tu proceso de titulación"
+            onRetry={() => void query.refetch()}
+          />
+        </div>
+      )
+  } else if (!expediente) {
+    contenido = (
+      <section aria-labelledby="sin-tramite-titulo" className={styles.start}>
+        <span aria-hidden="true" className={styles.startIcon}>
+          <FolderIcon size={28} />
+        </span>
+        <div>
+          <h2 className={styles.startTitle} id="sin-tramite-titulo">
+            Aún no tienes un trámite de titulación
+          </h2>
+          <p className={styles.startText}>
+            Registra tu solicitud para iniciar el proceso. Después podrás gestionar tus documentos y seguir cada etapa
+            desde este panel.
+          </p>
+          <Link className={styles.primaryLink} to="/estudiante/solicitud/nueva">
+            Crear solicitud
+          </Link>
+        </div>
+      </section>
+    )
+  } else {
+    const acciones = construirAccionesPendientes(expediente)
+    const hito = calcularProximoHito(expediente)
+    contenido = (
+      <>
+        <KpiResumen acciones={acciones} expediente={expediente} hito={hito} />
+        {/* Orden del DOM = prioridad de lectura: primero lo accionable. En escritorio,
+            el seguimiento ocupa la columna ancha (CSS) sin alterar ese orden. */}
+        <div className={styles.layout}>
+          <div className={styles.colSide}>
+            <Card icon={<ListCheckIcon />} id="pendientes" title="Necesitas completar">
+              <AccionesPendientes acciones={acciones} />
+            </Card>
+            <Card
+              actions={
+                <Link className={styles.panelLink} to={`/expedientes/${expediente.id}/peticiones`}>
+                  Ver documentos
+                </Link>
+              }
+              icon={<DocumentIcon />}
+              id="documentos"
+              title="Documentación"
+            >
+              <DocumentosResumen expediente={expediente} />
+            </Card>
+          </div>
+          <div className={styles.colMain}>
+            <Card icon={<FlagIcon />} id="seguimiento" title="Mi seguimiento de titulación">
+              <SeguimientoTramite expediente={expediente} hito={hito} />
+            </Card>
+            <Card icon={<ClockIcon />} id="movimientos" title="Últimos movimientos">
+              <UltimosMovimientos movimientos={expediente.movimientos} />
+            </Card>
+          </div>
+        </div>
+      </>
+    )
   }
-
-  function handleMarkRead(id: string) {
-    setPendingId(id)
-    markReadMutation.mutate(id, {
-      onError: () => toast?.showToast('No se pudo marcar la notificación como leída. Intente nuevamente.', 'danger'),
-      onSettled: () => setPendingId(null),
-    })
-  }
-
-  const borradorCount = bandejaQuery.isSuccess
-    ? bandejaQuery.data.results.filter((expediente) => expediente.estado === 'BORRADOR').length
-    : null
-  const observadaCount = bandejaQuery.isSuccess
-    ? bandejaQuery.data.results.filter((expediente) => expediente.estado === 'OBSERVADA').length
-    : null
-  const noLeidasCount = notificacionesQuery.isSuccess
-    ? notificacionesQuery.data.results.filter((notificacion) => !notificacion.leida).length
-    : null
-  const bandejaIds = bandejaQuery.isSuccess
-    ? new Set(bandejaQuery.data.results.map((expediente) => expediente.id))
-    : null
-  const isPartial =
-    (bandejaQuery.isError && notificacionesQuery.isSuccess) ||
-    (notificacionesQuery.isError && bandejaQuery.isSuccess)
 
   return (
-    <main className={styles.page}>
-      <h1>Dashboard del estudiante (V-02)</h1>
-      <p className={styles.greeting}>Hola, {auth?.user?.cedula ?? 'estudiante'}</p>
-
-      <Alert variant="info">
-        Este panel muestra únicamente sus expedientes en estado Borrador u Observada y no incluye su perfil
-        completo ni el historial en otros estados (limitación del backend).
-      </Alert>
-
-      {isPartial && (
-        <p className={styles.partialNotice} role="status">
-          Algunos datos no se pudieron cargar. El resto del panel sigue disponible.
-        </p>
-      )}
-
-      <h2>Resumen</h2>
-      <div className={styles.stats}>
-        <Card title="En borrador">
-          <p className={styles.statNumber}>{borradorCount ?? '—'}</p>
-        </Card>
-        <Card title="Observadas">
-          <p className={styles.statNumber}>{observadaCount ?? '—'}</p>
-        </Card>
-        <Card title="Notificaciones sin leer">
-          <p className={styles.statNumber}>{noLeidasCount ?? '—'}</p>
-        </Card>
-      </div>
-
-      <Card title="Mis expedientes">
-        <ExpedientesCard query={bandejaQuery} page={page} onPageChange={setPage} onVisit={handleVisit} />
-      </Card>
-
-      <Card title="Notificaciones">
-        <NotificacionesCard pendingId={pendingId} query={notificacionesQuery} onMarkRead={handleMarkRead} />
-      </Card>
-
-      <Card title="Accesos rápidos">
-        <AccesosRapidos bandejaIds={bandejaIds} recent={recent} />
-      </Card>
-    </main>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <div>
+          <h1 className={styles.title}>Mi proceso de titulación</h1>
+          <p className={styles.subtitle}>Consulta tu avance, pendientes y próximos pasos.</p>
+        </div>
+        {(nombre || expediente) && (
+          <dl className={styles.identity}>
+            {nombre && (
+              <div>
+                <dt>Estudiante</dt>
+                <dd>{nombre}</dd>
+              </div>
+            )}
+            {expediente && (
+              <div>
+                <dt>Expediente</dt>
+                <dd>{expediente.numero_expediente}</dd>
+              </div>
+            )}
+            {expediente && (
+              <div>
+                <dt>Registrado</dt>
+                <dd>{formatFecha(expediente.fecha_creacion)}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+      </header>
+      {contenido}
+    </div>
   )
 }
