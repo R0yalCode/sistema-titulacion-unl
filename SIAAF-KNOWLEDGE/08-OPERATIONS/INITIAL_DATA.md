@@ -76,6 +76,7 @@ Use el valor de `POSTGRES_DB` si no es `sgt_siaaf`. Si la base ya tiene otra ide
 | `seed_initial_data` | `backend/src/apps/authentication/adapters/management/commands/seed_initial_data.py` | **Recomendado.** 8 cuentas demo y sus roles |
 | `seed_mock_sga` | `backend/src/apps/academico/adapters/management/commands/seed_mock_sga.py` | **Recomendado.** Catálogo y perfiles simulados |
 | `registrar_entorno_bd` | `backend/src/apps/authentication/adapters/management/commands/registrar_entorno_bd.py` | Registra la identidad de la base |
+| `seed_sgt_siaaf` | `backend/src/apps/entorno_pruebas/adapters/management/commands/seed_sgt_siaaf.py` | **Opcional.** Dataset sintético de 80 cuentas ([guía](../../docs/entorno-pruebas/dataset-sgt-siaaf.md)) |
 | Migración del catálogo | `backend/src/apps/peticiones/adapters/migrations/0002_catalogo_base_art235.py` | Automática con `migrate`: 5 requisitos del Art. 235 |
 | `createsuperuser` | Comando estándar de Django | Cuenta para `/admin/` |
 | `sga_mock_records.json` | `backend/src/core/adapters/fixtures/` | Fixture del adaptador simulado de `core`. No se carga con `loaddata` |
@@ -198,7 +199,6 @@ El superusuario también necesita un rol, por ejemplo `ADMINISTRADOR`, para usar
 ## 9. Pendientes
 
 - Valorar un comando único de preparación del entorno de desarrollo (propuesta, no implementada).
-- El dataset ampliado `seed_sgt_siaaf` existe solo como trabajo local sin integrar en `develop`. No documentarlo como disponible hasta su integración.
 
 ## Relacionado
 
