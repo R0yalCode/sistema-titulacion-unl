@@ -3,7 +3,7 @@ system: SGT-SIAAF
 type: operations
 status: verified
 source: repository-config
-last_verified: 2026-11-12
+last_verified: 2026-11-23
 aliases: [DEPLOYMENT, INSTALLATION]
 ---
 
@@ -24,6 +24,7 @@ Red `backend_net`. Desde el 2026-11-12 (rama `fix/docker-nginx-frontend`), el fr
 - **React Router:** la ruta `/` y el resto de rutas usan `try_files $uri $uri/ /index.html`. Los recursos de `/assets/` con hash llevan `Cache-Control: public, max-age=31536000, immutable` y responden 404 si no existen; `index.html` se sirve con `no-cache`.
 - **Redirecciones:** `absolute_redirect off`, para que `/admin` redirija a `/admin/` conservando el puerto 8000.
 - **`/media/`:** no se sirve desde el volumen `media_data`, porque los PDF del trámite son privados y solo salen por la API.
+- **Persistencia de documentos en desarrollo:** `MEDIA_ROOT` es `backend/src/media`, mientras el volumen `media_data` se monta en `/app/backend/media`. Recrear el contenedor `backend` **borra los PDF cargados** ([[INITIAL_DATA]] §8).
 - **Configuración montada:** `nginx/nginx.conf` es un archivo montado suelto. Tras editarlo, `docker compose restart nginx`; ni `nginx -s reload` ni `up --build` ven el archivo nuevo, porque el contenedor conserva el inodo antiguo. Esa fue la causa del 404 de Django en `/`.
 
 El servidor de desarrollo de Vite (`npm --prefix frontend run dev`, puerto 5173) sigue disponible para trabajar con recarga en caliente.
@@ -32,7 +33,7 @@ El servidor de desarrollo de Vite (`npm --prefix frontend run dev`, puerto 5173)
 
 Proyecto `sgt-siaaf-prod`, declarado con `name:`. Usar siempre `-p sgt-siaaf-prod`: `-p` y `COMPOSE_PROJECT_NAME` tienen precedencia sobre `name:`, y el proyecto `sgt-siaaf` es el entorno de desarrollo de `:8000`.
 
-`db` (postgres:16), `backend` (target `production`), `nginx` con puertos `80` y `443` (`nginx/prod.conf`); volúmenes `postgres_data_prod`, `media_private_prod`, `static_data_prod`; red `backend_net_prod`. Variables obligatorias en producción (`backend/.env.example`): `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `CORS_ALLOWED_ORIGINS`, y opcionales `CSP_CONNECT_SRC_EXTRA`, `TRUSTED_PROXIES`, `LOG_DIR`.
+`db` (postgres:16), `backend` (target `production`), `nginx` con puertos `80` y `443` (`nginx/prod.conf`); volúmenes `postgres_data_prod`, `media_private_prod`, `static_data_prod`; red `backend_net_prod`. Variables obligatorias en producción: `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `CORS_ALLOWED_ORIGINS`, `PUBLIC_BASE_URL`, `EMAIL_HOST` y `DEFAULT_FROM_EMAIL`, y opcionales `CSP_CONNECT_SRC_EXTRA`, `TRUSTED_PROXIES`, `LOG_DIR`. La imagen `production` incluye la marca `.entorno-produccion` y, al arrancar, registra la base como `produccion` ([[INITIAL_DATA]]).
 
 ## Variables (solo nombres)
 
@@ -41,14 +42,17 @@ Frontend (`frontend/.env.example`): `VITE_API_BASE_URL`, `VITE_DEMO_MODE`, `VITE
 
 ## CI/CD
 
-| Workflow | Disparadores | Contenido | Seguimiento Git |
-|---|---|---|---|
-| `.github/workflows/security.yml` | `pull_request`, `push` a `main` | Safety, Bandit (`bandit -r src/ -c .bandit`), Gitleaks | **Sin seguimiento** (local) |
-| `.github/workflows/publish-quarto.yml` | `push` a `main` | `quarto render` → GitHub Pages | **Sin seguimiento** (local) |
-| `.github/dependabot.yml`, `.github/safety-policy.yml` | — | — | **Sin seguimiento** |
-| `.github/PULL_REQUEST_TEMPLATE.md` | — | Plantilla de PR | Versionado |
+Verificado en `develop` (`f666ef5`) el 2026-11-23:
 
-Como los workflows no están en el remoto, **hoy no se ejecutan en GitHub**. Esta construcción no los incorporó: no son de su alcance y son cambios locales ajenos.
+| Archivo | Disparadores | Contenido |
+|---|---|---|
+| `.github/workflows/ci.yml` | `pull_request`, `push` a `main` y `develop` | Frontend, backend con SQLite, backend con PostgreSQL 16 y contrato OpenAPI |
+| `.github/workflows/security.yml` | `pull_request`, `push` a `main` y `develop` | Safety, Bandit y Gitleaks |
+| `.github/workflows/publish-quarto.yml` | `push` a `main` con cambios en `docs/` | `quarto render` → GitHub Pages |
+| `.github/safety-policy.yml` | — | Política de Safety |
+| `.github/PULL_REQUEST_TEMPLATE.md` | — | Plantilla de PR |
+
+`.github/dependabot.yml` no está versionado en `develop`.
 
 ## Documentación operativa previa
 

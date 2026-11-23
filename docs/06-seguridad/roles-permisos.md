@@ -8,7 +8,7 @@ Fuente: `RBAC_MATRIX` (código) == literal 6.2 de `specs/001/specify.md` (verifi
 
 | Recurso × Método | EST | SEC.CARR | SEC.ABOG | ANALISTA | DECANO | DIR.CARR | RESP.DEP | ADMIN |
 |---|---|---|---|---|---|---|---|---|
-| auth/token POST | público | público | público | público | público | público | público | público |
+| auth/login y flujo MFA POST | público | público | público | público | público | público | público | público |
 | expedientes POST | allow | — | — | — | — | — | — | allow |
 | expedientes GET | own | carrera | facultad | facultad | facultad | carrera | — | allow |
 | expedientes:enviar POST | own | — | — | — | — | — | — | — |

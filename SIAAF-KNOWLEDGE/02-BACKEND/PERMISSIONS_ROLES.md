@@ -4,7 +4,7 @@ type: security
 area: rbac
 status: verified
 source: verified-code
-last_verified: 2026-11-11
+last_verified: 2026-11-23
 ---
 
 # Roles y permisos (RBAC real)
@@ -51,6 +51,23 @@ Un usuario puede tener varios roles (`UserRole`); los scopes concedidos se **une
 | `catalogos:requisitos` POST/PUT | — | — | — | — | — | — | — | ALLOW |
 
 `—` = sin concesión (denegado).
+
+Además, `perfil_academico` GET concede `OWN` solo a `ESTUDIANTE` (V-03, MockSGA).
+
+### Resumen por rol y pantalla
+
+| Rol | Pantalla | Puede (API) |
+|---|---|---|
+| `ESTUDIANTE` | `/estudiante` | Crear su expediente, verlo y enviarlo; solicitar certificados; cargar y descargar sus documentos; subsanar requisitos observados; consultar su perfil académico y sus notificaciones |
+| `SECRETARIA_CARRERA` | `/bandeja` | Ver expedientes de su carrera; cargar y descargar documentos de peticiones asignadas; subsanar requisitos de su carrera; notificaciones de su carrera |
+| `SECRETARIO_ABOGADO` | `/bandeja` | Ver expedientes de su facultad; iniciar la verificación; ver y evaluar el checklist; observar expedientes; emitir el informe de aptitud; documentos asignados; notificaciones |
+| `ANALISTA_APOYO` | `/bandeja` | Ver expedientes de su facultad; ver el checklist y evaluarlo en borrador; preparar el informe en borrador; documentos asignados; notificaciones |
+| `DECANO` | `/bandeja` | Ver expedientes de su facultad; registrar la declaratoria de aptitud; notificaciones |
+| `DIRECTOR_CARRERA` | `/bandeja` | Ver expedientes de su carrera; documentos asignados; notificaciones |
+| `ADMINISTRADOR` | `/bandeja` | Acceso completo de lectura; crear expedientes y peticiones; checklist; catálogo de requisitos; notificaciones |
+| `RESPONSABLE_DEPENDENCIA` | `/no-habilitado` | **Aún sin acceso funcional:** el rol existe, pero la matriz no le concede ninguna operación |
+
+El backend comprueba el rol **en cada petición**. Ocultar un botón en la interfaz no concede ni retira permisos.
 
 ## 4. Hallazgos verificados
 

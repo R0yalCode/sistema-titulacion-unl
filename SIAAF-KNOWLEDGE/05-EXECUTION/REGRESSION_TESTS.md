@@ -4,7 +4,7 @@ type: execution
 area: tests
 status: verified
 source: test-runs
-last_verified: 2026-11-12
+last_verified: 2026-11-23
 ---
 
 # Pruebas y regresión
@@ -13,6 +13,8 @@ last_verified: 2026-11-12
 
 | Fecha | Suite | Comando | Resultado | Duración | Contexto |
 |---|---|---|---|---|---|
+| 2026-11-23 | Backend (SQLite, contenedor desechable) | `python -m pytest -ra src/apps src/core tests` | **1226 aprobadas, 26 omitidas** | ~80 s | `develop` con los PR #27 y #28 |
+| 2026-11-23 | Backend (PostgreSQL 16 desechable) | `python -m pytest -ra tests` con `config.settings.test_postgres` | **51 aprobadas** | ~7 s | `develop` con los PR #27 y #28 |
 | 2026-11-11 | Frontend | `npm run test` (`vitest run`) | **6 fallidas / 322 aprobadas (328)**; 2 archivos con fallos de 58 | 139,7 s | Rama `docs/siaaf-knowledge`; sin cambios de código |
 | 2026-11-11 | Frontend | `npx vitest run` (2.ª ejecución) | Sin líneas `FAIL` en la salida filtrada | — | Ídem |
 | 2026-11-11 | Frontend | `npx vitest run` (3.ª ejecución) | **58/58 archivos, 328/328 pruebas aprobadas** | — | Ídem |
@@ -66,6 +68,44 @@ La suite frontend tiene **fallos intermitentes**: 1 de 3 ejecuciones consecutiva
   - La de carrera.
   - Un 401 justo después de pintar el dashboard, repetido 5 veces, en `router.auth-expiry.test.tsx`.
 - **Suite completa tras la corrección:** 10 de 10 ejecuciones sin fallos (408/408). Antes fallaba 2 de cada 11 en esta prueba.
+
+## Cómo ejecutar las pruebas (trasladado del README, 2026-11-23)
+
+**Backend.** Python 3.12, SQLite en memoria (`config.settings.test`) y claves desechables:
+
+```bash
+cd backend
+python3.12 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
+export SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')
+export JWT_SIGNING_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')
+export MFA_ENCRYPTION_KEYS=$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')
+export DB_PASSWORD=ci
+python -m pytest -ra src/apps src/core tests
+```
+
+Cubren el dominio y los servicios de cada módulo, el RBAC y el aislamiento por ámbito, la máquina de estados y los plazos, los PDF, la autenticación (correo institucional, TOTP, ventana temporal, reutilización de códigos, límites, cifrado, dispositivo de confianza, recuperación y restablecimiento del 2FA) y el flujo completo del trámite.
+
+> No ejecute `pytest` dentro del contenedor `backend` de desarrollo: la imagen no incluye `backend/conftest.py` ni `backend/tests/`, y su `DJANGO_SETTINGS_MODULE` apunta a PostgreSQL.
+
+**Frontend.** Node 24:
+
+```bash
+cd frontend
+npm ci
+npm run lint        # ESLint (incluye reglas de accesibilidad jsx-a11y)
+npm run typecheck   # TypeScript
+npm run test        # Vitest + Testing Library + MSW + vitest-axe
+npm run build
+```
+
+Cubren formularios y mensajes de validación, ingreso con 2FA y restablecimiento, guardas de ruta y redirección por rol, vistas del trámite y accesibilidad automática con axe.
+
+**E2E de autenticación.** `scripts/e2e/e2e_mfa.py` recorre por HTTP el flujo completo contra un backend en `http://127.0.0.1:8765`, con un usuario `e2e_estudiante` en una base desechable. Calcula los códigos TOTP igual que Google Authenticator. Las instrucciones están en la cabecera del script.
+
+**CI.** `.github/workflows/ci.yml` y `security.yml`. Ver [[DOCKER]].
+
+> Referencia histórica del README (2026-11-18): backend 889 aprobadas y 13 omitidas; frontend 475/475. Las cifras cambian con el proyecto.
 
 ## Comandos de verificación obligatorios (DoD)
 

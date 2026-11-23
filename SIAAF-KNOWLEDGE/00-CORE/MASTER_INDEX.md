@@ -2,7 +2,7 @@
 system: SGT-SIAAF
 type: index
 status: active
-last_updated: 2026-11-11
+last_updated: 2026-11-23
 ---
 
 # Mapa maestro: SIAAF-KNOWLEDGE
@@ -35,7 +35,7 @@ last_updated: 2026-11-11
 [[ADR_INDEX]] · [[ADR-KB-001-fuentes-originales]]
 
 ## 08 · Operación
-[[DOCKER]] (incluye despliegue y CI) · [[ENVIRONMENTS]]
+[[DOCKER]] (incluye despliegue y CI) · [[ENVIRONMENTS]] · [[INITIAL_DATA]] · [[USER_ACCESS_GUIDE]] · [[TROUBLESHOOTING]]
 
 ## 09 · Bitácoras
 [[SESSION_TEMPLATE]] · [[2026-11-11-construccion-siaaf-knowledge]]

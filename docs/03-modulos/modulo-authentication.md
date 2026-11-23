@@ -23,7 +23,14 @@ title: "Módulo: authentication"
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| POST | `/api/v1/auth/token/` | Devuelve `{access, refresh}`; inyecta claims `cedula` y `roles` |
+| POST | `/api/v1/auth/login/` | Paso 1: correo y contraseña. Devuelve un reto MFA, o el JWT si hay confianza vigente |
+| POST | `/api/v1/auth/mfa/setup/`, `/mfa/setup/confirm/` | Registro del autenticador TOTP |
+| POST | `/api/v1/auth/mfa/verify/`, `/mfa/recovery/` | Segundo factor o código de recuperación |
+| POST | `/api/v1/auth/mfa/reset/`, `/mfa/reset/confirm/` | Restablecimiento del 2FA por enlace |
+| POST | `/api/v1/auth/password-reset/`, `/validate/`, `/confirm/` | Recuperación de contraseña |
+| POST | `/api/v1/auth/logout/` | Revoca la confianza del dispositivo |
+
+`POST /api/v1/auth/token/` se retiró (AUTH-B). El JWT incluye los claims `cedula` y `roles`.
 
 ## Reglas de negocio y permisos
 

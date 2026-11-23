@@ -72,8 +72,8 @@ JWT contra `JWT_SIGNING_KEY` en vez de `SECRET_KEY`. Esto significa que:
   ser válidos de inmediato** (la firma ya no verifica contra la nueva clave).
   No hay periodo de gracia ni migración posible para tokens ya emitidos.
 - Los usuarios con un token activo recibirán `401` en su siguiente petición
-  autenticada y deberán volver a autenticarse en
-  `POST /api/v1/auth/token/` para obtener un par de tokens válido. Esto es
+  autenticada y deberán volver a autenticarse con
+  `POST /api/v1/auth/login/` y el segundo factor para obtener un par de tokens válido. Esto es
   exactamente el comportamiento de "re-login al expirar" ya contemplado para
   el frontend (no se requiere ni se implementa refresh automático ni logout
   de servidor); no hay cambio de contrato ni de código en el frontend.
@@ -130,7 +130,7 @@ autorizado al servidor).
 
 ### Checklist de verificación post-rotación
 
-- [ ] Login (`POST /api/v1/auth/token/`) devuelve `200` y un token válido con la clave nueva.
+- [ ] Login (`POST /api/v1/auth/login/` y segundo factor) devuelve un token válido con la clave nueva.
 - [ ] Un token/cookie firmado con la clave anterior es rechazado (`401` para JWT; sesión inválida para `SECRET_KEY`).
 - [ ] El login de Django admin funciona con normalidad tras la rotación.
 - [ ] No quedan referencias a la clave anterior en variables de entorno activas ni en gestor de secretos.

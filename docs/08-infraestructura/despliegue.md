@@ -8,12 +8,15 @@ title: "Despliegue"
 
 | Aspecto | Realidad verificada |
 |---|---|
-| Modo | Desarrollo/demostración |
-| Servidor | `runserver` (Dockerfile CMD) |
-| DEBUG | `1` por defecto en el compose |
-| Proxy | Nginx 1.24 en el puerto 8000 |
-| CI/CD | No existe |
-| Healthcheck de la app | No existe (solo el de PostgreSQL) |
+| Modo | Desarrollo/demostración. **No existe un despliegue de producción** |
+| Servidor en desarrollo | `runserver` (target `development`) |
+| Servidor en producción | Gunicorn (target `production`), probado solo en ensayos aislados |
+| DEBUG | `1` por defecto en `docker-compose.yml`; `False` en producción |
+| Proxy | Nginx 1.24: puerto 8000 en desarrollo, 80 y 443 en producción |
+| CI/CD | CI y controles de seguridad en GitHub Actions. **No hay despliegue automático** |
+| Healthcheck de la app | Solo en `docker-compose.prod.yml` y en la imagen `production` |
+
+**Pendiente antes de producción:** adaptador SGA real, certificados y dominio, SMTP institucional, backups y pruebas completas a través de Nginx en un navegador.
 
 ## Procedimiento actual (demostración local)
 
@@ -29,11 +32,11 @@ title: "Despliegue"
 |---|---|
 | 1. `settings/production.py` (`DEBUG=False`, `ALLOWED_HOSTS`, `SECURE_SSL_REDIRECT`, HSTS, cookies seguras, CORS, CSP) | ✅ Implementado (`backend/src/config/settings/production.py`) |
 | 2. Servidor WSGI (gunicorn) + workers | ✅ Implementado (target `production` del `Dockerfile`, `entrypoint.sh`) |
-| 3. Throttling habilitado | ⚠️ Parcial: carga de documentos sí (SEC-T008); login pendiente de SEC-T005/SEC-T002 |
+| 3. Throttling habilitado | ✅ Implementado: carga de documentos (SEC-T008), login y flujo MFA (SEC-T002/SEC-T005) |
 | 4. Backups automáticos PostgreSQL/`media` | ❌ Sigue pendiente, fuera del alcance de SEC-T001 |
 | 5. Healthcheck de la aplicación | ✅ Implementado (`GET /health/`, `HEALTHCHECK` en el Dockerfile) |
 | 6. `collectstatic` en el pipeline | ✅ Implementado (`entrypoint.sh`) |
-| 7. Restricción de `/docs/`, `/redoc/`, `/schema/` | ❌ Pendiente — es SEC-T013, siguiente tarea tras SEC-T001 |
+| 7. Restricción de `/docs/`, `/redoc/`, `/schema/` | ✅ Implementado (SEC-T013): solo `IsAdminUser` en producción |
 
 ### Archivos de producción
 
@@ -43,7 +46,7 @@ registrada en `DECISION_LOG.md`, no en `backend/`):
 - `Dockerfile` — multi-stage, target `production` (gunicorn, usuario `appuser` UID 1000, sin acceso de root).
 - `docker-compose.prod.yml` — servicios `db`, `backend`, `nginx`; variables de entorno obligatorias sin valores reales.
 - `nginx/prod.conf` y `nginx/snippets/` — TLS, SPA, estáticos y proxy de la API; requiere montar certificados reales en `nginx/certs/` (no incluidos en el repositorio).
-- `backend/entrypoint.sh` — `migrate` → `collectstatic` → `gunicorn`.
+- `backend/entrypoint.sh` — `migrate` → registro de la base como `produccion` → `collectstatic` → `gunicorn`. Se detiene si la base está registrada como desarrollo.
 - `backend/gunicorn.conf.py` — ruta de importación de `config` y parámetros del servidor.
 - `backend/healthcheck.py` — healthcheck con un `Host` admitido por `ALLOWED_HOSTS`.
 
@@ -79,7 +82,10 @@ set -a; . ./.env.prod; set +a
 
 # 4. Verificación
 curl -k https://<dominio>/health/              # 200
-curl -k https://<dominio>/api/v1/auth/token/   # 200/401 según credenciales
+# La ruta de ingreso solo admite POST. Un cuerpo vacío confirma que responde,
+# sin enviar credenciales:
+curl -k -o /dev/null -w '%{http_code}\n' -X POST -H 'Content-Type: application/json' \
+  -d '{}' https://<dominio>/api/v1/auth/login/  # 400
 ```
 
 ### Nombre del proyecto Compose
@@ -130,5 +136,4 @@ registra las rutas de los enlaces de recuperación, que contienen un token.
 El modo `Report-Only` de la Content-Security-Policy (DEC-010) no tiene,
 en esta fase, un endpoint de recepción de reportes — las violaciones solo
 son visibles manualmente (herramientas de desarrollador del navegador).
-Backups automáticos y la restricción de Swagger/ReDoc (SEC-T013) quedan
-como trabajo posterior, ya identificado arriba.
+Los backups automáticos quedan como trabajo posterior, ya identificado arriba.
