@@ -3,14 +3,19 @@
 # del repositorio (ver DECISION_LOG.md, "Ubicación de archivos de
 # producción").
 #
-# Uso: ejecutar con un nombre de proyecto propio para no colisionar con
-# una instancia de desarrollo que pudiera estar corriendo en el mismo host:
+# Uso: indicar siempre el proyecto para no colisionar con la instancia de
+# desarrollo, cuyo proyecto es `sgt-siaaf`:
 #   docker compose -f docker-compose.prod.yml -p sgt-siaaf-prod up -d
+#
+# `name` solo es el valor por defecto: `-p` y COMPOSE_PROJECT_NAME (del entorno
+# o de un archivo .env) tienen precedencia. Ver docs/08-infraestructura/despliegue.md.
 #
 # Variables de entorno: todas obligatorias (sin valores por defecto para
 # nada sensible). Deben proveerse en un .env.prod o en el entorno real de
 # despliegue — este archivo no contiene ningún dominio, secreto ni
 # certificado real.
+
+name: sgt-siaaf-prod
 
 services:
   db:
