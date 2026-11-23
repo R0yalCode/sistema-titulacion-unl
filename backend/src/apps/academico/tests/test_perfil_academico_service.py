@@ -231,6 +231,9 @@ def test_settings_de_produccion_no_habilitan_el_mock_por_defecto(monkeypatch):
     monkeypatch.setenv("ALLOWED_HOSTS", "test.invalid")
     monkeypatch.setenv("CSRF_TRUSTED_ORIGINS", "https://test.invalid")
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", "https://test.invalid")
+    monkeypatch.setenv("FRONTEND_BASE_URL", "https://test.invalid")
+    monkeypatch.setenv("EMAIL_HOST", "smtp.test.invalid")
+    monkeypatch.setenv("DEFAULT_FROM_EMAIL", "no-reply@test.invalid")
 
     produccion = importlib.reload(importlib.import_module("config.settings.production"))
     assert produccion.ACADEMIC_PROFILE_PROVIDER == ""

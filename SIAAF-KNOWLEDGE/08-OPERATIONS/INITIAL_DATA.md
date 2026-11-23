@@ -15,26 +15,59 @@ last_verified: 2026-11-23
 > - **No introducir contraseñas reales** en esta documentación, en archivos versionados ni como contraseña demo.
 > - **No confundir las cuentas demo con cuentas institucionales.** Sus correos `sgtdemo.*@unl.edu.ec` no son buzones reales.
 >
-> **Verificación (2026-11-23):** la secuencia se ejecutó dos veces con PostgreSQL 16 desechable y la imagen de desarrollo, con el resultado de la sección 5. El rechazo se comprobó con la imagen de producción. No se ejecutó contra ninguna base real.
+> **Verificación (2026-11-23):** la secuencia y los rechazos se ejecutaron con PostgreSQL 16 e imágenes desechables. No se ejecutó contra ninguna base real.
 
 ## Uso por entorno
 
 | Entorno | Settings | `seed_initial_data` | `seed_mock_sga` | Indicación |
 |---|---|---|---|---|
-| **Desarrollo** | `config.settings.local` | Disponible; requiere `SEED_DEMO_PASSWORD` | Disponible | Único entorno para esta carga |
-| **Pruebas** | `config.settings.test`, `test_postgres` | Lo ejecutan sus pruebas | Lo ejecutan sus pruebas | No requiere carga manual: pytest crea una base temporal |
+| **Desarrollo** | `config.settings.local` | Disponible en una base registrada como `desarrollo`; requiere `SEED_DEMO_PASSWORD` | Disponible en una base registrada como `desarrollo` | Único entorno para esta carga |
+| **Pruebas** | `config.settings.test`, `test_postgres` | Solo dentro de pytest, en su base temporal | Solo dentro de pytest, en su base temporal | No requiere carga manual ni registro |
 | **Producción** | `config.settings.production` | **Rechazado antes de acceder a la base** | **Rechazado antes de acceder a la base** | Las cuentas reales no se crean con estos comandos |
 
-## Protección en producción
+## Protección de la base
 
-Ambos comandos llaman a `exigir_entorno_de_demostracion` (`backend/src/core/adapters/entorno_demo.py`) antes de leer la contraseña o abrir la base. Solo continúan si se cumplen las dos condiciones:
+Los comandos llaman a `exigir_entorno_de_demostracion` (`backend/src/core/adapters/entorno_demo.py`) antes de escribir. Deben cumplirse todas las condiciones:
 
-1. `DJANGO_SETTINGS_MODULE` es `config.settings.local`, `config.settings.test` o `config.settings.test_postgres`. Cualquier otro módulo se rechaza.
-2. No existe `/app/backend/.entorno-produccion`, la marca de solo lectura que crea la imagen `production`. Así, usar `--settings=config.settings.local` o cambiar la variable dentro de esa imagen tampoco habilita la carga.
+1. `DJANGO_SETTINGS_MODULE` es `config.settings.local`, `test` o `test_postgres`.
+2. No existe `/app/backend/.entorno-produccion`, la marca de solo lectura de la imagen `production`.
+3. **El destino lo admite:** la base está registrada como `desarrollo`, o es la base temporal de pytest (ejecutor de pruebas activo, base en memoria o con prefijo `test_`).
 
-Ninguna opción ni variable, incluidas `DEBUG` y `ACADEMIC_PROFILE_MOCK_ALLOWED`, desactiva esta protección.
+`DEBUG`, `ACADEMIC_PROFILE_MOCK_ALLOWED` y `test_postgres` no autorizan la carga por sí solos.
 
-**Límite:** la marca solo existe en la imagen `production`. Ejecutar la imagen de **desarrollo** con las credenciales de una base de producción no se detecta, por lo que nunca deben entregarse esas credenciales a un entorno de desarrollo.
+### Identidad de la base
+
+La tabla `sgt_identidad_entorno` (migración `authentication/0004`) admite **una sola fila**, con valor `desarrollo` o `produccion`. En PostgreSQL, unos triggers impiden `UPDATE`, `DELETE` y `TRUNCATE` sobre ella. Los seeders solo la leen.
+
+| Situación | Resultado |
+|---|---|
+| Arranque de la imagen `production` sobre una base sin marca | Tras `migrate`, la registra como `produccion` |
+| Arranque de la imagen `production` sobre una base de `desarrollo` | **El arranque se detiene** |
+| Imagen de desarrollo + base `produccion` | Seeders rechazados, y no se puede reclasificar |
+| Imagen de desarrollo + base `desarrollo` | Carga permitida e idempotente |
+| Base sin marca | Rechazada, salvo la temporal de pytest |
+| Marca inconsistente o que no se puede consultar | Rechazada |
+| `test_postgres` fuera de pytest, aunque la base empiece por `test_` | Rechazada |
+| Backup restaurado o base clonada | Conserva la identidad y sus triggers |
+| Base creada desde cero | Sin marca hasta registrarla |
+| Base sin migrar | Rechazada: no tiene la tabla |
+
+### Preparar una base nueva de desarrollo
+
+Se hace **una vez** por base, después de `migrate`. Hay que escribir el nombre exacto de la base:
+
+```bash
+docker compose exec backend python manage.py registrar_entorno_bd desarrollo --confirmar-base sgt_siaaf
+```
+
+Use el valor de `POSTGRES_DB` si no es `sgt_siaaf`. Si la base ya tiene otra identidad, el comando falla y no cambia nada.
+
+### Límites
+
+- Quien registre manualmente como `desarrollo` una base **sin marca** habilita la carga. Por eso debe confirmar su nombre, y nunca debe hacerlo sobre una base real.
+- Un **superusuario de PostgreSQL** puede desactivar los triggers y alterar la marca. `docker-compose.prod.yml` conecta la aplicación con el usuario creado por `POSTGRES_USER`, que es superusuario. Separar un rol de aplicación sin esos privilegios sigue pendiente.
+- La protección no impide escribir con SQL directo o con código propio en una base con credenciales válidas.
+- No se probó contra un PostgreSQL gestionado ni con el esquema de roles de un despliegue real.
 
 ## 1. Mecanismos existentes
 
@@ -42,6 +75,7 @@ Ninguna opción ni variable, incluidas `DEBUG` y `ACADEMIC_PROFILE_MOCK_ALLOWED`
 |---|---|---|
 | `seed_initial_data` | `backend/src/apps/authentication/adapters/management/commands/seed_initial_data.py` | **Recomendado.** 8 cuentas demo y sus roles |
 | `seed_mock_sga` | `backend/src/apps/academico/adapters/management/commands/seed_mock_sga.py` | **Recomendado.** Catálogo y perfiles simulados |
+| `registrar_entorno_bd` | `backend/src/apps/authentication/adapters/management/commands/registrar_entorno_bd.py` | Registra la identidad de la base |
 | Migración del catálogo | `backend/src/apps/peticiones/adapters/migrations/0002_catalogo_base_art235.py` | Automática con `migrate`: 5 requisitos del Art. 235 |
 | `createsuperuser` | Comando estándar de Django | Cuenta para `/admin/` |
 | `sga_mock_records.json` | `backend/src/core/adapters/fixtures/` | Fixture del adaptador simulado de `core`. No se carga con `loaddata` |
@@ -54,6 +88,7 @@ No existe un script único de inicialización ni un `Makefile`.
 2. PostgreSQL `healthy` en `docker compose ps`.
 3. Migraciones aplicadas: `docker compose exec backend python manage.py migrate`.
 4. `DJANGO_SETTINGS_MODULE=config.settings.local`, que Compose ya define y permite MockSGA.
+5. Base registrada como desarrollo: `docker compose exec backend python manage.py registrar_entorno_bd desarrollo --confirmar-base sgt_siaaf`.
 
 | Variable | Requerida por | Notas |
 |---|---|---|
@@ -153,7 +188,7 @@ El superusuario también necesita un rol, por ejemplo `ADMINISTRADOR`, para usar
 
 | Operación | Efecto |
 |---|---|
-| Imagen de desarrollo con credenciales de producción | **No se detecta.** Crearía cuentas demo, incluida una `ADMINISTRADOR` |
+| `registrar_entorno_bd desarrollo` sobre una base real sin marca | **Habilitaría la carga.** Confirme siempre que la base es local |
 | Repetir `seed_initial_data` tras retirar un rol | Restaura ese rol en la cuenta |
 | Recrear el contenedor `backend` de desarrollo | Borra los PDF, que están en `backend/src/media`, fuera del volumen. Sus filas quedan sin archivo |
 | `docker compose down -v` | Elimina la base de datos y los volúmenes |

@@ -290,3 +290,36 @@ class EventoAutenticacion(models.Model):
 
     def __str__(self):
         return f"{self.created_at:%Y-%m-%d %H:%M} {self.tipo} {self.user or '-'}"
+
+
+class IdentidadEntornoBD(models.Model):
+    """Identidad persistente de la base: decide si admite datos de demostración.
+
+    Tiene una sola fila, que se registra con `registrar_entorno_bd`. En
+    PostgreSQL unos triggers impiden modificarla o retirarla, de modo que viaja
+    con los respaldos y clones de la base.
+    """
+
+    class Entorno(models.TextChoices):
+        DESARROLLO = "desarrollo", "Desarrollo"
+        PRODUCCION = "produccion", "Producción"
+
+    id = models.PositiveSmallIntegerField(primary_key=True, default=1, editable=False)
+    entorno = models.CharField(max_length=16, choices=Entorno.choices)
+    base_registrada = models.CharField(max_length=128)
+    registrada_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "sgt_identidad_entorno"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(id=1), name="identidad_entorno_fila_unica"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(entorno__in=["desarrollo", "produccion"]),
+                name="identidad_entorno_valor_valido",
+            ),
+        ]
+
+    def __str__(self):
+        return self.entorno

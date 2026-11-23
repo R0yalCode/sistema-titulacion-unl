@@ -67,8 +67,10 @@ recrear el contenedor de desarrollo elimina los documentos subidos.
 # 1. Definir variables reales (dominio, orígenes, contraseñas, claves) en
 #    un .env.prod — nunca los valores de ejemplo de backend/.env.example.
 #    Incluye PUBLIC_BASE_URL (URL HTTPS pública, sin barra final), que se
-#    compila en el frontend.
-export $(grep -v '^#' .env.prod | xargs)
+#    compila en el frontend y genera los enlaces de recuperación, y la
+#    configuración SMTP. Use comillas simples en valores con caracteres
+#    especiales.
+set -a; . ./.env.prod; set +a
 
 # 2. Certificados TLS reales montados en ./nginx/certs/
 #    (fullchain.pem, privkey.pem) — no provistos por este repositorio.
@@ -105,6 +107,29 @@ eso toda operación (`up`, `down`, `build`, `restart`, `exec`) debe incluir
 `-f docker-compose.prod.yml -p sgt-siaaf-prod`. El repositorio no tiene un
 script de despliegue, así que esta regla y la comprobación del paso 3 son
 manuales.
+
+### Correo y enlaces de recuperación
+
+La recuperación de contraseña y del 2FA necesita estas variables en `.env.prod`:
+
+| Variable | Obligatoria | Valor o regla |
+|---|---|---|
+| `PUBLIC_BASE_URL` | Sí | Origen HTTPS público, sin ruta ni barra final. Su host debe figurar en `ALLOWED_HOSTS`. Compose lo entrega como `FRONTEND_BASE_URL` |
+| `EMAIL_HOST` | Sí | Servidor SMTP. No admite `localhost` ni direcciones de loopback |
+| `DEFAULT_FROM_EMAIL` | Sí | Dirección de correo válida |
+| `EMAIL_PORT` | No | `587` |
+| `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Juntas o ninguna | Credenciales SMTP. No las versione |
+| `EMAIL_USE_TLS` | No | `1`. Producción no arranca si se desactiva |
+| `EMAIL_TIMEOUT` | No | `10` segundos |
+| `EMAIL_BACKEND` | No | Solo se admite `django.core.mail.backends.smtp.EmailBackend` |
+
+Si falta un valor obligatorio o uno no cumple su regla, Compose o Django detienen
+el arranque sin mostrar credenciales. Solo se admite STARTTLS: un servidor que
+exija TLS implícito (puerto 465) no está soportado.
+
+Si el servidor SMTP falla durante una solicitud, la API responde igual, para no
+revelar si la cuenta existe, y el error queda en el log del backend. Nginx no
+registra las rutas de los enlaces de recuperación, que contienen un token.
 
 ### Limitación conocida
 
