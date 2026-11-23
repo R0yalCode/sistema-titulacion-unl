@@ -42,7 +42,8 @@ docker compose up --build -d backend
 | Tras cambiar `SECRET_KEY` en desarrollo el código nunca es válido | La clave del 2FA se deriva de `SECRET_KEY`: restablezca el 2FA ([[USER_ACCESS_GUIDE]] §7) y registre de nuevo el autenticador |
 | `seed_initial_data` indica que falta `SEED_DEMO_PASSWORD` | Pásela con `docker compose exec -e` ([[INITIAL_DATA]] §3) |
 | `seed_mock_sga` indica que el entorno no permite la fuente simulada | Revise `ACADEMIC_PROFILE_MOCK_ALLOWED`. En producción es el comportamiento correcto |
-| `seed_* solo puede ejecutarse en desarrollo o pruebas` | La protección rechazó el entorno. En producción es el comportamiento correcto ([[INITIAL_DATA]]) |
+| `seed_* solo puede ejecutarse en desarrollo o pruebas` | La protección rechazó el entorno o la base. Si es una base **local** sin identidad, regístrela como indica [[INITIAL_DATA]]. En producción es el comportamiento correcto |
+| Producción no arranca: `ya está registrada como desarrollo` | Esa base es de desarrollo y no debe usarse en producción. Conecte una base de producción |
 | Producción no arranca con `ImproperlyConfigured` sobre correo o `FRONTEND_BASE_URL` | Revise las variables de `docs/08-infraestructura/despliegue.md`, sección «Correo y enlaces de recuperación» |
 | La base de datos no arranca | `docker compose logs db` |
 

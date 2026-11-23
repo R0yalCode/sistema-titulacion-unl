@@ -27,6 +27,7 @@ Todos los datos son ficticios (simulación académica); en desarrollo, el perfil
 | Correo | Consola (log del backend) | SMTP con TLS, validado al arrancar |
 | Documentos | `backend/src/media`, **fuera** del volumen `media_data` | `backend/media`, en el volumen `media_private_prod` |
 | Swagger y ReDoc | Abiertos | Solo `IsAdminUser` |
+| Identidad de la base | `registrar_entorno_bd desarrollo`, manual y una vez | `produccion`, registrada al arrancar |
 
 ## Variables de configuración
 
@@ -48,7 +49,7 @@ La mayoría de las variables del backend están documentadas, sin valores secret
 | `AUTH_THROTTLE_RATE`, `PASSWORD_RESET_THROTTLE_RATE`, `PASSWORD_RESET_TIMEOUT` | Límites de intentos y vigencia de los enlaces |
 | `EMAIL_*`, `DEFAULT_FROM_EMAIL`, `FRONTEND_BASE_URL` | Envío de correos y enlaces ([[USER_ACCESS_GUIDE]] §8). En producción, Compose toma `FRONTEND_BASE_URL` de `PUBLIC_BASE_URL` |
 | `ACADEMIC_PROFILE_PROVIDER`, `ACADEMIC_PROFILE_MOCK_ALLOWED` | Fuente académica. En producción el mock está prohibido |
-| `SEED_DEMO_PASSWORD` | Contraseña de `seed_initial_data`. Solo desarrollo y pruebas; el comando se rechaza en producción ([[INITIAL_DATA]]) |
+| `SEED_DEMO_PASSWORD` | Contraseña de `seed_initial_data`. El comando solo escribe en una base registrada como desarrollo o en la temporal de pytest ([[INITIAL_DATA]]) |
 
 ## Sesión
 

@@ -180,20 +180,23 @@ Operaciones habituales y solución de problemas: [`TROUBLESHOOTING.md`](SIAAF-KN
 
 Las pruebas automatizadas no necesitan esta carga, porque crean su propia base temporal.
 
-El mecanismo recomendado son dos comandos de Django, que se ejecutan **en este orden** después de migrar:
+El mecanismo recomendado son tres comandos de Django, que se ejecutan **en este orden** después de migrar:
 
 | Orden | Comando | Qué crea |
 |---|---|---|
-| 1 | `seed_initial_data` | 8 cuentas demo, una por rol, y sus roles |
-| 2 | `seed_mock_sga --asignar-ambito-personal` | Catálogo académico simulado (`MOCK-…`), perfil de `estudiante_1` y ámbito del personal demo |
+| 1 | `registrar_entorno_bd desarrollo` | Identidad de la base. Se hace una vez por base |
+| 2 | `seed_initial_data` | 8 cuentas demo, una por rol, y sus roles |
+| 3 | `seed_mock_sga --asignar-ambito-personal` | Catálogo académico simulado (`MOCK-…`), perfil de `estudiante_1` y ámbito del personal demo |
 
 El catálogo de los 5 requisitos del Art. 235 no necesita carga: lo crea la migración.
 
 ### 5.1 Ejecutar la carga
 
-`docker-compose.yml` no entrega `SEED_DEMO_PASSWORD` al backend, por lo que debe pasarse en el comando. Defina una contraseña propia:
+El primer comando exige escribir el nombre de la base (`sgt_siaaf` por defecto, o su `POSTGRES_DB`). `docker-compose.yml` no entrega `SEED_DEMO_PASSWORD` al backend, por lo que debe pasarse en el comando. Defina una contraseña propia:
 
 ```bash
+docker compose exec backend python manage.py registrar_entorno_bd desarrollo --confirmar-base sgt_siaaf
+
 read -rsp "Contraseña para las cuentas demo: " SEED_DEMO_PASSWORD; echo
 docker compose exec -e SEED_DEMO_PASSWORD="$SEED_DEMO_PASSWORD" backend python manage.py seed_initial_data
 unset SEED_DEMO_PASSWORD
@@ -238,8 +241,8 @@ En una base nueva, el resultado esperado es 8 cuentas, 1 facultad, 2 carreras y 
 - Ambos comandos son **idempotentes**: al repetirlos no duplican datos.
 - Repetirlos **no restablece contraseñas** ni modifica el 2FA de las cuentas existentes.
 - `seed_initial_data` **vuelve a asignar** el rol demo si se retiró, y lo asigna a cualquier cuenta existente con uno de esos nombres de usuario.
-- Ambos comandos **se rechazan en producción** antes de acceder a la base, también con `--settings` dentro de la imagen de producción.
-- ⚠️ La protección no detecta la imagen de **desarrollo** conectada a una base real. Nunca le entregue credenciales de producción.
+- Los seeders solo escriben en una base registrada como **desarrollo**. Rechazan antes de escribir una base de producción, sin registrar o que no se pueda verificar, también desde la imagen de desarrollo.
+- ⚠️ **Registre como desarrollo solo una base local.** Hacerlo sobre una base real sin marca habilitaría la carga, y un superusuario de PostgreSQL puede alterar la marca.
 
 Para entrar a `/admin/`, cree una cuenta aparte con `createsuperuser`. Ese procedimiento, los datos exactos que crea cada comando y las operaciones que eliminan datos están en [`INITIAL_DATA.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/INITIAL_DATA.md).
 

@@ -46,7 +46,7 @@ registrada en `DECISION_LOG.md`, no en `backend/`):
 - `Dockerfile` — multi-stage, target `production` (gunicorn, usuario `appuser` UID 1000, sin acceso de root).
 - `docker-compose.prod.yml` — servicios `db`, `backend`, `nginx`; variables de entorno obligatorias sin valores reales.
 - `nginx/prod.conf` y `nginx/snippets/` — TLS, SPA, estáticos y proxy de la API; requiere montar certificados reales en `nginx/certs/` (no incluidos en el repositorio).
-- `backend/entrypoint.sh` — `migrate` → `collectstatic` → `gunicorn`.
+- `backend/entrypoint.sh` — `migrate` → registro de la base como `produccion` → `collectstatic` → `gunicorn`. Se detiene si la base está registrada como desarrollo.
 - `backend/gunicorn.conf.py` — ruta de importación de `config` y parámetros del servidor.
 - `backend/healthcheck.py` — healthcheck con un `Host` admitido por `ALLOWED_HOSTS`.
 

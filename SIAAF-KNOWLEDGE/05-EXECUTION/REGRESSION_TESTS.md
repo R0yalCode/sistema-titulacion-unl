@@ -13,8 +13,8 @@ last_verified: 2026-11-23
 
 | Fecha | Suite | Comando | Resultado | Duración | Contexto |
 |---|---|---|---|---|---|
-| 2026-11-23 | Backend (SQLite, contenedor desechable) | `python -m pytest -ra src/apps src/core tests` | **1143 aprobadas, 14 omitidas** | ~70 s | Rama `fix/seed-production-guard` (`ac5fd61`) |
-| 2026-11-23 | Backend (SQLite, contenedor desechable) | `python -m pytest -ra src/apps src/core tests` | **1130 aprobadas, 14 omitidas** | ~59 s | Rama `fix/production-email-configuration` (`24075ac`) |
+| 2026-11-23 | Backend (SQLite, contenedor desechable) | `python -m pytest -ra src/apps src/core tests` | **1226 aprobadas, 26 omitidas** | ~80 s | `develop` con los PR #27 y #28 |
+| 2026-11-23 | Backend (PostgreSQL 16 desechable) | `python -m pytest -ra tests` con `config.settings.test_postgres` | **51 aprobadas** | ~7 s | `develop` con los PR #27 y #28 |
 | 2026-11-11 | Frontend | `npm run test` (`vitest run`) | **6 fallidas / 322 aprobadas (328)**; 2 archivos con fallos de 58 | 139,7 s | Rama `docs/siaaf-knowledge`; sin cambios de código |
 | 2026-11-11 | Frontend | `npx vitest run` (2.ª ejecución) | Sin líneas `FAIL` en la salida filtrada | — | Ídem |
 | 2026-11-11 | Frontend | `npx vitest run` (3.ª ejecución) | **58/58 archivos, 328/328 pruebas aprobadas** | — | Ídem |
