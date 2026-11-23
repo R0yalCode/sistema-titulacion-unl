@@ -15,7 +15,8 @@ Carga, de forma idempotente y sin sobrescribir datos existentes:
 
 No crea ni elimina cuentas, no cambia contraseñas, roles ni 2FA, y no
 escribe cédulas, nombres ni correos en la salida. Se niega a ejecutarse si el
-entorno no permite la fuente simulada (`ACADEMIC_PROFILE_MOCK_ALLOWED`).
+entorno no es de desarrollo o pruebas (`exigir_entorno_de_demostracion`) o no
+permite la fuente simulada (`ACADEMIC_PROFILE_MOCK_ALLOWED`).
 Cada alta queda en `EventoCatalogoAcademico` con origen `seed_mock_sga`.
 """
 
@@ -36,6 +37,7 @@ from apps.academico.services.auditoria import (
     registrar_cambio,
 )
 from apps.authentication.adapters.models import User
+from core.adapters.entorno_demo import exigir_entorno_de_demostracion
 
 ORIGEN = "seed_mock_sga"
 
@@ -107,6 +109,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        exigir_entorno_de_demostracion("seed_mock_sga")
         if not getattr(settings, "ACADEMIC_PROFILE_MOCK_ALLOWED", False):
             raise CommandError(
                 "Este entorno no permite la fuente académica simulada "

@@ -53,8 +53,11 @@ COPY backend/healthcheck.py ./healthcheck.py
 
 # El código queda como root y de solo lectura para la aplicación: appuser solo
 # escribe en los directorios que Compose monta como volúmenes y en los logs.
+# La marca impide cargar datos de demostración en esta imagen (core/adapters/entorno_demo.py).
 RUN chmod -R u=rwX,go=rX manage.py pyproject.toml gunicorn.conf.py healthcheck.py src && \
     chmod 755 entrypoint.sh && \
+    touch .entorno-produccion && \
+    chmod 444 .entorno-produccion && \
     mkdir -p media/private staticfiles /var/log/sgt-siaaf && \
     chmod -R 750 media && \
     chown -R appuser:appuser media staticfiles /var/log/sgt-siaaf
