@@ -58,6 +58,11 @@ jobs:
         run: |
           echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
           echo "JWT_SIGNING_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')" >> "$GITHUB_ENV"
+          # Clave Fernet exclusiva de esta ejecución: las pruebas importan
+          # config.settings.production, que la exige. Se enmascara en los logs.
+          MFA_KEY="$(python -c 'import base64, os; print(base64.urlsafe_b64encode(os.urandom(32)).decode())')"
+          echo "::add-mask::$MFA_KEY"
+          echo "MFA_ENCRYPTION_KEYS=$MFA_KEY" >> "$GITHUB_ENV"
       - run: pip install -r requirements.txt -r requirements-dev.txt
       - name: Pruebas (src/apps, src/core y tests/)
         run: python -m pytest -ra src/apps src/core tests --junitxml=pytest-backend.xml
