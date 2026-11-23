@@ -68,7 +68,7 @@ def estudiante():
 
 @pytest.fixture
 def expediente(estudiante):
-    return crear_expediente.execute(estudiante, CARRERA)
+    return crear_expediente.registrar_expediente(estudiante, CARRERA)
 
 
 def _peticion_de(expediente, dependencia):

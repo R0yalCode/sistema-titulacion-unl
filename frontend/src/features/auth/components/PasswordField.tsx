@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Input, type InputProps } from '@/components/ui/Input'
-import { EyeIcon, EyeOffIcon } from './icons'
+import { EyeIcon, EyeOffIcon } from '@/components/ui/icons'
 import styles from './PasswordField.module.css'
 
 export type PasswordFieldProps = Omit<InputProps, 'type' | 'size'>

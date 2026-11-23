@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { describeTransportError } from './authErrors'
 import { AuthLayout } from './components/AuthLayout'
-import { AlertCircleIcon, ArrowLeftIcon, CheckCircleIcon } from './components/icons'
+import { AlertCircleIcon, ArrowLeftIcon, CheckCircleIcon } from '@/components/ui/icons'
 import styles from './components/authForm.module.css'
 import { ResetPasswordForm } from './ResetPasswordForm'
 

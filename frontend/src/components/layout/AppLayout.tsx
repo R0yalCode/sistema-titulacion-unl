@@ -1,58 +1,96 @@
-import { useContext, useState, type ReactNode } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useContext, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
-import { OPERATIONAL_ROLES } from '@/auth/roles'
+import { OPERATIONAL_ROLES, ROLES_CON_NOTIFICACIONES } from '@/auth/roles'
+import { BellIcon, InboxIcon, InfoIcon, SettingsShieldIcon, UserIcon } from '@/components/ui/icons'
+import { AdminSearch, enlacesConsola, type DestinoBusqueda } from '@/features/bandeja'
+import { useNotificaciones } from '@/features/dashboard'
 import { getEnv } from '@/lib/env'
-import { queryClient } from '@/lib/queryClient'
-import styles from './AppLayout.module.css'
-import { DemoBanner } from './DemoBanner'
-import { Header } from './Header'
-import { Sidebar, type SidebarItem } from './Sidebar'
-import { SkipLink } from './SkipLink'
+import { nombreRol } from '@/lib/estados'
+import '@/styles/siaaf-modern.css'
+import { AppShell, type ShellNavItem } from './AppShell'
 
-const NAV_ITEMS: SidebarItem[] = [
-  { to: '/estudiante', label: 'Mi expediente', roles: ['ESTUDIANTE'] },
-  { to: '/bandeja', label: 'Bandeja', roles: OPERATIONAL_ROLES },
-]
-
-type AppLayoutProps = {
-  children?: ReactNode
+/**
+ * Portal de funcionarios. La navegación se construye con las capacidades
+ * reales de cada rol (rutas y celdas RBAC existentes); el backend sigue
+ * autorizando cada operación.
+ */
+function buildNavItems(roles: string[], noLeidas: number, apiBaseUrl: string): ShellNavItem[] {
+  const tiene = (lista: string[]) => roles.some((rol) => lista.includes(rol))
+  const esAdministrador = roles.includes('ADMINISTRADOR')
+  const group = esAdministrador ? 'Menú principal' : undefined
+  const items: ShellNavItem[] = []
+  if (tiene(OPERATIONAL_ROLES)) {
+    items.push({ to: '/bandeja', label: 'Bandeja de trabajo', icon: <InboxIcon />, group })
+  }
+  if (tiene(ROLES_CON_NOTIFICACIONES)) {
+    items.push({ to: '/notificaciones', label: 'Notificaciones', icon: <BellIcon />, count: noLeidas, group })
+  }
+  if (tiene(OPERATIONAL_ROLES)) {
+    items.push({ to: '/perfil', label: 'Mi perfil', icon: <UserIcon />, group })
+  }
+  if (esAdministrador) {
+    // Consola interna existente (Django admin, ADR-0009): usuarios, roles y auditoría.
+    items.push({
+      to: `${apiBaseUrl}/admin/`,
+      label: 'Consola de administración',
+      icon: <SettingsShieldIcon />,
+      external: true,
+      group: 'Gestión y control',
+    })
+  }
+  if (items.length === 0) {
+    items.push({ to: '/no-habilitado', label: 'Estado de mi acceso', icon: <InfoIcon /> })
+  }
+  return items
 }
 
-export function AppLayout({ children }: AppLayoutProps) {
+function seccionAdministrador(pathname: string): string {
+  if (pathname === '/bandeja') return 'Panel'
+  if (pathname.startsWith('/bandeja/') || pathname.startsWith('/expedientes/')) return 'Expediente'
+  if (pathname.startsWith('/notificaciones')) return 'Notificaciones'
+  if (pathname.startsWith('/perfil')) return 'Mi perfil'
+  return 'Gestión de titulación'
+}
+
+export function AppLayout({ children }: { children?: ReactNode }) {
   const auth = useContext(AuthContext)
+  const { pathname } = useLocation()
   const env = getEnv()
-  const navigate = useNavigate()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const user = auth?.user ?? null
-
-  const handleLogout = () => {
-    if (!window.confirm('¿Desea cerrar sesión?')) {
-      return
-    }
-
-    auth?.signOut()
-    queryClient.clear()
-    navigate('/login', { replace: true })
-  }
+  const roles = auth?.user?.roles ?? []
+  const conNotificaciones = roles.some((rol) => ROLES_CON_NOTIFICACIONES.includes(rol))
+  const notificaciones = useNotificaciones({ enabled: conNotificaciones })
+  const noLeidas = notificaciones.data?.results.filter((notificacion) => !notificacion.leida).length ?? 0
+  const rolPrincipal = roles.find((rol) => rol !== 'ESTUDIANTE') ?? roles[0]
+  const esAdministrador = roles.includes('ADMINISTRADOR')
+  const navItems = buildNavItems(roles, noLeidas, env.apiBaseUrl)
+  const destinosBusqueda: DestinoBusqueda[] = esAdministrador
+    ? [
+        ...navItems
+          .filter((item) => !item.external)
+          .map((item) => ({ label: item.label, to: item.to })),
+        ...enlacesConsola(env.apiBaseUrl).map((enlace) => ({
+          label: enlace.titulo,
+          to: enlace.href,
+          detalle: enlace.descripcion,
+          external: true,
+        })),
+      ]
+    : []
 
   return (
-    <>
-      <SkipLink />
-      <DemoBanner show={env.demoMode} />
-      <Header
-        appName={env.appName}
-        sidebarOpen={sidebarOpen}
-        user={user}
-        onLogout={handleLogout}
-        onToggleSidebar={() => setSidebarOpen((previous) => !previous)}
-      />
-      <div className={styles.body}>
-        <Sidebar items={NAV_ITEMS} open={sidebarOpen} roles={user?.roles ?? []} />
-        <main className={styles.main} id="main-content" tabIndex={-1}>
-          {children ?? <Outlet />}
-        </main>
-      </div>
-    </>
+    <AppShell
+      navItems={navItems}
+      notificationsTo={conNotificaciones ? '/notificaciones' : null}
+      portalLabel={esAdministrador ? `Administración · ${seccionAdministrador(pathname)}` : 'Gestión de titulación'}
+      profileTo={roles.some((rol) => OPERATIONAL_ROLES.includes(rol)) ? '/perfil' : null}
+      topbarSlot={esAdministrador ? <AdminSearch destinos={destinosBusqueda} /> : undefined}
+      unreadCount={noLeidas}
+      visual={esAdministrador ? 'siaaf-modern' : undefined}
+      userName={rolPrincipal ? nombreRol(rolPrincipal) : 'Usuario'}
+      userRole={auth?.user?.cedula ? `C.I. ${auth.user.cedula}` : ''}
+    >
+      {children}
+    </AppShell>
   )
 }

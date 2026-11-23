@@ -4,12 +4,13 @@ import type { ChecklistItem } from '@/api/endpoints/checklist'
 import type { ApiRequestError } from '@/api/errors'
 import type { EstadoExpediente } from '@/api/endpoints/expedientes'
 import { Alert } from '@/components/ui/Alert'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { FileUpload } from '@/components/ui/FileUpload'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
-import { Spinner } from '@/components/ui/Spinner'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Textarea } from '@/components/ui/Textarea'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { puedeEvaluarItem, puedeSubsanarItem, puedeVerChecklist } from './accionesPorRolEstado'
@@ -50,12 +51,12 @@ export function ChecklistSection({ query, roles, estadoExpediente, esPropietario
   }
 
   if (query.isLoading) {
-    return <Spinner label="Cargando checklist…" />
+    return <Skeleton count={3} label="Cargando checklist…" />
   }
 
   const items = query.data ?? []
   if (items.length === 0) {
-    return <p>Este expediente no tiene checklist registrado todavía.</p>
+    return <p className={styles.empty}>Este expediente no tiene checklist registrado todavía.</p>
   }
 
   return (
@@ -88,12 +89,18 @@ function ChecklistRow({ item, roles, estadoExpediente, esPropietario, expediente
   const [error, setError] = useState<string | null>(null)
   const evaluarMutation = useEvaluarChecklist(expedienteId)
   const subsanarMutation = useSubsanarChecklist(expedienteId)
+  const { confirm, dialog } = useConfirm()
 
   const puedeEvaluar = puedeEvaluarItem(roles, estadoExpediente, item.estado_verificacion)
   const puedeSubsanar = puedeSubsanarItem(roles, estadoExpediente, item.estado_verificacion, esPropietario)
 
   async function handleVerificar() {
-    if (!window.confirm(`¿Confirma marcar "${item.requisito_nombre}" como VERIFICADO?`)) {
+    const confirmado = await confirm({
+      title: '¿Marcar como verificado?',
+      description: `El requisito "${item.requisito_nombre}" quedará como VERIFICADO.`,
+      confirmLabel: 'Marcar como verificado',
+    })
+    if (!confirmado) {
       return
     }
     setError(null)
@@ -132,12 +139,11 @@ function ChecklistRow({ item, roles, estadoExpediente, esPropietario, expediente
   }
 
   return (
-    <li className={styles.item}>
+    <li className={`${styles.item} ${item.estado_verificacion === 'OBSERVADO' ? styles.observado : ''}`}>
+      {dialog}
       <div className={styles.itemHeader}>
-        <strong>{item.requisito_nombre}</strong>
-        <Badge variant={item.estado_verificacion === 'OBSERVADO' ? 'warning' : item.estado_verificacion === 'VERIFICADO' ? 'success' : 'neutral'}>
-          {item.estado_verificacion}
-        </Badge>
+        <strong className={styles.nombre}>{item.requisito_nombre}</strong>
+        <StatusBadge dominio="checklist" valor={item.estado_verificacion} />
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
@@ -162,7 +168,7 @@ function ChecklistRow({ item, roles, estadoExpediente, esPropietario, expediente
             onChange={(event) => setMotivo(event.target.value)}
           />
           <div className={styles.actions}>
-            <Button loading={evaluarMutation.isPending} size="sm" variant="danger" onClick={() => void handleObservar()}>
+            <Button loading={evaluarMutation.isPending} size="sm" onClick={() => void handleObservar()}>
               Confirmar observación
             </Button>
             <Button size="sm" variant="ghost" onClick={() => setObservando(false)}>

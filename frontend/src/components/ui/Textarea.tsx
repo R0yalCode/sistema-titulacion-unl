@@ -19,7 +19,7 @@ export function Textarea({ label, id, error, hint, required, className, ...rest 
     <div className={styles.field}>
       <label className={styles.label} htmlFor={textareaId}>
         {label}
-        {required && <span aria-hidden="true"> *</span>}
+        {required && <span aria-hidden="true" className={styles.required}> *</span>}
       </label>
       {hint && (
         <p className={styles.hint} id={hintId}>

@@ -5,8 +5,8 @@
 
 .spinner {
   display: inline-block;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-brand-red);
+  border: 2px solid var(--color-primary-muted);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

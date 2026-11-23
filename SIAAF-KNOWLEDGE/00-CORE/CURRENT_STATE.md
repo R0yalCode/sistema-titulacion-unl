@@ -3,12 +3,16 @@ system: SGT-SIAAF
 type: current-state
 status: active
 source: verified-code + tasks.md + test-runs
-last_verified: 2026-11-11
+last_verified: 2026-11-22
 ---
 
 # Estado actual del proyecto
 
-> Instantánea verificada el **2026-11-11**. Actualizar al cerrar cada tarea ([[KNOWLEDGE_MAINTENANCE]]).
+> Instantánea general del **2026-11-11**, con la integración del **2026-11-22** añadida abajo. Actualizar al cerrar cada tarea ([[KNOWLEDGE_MAINTENANCE]]).
+
+## Integración del 2026-11-22
+
+Design System, portal del estudiante, perfil académico MockSGA, `mi-tramite`, corrección de notificaciones y panel del administrador, integrados por bloques en modalidad centralizada DK-010 → [[2026-11-22-integracion-rediseno-admin]]. Validación: frontend 544/544, backend 1040 aprobadas y 14 omitidas, PostgreSQL 102/102. Pendientes: INC-NOTIF-01 a 03, PROD-ACAD-01 (obligatoria antes de `main`) y el despliegue del puerto 8000, que requiere autorización propia.
 
 ## Resumen
 

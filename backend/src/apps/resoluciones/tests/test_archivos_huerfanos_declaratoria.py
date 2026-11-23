@@ -91,7 +91,7 @@ def informe_emitido():
     estudiante = _usuario("i3t4_est", "ESTUDIANTE")
     jurista = _usuario("i3t4_jur", "SECRETARIO_ABOGADO")
     decano = _usuario("i3t4_dec", "DECANO")
-    expediente = crear_expediente.execute(estudiante, CARRERA)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA)
     PeticionDocumental.objects.filter(expediente=expediente).update(
         estado_peticion="CARGADO"
     )

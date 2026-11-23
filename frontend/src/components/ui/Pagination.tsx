@@ -1,4 +1,5 @@
 import { Button } from './Button'
+import { ChevronLeftIcon, ChevronRightIcon } from './icons'
 import styles from './Pagination.module.css'
 
 export type PaginationProps = {
@@ -21,6 +22,7 @@ export function Pagination({ count, pageSize, page, onPageChange }: PaginationPr
         size="sm"
         variant="secondary"
       >
+        <ChevronLeftIcon size={16} />
         Anterior
       </Button>
       <p aria-live="polite" className={styles.status}>
@@ -28,6 +30,7 @@ export function Pagination({ count, pageSize, page, onPageChange }: PaginationPr
       </p>
       <Button disabled={!canGoNext} onClick={() => onPageChange(page + 1)} size="sm" variant="secondary">
         Siguiente
+        <ChevronRightIcon size={16} />
       </Button>
     </nav>
   )

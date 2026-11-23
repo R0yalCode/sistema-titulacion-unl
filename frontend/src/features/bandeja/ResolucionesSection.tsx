@@ -7,6 +7,7 @@ import { ToastContext } from '@/components/feedback/ToastProvider'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { FlagIcon } from '@/components/ui/icons'
 import { FileUpload } from '@/components/ui/FileUpload'
 import { Input } from '@/components/ui/Input'
 import { Modal } from '@/components/ui/Modal'
@@ -91,7 +92,7 @@ export function ResolucionesSection({ expedienteId, estado, roles, checklistQuer
   }
 
   return (
-    <Card title="Resoluciones">
+    <Card icon={<FlagIcon />} title="Resoluciones">
       <div className={styles.cuerpo}>
         {resultado && (
           <Alert title={resultado.titulo} variant="success">

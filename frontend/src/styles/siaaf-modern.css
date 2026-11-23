@@ -1,0 +1,62 @@
+/*
+ * Variante visual «SIAAF Modern» (patrón de referencia del rediseño).
+ * Solo redefine tokens semánticos de tokens.css dentro de su alcance: hoy se
+ * activa únicamente en el portal del ADMINISTRADOR (AppLayout), de modo que los
+ * demás roles no cambian.
+ *
+ * Paleta: docs/paleta_colores_institucionales. #6597C9 y #85B5DE no alcanzan
+ * 4,5:1 con blanco: se usan solo como acento sobre fondo oscuro. Las acciones y
+ * los enlaces usan #3D5871 (7,41:1 sobre blanco).
+ */
+[data-visual='siaaf-modern'] {
+  --color-brand: #25374a;
+  --color-brand-strong: #1e2b37;
+  --color-primary: #3d5871;
+  --color-primary-hover: #2d4254;
+  --color-primary-subtle: #eaf1f8;
+  --color-primary-muted: #d6e4f0;
+  --color-accent: #e1ab1d;
+  --color-accent-text: #91601e;
+  --color-accent-subtle: #fbf3dc;
+
+  --color-bg-main: #f4f7fa;
+  --color-surface-muted: #f8fafc;
+  --color-surface-sunken: #edf1f5;
+  --color-text-primary: #2c3a46;
+  --color-text-strong: #25374a;
+  --color-text-secondary: #576068;
+  --color-text-muted: #576068;
+  --color-divider: #e1e7ec;
+  --color-border-strong: #c1ccd3;
+  --color-border-control: #7f878b;
+
+  --color-success-bg: #dcefd9;
+  --color-success-bg-soft: #eff7ee;
+  --color-success-text: #25601f;
+  --color-success-solid: #2f7a28;
+  --color-warning-bg: #f8e7b8;
+  --color-warning-bg-soft: #fbf3dc;
+  --color-warning-text: #6f4a14;
+  --color-warning-solid: #91601e;
+  --color-danger-bg: #fbdcda;
+  --color-danger-bg-soft: #fdeeed;
+  --color-danger-text: #a8170f;
+  --color-danger-solid: #d31e15;
+  --color-info-bg: #d6e4f0;
+  --color-info-text: #2d4254;
+  --color-info-solid: #527495;
+  --color-neutral-bg: #e4e9ed;
+  --color-neutral-text: #4e565d;
+  --color-neutral-solid: #576068;
+
+  --focus-ring-color: #3d5871;
+  --focus-ring: 0 0 0 3px rgba(82, 116, 149, 0.35);
+  --focus-ring-on-dark: #e1ab1d;
+
+  --elevation-card: 0 1px 2px rgba(37, 55, 74, 0.05);
+  --elevation-raised: 0 6px 16px rgba(37, 55, 74, 0.09);
+  --elevation-overlay: 0 16px 40px rgba(37, 55, 74, 0.2);
+  --layout-sidebar-width: 296px;
+  --layout-sidebar-collapsed: 72px;
+  --layout-header-height: 60px;
+}

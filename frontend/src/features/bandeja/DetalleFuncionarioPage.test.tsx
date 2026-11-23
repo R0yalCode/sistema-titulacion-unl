@@ -9,6 +9,7 @@ import { AuthContext, type AuthContextValue, type AuthUser } from '@/auth/AuthCo
 import type { ChecklistItem } from '@/api/endpoints/checklist'
 import { ToastProvider } from '@/components/feedback/ToastProvider'
 import { fixtureChecklist, fixtureExpedienteDetalle } from '@/mocks/fixtures'
+import { confirmarDialogo } from '@/test/confirmar'
 import { server } from '@/test/server'
 import DetalleFuncionarioPage from './DetalleFuncionarioPage'
 import { BANDEJA_OPERATIVA_QUERY_KEY } from './queries'
@@ -83,7 +84,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     servirDetalle('EN_VERIFICACION')
     const { container } = renderAs(['SECRETARIO_ABOGADO'])
 
-    expect(await screen.findByText(fixtureExpedienteDetalle.numero_expediente)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Volver a la bandeja' })).toHaveAttribute('href', '/bandeja')
     const checklist = await seccion('Checklist de verificación')
     expect((await within(checklist).findAllByRole('button', { name: 'Verificar' })).length).toBeGreaterThan(0)
@@ -92,7 +93,6 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
 
   it('E2-01: el secretario inicia la verificación de un expediente ENVIADA y se refrescan detalle y bandeja', async () => {
     const user = userEvent.setup()
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     const lecturas = servirDetalle('ENVIADA')
     let iniciado = ''
     server.use(
@@ -106,6 +106,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     queryClient.setQueryData([BANDEJA_OPERATIVA_QUERY_KEY, 1, 10], { count: 0, next: null, previous: null, results: [] })
 
     await user.click(await screen.findByRole('button', { name: 'Iniciar verificación' }))
+    await confirmarDialogo(user)
 
     await waitFor(() => expect(iniciado).toBe(ID))
     expect(await screen.findByText('Verificación iniciada.')).toBeInTheDocument()
@@ -115,7 +116,6 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
 
   it('E2-01: un error de transición muestra el mensaje real del backend', async () => {
     const user = userEvent.setup()
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     servirDetalle('ENVIADA')
     server.use(
       http.post(INICIAR_URL, () =>
@@ -128,6 +128,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     renderAs(['SECRETARIO_ABOGADO'])
 
     await user.click(await screen.findByRole('button', { name: 'Iniciar verificación' }))
+    await confirmarDialogo(user)
 
     expect(await screen.findByText('Transición de estado no permitida.')).toBeInTheDocument()
   })
@@ -159,7 +160,6 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
 
   it('FE-T802: el funcionario evalúa un ítem del checklist desde V-08', async () => {
     const user = userEvent.setup()
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     servirDetalle('EN_VERIFICACION')
     let evaluado = ''
     let items: ChecklistItem[] = fixtureChecklist.map((item) => ({ ...item }))
@@ -175,6 +175,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
 
     const checklist = await seccion('Checklist de verificación')
     await user.click((await within(checklist).findAllByRole('button', { name: 'Verificar' }))[0]!)
+    await confirmarDialogo(user)
 
     await waitFor(() => expect(evaluado).toBe(fixtureChecklist[0]!.id))
   })
@@ -198,7 +199,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     )
     renderAs(['DECANO'])
 
-    await screen.findByText(fixtureExpedienteDetalle.numero_expediente)
+    await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })
     expect(checklistPedido).toBe(false)
     expect(screen.queryByRole('button', { name: 'Descargar' })).not.toBeInTheDocument()
   })
@@ -271,7 +272,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
 
     await user.click(await screen.findByRole('button', { name: /reintentar/i }))
 
-    expect(await screen.findByText(fixtureExpedienteDetalle.numero_expediente)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })).toBeInTheDocument()
     expect(llamadas).toBe(2)
   })
 })

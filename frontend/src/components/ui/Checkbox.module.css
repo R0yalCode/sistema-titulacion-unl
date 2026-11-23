@@ -11,13 +11,13 @@
 }
 
 .control {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--color-brand-red);
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
 }
 
 .control:focus-visible {
-  outline: 2px solid var(--color-brand-blue);
+  outline: 2px solid var(--focus-ring-color);
   outline-offset: 2px;
 }
 

@@ -93,7 +93,7 @@ def estudiante():
 
 @pytest.fixture
 def peticion(estudiante):
-    expediente = crear_expediente.execute(estudiante, CARRERA)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA)
     return PeticionDocumental.objects.filter(expediente=expediente).first()
 
 

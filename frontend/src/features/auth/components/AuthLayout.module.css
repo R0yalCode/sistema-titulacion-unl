@@ -6,12 +6,12 @@
  * los tokens globales.
  */
 .page {
-  --auth-navy: #13294b;
+  --auth-navy: var(--navy-800);
   --auth-navy-overlay: rgba(16, 38, 74, 0.82);
-  --auth-ink: #142844;
-  --auth-gold: #c8a333;
-  --auth-bg: #f2f5f8;
-  --auth-error: #a8123e;
+  --auth-ink: var(--navy-800);
+  --auth-gold: var(--gold-500);
+  --auth-bg: var(--color-bg-main);
+  --auth-error: var(--color-danger-text);
 
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@
     image-set(url('/assets/auth/campus-960.jpg') 1x, url('/assets/auth/campus.jpg') 2x);
   background-position: center 40%;
   background-size: cover;
-  color: #ffffff;
+  color: var(--white);
 }
 
 .brand {
@@ -61,7 +61,7 @@
 
 .systemName {
   margin: 0;
-  font-size: 1.375rem;
+  font-size: var(--text-xl);
   font-weight: 300;
   line-height: 1.2;
   text-align: center;
@@ -69,7 +69,7 @@
 
 .systemTag {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 800;
   letter-spacing: 0.03em;
   text-align: center;
@@ -97,7 +97,7 @@
   width: 100%;
   padding: var(--space-6) var(--space-4) var(--space-6);
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--white);
   box-shadow: 0 12px 32px rgba(20, 40, 68, 0.14);
 }
 
@@ -106,7 +106,7 @@
   padding-bottom: var(--space-3);
   border-bottom: 2px solid var(--auth-gold);
   color: var(--auth-ink);
-  font-size: 1.375rem;
+  font-size: var(--text-xl);
   font-weight: 800;
   letter-spacing: 0.01em;
   text-align: center;
@@ -117,21 +117,21 @@
 .titlePanel {
   padding: var(--space-5, 1.25rem) var(--space-5, 1.25rem);
   border-radius: 12px;
-  background: linear-gradient(135deg, #13294b, #1d3a61);
+  background: linear-gradient(135deg, var(--navy-800), var(--navy-700));
   box-shadow: 0 8px 20px rgba(20, 40, 68, 0.25);
-  color: #ffffff;
+  color: var(--white);
 }
 
 .panelTitle {
   margin: 0 0 var(--space-2);
-  font-size: 1.375rem;
+  font-size: var(--text-xl);
   font-weight: 800;
   line-height: 1.25;
 }
 
 .panelText {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
@@ -139,17 +139,17 @@
   padding: var(--space-3) var(--space-4);
   border-left: 4px solid var(--auth-gold);
   border-radius: 8px;
-  background: #ffffff;
-  color: #374151;
-  font-size: 0.875rem;
+  background: var(--white);
+  color: var(--gray-700);
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
 .footer {
   margin: 0 var(--space-4);
   padding: var(--space-4) 0 var(--space-6);
-  border-top: 1px dashed #c3cad3;
-  color: #4b5563;
+  border-top: 1px dashed var(--gray-300);
+  color: var(--gray-600);
   font-size: var(--font-size-label);
   text-align: center;
 }
@@ -182,7 +182,7 @@
   }
 
   .systemTag {
-    font-size: 1.25rem;
+    font-size: var(--text-lg);
   }
 
   .main {
@@ -202,11 +202,11 @@
   }
 
   .cardTitle {
-    font-size: 1.5rem;
+    font-size: var(--text-xl);
   }
 
   .panelTitle {
-    font-size: 1.75rem;
+    font-size: var(--text-2xl);
   }
 
   .footer {

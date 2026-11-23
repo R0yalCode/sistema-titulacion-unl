@@ -1,20 +1,54 @@
+/* Estados vacíos, de error, 403 y 404: icono + título + explicación + acción. */
 .wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-2);
-  padding: var(--space-6);
-  text-align: left;
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+  animation: sgt-fade-in var(--duration-slow) var(--ease-out);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-full);
+}
+
+.iconNeutral {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.iconDanger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
+
+.iconWarning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
 }
 
 .title {
   margin: 0;
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-h3);
-  color: var(--color-text-primary);
+  color: var(--color-text-strong);
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-semibold);
 }
 
 .description {
-  margin: 0;
-  color: var(--color-text-secondary);
+  max-width: 52ch;
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    padding: var(--space-8) var(--space-4);
+  }
 }

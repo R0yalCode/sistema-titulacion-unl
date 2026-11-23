@@ -2,6 +2,11 @@ from .base import *  # noqa: F401,F403
 
 DEBUG = False
 
+# Pruebas: fuente simulada habilitada explícitamente (las pruebas de
+# configuración la deshabilitan con `settings`).
+ACADEMIC_PROFILE_PROVIDER = "mock_sga"
+ACADEMIC_PROFILE_MOCK_ALLOWED = True
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",

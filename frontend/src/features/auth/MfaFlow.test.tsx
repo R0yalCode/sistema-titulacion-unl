@@ -85,7 +85,7 @@ describe('Ingreso con segundo factor (AUTH-D)', () => {
     await user.click(screen.getByLabelText(/Guardé mis códigos/))
     await user.click(continuar)
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
     expect(getAccessToken()).not.toBeNull()
     expect(storageContains(FIRST_RECOVERY_CODE)).toBe(false)
   })
@@ -113,7 +113,7 @@ describe('Ingreso con segundo factor (AUTH-D)', () => {
     await user.type(screen.getByLabelText(/Código de 6 dígitos/), '123456')
     await user.click(screen.getByRole('button', { name: 'Verificar' }))
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
   })
 
   it('envía trust_device solo si el usuario marca la confianza del dispositivo', async () => {

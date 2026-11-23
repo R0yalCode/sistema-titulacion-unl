@@ -104,7 +104,7 @@ def actores():
 @pytest.fixture
 def observado(actores):
     """Expediente OBSERVADA con una versión 1 real del requisito observado."""
-    expediente = crear_expediente.execute(actores["estudiante"], CARRERA)
+    expediente = crear_expediente.registrar_expediente(actores["estudiante"], CARRERA)
     for peticion in PeticionDocumental.objects.filter(expediente=expediente):
         archivo = io.BytesIO(PDF)
         cargar_documento.execute(

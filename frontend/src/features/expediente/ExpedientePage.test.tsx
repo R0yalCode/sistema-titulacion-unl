@@ -9,6 +9,7 @@ import { AuthContext, type AuthContextValue, type AuthUser } from '@/auth/AuthCo
 import type { ChecklistItem } from '@/api/endpoints/checklist'
 import { ToastProvider } from '@/components/feedback/ToastProvider'
 import { fixtureChecklist, fixtureExpedienteBorrador, fixtureExpedienteDetalle } from '@/mocks/fixtures'
+import { confirmarDialogo } from '@/test/confirmar'
 import { server } from '@/test/server'
 import ExpedientePage from './ExpedientePage'
 
@@ -70,8 +71,8 @@ describe('ExpedientePage (V-04)', () => {
   it('CA-V04-01: carga el detalle real y muestra cabecera, timeline y peticiones', async () => {
     renderPageAs(['ESTUDIANTE'])
 
-    expect(await screen.findByText(fixtureExpedienteDetalle.numero_expediente)).toBeInTheDocument()
-    expect(screen.getByText('EN_VERIFICACION')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })).toBeInTheDocument()
+    expect(screen.getAllByText('En verificación').length).toBeGreaterThan(0)
     expect(screen.getAllByText(fixtureExpedienteDetalle.peticiones[0]!.requisito_nombre).length).toBeGreaterThan(0)
   })
 
@@ -108,7 +109,7 @@ describe('ExpedientePage (V-04)', () => {
 
     const section = await findChecklistSection()
     expect(within(section).getByText(fixtureChecklist[0]!.requisito_nombre)).toBeInTheDocument()
-    expect(within(section).getAllByText('PENDIENTE').length).toBeGreaterThan(0)
+    expect(within(section).getAllByText('Pendiente').length).toBeGreaterThan(0)
   })
 
   it('CA-V04-02: el estudiante propietario puede enviar desde BORRADOR', async () => {
@@ -122,14 +123,14 @@ describe('ExpedientePage (V-04)', () => {
         return HttpResponse.json(fixtureExpedienteDetalle)
       }),
     )
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     const user = userEvent.setup()
     renderPageAs(['ESTUDIANTE'], `/expedientes/${fixtureExpedienteBorrador.id}`)
 
     const enviarButton = await screen.findByRole('button', { name: 'Enviar expediente' })
     await user.click(enviarButton)
+    await confirmarDialogo(user)
 
-    await waitFor(() => expect(screen.getByText('EN_VERIFICACION')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getAllByText('En verificación').length).toBeGreaterThan(0))
   })
 
   it('CA-V04-03: un envío con requisitos incompletos (422) muestra el mensaje real sin enviar', async () => {
@@ -139,11 +140,11 @@ describe('ExpedientePage (V-04)', () => {
         HttpResponse.json({ detail: 'Envio incompleto: requisitos sin documento en firme.' }, { status: 422 }),
       ),
     )
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     const user = userEvent.setup()
     renderPageAs(['ESTUDIANTE'], `/expedientes/${fixtureExpedienteBorrador.id}`)
 
     await user.click(await screen.findByRole('button', { name: 'Enviar expediente' }))
+    await confirmarDialogo(user)
 
     expect(await screen.findByText('Envio incompleto: requisitos sin documento en firme.')).toBeInTheDocument()
   })
@@ -192,14 +193,14 @@ describe('ExpedientePage (V-04)', () => {
         return HttpResponse.json(checklistState.find((item) => item.id === params.id))
       }),
     )
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     const user = userEvent.setup()
     renderPageAs(['SECRETARIO_ABOGADO'])
 
     const section = await findChecklistSection()
     await user.click(within(section).getAllByRole('button', { name: 'Verificar' })[0]!)
+    await confirmarDialogo(user)
 
-    await waitFor(() => expect(within(section).getAllByText('VERIFICADO').length).toBeGreaterThan(0))
+    await waitFor(() => expect(within(section).getAllByText('Verificado').length).toBeGreaterThan(0))
   })
 
   it('CA-V04-07: un PDF inválido en subsanación no llama a la API', async () => {

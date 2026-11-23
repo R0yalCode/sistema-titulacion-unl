@@ -5,8 +5,10 @@ import {
   fixtureExpedienteBorrador,
   fixtureExpedienteDetalle,
   fixtureMfaChallenge,
+  fixtureMiTramite,
   fixtureMfaSetup,
   fixtureNotificacion,
+  fixturePerfilAcademico,
   fixtureRecoveryCodes,
   fixtureTokenPair,
   mfaInvalidCodeBody,
@@ -25,6 +27,8 @@ const PASSWORD_RESET_VALIDATE_URL = '*/api/v1/auth/password-reset/validate/'
 const PASSWORD_RESET_CONFIRM_URL = '*/api/v1/auth/password-reset/confirm/'
 const BANDEJA_URL = '*/api/v1/expedientes/bandeja/'
 const EXPEDIENTES_URL = '*/api/v1/expedientes/'
+const MI_TRAMITE_URL = '*/api/v1/expedientes/mi-tramite/'
+const PERFIL_ACADEMICO_URL = '*/api/v1/perfil-academico/'
 const EXPEDIENTE_DETALLE_URL = '*/api/v1/expedientes/:id/'
 const EXPEDIENTE_ENVIAR_URL = '*/api/v1/expedientes/:id/enviar/'
 const EXPEDIENTE_OBSERVAR_URL = '*/api/v1/expedientes/:id/observar/'
@@ -117,6 +121,9 @@ export const handlers: HttpHandler[] = [
     HttpResponse.json({ count: 1, next: null, previous: null, results: [fixtureBandejaExpediente] }),
   ),
   http.post(EXPEDIENTES_URL, () => HttpResponse.json(fixtureExpedienteBorrador, { status: 201 })),
+  // Antes del detalle: `:id/` también coincidiría con `mi-tramite/`.
+  http.get(MI_TRAMITE_URL, () => HttpResponse.json(fixtureMiTramite)),
+  http.get(PERFIL_ACADEMICO_URL, () => HttpResponse.json(fixturePerfilAcademico)),
   http.get(EXPEDIENTE_DETALLE_URL, () => HttpResponse.json(fixtureExpedienteDetalle)),
   http.post(EXPEDIENTE_ENVIAR_URL, () => HttpResponse.json(fixtureExpedienteDetalle)),
   http.post(EXPEDIENTE_OBSERVAR_URL, () =>

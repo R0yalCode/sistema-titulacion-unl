@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { describeTransportError } from './authErrors'
 import { AuthLayout } from './components/AuthLayout'
-import { ArrowLeftIcon, MailIcon } from './components/icons'
+import { ArrowLeftIcon, MailIcon } from '@/components/ui/icons'
 import styles from './components/authForm.module.css'
 import { EMAIL_MAX_LENGTH, validateEmail } from './validation'
 

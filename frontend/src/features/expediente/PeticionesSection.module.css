@@ -1,13 +1,12 @@
-.acciones {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  align-items: flex-start;
+.codigo {
+  font-family: var(--font-family-mono);
+  font-size: var(--text-xs);
+  word-break: break-all;
 }
 
 .subsanarNote {
-  margin: 0;
-  font-size: var(--font-size-label);
-  color: var(--color-text-secondary);
-  max-width: 16rem;
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--color-warning-text);
+  font-size: var(--text-xs);
 }

@@ -47,7 +47,7 @@ def cliente(user):
 def fixture_borrador(db):
     """Expediente en BORRADOR con sus 5 peticiones base."""
     user = crear_estudiante("t016_estudiante_a")
-    return user, crear_expediente.execute(user, CARRERA_1)
+    return user, crear_expediente.registrar_expediente(user, CARRERA_1)
 
 
 def marcar_requisitos_cargados(expediente, estados=None):
@@ -162,7 +162,7 @@ def test_numeros_providencia_correlativos(db):
     for idx in ("a", "b"):
         user = crear_estudiante(f"t016_prov_{idx}")
         carrera = CARRERA_1 if idx == "a" else CARRERA_2
-        expediente = crear_expediente.execute(user, carrera)
+        expediente = crear_expediente.registrar_expediente(user, carrera)
         marcar_requisitos_cargados(expediente)
         marcos.append((user, expediente))
 

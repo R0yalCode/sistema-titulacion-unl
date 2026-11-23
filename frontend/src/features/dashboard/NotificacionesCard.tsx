@@ -1,4 +1,5 @@
 import type { UseQueryResult } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import type { ListNotificacionesResponse } from '@/api/endpoints/notificaciones'
 import type { ApiRequestError } from '@/api/errors'
 import { Badge } from '@/components/ui/Badge'
@@ -15,9 +16,11 @@ type NotificacionesCardProps = {
   query: UseQueryResult<ListNotificacionesResponse, ApiRequestError>
   onMarkRead: (id: string) => void
   pendingId: string | null
+  /** Ruta del expediente relacionado según el portal del rol (si existe). */
+  expedienteHref?: (expedienteId: string) => string
 }
 
-export function NotificacionesCard({ query, onMarkRead, pendingId }: NotificacionesCardProps) {
+export function NotificacionesCard({ query, onMarkRead, pendingId, expedienteHref }: NotificacionesCardProps) {
   if (query.isError) {
     const presentation = presentApiError(query.error)
     if (presentation.kind === 'forbidden') {
@@ -44,15 +47,24 @@ export function NotificacionesCard({ query, onMarkRead, pendingId }: Notificacio
   return (
     <ul className={styles.list}>
       {results.map((notificacion) => (
-        <li className={styles.item} key={notificacion.id}>
+        <li className={notificacion.leida ? styles.item : `${styles.item} ${styles.unread}`} key={notificacion.id}>
           <div className={styles.itemHeader}>
-            <strong>{notificacion.titulo}</strong>
-            {!notificacion.leida && <Badge variant="info">No leída</Badge>}
+            <strong className={styles.titulo}>{notificacion.titulo}</strong>
+            {!notificacion.leida && (
+              <Badge icon variant="info">
+                No leída
+              </Badge>
+            )}
           </div>
           <p className={styles.message}>{notificacion.mensaje}</p>
           <div className={styles.itemFooter}>
             <span className={styles.meta}>
-              {notificacion.expediente_numero} · {formatFecha(notificacion.fecha_creacion)}
+              {expedienteHref ? (
+                <Link to={expedienteHref(notificacion.expediente)}>{notificacion.expediente_numero}</Link>
+              ) : (
+                notificacion.expediente_numero
+              )}{' '}
+              · <time dateTime={notificacion.fecha_creacion}>{formatFecha(notificacion.fecha_creacion)}</time>
             </span>
             {!notificacion.leida && (
               <Button

@@ -11,11 +11,21 @@ export type TimelineStep = {
 
 export type TimelineProps = {
   steps: TimelineStep[]
+  /** `horizontal` en escritorio; en ≤768 px siempre se apila en vertical. */
+  orientation?: 'vertical' | 'horizontal'
+  /** Nombre accesible de la lista de etapas. */
+  label?: string
 }
 
-export function Timeline({ steps }: TimelineProps) {
+const ESTADO_TEXTO: Record<TimelineStepStatus, string> = {
+  completed: 'completada',
+  current: 'etapa actual',
+  pending: 'pendiente',
+}
+
+export function Timeline({ steps, orientation = 'vertical', label }: TimelineProps) {
   return (
-    <ol className={styles.list}>
+    <ol aria-label={label} className={`${styles.list} ${orientation === 'horizontal' ? styles.horizontal : ''}`}>
       {steps.map((step) => (
         <li
           aria-current={step.status === 'current' ? 'step' : undefined}
@@ -24,7 +34,10 @@ export function Timeline({ steps }: TimelineProps) {
         >
           <span aria-hidden="true" className={[styles.marker, styles[step.status]].join(' ')} />
           <div>
-            <p className={styles.label}>{step.label}</p>
+            <p className={styles.label}>
+              {step.label}
+              <span className="sr-only">: {ESTADO_TEXTO[step.status]}</span>
+            </p>
             {step.date && <p className={styles.date}>{step.date}</p>}
           </div>
         </li>

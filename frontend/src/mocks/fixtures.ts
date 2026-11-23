@@ -53,6 +53,38 @@ export const fixtureBandejaExpediente = {
   fecha_limite_atencion: null,
 }
 
+/** Perfil académico de prueba (datos ficticios, fuente simulada). */
+export const fixturePerfilAcademico = {
+  estudiante: {
+    identificacion: '1104567890',
+    nombres: 'Estudiante',
+    apellidos: 'De Prueba',
+    correo_institucional: 'estudiante.prueba@unl.edu.ec',
+  },
+  carrera: {
+    id: fixtureBandejaExpediente.carrera_id,
+    codigo: 'MOCK-COMPUTACION',
+    nombre: 'Computación',
+    activa: true,
+  },
+  facultad: {
+    id: fixtureBandejaExpediente.facultad_id,
+    codigo: 'MOCK-FEIRNNR',
+    nombre: 'Facultad de prueba',
+    activa: true,
+  },
+  fuente: {
+    codigo: 'MOCK_SGA',
+    nombre: 'MockSGA (simulación del SGA, prototipo sin conexión institucional)',
+    es_simulada: true,
+  },
+  consultado_en: '2026-11-22T10:00:00Z',
+  estado_perfil: 'VALIDADO' as const,
+  perfil_validado: true,
+  puede_iniciar_tramite: true,
+  motivos_bloqueo: [] as Array<{ codigo: string; mensaje: string }>,
+}
+
 export const fixtureExpedienteBorrador = {
   id: '66666666-6666-6666-6666-666666666666',
   numero_expediente: 'EXP-2026-0002',
@@ -140,4 +172,66 @@ export const fixtureNotificacion = {
   mensaje: 'Revise el requisito observado en su expediente.',
   leida: false,
   fecha_creacion: '2026-11-02T09:00:00Z',
+}
+
+/**
+ * Solo pruebas (MSW): respuesta de `GET /expedientes/mi-tramite/` para un
+ * expediente en BORRADOR con dos requisitos sin documento. No es dato de
+ * producción ni se usa fuera de la suite.
+ */
+export const fixtureMiTramite = {
+  estudiante: {
+    nombre_completo: 'Estudiante de Prueba',
+    email: 'estudiante.prueba@unl.edu.ec',
+    cedula: '1104567890',
+  },
+  total_expedientes: 1,
+  expediente: {
+    id: fixtureExpedienteDetalle.id,
+    numero_expediente: fixtureExpedienteDetalle.numero_expediente,
+    estado: 'BORRADOR' as const,
+    activa: true,
+    fecha_creacion: '2026-10-20T08:00:00Z',
+    fecha_recepcion: null,
+    fecha_actualizacion: '2026-10-22T10:00:00Z',
+    fecha_limite_atencion: null,
+    numero_providencia: null,
+    etapas: [
+      { codigo: 'BORRADOR' as const, nombre: 'Solicitud registrada', situacion: 'actual' as const, fecha: '2026-10-20T08:00:00Z' },
+      { codigo: 'ENVIADA' as const, nombre: 'Solicitud enviada', situacion: 'pendiente' as const, fecha: null },
+      { codigo: 'EN_VERIFICACION' as const, nombre: 'Verificación de requisitos', situacion: 'pendiente' as const, fecha: null },
+      { codigo: 'INFORME_EMITIDO' as const, nombre: 'Informe emitido', situacion: 'pendiente' as const, fecha: null },
+      { codigo: 'DECLARADA_APTA' as const, nombre: 'Declaratoria de aptitud', situacion: 'pendiente' as const, fecha: null },
+    ],
+    progreso: { etapas_completadas: 0, etapas_totales: 5 },
+    peticiones: fixtureExpedienteBorrador.peticiones.map((peticion, index) => ({
+      id: peticion.id,
+      requisito_codigo: peticion.requisito_codigo,
+      requisito_nombre: peticion.requisito_nombre,
+      estado_peticion: index < 2 ? 'PENDIENTE' : 'CARGADO',
+      dependencia_emisora: peticion.dependencia_emisora,
+      fecha_actualizacion: '2026-10-22T10:00:00Z',
+    })),
+    requisitos_sin_documento: fixtureExpedienteBorrador.peticiones.slice(0, 2).map((peticion) => peticion.id),
+    puede_enviarse: false,
+    observaciones_pendientes: [],
+    movimientos: [
+      {
+        tipo: 'documento_cargado' as const,
+        fecha: '2026-10-22T10:00:00Z',
+        estado_anterior: null,
+        estado_nuevo: null,
+        requisito_nombre: fixtureExpedienteBorrador.peticiones[2]?.requisito_nombre ?? null,
+        version: 1,
+      },
+      {
+        tipo: 'creacion' as const,
+        fecha: '2026-10-20T08:00:00Z',
+        estado_anterior: null,
+        estado_nuevo: 'BORRADOR' as const,
+        requisito_nombre: null,
+        version: null,
+      },
+    ],
+  },
 }

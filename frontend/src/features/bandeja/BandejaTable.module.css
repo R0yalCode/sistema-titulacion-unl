@@ -1,9 +1,33 @@
-.enlace {
-  color: var(--color-brand-red);
-  font-weight: 600;
+.abrir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--control-height-md);
+  padding: 0 var(--space-4);
+  border: var(--border-control);
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.abrir:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
 }
 
 .id {
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--text-xs);
+}
+
+@media (pointer: coarse) {
+  .abrir {
+    min-height: var(--touch-target);
+  }
 }

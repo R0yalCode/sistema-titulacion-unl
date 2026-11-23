@@ -3,11 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'vitest-axe'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { AuthProvider } from '@/auth/AuthContext'
 import { getAccessToken } from '@/auth/storage'
 import { ToastProvider } from '@/components/feedback/ToastProvider'
 import { MemoryRouter } from 'react-router-dom'
+import { confirmarDialogo } from '@/test/confirmar'
 import { server } from '@/test/server'
 import { AppRouter } from '@/app/router'
 
@@ -57,7 +58,7 @@ describe('LoginPage (V-01, integración real)', () => {
 
     await fillAndSubmit('estudiante.demo', 'demo-valida')
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
     expect(getAccessToken()).not.toBeNull()
   })
 
@@ -166,7 +167,7 @@ describe('LoginPage (V-01, integración real)', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/problema al procesar/i)
 
     await fillAndSubmit('estudiante.demo', 'demo-valida')
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
     expect(attempts).toBe(2)
   })
 
@@ -200,22 +201,21 @@ describe('LoginPage (V-01, integración real)', () => {
     expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toHaveAttribute('aria-busy', 'true')
     await waitFor(() => expect(screen.getByRole('button', { name: 'Iniciar sesión' })).toBeDisabled())
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
   })
 
   it('CA-V01-05: el logout local borra el token y vuelve a /login', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
     const user = userEvent.setup()
     renderAppAt('/login')
 
     await fillAndSubmit('estudiante.demo', 'demo-valida')
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    await confirmarDialogo(user)
 
     expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
-    confirmSpy.mockRestore()
   })
 
   it('CA-V01-04: con sesión activa, visitar /login redirige al inicio por rol', async () => {
@@ -226,7 +226,7 @@ describe('LoginPage (V-01, integración real)', () => {
 
     renderAppAt('/login')
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard del estudiante (V-02)' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 

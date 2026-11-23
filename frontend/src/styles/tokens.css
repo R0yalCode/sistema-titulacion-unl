@@ -1,90 +1,203 @@
 /*
- * Tokens de diseño — SGT-SIAAF
- * Fuente: diseno-ui/ui/titulacion-v2/especificaciones/01_UI_DESIGN_SYSTEM.md
- * Breakpoints: specs/003-frontend-titulacion/plan.md §10.1
+ * Design System SGT-SIAAF — tokens globales (fuente única).
+ * Documentación: docs/frontend/DESIGN_SYSTEM.md
+ *
+ * Identidad institucional UNL: azul marino #13294b y dorado #c8a333 (login,
+ * landing y SAC), azul de interacción #004c7b. Todos los pares texto/fondo se
+ * verificaron contra WCAG 2.2 AA (ver la tabla de contraste del documento).
+ *
+ * Reglas:
+ *  - Los componentes usan tokens SEMÁNTICOS (--color-*), no primitivos.
+ *  - El dorado #c8a333 es acento solo sobre azul marino (6,04:1); sobre fondo
+ *    claro se usa --color-accent-text (#8a6a12, 5,06:1).
+ *  - Un estado nunca depende solo del color: siempre texto o icono.
+ *  - Los alias "heredados" del final mantienen compatibilidad; no usarlos en
+ *    código nuevo.
+ *
+ * Breakpoints (usar en @media; no admiten var()): 480 · 768 · 1024 · 1280 · 1440.
  */
 :root {
-  /* Paleta de marca */
-  --color-brand-red: #bf0811;
-  --color-brand-green: #4f8e3a;
-  --color-brand-blue: #004c7b;
+  /* --- Primitivos de marca -------------------------------------------- */
+  --navy-950: #0b1a33;
+  --navy-900: #0e1f3a;
+  --navy-800: #13294b;
+  --navy-700: #1d3a61;
+  --blue-800: #003a5e;
+  --blue-700: #004c7b;
+  --blue-100: #dbe9f4;
+  --blue-50: #eef5fa;
+  --blue-gray-300: #9fb3c8;
+  --gold-500: #c8a333;
+  --gold-600: #a8872a;
+  --gold-700: #8a6a12;
+  --gold-100: #f6efd8;
+  --red-unl: #bf0811;
 
-  /* Superficies y texto */
-  --color-bg-main: #f6f8fa;
-  --color-surface: #ffffff;
-  --color-text-primary: #1f2937;
-  --color-text-secondary: #6b7280;
-  --color-border: #e5e7eb;
+  /* --- Primitivos neutros ---------------------------------------------- */
+  --gray-900: #111827;
+  --gray-800: #1f2937;
+  --gray-700: #374151;
+  --gray-600: #4b5563;
+  --gray-500: #646d7c; /* AA ≥4,61:1 sobre todas las superficies (antes #6b7280: 4,42 sobre el fondo) */
+  --gray-400: #8a94a3;
+  --gray-300: #d1d5db;
+  --gray-200: #e5e7eb;
+  --gray-100: #eef1f4;
+  --gray-50: #f8fafc;
+  --white: #ffffff;
 
-  /* Estados (fondo / texto) */
-  --color-status-pending-bg: #fde68a;
-  --color-status-pending-text: #92400e;
-  --color-status-success-bg: #d1fae5;
-  --color-status-success-text: #065f46;
-  --color-status-info-bg: #dbeafe;
-  --color-status-info-text: #1e40af;
-  --color-status-error-bg: #fee2e2;
-  --color-status-error-text: #991b1b;
+  /* --- Semánticos: marca e interacción ---------------------------------- */
+  --color-brand: var(--navy-800);
+  --color-brand-strong: var(--navy-900);
+  --color-primary: var(--blue-700);
+  --color-primary-hover: var(--blue-800);
+  --color-primary-subtle: var(--blue-50);
+  --color-primary-muted: var(--blue-100);
+  --color-on-primary: var(--white);
+  --color-accent: var(--gold-500);
+  --color-accent-text: var(--gold-700);
+  --color-accent-subtle: var(--gold-100);
 
-  /* Alias semánticos usados por componentes de estado (Badge, Alert) */
-  --color-neutral-bg: var(--color-border);
-  --color-neutral-text: var(--color-text-secondary);
-  --color-warning-bg: var(--color-status-pending-bg);
-  --color-warning-text: var(--color-status-pending-text);
-  --color-success-bg: var(--color-status-success-bg);
-  --color-success-text: var(--color-status-success-text);
-  --color-info-bg: var(--color-status-info-bg);
-  --color-info-text: var(--color-status-info-text);
-  --color-danger-bg: var(--color-status-error-bg);
-  --color-danger-text: var(--color-status-error-text);
+  /* --- Semánticos: superficies y texto ---------------------------------- */
+  --color-bg-main: #f2f5f8;
+  --color-surface: var(--white);
+  --color-surface-muted: var(--gray-50);
+  --color-surface-sunken: var(--gray-100);
+  --color-text-primary: var(--gray-800);
+  --color-text-strong: var(--navy-800);
+  --color-text-secondary: var(--gray-500);
+  --color-text-muted: var(--gray-600);
+  --color-text-inverse: var(--white);
+  --color-divider: var(--gray-200);
+  --color-border-control: var(--gray-400);
+  --color-border-strong: var(--gray-300);
 
-  /* TODO (diseño): 01_UI_DESIGN_SYSTEM.md no define un color "neutral" de
-     estado explícito para badges; se usa --color-border/--color-text-secondary
-     como valor neutro hasta que el catálogo de componentes (03_UI_COMPONENT_CATALOG.md)
-     confirme el token definitivo. */
+  /* --- Semánticos: estados (fondo / texto / acento sólido) ---------------- */
+  --color-success-bg: #d1fae5;
+  --color-success-text: #065f46;
+  --color-success-solid: #15803d;
+  --color-success-bg-soft: #ecfdf5;
+  --color-warning-bg: #fde68a;
+  --color-warning-bg-soft: #fffbeb;
+  --color-warning-text: #92400e;
+  --color-warning-solid: #b45309;
+  --color-danger-bg: #fee2e2;
+  --color-danger-bg-soft: #fef2f2;
+  --color-danger-text: #991b1b;
+  --color-danger-solid: #b91c1c;
+  --color-info-bg: #dbeafe;
+  --color-info-text: #1e40af;
+  --color-info-solid: var(--blue-700);
+  --color-neutral-bg: var(--gray-200);
+  --color-neutral-text: var(--gray-600);
+  --color-neutral-solid: var(--gray-500);
 
-  /* Tipografía */
-  --font-family-base: 'Inter', 'Roboto', -apple-system, 'San Francisco', sans-serif;
-  --font-size-h1: 1.75rem;
-  --font-weight-h1: 700;
-  --font-size-h2: 1.5rem;
-  --font-weight-h2: 600;
-  --font-size-h3: 1.25rem;
-  --font-weight-h3: 600;
-  --font-size-body: 0.875rem;
-  --font-weight-body: 400;
-  --font-size-label: 0.75rem;
-  --font-weight-label: 500;
-  --font-size-button: 0.875rem;
-  --font-weight-button: 600;
+  /* --- Tipografía ------------------------------------------------------- */
+  --font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-md: 1rem; /* 16 */
+  --text-lg: 1.25rem; /* 20 */
+  --text-xl: 1.5rem; /* 24 */
+  --text-2xl: 1.875rem; /* 30 */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+  --letter-spacing-caps: 0.04em;
 
-  /* Espaciado (escala 4px) */
+  /* --- Espaciado (escala de 4 px) -------------------------------------- */
+  --space-0: 0;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
+  --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
   --space-12: 48px;
+  --space-16: 64px;
 
-  /* Radios de borde */
+  /* --- Radios ----------------------------------------------------------- */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
 
-  /* Sombras */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  /* --- Sombras y elevación ---------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.14), 0 4px 8px rgba(15, 23, 42, 0.06);
+  --elevation-card: var(--shadow-xs);
+  --elevation-raised: var(--shadow-md);
+  --elevation-overlay: var(--shadow-lg);
 
-  /* Layout global */
-  --layout-sidebar-width: 260px;
-  --layout-sidebar-bg: #0b3b24;
-  --layout-sidebar-text: #ffffff;
+  /* --- Bordes ----------------------------------------------------------- */
+  --border-width: 1px;
+  --border-divider: var(--border-width) solid var(--color-divider);
+  --border-control: var(--border-width) solid var(--color-border-control);
+
+  /* --- Interacción ------------------------------------------------------ */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --focus-ring-color: var(--color-primary);
+  --focus-ring: 0 0 0 3px rgba(0, 76, 123, 0.28);
+  --focus-ring-on-dark: var(--gold-500);
+  --opacity-disabled: 0.55;
+
+  /* --- Controles -------------------------------------------------------- */
+  --control-height-sm: 32px;
+  --control-height-md: 40px;
+  --control-height-lg: 48px;
+  --touch-target: 44px;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --layout-sidebar-width: 264px;
+  --layout-sidebar-collapsed: 76px;
   --layout-header-height: 64px;
+  --layout-content-max: 1360px;
   --layout-main-padding: var(--space-6);
+  --z-sticky: 10;
+  --z-drawer: 30;
+  --z-modal: 40;
+  --z-toast: 50;
 
-  /* Breakpoints (referencia; usar en @media, no como var() dentro de @media) */
+  /* --- Alias heredados (compatibilidad; no usar en código nuevo) --------- */
+  --color-brand-red: var(--red-unl);
+  --color-brand-green: #4f8e3a;
+  --color-brand-blue: var(--color-primary);
+  --color-border: var(--color-divider);
+  --color-status-pending-bg: var(--color-warning-bg);
+  --color-status-pending-text: var(--color-warning-text);
+  --color-status-success-bg: var(--color-success-bg);
+  --color-status-success-text: var(--color-success-text);
+  --color-status-info-bg: var(--color-info-bg);
+  --color-status-info-text: var(--color-info-text);
+  --color-status-error-bg: var(--color-danger-bg);
+  --color-status-error-text: var(--color-danger-text);
+  --font-size-h1: var(--text-2xl);
+  --font-weight-h1: var(--font-weight-bold);
+  --font-size-h2: var(--text-lg);
+  --font-weight-h2: var(--font-weight-semibold);
+  --font-size-h3: var(--text-md);
+  --font-weight-h3: var(--font-weight-semibold);
+  --font-size-body: var(--text-sm);
+  --font-weight-body: var(--font-weight-regular);
+  --font-size-label: var(--text-xs);
+  --font-weight-label: var(--font-weight-medium);
+  --font-size-button: var(--text-sm);
+  --font-weight-button: var(--font-weight-semibold);
+  --layout-sidebar-bg: var(--color-brand);
+  --layout-sidebar-text: var(--color-text-inverse);
   --breakpoint-xs: 320px;
   --breakpoint-sm: 480px;
   --breakpoint-md: 768px;

@@ -50,3 +50,11 @@ Dieciocho contradicciones entre los documentos DP2 y el código (C-01…C-18), c
 - C-13: D01/D08 dan por existente `POST /auth/token/refresh/`; no está enrutado.
 - C-14: "497 pruebas pasando"; en un entorno limpio fallan 13 (`pypdf`).
 No se resolvieron inventando: quedan como DP-xx en `REGISTRO_DECISIONES_TECNICAS.md`.
+
+## Contradicciones registradas el 2026-11-22 (V-03 y perfil académico MockSGA)
+
+- C-V03-01: HU-001 (spec 001, «seleccionando mi carrera») y la RF de creación (entrada `carrera_id`) frente a la implementación del 2026-11-22: la carrera ya no la envía el estudiante, la determina el backend desde el perfil académico (`POST /api/v1/expedientes/` con cuerpo vacío; `carrera_id` → 400 `campo_no_permitido`). **La spec 001 no se modificó** (intocable según `CLAUDE.md`); requiere decisión del responsable para actualizar HU-001.
+- C-V03-02: la spec 001 §7.1 describe `ExpedienteTitulacion.carrera_id` como «FK Carrera»; en el código sigue siendo un `UUIDField` sin clave foránea. Ahora existe el modelo `Carrera` (`apps/academico`), pero no se migró el campo para no afectar a otros módulos.
+- C-V03-03: la auditoría de V-03 del mismo día afirmó que la creación del expediente no se auditaba; es **incorrecto**: la señal `expediente_post_save` (`apps/notificaciones/adapters/signals.py`) ya registraba `EXPEDIENTE_CREADO`. Ahora incluye carrera, facultad y fuente del perfil.
+- C-V03-04: `CLAUDE.md` enlaza `specs/003-frontend-titulacion/…` en la raíz; la carpeta real es `sgt-siaaf/specs/`.
+- Evidencia: `docs/academico/perfil-academico-mock-sga.md`, `docs/adr/0010-perfil-academico-puerto-y-mocksga.md`.

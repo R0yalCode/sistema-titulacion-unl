@@ -1,0 +1,31 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bone {
+  display: block;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--gray-100) 0%, var(--gray-50) 50%, var(--gray-100) 100%);
+  background-size: 200% 100%;
+  animation: sgt-shimmer 1.4s ease-in-out infinite;
+}
+
+.block {
+  height: 64px;
+}
+
+.text {
+  width: 100%;
+  height: 14px;
+}
+
+.text:last-child {
+  width: 60%;
+}
+
+.card {
+  height: 140px;
+  border-radius: var(--radius-lg);
+}

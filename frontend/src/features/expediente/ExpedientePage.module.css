@@ -4,8 +4,11 @@
   gap: var(--space-6);
 }
 
-.actions {
-  display: flex;
-  gap: var(--space-3);
-  flex-wrap: wrap;
+.error {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--color-danger-solid);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-bg-soft);
+  color: var(--color-danger-text);
 }

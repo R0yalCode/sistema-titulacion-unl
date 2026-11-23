@@ -67,7 +67,7 @@ def test_expediente_bloqueado_no_se_toca_y_se_elimina_al_liberarse():
     UserRole.objects.create(
         user=estudiante, role=Role.objects.get_or_create(name="ESTUDIANTE")[0]
     )
-    expediente = crear_expediente.execute(estudiante, CARRERA)
+    expediente = crear_expediente.registrar_expediente(estudiante, CARRERA)
     peticion = PeticionDocumental.objects.filter(expediente=expediente).first()
     cargar_documento.execute(
         usuario=estudiante,

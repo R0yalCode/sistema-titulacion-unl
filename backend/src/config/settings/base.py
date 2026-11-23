@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "apps.verificacion.adapters",
     "apps.resoluciones.adapters",
     "apps.notificaciones.adapters",
+    "apps.academico.adapters",
 ]
 
 MIDDLEWARE = [
@@ -165,6 +166,18 @@ SIMPLE_JWT = {
 # Proveedor de identidad activo. Solo existe "local"; "cas" queda documentado
 # en docs/autenticacion/arquitectura-cas.md y no está implementado.
 AUTH_IDENTITY_PROVIDER = env("AUTH_IDENTITY_PROVIDER", default="local")
+
+# Fuente académica (perfil del estudiante: carrera y facultad). Ver
+# docs/academico/perfil-academico-mock-sga.md. "mock_sga" es una SIMULACIÓN
+# de prototipo (no hay conexión con el SGA de la UNL) y solo se activa si
+# ACADEMIC_PROFILE_MOCK_ALLOWED es verdadero; por defecto, solo con DEBUG.
+# Sin fuente, el perfil y la creación de expedientes responden 503.
+ACADEMIC_PROFILE_PROVIDER = env(
+    "ACADEMIC_PROFILE_PROVIDER", default="mock_sga" if DEBUG else ""
+)
+ACADEMIC_PROFILE_MOCK_ALLOWED = env.bool(
+    "ACADEMIC_PROFILE_MOCK_ALLOWED", default=DEBUG
+)
 # Único dominio admitido para iniciar sesión y para el restablecimiento del
 # 2FA. El correo se normaliza (espacios y mayúsculas) antes de validarlo.
 INSTITUTIONAL_EMAIL_DOMAIN = env("INSTITUTIONAL_EMAIL_DOMAIN", default="unl.edu.ec")

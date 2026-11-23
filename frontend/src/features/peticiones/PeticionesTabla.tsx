@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import type { EstadoExpediente, PeticionInicializada } from '@/api/endpoints/expedientes'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { Table, type TableColumn } from '@/components/ui/Table'
+import { DataList } from '@/components/ui/DataList'
+import { ChevronRightIcon } from '@/components/ui/icons'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { DescargaButton, puedeDescargar } from '@/features/expediente'
+import { nombreRol } from '@/lib/estados'
 import {
-  presentarEstadoPeticion,
   puedeCargarDocumento,
   puedeSolicitarEmision,
   tieneDocumento,
@@ -22,7 +23,10 @@ type PeticionesTablaProps = {
   onCargar: (peticion: PeticionInicializada) => void
 }
 
-/** FE-T501: lista de peticiones con estado, dependencia, acciones por rol/estado y enlace a V-06. */
+/**
+ * FE-T501: lista adaptable de peticiones (filas en escritorio, tarjetas en
+ * móvil) con estado, dependencia, acciones por rol/estado y enlace a V-06.
+ */
 export function PeticionesTabla({
   expedienteId,
   numeroExpediente,
@@ -34,29 +38,19 @@ export function PeticionesTabla({
 }: PeticionesTablaProps) {
   const descargaPermitida = puedeDescargar(roles)
 
-  const columns: Array<TableColumn<PeticionInicializada>> = [
-    { key: 'numero', header: '#', render: (row) => peticiones.indexOf(row) + 1 },
-    { key: 'requisito_nombre', header: 'Requisito', render: (row) => row.requisito_nombre },
-    {
-      key: 'estado_peticion',
-      header: 'Estado',
-      render: (row) => {
-        const { label, variant } = presentarEstadoPeticion(row.estado_peticion)
-        return <Badge variant={variant}>{label}</Badge>
-      },
-    },
-    { key: 'dependencia_emisora', header: 'Dependencia emisora', render: (row) => row.dependencia_emisora },
-    {
-      key: 'acciones',
-      header: 'Acciones',
-      render: (row) => (
-        <div className={styles.acciones}>
+  return (
+    <DataList
+      emptyDescription="Este expediente no tiene peticiones registradas."
+      emptyTitle="Sin peticiones"
+      fields={[{ key: 'dependencia', label: 'Dependencia emisora', render: (row) => nombreRol(row.dependencia_emisora) }]}
+      getKey={(row) => row.id}
+      getTone={(row) => (row.estado_peticion === 'OBSERVADO' ? 'warning' : undefined)}
+      items={peticiones}
+      label="Peticiones documentales del expediente"
+      renderActions={(row) => (
+        <>
           {puedeSolicitarEmision(roles, estadoExpediente, row.estado_peticion) && (
-            <Button
-              aria-label={`Solicitar emisión: ${row.requisito_nombre}`}
-              size="sm"
-              onClick={() => onSolicitar(row)}
-            >
+            <Button aria-label={`Solicitar emisión: ${row.requisito_nombre}`} size="sm" onClick={() => onSolicitar(row)}>
               Solicitar emisión
             </Button>
           )}
@@ -71,10 +65,7 @@ export function PeticionesTabla({
             </Button>
           )}
           {descargaPermitida && tieneDocumento(row.estado_peticion) && (
-            <DescargaButton
-              fallbackFilename={`${numeroExpediente}-${row.requisito_codigo}.pdf`}
-              peticionId={row.id}
-            />
+            <DescargaButton fallbackFilename={`${numeroExpediente}-${row.requisito_codigo}.pdf`} peticionId={row.id} />
           )}
           <Link
             aria-label={`Ver seguimiento: ${row.requisito_nombre}`}
@@ -82,20 +73,13 @@ export function PeticionesTabla({
             to={`/expedientes/${expedienteId}/peticiones/${row.id}`}
           >
             Ver seguimiento
+            <ChevronRightIcon size={16} />
           </Link>
-        </div>
-      ),
-    },
-  ]
-
-  return (
-    <Table
-      caption="Peticiones documentales del expediente"
-      columns={columns}
-      emptyDescription="Este expediente no tiene peticiones registradas."
-      emptyTitle="Sin peticiones"
-      rowKey={(row) => row.id}
-      rows={peticiones}
+        </>
+      )}
+      renderStatus={(row) => <StatusBadge dominio="peticion" valor={row.estado_peticion} />}
+      renderSubtitle={(row) => `Requisito ${peticiones.indexOf(row) + 1} de ${peticiones.length}`}
+      renderTitle={(row) => row.requisito_nombre}
     />
   )
 }

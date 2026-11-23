@@ -19,9 +19,11 @@ from apps.authentication.adapters.views import (
     PasswordResetRequestView,
     PasswordResetValidateView,
 )
+from apps.academico.adapters.views import PerfilAcademicoView
 from apps.expedientes.adapters.views import (
     BandejaExpedienteViewSet,
     ExpedienteViewSet,
+    MiTramiteView,
 )
 from apps.peticiones.adapters.views import PeticionViewSet
 from apps.verificacion.adapters.views import (
@@ -94,6 +96,16 @@ urlpatterns = [
         "api/v1/expedientes/bandeja/",
         BandejaExpedienteViewSet.as_view({"get": "list"}),
         name="expedientes-bandeja",
+    ),
+    path(
+        "api/v1/perfil-academico/",
+        PerfilAcademicoView.as_view(),
+        name="perfil-academico",
+    ),
+    path(
+        "api/v1/expedientes/mi-tramite/",
+        MiTramiteView.as_view(),
+        name="expedientes-mi-tramite",
     ),
     path(
         "api/v1/expedientes/<uuid:pk>/",

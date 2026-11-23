@@ -1,6 +1,7 @@
 import { lazy, Suspense, useContext, useLayoutEffect } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { StudentLayout } from '@/components/layout/StudentLayout'
 import { AuthContext } from '@/auth/AuthContext'
 import { RedirectIfAuthenticated, RequireAuth, RequireRole } from '@/auth/guards'
 import { getHomeRouteForRoles } from '@/auth/redirect'
@@ -16,6 +17,9 @@ const ResetPasswordPage = lazy(() => import('@/features/auth/ResetPasswordPage')
 const MfaResetRequestPage = lazy(() => import('@/features/auth/MfaResetRequestPage'))
 const MfaResetConfirmPage = lazy(() => import('@/features/auth/MfaResetConfirmPage'))
 const StudentDashboardPage = lazy(() => import('@/features/dashboard/StudentDashboardPage'))
+const NotificacionesPage = lazy(() => import('@/features/dashboard/NotificacionesPage'))
+const PerfilEstudiantePage = lazy(() => import('@/features/dashboard/PerfilPage'))
+const PerfilFuncionarioPage = lazy(() => import('@/features/cuenta/PerfilFuncionarioPage'))
 const NuevaSolicitudPage = lazy(() => import('@/features/solicitud/NuevaSolicitudPage'))
 const ExpedientePage = lazy(() => import('@/features/expediente/ExpedientePage'))
 const PeticionesPage = lazy(() => import('@/features/peticiones/PeticionesPage'))
@@ -53,6 +57,18 @@ function LoginRoute() {
       <LoginPage />
     </RedirectIfAuthenticated>
   )
+}
+
+/**
+ * Las rutas del expediente son compartidas entre roles: el estudiante (sin
+ * roles operativos) las ve dentro de su portal; los demás roles conservan el
+ * AppLayout sin cambios. La autorización real sigue en el backend.
+ */
+function ExpedienteLayout() {
+  const auth = useContext(AuthContext)
+  const roles = auth?.user?.roles ?? []
+  const soloEstudiante = roles.includes('ESTUDIANTE') && !roles.some((rol) => OPERATIONAL_ROLES.includes(rol))
+  return soloEstudiante ? <StudentLayout /> : <AppLayout />
 }
 
 function AuthExpiryBootstrap() {
@@ -94,20 +110,31 @@ export function AppRouter() {
           <Route element={<MfaResetRequestPage />} path="/restablecer-2fa" />
           <Route element={<MfaResetConfirmPage />} path="/restablecer-2fa/confirmar" />
           <Route element={<RequireAuth />}>
-            <Route element={<AppLayout />}>
-              <Route element={<RequireRole roles={['ESTUDIANTE']} />}>
+            <Route element={<RequireRole roles={['ESTUDIANTE']} />}>
+              <Route element={<StudentLayout />}>
                 <Route element={<StudentDashboardPage />} path="/estudiante" />
                 <Route element={<NuevaSolicitudPage />} path="/estudiante/solicitud/nueva" />
+                <Route element={<NotificacionesPage />} path="/estudiante/notificaciones" />
+                <Route element={<PerfilEstudiantePage />} path="/estudiante/perfil" />
               </Route>
+            </Route>
+            <Route element={<ExpedienteLayout />}>
               <Route element={<ExpedientePage />} path="/expedientes/:id" />
               <Route element={<PeticionesPage />} path="/expedientes/:id/peticiones" />
               <Route
                 element={<SeguimientoPeticionPage />}
                 path="/expedientes/:id/peticiones/:peticionId"
               />
+            </Route>
+            <Route element={<AppLayout />}>
               <Route element={<RequireRole roles={OPERATIONAL_ROLES} />}>
                 <Route element={<BandejaPage />} path="/bandeja" />
                 <Route element={<DetalleFuncionarioPage />} path="/bandeja/:id" />
+                <Route
+                  element={<NotificacionesPage expedienteHref={(id) => `/bandeja/${id}`} />}
+                  path="/notificaciones"
+                />
+                <Route element={<PerfilFuncionarioPage />} path="/perfil" />
               </Route>
               <Route element={<NoHabilitadoPage />} path="/no-habilitado" />
             </Route>

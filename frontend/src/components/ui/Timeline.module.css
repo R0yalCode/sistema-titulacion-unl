@@ -1,48 +1,100 @@
 .list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .item {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
 }
 
 .marker {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-top: 4px;
+  width: 14px;
+  height: 14px;
+  margin-top: 3px;
   flex-shrink: 0;
-  background: var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-sunken);
 }
 
 .completed {
-  background: var(--color-success-text);
+  background: var(--color-success-solid);
 }
 
 .current {
-  background: var(--color-brand-red);
-  box-shadow: 0 0 0 3px var(--color-danger-bg);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-muted);
 }
 
 .pending {
-  background: var(--color-border);
+  border: 2px solid var(--color-border-control);
+  background: var(--color-surface);
 }
 
 .label {
   margin: 0;
   color: var(--color-text-primary);
-  font-weight: var(--font-weight-label);
+  font-weight: var(--font-weight-medium);
 }
 
 .date {
   margin: 0;
   color: var(--color-text-secondary);
-  font-size: var(--font-size-label);
+  font-size: var(--text-xs);
+}
+
+/* Horizontal: etapas en fila con conector; el texto bajo cada marcador. */
+.horizontal {
+  flex-direction: row;
+  gap: 0;
+}
+
+.horizontal .item {
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+  padding-right: var(--space-3);
+}
+
+.horizontal .item:not(:last-child)::after {
+  position: absolute;
+  top: 9px;
+  right: 0;
+  left: 22px;
+  height: 2px;
+  background: var(--color-divider);
+  content: '';
+}
+
+.horizontal .item:has(.completed):not(:last-child)::after {
+  background: var(--color-success-solid);
+}
+
+.horizontal .marker {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .horizontal {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .horizontal .item {
+    flex-direction: row;
+    padding-right: 0;
+  }
+
+  .horizontal .item:not(:last-child)::after {
+    display: none;
+  }
 }

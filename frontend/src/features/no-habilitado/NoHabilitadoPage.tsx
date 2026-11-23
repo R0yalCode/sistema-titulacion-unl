@@ -51,6 +51,7 @@ export default function NoHabilitadoPage() {
 
   return (
     <div className={styles.page}>
+      <h1 className="sr-only">Acceso al sistema</h1>
       {motivo.tipo === 'forbidden' && <img alt="" className={styles.mascot} src="/assets/mascotas/mascota-403.png" />}
       {motivo.tipo === 'forbidden' ? (
         <ForbiddenState action={acciones} description={motivo.descripcion} title={motivo.titulo} />

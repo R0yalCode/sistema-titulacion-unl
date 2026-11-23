@@ -1,6 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from './Button'
+import { CloseIcon } from './icons'
 import styles from './Modal.module.css'
 
 export type ModalProps = {
@@ -8,15 +9,33 @@ export type ModalProps = {
   title: string
   onClose: () => void
   children: ReactNode
+  /** Texto de apoyo bajo el título; se asocia con `aria-describedby`. */
+  description?: string
+  /** Ancho máximo: `sm` para confirmaciones, `md` (por defecto) para formularios. */
+  size?: 'sm' | 'md' | 'lg'
+  /** Rol ARIA: `alertdialog` para confirmaciones que requieren respuesta. */
+  role?: 'dialog' | 'alertdialog'
+  /** Oculta el botón de cierre (p. ej. mientras se procesa una operación). */
+  hideCloseButton?: boolean
 }
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-export function Modal({ open, title, onClose, children }: ModalProps) {
+export function Modal({
+  open,
+  title,
+  onClose,
+  children,
+  description,
+  size = 'md',
+  role = 'dialog',
+  hideCloseButton = false,
+}: ModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const onCloseRef = useRef(onClose)
   const titleId = useId()
+  const descriptionId = useId()
 
   // La función de cierre más reciente, sin reiniciar el ciclo de apertura: los
   // consumidores suelen pasar `onClose` en línea y su identidad cambia en cada
@@ -94,20 +113,30 @@ export function Modal({ open, title, onClose, children }: ModalProps) {
   return createPortal(
     <div className={styles.overlay}>
       <div
+        aria-describedby={description ? descriptionId : undefined}
         aria-labelledby={titleId}
         aria-modal="true"
-        className={styles.dialog}
+        className={`${styles.dialog} ${styles[size]}`}
         ref={dialogRef}
-        role="dialog"
+        role={role}
         tabIndex={-1}
       >
         <div className={styles.header}>
-          <h2 className={styles.title} id={titleId}>
-            {title}
-          </h2>
-          <Button aria-label="Cerrar" onClick={onClose} size="sm" variant="ghost">
-            ✕
-          </Button>
+          <div className={styles.heading}>
+            <h2 className={styles.title} id={titleId}>
+              {title}
+            </h2>
+            {description && (
+              <p className={styles.description} id={descriptionId}>
+                {description}
+              </p>
+            )}
+          </div>
+          {!hideCloseButton && (
+            <Button aria-label="Cerrar" className={styles.close} onClick={onClose} size="sm" variant="ghost">
+              <CloseIcon size={18} />
+            </Button>
+          )}
         </div>
         {children}
       </div>

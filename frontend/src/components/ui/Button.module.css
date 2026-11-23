@@ -1,67 +1,97 @@
+/*
+ * Jerarquía: primary (azul de interacción, una acción principal por zona),
+ * secondary (borde), ghost (terciaria/textual), danger (destructiva, rojo
+ * sólido con texto blanco 6,47:1). El rojo ya no se usa como acción principal.
+ */
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  min-height: var(--control-height-md);
+  border: var(--border-width) solid transparent;
   border-radius: var(--radius-md);
   font-family: inherit;
-  font-size: var(--font-size-button);
-  font-weight: var(--font-weight-button);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: filter 0.15s ease, background-color 0.15s ease;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: var(--opacity-disabled);
 }
 
-.button:focus-visible {
-  outline: 2px solid var(--color-brand-blue);
-  outline-offset: 2px;
+.button[aria-busy='true'] {
+  cursor: progress;
 }
 
 .primary {
-  background: var(--color-brand-red);
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-xs);
 }
 
 .primary:hover:not(:disabled) {
-  filter: brightness(0.92);
+  background: var(--color-primary-hover);
 }
 
 .secondary {
+  border-color: var(--color-border-control);
   background: var(--color-surface);
-  color: var(--color-text-primary);
-  border-color: var(--color-border);
+  color: var(--color-text-strong);
 }
 
 .secondary:hover:not(:disabled) {
-  background: var(--color-bg-main);
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-hover);
 }
 
 .ghost {
   background: transparent;
-  color: var(--color-brand-red);
+  color: var(--color-primary);
 }
 
 .ghost:hover:not(:disabled) {
-  background: var(--color-bg-main);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-hover);
 }
 
 .danger {
-  background: var(--color-danger-bg);
-  color: var(--color-danger-text);
+  background: var(--color-danger-solid);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-xs);
 }
 
 .danger:hover:not(:disabled) {
-  filter: brightness(0.95);
+  background: var(--color-danger-text);
 }
 
 .sm {
+  min-height: var(--control-height-sm);
   padding: var(--space-1) var(--space-3);
-  font-size: var(--font-size-label);
+  font-size: var(--text-xs);
 }
 
 .md {
@@ -69,8 +99,9 @@
 }
 
 .lg {
+  min-height: var(--control-height-lg);
   padding: var(--space-3) var(--space-6);
-  font-size: 1rem;
+  font-size: var(--text-md);
 }
 
 .spinner {
@@ -82,9 +113,10 @@
   animation: spin 0.6s linear infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .spinner {
-    animation: none;
+/* En táctil, ninguna acción por debajo de 44 px de alto. */
+@media (pointer: coarse) {
+  .button {
+    min-height: var(--touch-target);
   }
 }
 

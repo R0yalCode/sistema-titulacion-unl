@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import type { BandejaOperativaItem } from '@/api/endpoints/expedientes'
 import { Badge } from '@/components/ui/Badge'
-import { Table, type TableColumn } from '@/components/ui/Table'
+import { DataList } from '@/components/ui/DataList'
+import { ChevronRightIcon } from '@/components/ui/icons'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatFecha } from '@/lib/dates'
 import { abreviarId, calcularVencimiento } from './bandejaReglas'
 import styles from './BandejaTable.module.css'
@@ -19,70 +21,83 @@ function Plazo({ fechaLimite, ahora }: { fechaLimite: string | null; ahora: Date
       return <span>Sin fecha límite</span>
     case 'vencido':
       return (
-        <Badge variant="danger">
-          {vencimiento.dias === 0 ? 'Vencido hoy' : `Vencido hace ${vencimiento.dias} días calendario`}
+        <Badge icon variant="danger">
+          {vencimiento.dias === 0
+            ? 'Vencido hoy'
+            : `Vencido hace ${vencimiento.dias} ${vencimiento.dias === 1 ? 'día' : 'días'} calendario`}
         </Badge>
       )
     case 'hoy':
-      return <Badge variant="warning">Vence hoy</Badge>
+      return (
+        <Badge icon variant="warning">
+          Vence hoy
+        </Badge>
+      )
     case 'pendiente':
-      return <span>{`Faltan ${vencimiento.dias} días calendario`}</span>
+      return (
+        <span>
+          {vencimiento.dias === 1 ? 'Falta 1 día calendario' : `Faltan ${vencimiento.dias} días calendario`}
+        </span>
+      )
   }
 }
 
 /**
- * FE-T702/FE-T705: columnas reales de `BandejaExpedienteSerializer`. `Table`
- * dibuja la tabla en escritorio y tarjetas en móvil. Sin acciones de
+ * FE-T702/FE-T705: datos reales de `BandejaExpedienteSerializer` en una lista
+ * adaptable (filas en escritorio, tarjetas en móvil). Sin acciones de
  * escritura: solo navegación a V-08 (`/bandeja/:id`), con precarga del
  * detalle al enfocar o pasar el puntero sobre el enlace.
  */
 export function BandejaTable({ filas, ahora, onPrecargar }: BandejaTableProps) {
-  const columns: Array<TableColumn<BandejaOperativaItem>> = [
-    {
-      key: 'numero_expediente',
-      header: 'Expediente',
-      render: (row) => (
+  return (
+    <DataList
+      emptyDescription="Ningún expediente de esta página coincide con los filtros."
+      emptyTitle="Sin coincidencias en esta página"
+      fields={[
+        { key: 'limite', label: 'Fecha límite', render: (row) => formatFecha(row.fecha_limite_atencion) },
+        { key: 'plazo', label: 'Plazo', render: (row) => <Plazo ahora={ahora} fechaLimite={row.fecha_limite_atencion} /> },
+        { key: 'recepcion', label: 'Recepción', render: (row) => formatFecha(row.fecha_recepcion), secondary: true },
+        {
+          key: 'estudiante',
+          label: 'Estudiante (id)',
+          render: (row) => <code className={styles.id}>{abreviarId(row.estudiante_id)}</code>,
+          secondary: true,
+        },
+        {
+          key: 'carrera',
+          label: 'Carrera / facultad (id)',
+          render: (row) => (
+            <code className={styles.id}>
+              {abreviarId(row.carrera_id)} / {abreviarId(row.facultad_id)}
+            </code>
+          ),
+          secondary: true,
+        },
+      ]}
+      getKey={(row) => row.id}
+      getTone={(row) => {
+        const tipo = calcularVencimiento(row.fecha_limite_atencion, ahora).tipo
+        return tipo === 'vencido' ? 'danger' : tipo === 'hoy' ? 'warning' : undefined
+      }}
+      items={filas}
+      label="Expedientes de la bandeja"
+      renderActions={(row) => (
         <Link
           aria-label={`Abrir expediente ${row.numero_expediente}`}
-          className={styles.enlace}
+          className={styles.abrir}
           to={`/bandeja/${row.id}`}
           onFocus={() => onPrecargar(row.id)}
           onMouseEnter={() => onPrecargar(row.id)}
         >
-          {row.numero_expediente}
+          Abrir
+          <ChevronRightIcon size={16} />
         </Link>
-      ),
-    },
-    { key: 'estado', header: 'Estado', render: (row) => <Badge variant="info">{row.estado}</Badge> },
-    { key: 'fecha_limite_atencion', header: 'Fecha límite', render: (row) => formatFecha(row.fecha_limite_atencion) },
-    { key: 'plazo', header: 'Plazo', render: (row) => <Plazo ahora={ahora} fechaLimite={row.fecha_limite_atencion} /> },
-    { key: 'fecha_recepcion', header: 'Recepción', render: (row) => formatFecha(row.fecha_recepcion) },
-    { key: 'numero_providencia', header: 'Providencia', render: (row) => row.numero_providencia ?? '—' },
-    {
-      key: 'estudiante_id',
-      header: 'Estudiante (id)',
-      render: (row) => <code className={styles.id}>{abreviarId(row.estudiante_id)}</code>,
-    },
-    {
-      key: 'carrera_facultad',
-      header: 'Carrera / facultad (id)',
-      render: (row) => (
-        <code className={styles.id}>
-          {abreviarId(row.carrera_id)} / {abreviarId(row.facultad_id)}
-        </code>
-      ),
-    },
-    { key: 'fecha_creacion', header: 'Creado', render: (row) => formatFecha(row.fecha_creacion) },
-  ]
-
-  return (
-    <Table
-      caption="Expedientes de la bandeja"
-      columns={columns}
-      emptyDescription="Ningún expediente de esta página coincide con los filtros."
-      emptyTitle="Sin coincidencias en esta página"
-      rowKey={(row) => row.id}
-      rows={filas}
+      )}
+      renderStatus={(row) => <StatusBadge dominio="expediente" valor={row.estado} />}
+      renderSubtitle={(row) =>
+        `${row.numero_providencia ?? 'Sin providencia'} · creado ${formatFecha(row.fecha_creacion)}`
+      }
+      renderTitle={(row) => row.numero_expediente}
     />
   )
 }

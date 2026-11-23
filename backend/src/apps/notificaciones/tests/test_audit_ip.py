@@ -4,6 +4,7 @@ import pytest
 from django.test import override_settings
 from rest_framework.test import APIClient
 
+from apps.academico.tests.factories import crear_carrera, crear_perfil_mock
 from apps.authentication.adapters.models import Role, User, UserRole
 from apps.expedientes.services import crear_expediente
 from apps.notificaciones.adapters.models import EventoAuditoria
@@ -25,6 +26,8 @@ def estudiante():
         carrera_id=CARRERA_1,
     )
     UserRole.objects.create(user=user, role=role)
+    # V-03: la creación exige un perfil académico validado (MockSGA en pruebas).
+    crear_perfil_mock(user, crear_carrera("SEC-T005", id=CARRERA_1))
     return user
 
 
@@ -43,7 +46,7 @@ def test_audit_ip_captured_from_xff_with_trusted_proxy(estudiante):
 
     respuesta = client.post(
         URL_EXPEDIENTES,
-        {"carrera_id": CARRERA_1},
+        {},
         format="json",
         HTTP_X_FORWARDED_FOR="203.0.113.195, 198.51.100.1",
     )
@@ -61,7 +64,7 @@ def test_audit_ip_spoofing_blocked_untrusted_proxy(estudiante):
 
     respuesta = client.post(
         URL_EXPEDIENTES,
-        {"carrera_id": CARRERA_1},
+        {},
         format="json",
         HTTP_X_FORWARDED_FOR="203.0.113.195",
     )
@@ -81,7 +84,7 @@ def test_audit_ip_persisted_in_eventoauditoria(estudiante):
 
     client.post(
         URL_EXPEDIENTES,
-        {"carrera_id": CARRERA_1},
+        {},
         format="json",
         HTTP_X_FORWARDED_FOR="203.0.113.195",
     )
@@ -95,7 +98,7 @@ def test_audit_ip_none_when_no_request(estudiante):
     """Fuera de un ciclo de request (p. ej. un management command o, como
     aquí, invocar el servicio directamente sin pasar por la vista), no hay
     request en el thread-local → ip queda en None, no una excepción."""
-    crear_expediente.execute(estudiante=estudiante, carrera_id=CARRERA_1)
+    crear_expediente.registrar_expediente(estudiante, CARRERA_1)
 
     evento = _ultimo_evento_creacion()
     assert evento.ip is None

@@ -519,28 +519,12 @@ paths:
       description: Registro, envio y consulta de expedientes (T015/T016/T018).
       tags:
       - expedientes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CrearExpedienteRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/CrearExpedienteRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/CrearExpedienteRequest'
-        required: true
       security:
       - jwtAuth: []
       - BearerAuth: []
       responses:
         '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CrearExpediente'
-          description: ''
+          description: No response body
         '429':
           description: Demasiadas operaciones mutantes en poco tiempo para este usuario
             (MutantOperationThrottle). Reintente cuando indique la cabecera Retry-After.
@@ -554,16 +538,32 @@ paths:
                 required:
                 - detail
         '400':
-          description: expediente_activo_existente, o errores de validación de campos.
+          description: 'expediente_activo_existente, o campo_no_permitido (el cuerpo
+            incluye carrera_id, facultad_id o estudiante_id: se determinan en el servidor
+            a partir del perfil académico).'
           content:
             application/json:
               schema:
                 anyOf:
                 - $ref: '#/components/schemas/ErrorDominio'
                 - $ref: '#/components/schemas/ErrorValidacion'
+        '422':
+          description: 'Perfil académico no validado: perfil_academico_no_asociado,
+            perfil_academico_incompleto, perfil_academico_inconsistente o carrera_inactiva.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
         '500':
           description: 'configuracion_catalogo_incompleta: el catálogo base del Art.
             235 no tiene los 5 requisitos vigentes (D-2).'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
+        '503':
+          description: 'servicio_academico_no_configurado o servicio_academico_no_disponible:
+            no se pudo obtener el perfil académico.'
           content:
             application/json:
               schema:
@@ -861,6 +861,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedBandejaExpedienteList'
           description: ''
+  /api/v1/expedientes/mi-tramite/:
+    get:
+      operationId: expedientes_mi_tramite_retrieve
+      description: |-
+        GET /api/v1/expedientes/mi-tramite/ (dashboard del estudiante).
+
+        Solo lectura y solo ESTUDIANTE (celda RBAC `expedientes:mi_tramite`).
+        No recibe identificadores: el resumen se construye siempre sobre
+        `request.user`, por lo que no puede consultarse el trámite de otro
+        estudiante (sin superficie IDOR). Devuelve `expediente: null` si el
+        estudiante aún no registró una solicitud.
+      tags:
+      - expedientes
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
   /api/v1/informes/:
     post:
       operationId: informes_create
@@ -982,6 +1006,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotificacionInterna'
           description: ''
+  /api/v1/perfil-academico/:
+    get:
+      operationId: perfil_academico_retrieve
+      description: 'Perfil académico del estudiante autenticado, obtenido de la fuente
+        académica configurada (hoy la simulación MockSGA: `fuente.es_simulada = true`)
+        y validado contra el catálogo interno. No recibe parámetros: siempre es el
+        del propio usuario. Un perfil no validado responde 200 con `perfil_validado
+        = false` y sus `motivos_bloqueo`.'
+      tags:
+      - perfil-academico
+      security:
+      - jwtAuth: []
+      - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerfilAcademico'
+          description: ''
+        '503':
+          description: servicio_academico_no_configurado (sin fuente académica habilitada)
+            o servicio_academico_no_disponible (la fuente no respondió).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDominio'
   /api/v1/peticiones/{id}/documento/:
     get:
       operationId: peticiones_documento_retrieve
@@ -1306,6 +1357,23 @@ components:
           format: binary
       required:
       - archivo
+    CarreraPerfil:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        codigo:
+          type: string
+        nombre:
+          type: string
+        activa:
+          type: boolean
+      required:
+      - activa
+      - codigo
+      - id
+      - nombre
     ChecklistEvaluation:
       type: object
       description: Entrada para PUT /api/v1/checklist/{id}/ (T027).
@@ -1416,29 +1484,6 @@ components:
         * `PENDIENTE` - PENDIENTE
         * `VERIFICADO` - VERIFICADO
         * `OBSERVADO` - OBSERVADO
-    CrearExpediente:
-      type: object
-      description: 'Entrada del caso de uso: `carrera_id` (UUID), HU-001/RF-001.'
-      properties:
-        carrera_id:
-          type: string
-          format: uuid
-        estudiante_id:
-          type: string
-          format: uuid
-          readOnly: true
-      required:
-      - carrera_id
-      - estudiante_id
-    CrearExpedienteRequest:
-      type: object
-      description: 'Entrada del caso de uso: `carrera_id` (UUID), HU-001/RF-001.'
-      properties:
-        carrera_id:
-          type: string
-          format: uuid
-      required:
-      - carrera_id
     DeclaratoriaCreate:
       type: object
       properties:
@@ -1596,6 +1641,20 @@ components:
         * `INFORME_EMITIDO` - INFORME_EMITIDO
         * `DECLARADA_APTA` - DECLARADA_APTA
         * `CANCELADA` - CANCELADA
+    EstadoPerfilEnum:
+      enum:
+      - VALIDADO
+      - NO_ASOCIADO
+      - INCOMPLETO
+      - INCONSISTENTE
+      - CARRERA_INACTIVA
+      type: string
+      description: |-
+        * `VALIDADO` - VALIDADO
+        * `NO_ASOCIADO` - NO_ASOCIADO
+        * `INCOMPLETO` - INCOMPLETO
+        * `INCONSISTENTE` - INCONSISTENTE
+        * `CARRERA_INACTIVA` - CARRERA_INACTIVA
     EstadoPeticionEnum:
       enum:
       - PENDIENTE
@@ -1612,6 +1671,22 @@ components:
         * `LEGALIZADO` - LEGALIZADO
         * `VERIFICADO` - VERIFICADO
         * `OBSERVADO` - OBSERVADO
+    EstudiantePerfil:
+      type: object
+      properties:
+        identificacion:
+          type: string
+        nombres:
+          type: string
+        apellidos:
+          type: string
+        correo_institucional:
+          type: string
+      required:
+      - apellidos
+      - correo_institucional
+      - identificacion
+      - nombres
     ExpedienteDetalle:
       type: object
       description: Detalle completo del expediente para GET /api/v1/expedientes/{id}/
@@ -1756,6 +1831,39 @@ components:
       required:
       - carrera_id
       - estudiante_id
+    FacultadPerfil:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        codigo:
+          type: string
+        nombre:
+          type: string
+        activa:
+          type: boolean
+      required:
+      - activa
+      - codigo
+      - id
+      - nombre
+    FuentePerfil:
+      type: object
+      properties:
+        codigo:
+          type: string
+          description: Código estable de la fuente, p. ej. MOCK_SGA.
+        nombre:
+          type: string
+        es_simulada:
+          type: boolean
+          description: True si los datos NO provienen de un sistema institucional
+            real.
+      required:
+      - codigo
+      - es_simulada
+      - nombre
     InformeCreate:
       type: object
       properties:
@@ -1905,6 +2013,16 @@ components:
       - issuer
       - manual_key
       - qr_svg
+    MotivoBloqueo:
+      type: object
+      properties:
+        codigo:
+          type: string
+        mensaje:
+          type: string
+      required:
+      - codigo
+      - mensaje
     NotificacionInterna:
       type: object
       description: Serializador de notificación interna.
@@ -2038,6 +2156,52 @@ components:
           maxLength: 254
       required:
       - email
+    PerfilAcademico:
+      type: object
+      description: |-
+        Perfil académico del estudiante autenticado.
+
+        `estudiante`, `carrera` y `facultad` son nulos cuando la fuente no tiene
+        la información. `puede_iniciar_tramite` combina el perfil validado con
+        la regla RN-001 (sin expediente activo).
+      properties:
+        estudiante:
+          allOf:
+          - $ref: '#/components/schemas/EstudiantePerfil'
+          nullable: true
+        carrera:
+          allOf:
+          - $ref: '#/components/schemas/CarreraPerfil'
+          nullable: true
+        facultad:
+          allOf:
+          - $ref: '#/components/schemas/FacultadPerfil'
+          nullable: true
+        fuente:
+          $ref: '#/components/schemas/FuentePerfil'
+        consultado_en:
+          type: string
+          format: date-time
+        estado_perfil:
+          $ref: '#/components/schemas/EstadoPerfilEnum'
+        perfil_validado:
+          type: boolean
+        puede_iniciar_tramite:
+          type: boolean
+        motivos_bloqueo:
+          type: array
+          items:
+            $ref: '#/components/schemas/MotivoBloqueo'
+      required:
+      - carrera
+      - consultado_en
+      - estado_perfil
+      - estudiante
+      - facultad
+      - fuente
+      - motivos_bloqueo
+      - perfil_validado
+      - puede_iniciar_tramite
     PeticionInicializada:
       type: object
       properties:

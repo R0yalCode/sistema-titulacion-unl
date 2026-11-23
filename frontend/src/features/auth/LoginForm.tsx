@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { LockIcon, ShieldIcon } from './components/icons'
+import { LockIcon, ShieldIcon } from '@/components/ui/icons'
 import { PasswordField } from './components/PasswordField'
 import styles from './components/authForm.module.css'
 import {

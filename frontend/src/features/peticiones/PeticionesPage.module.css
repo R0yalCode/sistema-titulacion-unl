@@ -7,7 +7,7 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .title {
@@ -15,6 +15,10 @@
 }
 
 .subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }

@@ -128,7 +128,8 @@ class SGTAutoSchema(AutoSchema):
             responses.setdefault("429", _respuesta_simple(DESCRIPCION_429))
 
         extra = getattr(self.view, "openapi_respuestas_extra", {}) or {}
-        accion = getattr(self.view, "action", None)
+        # ViewSets: por acción; APIView (sin `action`): por método HTTP.
+        accion = getattr(self.view, "action", None) or self.method.lower()
         for codigo, declaracion in extra.get(accion, {}).items():
             responses.setdefault(
                 str(codigo), self._respuesta_error(str(codigo), declaracion)
