@@ -58,17 +58,11 @@ export function clearRecentExpedientes(): void {
 const NUEVA_SOLICITUD_DRAFT_KEY = 'sgt.nueva_solicitud_draft'
 
 /**
- * Borrador local del formulario de nueva solicitud (FE-T304): solo guarda
- * `carrera_id`, nunca credenciales ni tokens.
+ * V-03 ya no guarda borrador (2026-11-22): la carrera la determina el backend
+ * a partir del perfil académico, así que no hay nada que el estudiante deba
+ * escribir. Se conserva la limpieza para borrar, al cerrar sesión o al crear
+ * la solicitud, el `carrera_id` que pudiera quedar de la versión anterior.
  */
-export function getNuevaSolicitudDraft(): string | null {
-  return sessionStorage.getItem(NUEVA_SOLICITUD_DRAFT_KEY)
-}
-
-export function saveNuevaSolicitudDraft(carreraId: string): void {
-  sessionStorage.setItem(NUEVA_SOLICITUD_DRAFT_KEY, carreraId)
-}
-
 export function clearNuevaSolicitudDraft(): void {
   sessionStorage.removeItem(NUEVA_SOLICITUD_DRAFT_KEY)
 }

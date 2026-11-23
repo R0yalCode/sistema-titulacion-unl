@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AuthContext, type AuthContextValue, type AuthUser } from '@/auth/AuthContext'
 import { fixtureExpedienteBorrador, fixtureExpedienteDetalle } from '@/mocks/fixtures'
 import { formatFecha } from '@/lib/dates'
+import { nombreRol } from '@/lib/estados'
 import { server } from '@/test/server'
 import SeguimientoPeticionPage from './SeguimientoPeticionPage'
 
@@ -74,8 +75,9 @@ describe('SeguimientoPeticionPage (V-06)', () => {
     expect(screen.getByText('Pendiente')).toBeInTheDocument()
     expect(screen.getByText(/todavía no se ha solicitado/)).toBeInTheDocument()
     expect(screen.getByText(`(${PENDIENTE.requisito_codigo})`)).toBeInTheDocument()
-    expect(screen.getByText(PENDIENTE.dependencia_emisora)).toBeInTheDocument()
-    expect(screen.getByText(new RegExp(EXPEDIENTE_BORRADOR.numero_expediente))).toBeInTheDocument()
+    expect(screen.getByText(nombreRol(PENDIENTE.dependencia_emisora))).toBeInTheDocument()
+    expect(screen.queryByText(PENDIENTE.dependencia_emisora)).not.toBeInTheDocument()
+    expect(screen.getAllByText(new RegExp(EXPEDIENTE_BORRADOR.numero_expediente)).length).toBeGreaterThan(0)
     expect(
       screen.getByText(`${formatFecha(EXPEDIENTE_BORRADOR.fecha_creacion)} (creada junto con el expediente)`),
     ).toBeInTheDocument()

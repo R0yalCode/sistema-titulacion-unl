@@ -2,12 +2,16 @@ import { useContext, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
 import { ToastContext } from '@/components/feedback/ToastProvider'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
+import { ArrowLeftIcon, ClipboardCheckIcon, DocumentIcon, SendIcon } from '@/components/ui/icons'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
-import { Spinner } from '@/components/ui/Spinner'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { OPERATIONAL_ROLES } from '@/auth/roles'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { ChecklistSection } from './ChecklistSection'
 import { ExpedienteHeader } from './ExpedienteHeader'
@@ -33,13 +37,15 @@ export default function ExpedientePage() {
   const checklistQuery = useChecklist(id ?? '', roles)
   const enviarMutation = useEnviarExpediente(id ?? '')
   const observarMutation = useObservarExpediente(id ?? '')
+  const { confirm, dialog } = useConfirm()
+  const soloEstudiante = roles.includes('ESTUDIANTE') && !roles.some((rol) => OPERATIONAL_ROLES.includes(rol))
 
   if (!id) {
     return <NotFoundState description="No se indicó un expediente." title="Expediente no encontrado" />
   }
 
   if (detalleQuery.isLoading) {
-    return <Spinner label="Cargando expediente…" />
+    return <Skeleton count={3} label="Cargando expediente…" variant="card" />
   }
 
   if (detalleQuery.isError) {
@@ -65,7 +71,12 @@ export default function ExpedientePage() {
   }
 
   async function handleEnviar() {
-    if (!window.confirm('¿Confirma el envío de este expediente? No podrá modificarlo mientras esté en verificación.')) {
+    const confirmado = await confirm({
+      title: '¿Enviar el expediente?',
+      description: 'Se enviará para su verificación. No podrá modificarlo mientras esté en verificación.',
+      confirmLabel: 'Enviar expediente',
+    })
+    if (!confirmado) {
       return
     }
     setEnviarError(null)
@@ -91,30 +102,48 @@ export default function ExpedientePage() {
   const mostrarEnviar = puedeEnviar(roles, expediente.estado, true)
   const mostrarObservar = puedeObservar(roles, expediente.estado)
 
+  const migas = soloEstudiante
+    ? [{ label: 'Inicio', to: '/estudiante' }, { label: 'Mi trámite' }]
+    : [{ label: 'Bandeja de trabajo', to: '/bandeja' }, { label: expediente.numero_expediente }]
+
   return (
-    <main className={styles.page}>
-      <ExpedienteHeader expediente={expediente} />
+    <div className={styles.page}>
+      {dialog}
+      <Breadcrumbs items={migas} />
+      <ExpedienteHeader
+        actions={
+          <>
+            {mostrarEnviar && (
+              <Button loading={enviarMutation.isPending} onClick={() => void handleEnviar()}>
+                <SendIcon size={16} />
+                Enviar expediente
+              </Button>
+            )}
+            {mostrarObservar && (
+              <Button variant="secondary" onClick={() => setObservarAbierto(true)}>
+                Observar
+              </Button>
+            )}
+            <Button variant="ghost" onClick={() => navigate(-1)}>
+              <ArrowLeftIcon size={16} />
+              Volver
+            </Button>
+          </>
+        }
+        expediente={expediente}
+      />
 
-      {enviarError && <p role="alert">{enviarError}</p>}
+      {enviarError && (
+        <p className={styles.error} role="alert">
+          {enviarError}
+        </p>
+      )}
 
-      <h2 className="sr-only">Detalle del expediente</h2>
-      <div className={styles.actions}>
-        {mostrarEnviar && (
-          <Button loading={enviarMutation.isPending} onClick={() => void handleEnviar()}>
-            Enviar expediente
-          </Button>
-        )}
-        {mostrarObservar && <Button variant="secondary" onClick={() => setObservarAbierto(true)}>Observar</Button>}
-        <Button variant="ghost" onClick={() => navigate(-1)}>
-          Volver
-        </Button>
-      </div>
-
-      <Card title="Peticiones documentales">
+      <Card icon={<DocumentIcon />} title="Peticiones documentales">
         <PeticionesSection numeroExpediente={expediente.numero_expediente} peticiones={expediente.peticiones} roles={roles} />
       </Card>
 
-      <Card title="Checklist de verificación">
+      <Card icon={<ClipboardCheckIcon />} title="Checklist de verificación">
         <ChecklistSection
           esPropietario
           estadoExpediente={expediente.estado}
@@ -132,6 +161,6 @@ export default function ExpedientePage() {
         onClose={() => setObservarAbierto(false)}
         onConfirm={(payload) => void handleObservarConfirm(payload)}
       />
-    </main>
+    </div>
   )
 }

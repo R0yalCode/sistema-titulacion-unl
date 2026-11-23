@@ -8,7 +8,11 @@ import { Card } from '@/components/ui/Card'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
-import { Spinner } from '@/components/ui/Spinner'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
+import { DocumentIcon } from '@/components/ui/icons'
+import { OPERATIONAL_ROLES } from '@/auth/roles'
 import { describeAccionError, useExpedienteDetalle } from '@/features/expediente'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { CargarDocumentoDialog } from './CargarDocumentoDialog'
@@ -43,7 +47,7 @@ export default function PeticionesPage() {
   }
 
   if (detalleQuery.isLoading) {
-    return <Spinner label="Cargando peticiones…" />
+    return <Skeleton count={4} label="Cargando peticiones…" />
   }
 
   if (detalleQuery.isError) {
@@ -105,12 +109,23 @@ export default function PeticionesPage() {
     }
   }
 
+  const soloEstudiante = roles.includes('ESTUDIANTE') && !roles.some((rol) => OPERATIONAL_ROLES.includes(rol))
+  const migas = soloEstudiante
+    ? [{ label: 'Inicio', to: '/estudiante' }, { label: 'Mi trámite', to: `/expedientes/${id}` }, { label: 'Documentos' }]
+    : [
+        { label: 'Bandeja de trabajo', to: '/bandeja' },
+        { label: expediente.numero_expediente, to: `/expedientes/${id}` },
+        { label: 'Peticiones' },
+      ]
+
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
+      <Breadcrumbs items={migas} />
       <header className={styles.header}>
         <h1 className={styles.title}>Peticiones documentales</h1>
         <p className={styles.subtitle}>
-          Expediente <strong>{expediente.numero_expediente}</strong> · estado {expediente.estado}
+          Expediente <strong>{expediente.numero_expediente}</strong>
+          <StatusBadge dominio="expediente" valor={expediente.estado} />
         </p>
       </header>
 
@@ -119,8 +134,7 @@ export default function PeticionesPage() {
         <Link to={`/expedientes/${id}`}>Volver al expediente</Link>
       </Alert>
 
-      <h2 className="sr-only">Listado de peticiones</h2>
-      <Card title="Requisitos y peticiones">
+      <Card icon={<DocumentIcon />} title="Requisitos y peticiones">
         <PeticionesTabla
           estadoExpediente={expediente.estado}
           expedienteId={id}
@@ -147,6 +161,6 @@ export default function PeticionesPage() {
         onClose={() => setACargar(null)}
         onConfirm={(peticion, archivo) => void confirmarCarga(peticion, archivo)}
       />
-    </main>
+    </div>
   )
 }

@@ -167,7 +167,7 @@ describe('ResolucionesSection en V-08 (V-08b)', () => {
     servir('EN_VERIFICACION')
     renderAs(['ANALISTA_APOYO'])
 
-    await screen.findByText(fixtureExpedienteDetalle.numero_expediente)
+    await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })
     expect(screen.queryByRole('button', { name: 'Emitir informe de aptitud' })).not.toBeInTheDocument()
   })
 
@@ -255,7 +255,7 @@ describe('ResolucionesSection en V-08 (V-08b)', () => {
   it('no ofrece resoluciones fuera de su rol y estado ni en estados finales', async () => {
     servir('INFORME_EMITIDO')
     const { unmount } = renderAs(['SECRETARIO_ABOGADO'])
-    await screen.findByText(fixtureExpedienteDetalle.numero_expediente)
+    await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })
     expect(screen.queryByRole('heading', { name: 'Resoluciones' })).not.toBeInTheDocument()
     unmount()
 

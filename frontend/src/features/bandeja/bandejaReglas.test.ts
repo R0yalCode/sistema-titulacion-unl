@@ -35,7 +35,7 @@ describe('estadosAtendidos y explicarBandejaVacia', () => {
     expect(explicarBandejaVacia(['DIRECTOR_CARRERA']).descripcion).toContain('BE-09')
     expect(explicarBandejaVacia(['DECANO'])).toEqual({
       titulo: 'No hay expedientes pendientes',
-      descripcion: 'No hay expedientes en los estados que atiende su rol (INFORME_EMITIDO).',
+      descripcion: 'No hay expedientes en los estados que atiende su rol (Informe emitido).',
     })
   })
 })

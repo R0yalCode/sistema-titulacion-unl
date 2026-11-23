@@ -1,4 +1,5 @@
 import type { EstadoExpediente } from '@/api/endpoints/expedientes'
+import { presentarEstado } from '@/lib/estados'
 
 /**
  * Espejo de solo lectura de `MAPA_INTERVENCION_POR_ROL`
@@ -41,7 +42,9 @@ export function explicarBandejaVacia(roles: string[]): { titulo: string; descrip
   }
   return {
     titulo: 'No hay expedientes pendientes',
-    descripcion: `No hay expedientes en los estados que atiende su rol (${estados.join(', ')}).`,
+    descripcion: `No hay expedientes en los estados que atiende su rol (${estados
+      .map((estado) => presentarEstado('expediente', estado).label)
+      .join(', ')}).`,
   }
 }
 

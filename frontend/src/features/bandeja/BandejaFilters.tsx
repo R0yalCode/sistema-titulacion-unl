@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
+import { presentarEstado } from '@/lib/estados'
 import styles from './BandejaFilters.module.css'
 
 export type FiltrosBandeja = {
@@ -30,7 +31,7 @@ export function BandejaFilters({ filtros, estadosDisponibles, visibles, totalPag
         <Select
           aria-describedby="bandeja-filtros-alcance"
           label="Estado (página actual)"
-          options={estadosDisponibles.map((estado) => ({ value: estado, label: estado }))}
+          options={estadosDisponibles.map((estado) => ({ value: estado, label: presentarEstado('expediente', estado).label }))}
           placeholder="Todos los estados"
           value={filtros.estado}
           onChange={(event) => onChange({ ...filtros, estado: event.target.value })}

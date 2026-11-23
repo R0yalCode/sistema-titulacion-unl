@@ -1,5 +1,6 @@
 import type { BadgeVariant } from '@/components/ui/Badge'
 import type { EstadoExpediente } from '@/api/endpoints/expedientes'
+import { presentarEstado } from '@/lib/estados'
 
 /**
  * Matriz de acciones de V-05 (FE-T502/FE-T503), basada en las reglas
@@ -55,16 +56,7 @@ export function tieneDocumento(estadoPeticion: string): boolean {
   return ESTADOS_CON_DOCUMENTO.includes(estadoPeticion)
 }
 
-const PRESENTACION_ESTADO: Record<string, { label: string; variant: BadgeVariant }> = {
-  PENDIENTE: { label: 'Pendiente', variant: 'neutral' },
-  SOLICITADO: { label: 'Solicitado', variant: 'info' },
-  CARGADO: { label: 'Cargado', variant: 'success' },
-  LEGALIZADO: { label: 'Legalizado', variant: 'success' },
-  VERIFICADO: { label: 'Verificado', variant: 'success' },
-  OBSERVADO: { label: 'Observado', variant: 'warning' },
-}
-
-/** Etiqueta legible del estado real; un valor desconocido se muestra tal cual, sin inventar. */
+/** Etiqueta legible del estado real; delega en la fuente única `lib/estados`. */
 export function presentarEstadoPeticion(estado: string): { label: string; variant: BadgeVariant } {
-  return PRESENTACION_ESTADO[estado] ?? { label: estado, variant: 'neutral' }
+  return presentarEstado('peticion', estado)
 }

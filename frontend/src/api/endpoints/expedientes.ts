@@ -56,20 +56,6 @@ export type ExpedienteBorrador = {
   peticiones: PeticionInicializada[]
 }
 
-export type CrearExpedienteRequest = {
-  carrera_id: string
-}
-
-/**
- * `POST /api/v1/expedientes/` (verificado 2026-11-05 contra
- * `apps/expedientes/services/crear_expediente.py` y
- * `apps/expedientes/tests/test_crear_expediente.py`): 201 con el expediente
- * en `BORRADOR` y sus 5 peticiones base inicializadas; 400 (no 409/412/428,
- * BE-11 sigue sin autorizar esa suposición) cuando el estudiante ya tiene un
- * expediente activo (`{"detail": "..."}` con la palabra "activo", RN-001) o
- * cuando el catálogo base está incompleto (error de datos del backend, no
- * del estudiante).
- */
 /**
  * Ítem de la bandeja operativa (V-07). Mismo contrato que
  * `BandejaExpedienteSerializer`, pero con cualquier estado que el rol pueda
@@ -107,10 +93,19 @@ export function listBandejaOperativa(
   )
 }
 
-export function crearExpediente(payload: CrearExpedienteRequest): Promise<ExpedienteBorrador> {
+/**
+ * `POST /api/v1/expedientes/` (V-03, 2026-11-22): cuerpo vacío. El backend
+ * toma la carrera del perfil académico validado del estudiante autenticado y
+ * deriva la facultad de la carrera; enviar `carrera_id` responde 400
+ * `campo_no_permitido`. Respuestas: 201 (expediente en `BORRADOR` con sus 5
+ * peticiones base); 400 `expediente_activo_existente` (RN-001; no 409, BE-11);
+ * 422 si el perfil no está validado; 500 `configuracion_catalogo_incompleta`;
+ * 503 si la fuente académica no está disponible.
+ */
+export function crearExpediente(): Promise<ExpedienteBorrador> {
   return request<ExpedienteBorrador>('/api/v1/expedientes/', {
     method: 'POST',
-    body: payload,
+    body: {},
   })
 }
 

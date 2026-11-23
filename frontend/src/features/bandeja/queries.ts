@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getExpedienteDetalle,
   iniciarVerificacion,
+  BANDEJA_MAX_PAGE_SIZE,
   listBandejaOperativa,
   type BandejaOperativaItem,
   type ExpedienteDetalle,
@@ -13,10 +14,24 @@ import { CHECKLIST_QUERY_KEY, EXPEDIENTE_DETALLE_QUERY_KEY } from '@/features/ex
 export const BANDEJA_OPERATIVA_QUERY_KEY = 'bandeja-operativa'
 
 /** FE-T701: página real de la bandeja; la paginación y el filtrado los hace el backend. */
-export function useBandejaOperativa(page: number, pageSize: number) {
+export function useBandejaOperativa(page: number, pageSize: number, options: { enabled?: boolean } = {}) {
   return useQuery<Paginated<BandejaOperativaItem>, ApiRequestError>({
     queryKey: [BANDEJA_OPERATIVA_QUERY_KEY, page, pageSize],
     queryFn: () => listBandejaOperativa({ page, pageSize }),
+    retry: false,
+    enabled: options.enabled ?? true,
+  })
+}
+
+/**
+ * Resumen del panel: primera página con el tamaño máximo que admite el
+ * backend (`max_page_size = 50`). `resumirBandeja` indica si cubre toda la
+ * bandeja; si no, el panel no presenta cifras parciales como totales.
+ */
+export function useResumenBandeja() {
+  return useQuery<Paginated<BandejaOperativaItem>, ApiRequestError>({
+    queryKey: [BANDEJA_OPERATIVA_QUERY_KEY, 'resumen'],
+    queryFn: () => listBandejaOperativa({ page: 1, pageSize: BANDEJA_MAX_PAGE_SIZE }),
     retry: false,
   })
 }

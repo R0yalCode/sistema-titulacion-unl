@@ -1,6 +1,7 @@
 import type { PeticionInicializada } from '@/api/endpoints/expedientes'
-import { Badge } from '@/components/ui/Badge'
-import { Table, type TableColumn } from '@/components/ui/Table'
+import { DataList } from '@/components/ui/DataList'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { nombreRol } from '@/lib/estados'
 import { puedeDescargar } from './accionesPorRolEstado'
 import { DescargaButton } from './DescargaButton'
 import styles from './PeticionesSection.module.css'
@@ -15,48 +16,33 @@ export function PeticionesSection({ peticiones, roles, numeroExpediente }: Petic
   const puedeDescargarDocumentos = puedeDescargar(roles)
   const esEstudiante = roles.includes('ESTUDIANTE')
 
-  const columns: Array<TableColumn<PeticionInicializada>> = [
-    { key: 'requisito_nombre', header: 'Requisito', render: (row) => row.requisito_nombre },
-    {
-      key: 'estado_peticion',
-      header: 'Estado',
-      render: (row) => (
-        <Badge variant={row.estado_peticion === 'OBSERVADO' ? 'warning' : 'neutral'}>
-          {row.estado_peticion}
-        </Badge>
-      ),
-    },
-    { key: 'dependencia_emisora', header: 'Dependencia emisora', render: (row) => row.dependencia_emisora },
-    {
-      key: 'acciones',
-      header: 'Acciones',
-      render: (row) => (
-        <div className={styles.acciones}>
-          {puedeDescargarDocumentos && (
-            <DescargaButton
-              fallbackFilename={`${numeroExpediente}-${row.requisito_codigo}.pdf`}
-              peticionId={row.id}
-            />
-          )}
-          {esEstudiante && row.estado_peticion === 'OBSERVADO' && (
-            <p className={styles.subsanarNote}>
-              Esta petición fue observada. Por una limitación del sistema, la subsanación en línea no está
-              disponible todavía para su rol; comuníquese con la dependencia correspondiente.
-            </p>
-          )}
-        </div>
-      ),
-    },
-  ]
-
   return (
-    <Table
-      caption="Peticiones documentales"
-      columns={columns}
+    <DataList
       emptyDescription="Este expediente no tiene peticiones registradas."
       emptyTitle="Sin peticiones"
-      rowKey={(row) => row.id}
-      rows={peticiones}
+      fields={[
+        { key: 'dependencia', label: 'Dependencia emisora', render: (row) => nombreRol(row.dependencia_emisora) },
+        { key: 'codigo', label: 'Código', render: (row) => <code className={styles.codigo}>{row.requisito_codigo}</code>, secondary: true },
+      ]}
+      getKey={(row) => row.id}
+      getTone={(row) => (row.estado_peticion === 'OBSERVADO' ? 'warning' : undefined)}
+      items={peticiones}
+      label="Peticiones documentales"
+      renderActions={(row) =>
+        puedeDescargarDocumentos ? (
+          <DescargaButton fallbackFilename={`${numeroExpediente}-${row.requisito_codigo}.pdf`} peticionId={row.id} />
+        ) : null
+      }
+      renderStatus={(row) => <StatusBadge dominio="peticion" valor={row.estado_peticion} />}
+      renderSubtitle={(row) =>
+        esEstudiante && row.estado_peticion === 'OBSERVADO' ? (
+          <span className={styles.subsanarNote}>
+            Esta petición fue observada. Por una limitación del sistema, la subsanación en línea no está disponible
+            todavía para su rol; comuníquese con la dependencia correspondiente.
+          </span>
+        ) : null
+      }
+      renderTitle={(row) => row.requisito_nombre}
     />
   )
 }

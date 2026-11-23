@@ -92,8 +92,9 @@ describe('BandejaPage (V-07)', () => {
       'href',
       `/bandeja/${item(1).id}`,
     )
-    expect(screen.getAllByText('EN_VERIFICACION').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('PROV-3').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('En verificación').length).toBeGreaterThan(0)
+    expect(screen.queryByText('EN_VERIFICACION')).not.toBeInTheDocument()
+    expect(screen.getAllByText(/PROV-3/).length).toBeGreaterThan(0)
     expect(screen.getAllByText('22222222').length).toBeGreaterThan(0)
     expect(await axe(container)).toHaveNoViolations()
   })
@@ -103,15 +104,16 @@ describe('BandejaPage (V-07)', () => {
     renderAs(['DECANO'])
 
     expect(await screen.findByText('1 expediente en la bandeja · página 1 de 1')).toBeInTheDocument()
-    expect(screen.getAllByText('INFORME_EMITIDO').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Informe emitido').length).toBeGreaterThan(0)
   })
 
-  it('CA-V07-03: un rol sin bandeja (BE-09) ve un vacío explicativo', async () => {
-    servirBandeja(() => pagina([], 0))
+  it('CA-V07-03: un rol sin bandeja (BE-09) ve un panel explicativo con sus avisos y no consulta la bandeja', async () => {
+    const urls = servirBandeja(() => pagina([], 0))
     renderAs(['SECRETARIA_CARRERA'])
 
-    expect(await screen.findByText('Su rol no tiene expedientes en la bandeja')).toBeInTheDocument()
-    expect(screen.getByText(/dependencia BE-09/)).toBeInTheDocument()
+    expect(await screen.findByText(/no asigna expedientes a la bandeja de su rol por ahora \(dependencia BE-09\)/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Avisos recientes' })).toBeInTheDocument()
+    expect(urls).toHaveLength(0)
   })
 
   it('un rol con bandeja pero sin pendientes ve un vacío distinto', async () => {
@@ -198,8 +200,10 @@ describe('BandejaPage (V-07)', () => {
     renderAs(['ADMINISTRADOR'])
 
     await screen.findByText('1 expediente en la bandeja · página 1 de 1')
+    // Solo navegación, paginación y filtros rápidos: ninguna operación de escritura.
     const botones = screen.getAllByRole('button').map((boton) => boton.textContent ?? '')
-    expect(botones.every((texto) => /Anterior|Siguiente/.test(texto))).toBe(true)
+    expect(botones.length).toBeGreaterThan(0)
+    expect(botones.some((texto) => /enviar|observar|verificar|emitir|declarar|eliminar|guardar/i.test(texto))).toBe(false)
   })
 
   it('un 403 muestra acceso restringido con enlace a V-09 sin revelar la regla', async () => {
@@ -208,7 +212,7 @@ describe('BandejaPage (V-07)', () => {
         HttpResponse.json({ detail: 'El rol del usuario no esta autorizado.' }, { status: 403 }),
       ),
     )
-    renderAs(['DIRECTOR_CARRERA'])
+    renderAs(['SECRETARIO_ABOGADO'])
 
     const enlace = await screen.findByRole('link', { name: 'Más información' })
     expect(within(enlace.closest('[role="status"]') as HTMLElement).getByText('Acceso restringido')).toBeInTheDocument()
@@ -225,7 +229,11 @@ describe('BandejaPage (V-07)', () => {
     const user = userEvent.setup()
     let llamadas = 0
     server.use(
-      http.get(BANDEJA_URL, () => {
+      http.get(BANDEJA_URL, ({ request }) => {
+        // Solo cuenta las consultas del listado (page_size=10); el resumen usa 50.
+        if (new URL(request.url).searchParams.get('page_size') !== '10') {
+          return HttpResponse.json(pagina([item(1)]))
+        }
         llamadas += 1
         return llamadas === 1 ? fallo() : HttpResponse.json(pagina([item(1)]))
       }),

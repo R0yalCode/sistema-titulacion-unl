@@ -3,12 +3,15 @@ import { Link, useParams } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
 import { ToastContext } from '@/components/feedback/ToastProvider'
 import { Alert } from '@/components/ui/Alert'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { useConfirm } from '@/components/ui/ConfirmDialog'
+import { ArrowLeftIcon, ClipboardCheckIcon, DocumentIcon, SearchIcon } from '@/components/ui/icons'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
-import { Spinner } from '@/components/ui/Spinner'
+import { Skeleton } from '@/components/ui/Skeleton'
 import {
   ChecklistSection,
   ExpedienteHeader,
@@ -21,6 +24,7 @@ import {
   useObservarExpediente,
 } from '@/features/expediente'
 import { presentApiError } from '@/lib/apiErrorPresentation'
+import { presentarEstado } from '@/lib/estados'
 import { esEstadoFinal, puedeIniciarVerificacion } from './accionesFuncionario'
 import { useIniciarVerificacion, useInvalidarTrasAccion } from './queries'
 import { ResolucionesSection } from './ResolucionesSection'
@@ -46,9 +50,11 @@ export default function DetalleFuncionarioPage() {
   const observarMutation = useObservarExpediente(id ?? '')
   const iniciarMutation = useIniciarVerificacion(id ?? '')
   const invalidar = useInvalidarTrasAccion(id ?? '')
+  const { confirm, dialog } = useConfirm()
 
   const volver = (
     <Link className={styles.volver} to="/bandeja">
+      <ArrowLeftIcon size={16} />
       Volver a la bandeja
     </Link>
   )
@@ -58,7 +64,7 @@ export default function DetalleFuncionarioPage() {
   }
 
   if (detalleQuery.isLoading) {
-    return <Spinner label="Cargando expediente…" />
+    return <Skeleton count={3} label="Cargando expediente…" variant="card" />
   }
 
   if (detalleQuery.isError) {
@@ -96,7 +102,12 @@ export default function DetalleFuncionarioPage() {
   const mostrarObservar = !final && puedeObservar(roles, expediente.estado)
 
   async function iniciar() {
-    if (!window.confirm('¿Confirma el inicio de la verificación? Se generará el checklist del expediente.')) {
+    const confirmado = await confirm({
+      title: '¿Iniciar la verificación?',
+      description: 'El expediente pasará a "En verificación" y se generará su checklist.',
+      confirmLabel: 'Iniciar verificación',
+    })
+    if (!confirmado) {
       return
     }
     setAccionError(null)
@@ -120,45 +131,55 @@ export default function DetalleFuncionarioPage() {
     }
   }
 
-  return (
-    <main className={styles.page}>
-      {volver}
-      <ExpedienteHeader expediente={expediente} />
+  const estadoLabel = presentarEstado('expediente', expediente.estado).label
 
+  return (
+    <div className={styles.page}>
+      {dialog}
+      <div className={styles.navegacion}>
+        <Breadcrumbs items={[{ label: 'Bandeja de trabajo', to: '/bandeja' }, { label: expediente.numero_expediente }]} />
+        {volver}
+      </div>
+      <ExpedienteHeader
+        actions={
+          mostrarIniciar || mostrarObservar ? (
+            <>
+              {mostrarIniciar && (
+                <Button loading={iniciarMutation.isPending} onClick={() => void iniciar()}>
+                  <SearchIcon size={16} />
+                  Iniciar verificación
+                </Button>
+              )}
+              {mostrarObservar && (
+                <Button variant="secondary" onClick={() => setObservarAbierto(true)}>
+                  Observar
+                </Button>
+              )}
+            </>
+          ) : undefined
+        }
+        expediente={expediente}
+      />
       {final && (
         <Alert title="Expediente en estado final">
-          El expediente está en estado {expediente.estado}: solo se permite su consulta.
+          El expediente está en estado «{estadoLabel}»: solo se permite su consulta.
         </Alert>
       )}
-
-      <h2 className="sr-only">Acciones del expediente</h2>
-      <div className={styles.acciones}>
-        {mostrarIniciar && (
-          <Button loading={iniciarMutation.isPending} onClick={() => void iniciar()}>
-            Iniciar verificación
-          </Button>
-        )}
-        {mostrarObservar && (
-          <Button variant="secondary" onClick={() => setObservarAbierto(true)}>
-            Observar
-          </Button>
-        )}
-        {!final && !mostrarIniciar && !mostrarObservar && (
-          <p className={styles.sinAcciones}>
-            No hay acciones de estado disponibles para su rol con el expediente en {expediente.estado}.
-          </p>
-        )}
-      </div>
+      {!final && !mostrarIniciar && !mostrarObservar && (
+        <p className={styles.sinAcciones}>
+          No hay acciones de estado disponibles para su rol con el expediente en «{estadoLabel}».
+        </p>
+      )}
       {accionError && <Alert variant="danger">{accionError}</Alert>}
 
       {/* Siempre montada: tras la declaratoria el estado pasa a final y el resultado debe seguir visible. */}
       <ResolucionesSection checklistQuery={checklistQuery} estado={expediente.estado} expedienteId={id} roles={roles} />
 
-      <Card title="Peticiones documentales">
+      <Card icon={<DocumentIcon />} title="Peticiones documentales">
         <PeticionesSection numeroExpediente={expediente.numero_expediente} peticiones={expediente.peticiones} roles={roles} />
       </Card>
 
-      <Card title="Checklist de verificación">
+      <Card icon={<ClipboardCheckIcon />} title="Checklist de verificación">
         <ChecklistSection
           esPropietario={false}
           estadoExpediente={expediente.estado}
@@ -176,6 +197,6 @@ export default function DetalleFuncionarioPage() {
         onClose={() => setObservarAbierto(false)}
         onConfirm={(payload) => void observar(payload)}
       />
-    </main>
+    </div>
   )
 }

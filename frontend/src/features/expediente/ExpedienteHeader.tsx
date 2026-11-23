@@ -1,20 +1,12 @@
+import type { ReactNode } from 'react'
 import type { EstadoExpediente, ExpedienteDetalle } from '@/api/endpoints/expedientes'
-import { Badge, type BadgeVariant } from '@/components/ui/Badge'
+import { CalendarIcon, ClockIcon, FlagIcon, SendIcon } from '@/components/ui/icons'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Timeline, type TimelineStep } from '@/components/ui/Timeline'
 import { formatFecha } from '@/lib/dates'
 import styles from './ExpedienteHeader.module.css'
 
 const CANONICAL_STATES: EstadoExpediente[] = ['BORRADOR', 'ENVIADA', 'EN_VERIFICACION', 'INFORME_EMITIDO', 'DECLARADA_APTA']
-
-const BADGE_VARIANT_BY_ESTADO: Record<EstadoExpediente, BadgeVariant> = {
-  BORRADOR: 'neutral',
-  ENVIADA: 'info',
-  EN_VERIFICACION: 'info',
-  OBSERVADA: 'warning',
-  INFORME_EMITIDO: 'success',
-  DECLARADA_APTA: 'success',
-  CANCELADA: 'danger',
-}
 
 /**
  * Construye el timeline solo con los dos datos reales de fecha que expone
@@ -65,41 +57,78 @@ function buildTimelineSteps(expediente: ExpedienteDetalle): TimelineStep[] {
 
 type ExpedienteHeaderProps = {
   expediente: ExpedienteDetalle
+  /** Acciones principales autorizadas para el rol (enviar, observar, iniciar verificación…). */
+  actions?: ReactNode
 }
 
-export function ExpedienteHeader({ expediente }: ExpedienteHeaderProps) {
+export function ExpedienteHeader({ expediente, actions }: ExpedienteHeaderProps) {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.summary}>
-        <h1 className={styles.titulo}>{expediente.numero_expediente}</h1>
-        <Badge variant={BADGE_VARIANT_BY_ESTADO[expediente.estado]}>{expediente.estado}</Badge>
-      </div>
+      <section aria-labelledby="expediente-titulo" className={styles.hero}>
+        <div className={styles.summary}>
+          <div className={styles.identity}>
+            <p className={styles.eyebrow}>Expediente de titulación</p>
+            <div className={styles.titleRow}>
+              <h1 className={styles.titulo} id="expediente-titulo">
+                {expediente.numero_expediente}
+              </h1>
+              <StatusBadge dominio="expediente" valor={expediente.estado} />
+            </div>
+            {expediente.numero_providencia && (
+              <p className={styles.providencia}>Providencia {expediente.numero_providencia}</p>
+            )}
+          </div>
+          {actions && <div className={styles.actions}>{actions}</div>}
+        </div>
 
-      <dl className={styles.facts}>
-        <div>
-          <dt>Creado</dt>
-          <dd>{formatFecha(expediente.fecha_creacion)}</dd>
-        </div>
-        <div>
-          <dt>Recepción</dt>
-          <dd>{formatFecha(expediente.fecha_recepcion)}</dd>
-        </div>
-        <div>
-          <dt>Límite de atención</dt>
-          <dd>{formatFecha(expediente.fecha_limite_atencion)}</dd>
-        </div>
-        <div>
-          <dt>Días laborables acumulados</dt>
-          <dd>{expediente.dias_laborables_acumulados}</dd>
-        </div>
-      </dl>
+        <dl className={styles.facts}>
+          <div className={styles.fact}>
+            <dt>
+              <span aria-hidden="true" className={styles.factIcon}>
+                <CalendarIcon size={18} />
+              </span>
+              Creado
+            </dt>
+            <dd>{formatFecha(expediente.fecha_creacion)}</dd>
+          </div>
+          <div className={styles.fact}>
+            <dt>
+              <span aria-hidden="true" className={styles.factIcon}>
+                <SendIcon size={18} />
+              </span>
+              Recepción
+            </dt>
+            <dd>{formatFecha(expediente.fecha_recepcion)}</dd>
+          </div>
+          <div className={styles.fact}>
+            <dt>
+              <span aria-hidden="true" className={styles.factIcon}>
+                <FlagIcon size={18} />
+              </span>
+              Límite de atención
+            </dt>
+            <dd>{formatFecha(expediente.fecha_limite_atencion)}</dd>
+          </div>
+          <div className={styles.fact}>
+            <dt>
+              <span aria-hidden="true" className={styles.factIcon}>
+                <ClockIcon size={18} />
+              </span>
+              Días laborables acumulados
+            </dt>
+            <dd>{expediente.dias_laborables_acumulados}</dd>
+          </div>
+        </dl>
 
-      <p className={styles.uuidNote}>
-        Carrera: <code>{expediente.carrera_id}</code> · Facultad: <code>{expediente.facultad_id}</code>. Se
-        muestran como identificadores (UUID); el sistema no tiene todavía un catálogo con sus nombres.
-      </p>
+        <div className={styles.timeline}>
+          <Timeline label="Etapas del expediente" orientation="horizontal" steps={buildTimelineSteps(expediente)} />
+        </div>
 
-      <Timeline steps={buildTimelineSteps(expediente)} />
+        <p className={styles.uuidNote}>
+          Carrera: <code>{expediente.carrera_id}</code> · Facultad: <code>{expediente.facultad_id}</code>. Se
+          muestran como identificadores (UUID); el sistema no tiene todavía un catálogo con sus nombres.
+        </p>
+      </section>
     </div>
   )
 }

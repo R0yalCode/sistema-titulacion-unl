@@ -5,29 +5,37 @@ import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
+import { InboxIcon } from '@/components/ui/icons'
 import { Pagination } from '@/components/ui/Pagination'
-import { Spinner } from '@/components/ui/Spinner'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { presentApiError } from '@/lib/apiErrorPresentation'
+import { getEnv } from '@/lib/env'
 import { BandejaFilters, aplicarFiltros, type FiltrosBandeja } from './BandejaFilters'
 import { BandejaTable } from './BandejaTable'
-import { explicarBandejaVacia } from './bandejaReglas'
+import { estadosAtendidos, explicarBandejaVacia } from './bandejaReglas'
+import { PanelAdministracion, PanelSinBandeja, ResumenPanel } from './PanelesInicio'
 import { useBandejaOperativa, usePrecargarExpediente } from './queries'
+import { contextoRol } from './resumen'
 import styles from './BandejaPage.module.css'
 
 const PAGE_SIZE = 10
 const FILTROS_INICIALES: FiltrosBandeja = { estado: '', numero: '' }
 
 /**
- * V-07 — Bandeja del funcionario (FE-T701…FE-T705). Datos reales de
- * `GET /expedientes/bandeja/`: el backend filtra por rol y ámbito; la vista
- * no añade acciones de escritura ni búsqueda global (BE-09).
+ * V-07 — Inicio del funcionario: panel contextual por rol (indicadores reales,
+ * distribución por estado y accesos rápidos) y la bandeja de
+ * `GET /expedientes/bandeja/`. El backend filtra por rol y ámbito; la vista no
+ * añade acciones de escritura ni búsqueda global (BE-09).
  */
 export default function BandejaPage() {
   const auth = useContext(AuthContext)
   const roles = auth?.user?.roles ?? []
   const [page, setPage] = useState(1)
   const [filtros, setFiltros] = useState<FiltrosBandeja>(FILTROS_INICIALES)
-  const bandejaQuery = useBandejaOperativa(page, PAGE_SIZE)
+  const contexto = contextoRol(roles)
+  // BE-09: el backend no asigna bandeja a estos roles; no se consulta en vano.
+  const sinBandeja = estadosAtendidos(roles).length === 0
+  const bandejaQuery = useBandejaOperativa(page, PAGE_SIZE, { enabled: !sinBandeja })
   const precargar = usePrecargarExpediente()
 
   function cambiarPagina(nueva: number) {
@@ -35,9 +43,14 @@ export default function BandejaPage() {
     setPage(nueva)
   }
 
+  function filtrarEstado(estado: string) {
+    setFiltros({ ...FILTROS_INICIALES, estado })
+    document.getElementById('listado-bandeja')?.focus()
+  }
+
   let contenido
   if (bandejaQuery.isLoading) {
-    contenido = <Spinner label="Cargando bandeja…" />
+    contenido = <Skeleton count={4} label="Cargando bandeja…" />
   } else if (bandejaQuery.isError) {
     const presentation = presentApiError(bandejaQuery.error)
     contenido =
@@ -85,15 +98,31 @@ export default function BandejaPage() {
   }
 
   return (
-    <main className={styles.page}>
-      <header>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <p className={styles.eyebrow}>{contexto.titulo}</p>
         <h1 className={styles.title}>Bandeja de expedientes</h1>
-        <p className={styles.subtitle}>
-          Expedientes que requieren la intervención de su rol, ordenados por fecha límite de atención.
-        </p>
+        <p className={styles.subtitle}>{contexto.subtitulo}</p>
       </header>
-      <h2 className="sr-only">Listado de la bandeja</h2>
-      <Card title="Expedientes">{contenido}</Card>
-    </main>
+
+      {sinBandeja ? (
+        <PanelSinBandeja roles={roles} />
+      ) : (
+        <ResumenPanel accionesRapidas={contexto.accionesRapidas} onFiltrarEstado={filtrarEstado} />
+      )}
+
+      {roles.includes('ADMINISTRADOR') && <PanelAdministracion apiBaseUrl={getEnv().apiBaseUrl} />}
+
+      {!sinBandeja && (
+        <Card
+          description="Ordenados por fecha límite de atención."
+          icon={<InboxIcon />}
+          id="listado-bandeja"
+          title="Expedientes"
+        >
+          {contenido}
+        </Card>
+      )}
+    </div>
   )
 }

@@ -2,16 +2,18 @@ import { useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
 import { Alert } from '@/components/ui/Alert'
-import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
-import { Spinner } from '@/components/ui/Spinner'
+import { ArrowLeftIcon, DocumentIcon, InfoIcon } from '@/components/ui/icons'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { DescargaButton, puedeDescargar, useExpedienteDetalle } from '@/features/expediente'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { formatFecha } from '@/lib/dates'
-import { presentarEstadoPeticion, tieneDocumento } from './accionesPeticion'
+import { nombreRol, presentarEstado } from '@/lib/estados'
+import { tieneDocumento } from './accionesPeticion'
 import { buscarPeticion, describirEstadoPeticion } from './seguimiento'
 import styles from './SeguimientoPeticionPage.module.css'
 
@@ -29,8 +31,13 @@ export default function SeguimientoPeticionPage() {
 
   const enlacesSalida = id ? (
     <nav aria-label="Navegación de la petición" className={styles.enlaces}>
-      <Link to={`/expedientes/${id}/peticiones`}>Volver a las peticiones</Link>
-      <Link to={`/expedientes/${id}`}>Volver al expediente</Link>
+      <Link className={styles.enlace} to={`/expedientes/${id}/peticiones`}>
+        <ArrowLeftIcon size={16} />
+        Volver a las peticiones
+      </Link>
+      <Link className={styles.enlace} to={`/expedientes/${id}`}>
+        Volver al expediente
+      </Link>
     </nav>
   ) : null
 
@@ -39,7 +46,7 @@ export default function SeguimientoPeticionPage() {
   }
 
   if (detalleQuery.isLoading) {
-    return <Spinner label="Cargando petición…" />
+    return <Skeleton count={3} label="Cargando petición…" variant="card" />
   }
 
   if (detalleQuery.isError) {
@@ -72,25 +79,27 @@ export default function SeguimientoPeticionPage() {
   const peticion = buscarPeticion(expediente.peticiones, peticionId)
   if (!peticion) {
     return (
-      <main className={styles.page}>
+      <div className={styles.page}>
         <NotFoundState
           description="La petición no pertenece a este expediente o no está disponible para su cuenta."
           title="Petición no encontrada"
         />
         {enlacesSalida}
-      </main>
+      </div>
     )
   }
 
-  const estado = presentarEstadoPeticion(peticion.estado_peticion)
   const conDocumento = tieneDocumento(peticion.estado_peticion)
 
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       {enlacesSalida}
       <header className={styles.header}>
-        <h1 className={styles.title}>{peticion.requisito_nombre}</h1>
-        <Badge variant={estado.variant}>{estado.label}</Badge>
+        <p className={styles.eyebrow}>Petición documental · {expediente.numero_expediente}</p>
+        <div className={styles.titleRow}>
+          <h1 className={styles.title}>{peticion.requisito_nombre}</h1>
+          <StatusBadge dominio="peticion" valor={peticion.estado_peticion} />
+        </div>
       </header>
 
       <Alert title="Historial no disponible">
@@ -98,8 +107,7 @@ export default function SeguimientoPeticionPage() {
         únicamente su estado actual.
       </Alert>
 
-      <h2 className="sr-only">Información de la petición</h2>
-      <Card title="Resumen de la petición">
+      <Card icon={<InfoIcon />} title="Resumen de la petición">
         <dl className={styles.datos}>
           <div>
             <dt>Estado actual</dt>
@@ -113,12 +121,12 @@ export default function SeguimientoPeticionPage() {
           </div>
           <div>
             <dt>Dependencia emisora</dt>
-            <dd>{peticion.dependencia_emisora}</dd>
+            <dd>{nombreRol(peticion.dependencia_emisora)}</dd>
           </div>
           <div>
             <dt>Expediente</dt>
             <dd>
-              {expediente.numero_expediente} · estado {expediente.estado}
+              {expediente.numero_expediente} · {presentarEstado('expediente', expediente.estado).label}
             </dd>
           </div>
           <div>
@@ -128,7 +136,7 @@ export default function SeguimientoPeticionPage() {
         </dl>
       </Card>
 
-      <Card title="Documento">
+      <Card icon={<DocumentIcon />} title="Documento">
         {conDocumento && puedeDescargar(roles) ? (
           <div className={styles.documento}>
             <p>Descargue la versión vigente del documento.</p>
@@ -148,6 +156,6 @@ export default function SeguimientoPeticionPage() {
           Las versiones anteriores no se pueden consultar: el sistema no expone el listado de versiones (BE-02).
         </p>
       </Card>
-    </main>
+    </div>
   )
 }
