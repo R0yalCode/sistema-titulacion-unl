@@ -3,25 +3,24 @@
 **Universidad Nacional de Loja — Facultad de la Energía, las Industrias y los Recursos Naturales No Renovables (FEIRNNR)**
 **Carrera de Computación — Asignatura: Desarrollo Basado en Plataformas (5.º ciclo)**
 
+> **Estado:** prototipo académico en desarrollo. **No está listo para producción** ([§11](#11-estado-actual-y-limitaciones)).
+
 ---
 
 ## Contenido
 
 1. [Presentación](#1-presentación)
 2. [Funcionalidades](#2-funcionalidades)
-3. [Tecnologías](#3-tecnologías)
-4. [Arquitectura](#4-arquitectura)
-5. [Instalación y ejecución local](#5-instalación-y-ejecución-local)
-6. [Guía de ingreso al sistema](#6-guía-de-ingreso-al-sistema)
+3. [Arquitectura y tecnologías](#3-arquitectura-y-tecnologías)
+4. [Instalación y ejecución](#4-instalación-y-ejecución)
+5. [Datos iniciales y cuentas de prueba](#5-datos-iniciales-y-cuentas-de-prueba)
+6. [Ingreso al sistema](#6-ingreso-al-sistema)
 7. [Google Authenticator: instrucciones para el usuario](#7-google-authenticator-instrucciones-para-el-usuario)
-8. [Recuperación de contraseña y del segundo factor](#8-recuperación-de-contraseña-y-del-segundo-factor)
-9. [Roles y permisos](#9-roles-y-permisos)
-10. [Configuración y seguridad](#10-configuración-y-seguridad)
-11. [Pruebas y calidad](#11-pruebas-y-calidad)
-12. [API](#12-api)
-13. [Estado del proyecto y limitaciones](#13-estado-del-proyecto-y-limitaciones)
-14. [Solución de problemas](#14-solución-de-problemas)
-15. [Licencia y autores](#15-licencia-y-autores)
+8. [Pruebas](#8-pruebas)
+9. [Estructura del repositorio](#9-estructura-del-repositorio)
+10. [Documentación complementaria](#10-documentación-complementaria)
+11. [Estado actual y limitaciones](#11-estado-actual-y-limitaciones)
+12. [Licencia y autores](#12-licencia-y-autores)
 
 ---
 
@@ -29,459 +28,322 @@
 
 **SGT-SIAAF** es el Sistema de Gestión del Trámite de Titulación integrado al SIAAF de la Universidad Nacional de Loja (UNL).
 
-**Problema que resuelve.** El trámite de titulación exige reunir certificados de varias dependencias, verificarlos, observarlos y subsanarlos, emitir un informe y registrar una declaratoria. Hecho a mano, con papel y correo, el trámite es lento, difícil de seguir y no deja trazabilidad. SGT-SIAAF lo digitaliza en un expediente único con estados, plazos, documentos versionados y una bitácora de auditoría.
+El trámite de titulación exige reunir certificados de varias dependencias, verificarlos, observarlos, subsanarlos, emitir un informe y registrar una declaratoria. SGT-SIAAF lo organiza en un expediente digital único, con estados, plazos, documentos versionados y una bitácora de auditoría.
 
-**Objetivos principales.**
+**Objetivos:**
 
-- Centralizar el expediente de titulación del estudiante y su documentación.
-- Coordinar a los actores del trámite con permisos acotados a su rol y su ámbito (carrera o facultad).
+- Centralizar el expediente de titulación y su documentación.
+- Coordinar a los actores del trámite con permisos acotados a su rol y su ámbito.
 - Dar seguimiento al estado y a los plazos del expediente.
-- Proteger el acceso con correo institucional y un segundo factor de autenticación.
+- Proteger el acceso con correo institucional y un segundo factor.
 
-**Alcance funcional actual (Fase 1).** Declaratoria de aptitud legal (Art. 235 del RRA-UNL). Estados del expediente:
+**Alcance actual (Fase 1):** declaratoria de aptitud legal (Art. 235 del RRA-UNL).
 
 `BORRADOR` → `ENVIADA` → `EN_VERIFICACION` ⇄ `OBSERVADA` → `INFORME_EMITIDO` → `DECLARADA_APTA` (además de `CANCELADA`)
 
-Las fases de sustentación y de cierre del trámite (tribunal, calificaciones, acta y registro del título) **no están implementadas**. La página pública las presenta solo como referencia.
+Las fases de sustentación y cierre (tribunal, calificaciones, acta y registro del título) **no están implementadas**.
 
 ---
 
 ## 2. Funcionalidades
 
-### Implementadas
-
-| Área | Qué hace hoy |
+| Área | Implementado |
 |---|---|
-| **Acceso con correo institucional** | Se ingresa con el correo `@unl.edu.ec` y la contraseña. El dominio se valida en el navegador **y en el backend**. |
-| **Doble factor (2FA) con TOTP** | Google Authenticator (u otra app TOTP compatible) se registra mediante un código QR. Después se solicita el código temporal en cada ingreso, salvo que el dispositivo sea de confianza. |
-| **Dispositivo de confianza** | Opcional, de 5 días. El cierre de sesión revoca la confianza de ese dispositivo. |
-| **Códigos de recuperación** | 10 códigos de un solo uso que se entregan al activar el 2FA. |
-| **Recuperación de contraseña** | Se envía un enlace de un solo uso al correo registrado. |
-| **Restablecimiento del 2FA** | Correo + cédula + contraseña actual permiten solicitar un enlace de un solo uso; el autenticador se retira al confirmar ese enlace. |
-| **Control de acceso por roles (RBAC)** | Matriz rol × recurso × acción evaluada en el servidor, con filtrado por ámbito (propio, carrera, facultad, asignado). |
-| **Gestión del trámite** | Creación del expediente, peticiones de certificados a las dependencias, carga de PDF versionada, envío, verificación por checklist, observación y subsanación, informe de aptitud y declaratoria. |
-| **Seguimiento** | Panel del estudiante, bandeja operativa por rol, detalle del expediente y de cada petición, notificaciones internas. |
-| **Auditoría y seguridad** | Bitácora de eventos del trámite y de autenticación (sin secretos), límites de intentos, documentos privados, cabeceras de seguridad. |
-| **Página pública** | Presentación del sistema y del proceso general de titulación, con acceso al ingreso. |
+| **Acceso** | Correo `@unl.edu.ec` y contraseña, validados también en el backend |
+| **Doble factor (2FA)** | TOTP con Google Authenticator, códigos de recuperación y dispositivo de confianza de 5 días |
+| **Recuperación** | Enlaces de un solo uso para restablecer la contraseña o el 2FA |
+| **Roles y permisos** | Matriz RBAC evaluada en el servidor, con filtrado por ámbito |
+| **Trámite** | Expediente, peticiones de certificados, carga de PDF versionada, verificación, observación, subsanación, informe y declaratoria |
+| **Perfil académico** | Consulta mediante **MockSGA, una simulación de desarrollo** |
+| **Seguimiento** | Panel del estudiante, bandeja por rol y notificaciones internas |
+| **Auditoría** | Bitácora de eventos del trámite y de autenticación, sin secretos |
+| **Página pública** | Presentación del sistema y acceso al ingreso |
 
-### Futuras o pendientes
-
-- **Integración con el Servicio de Autenticación Centralizada (SAC/Apereo CAS) de la UNL:** solo está **documentada y preparada** (puerto de proveedor de identidad), **no implementada**. Ver [`docs/autenticacion/arquitectura-cas.md`](docs/autenticacion/arquitectura-cas.md).
-- Fases 2 y 3 del proceso de titulación.
-- Envío real de correos (requiere configurar SMTP).
+**No implementado:** adaptador real del SGA, integración con el SAC/CAS de la UNL y fases 2 y 3 del proceso.
 
 ---
 
-## 3. Tecnologías
+## 3. Arquitectura y tecnologías
 
-| Capa | Tecnologías (según `package.json`, `requirements*.txt` y Dockerfiles) |
+**Monolito modular** con arquitectura hexagonal en el backend y una SPA en React.
+
+```
+navegador ──► Nginx :8000 ──┬─► /, /login, /bandeja/…      → frontend React compilado
+                            ├─► /api/, /admin/, /health/   → backend Django
+                            └─► /static/                   → backend Django
+                                        │
+                                        └─► PostgreSQL 16 (red interna de Docker)
+```
+
+Los PDF del trámite son privados y solo se entregan por la API autenticada.
+
+| Capa | Tecnologías |
 |---|---|
 | Frontend | React 19, TypeScript 5, Vite 8, React Router 7, TanStack Query 5 |
-| Backend | Python 3.12, Django 5.2, Django REST Framework 3, drf-spectacular (OpenAPI 3) |
-| Autenticación | JWT con `djangorestframework-simplejwt`; TOTP (RFC 6238) con `pyotp`; QR con `segno`; cifrado de secretos con `cryptography` (MultiFernet) |
-| Base de datos | PostgreSQL 16 |
-| Documentos | `reportlab` (generación de PDF) |
+| Backend | Python 3.12, Django 5.2, Django REST Framework 3, drf-spectacular |
+| Autenticación | JWT (`simplejwt`), TOTP (`pyotp`), QR (`segno`), cifrado con `cryptography` |
+| Datos y documentos | PostgreSQL 16, `reportlab` |
 | Infraestructura | Docker, Docker Compose, Nginx, Gunicorn (imagen de producción) |
-| Pruebas | pytest + pytest-django; Vitest + Testing Library + MSW + vitest-axe |
-| Calidad y seguridad | ESLint, Prettier, flake8, black, isort, mypy; GitHub Actions con gitleaks (`.github/workflows/`) |
+| Calidad | pytest, Vitest, Testing Library, MSW, vitest-axe, ESLint, GitHub Actions, Safety, Bandit, Gitleaks |
+
+| | Desarrollo | Pruebas | Producción |
+|---|---|---|---|
+| Configuración | `config.settings.local` | `config.settings.test` | `config.settings.production` |
+| Ejecución | `docker-compose.yml` | pytest y Vitest | `docker-compose.prod.yml` |
+| Servidor | `runserver` | — | Gunicorn |
+| Migraciones | Manuales | Automáticas | Al arrancar |
+| Fuente académica | MockSGA (simulación) | MockSGA (simulación) | Sin proveedor: responde 503 |
+| Correo | Log del backend | Memoria | SMTP con TLS, obligatorio |
 
 ---
 
-## 4. Arquitectura
+## 4. Instalación y ejecución
 
-**Monolito modular** con arquitectura hexagonal en el backend (`domain`, `ports`, `services`, `adapters` por módulo) y una SPA en React.
+Esta guía prepara un entorno de **desarrollo local**. El despliegue de producción se describe en [`docs/08-infraestructura/despliegue.md`](docs/08-infraestructura/despliegue.md) y aún tiene condiciones pendientes.
 
-```
-navegador ──► nginx :8000 ──┬─► /, /login, /bandeja/…    → frontend React compilado
-                            ├─► /api/, /admin/, /health/  → backend Django
-                            └─► /static/, /media/          → backend Django
-                                         │
-                                         └─► PostgreSQL 16 (red interna de Docker)
-```
+### 4.1 Requisitos previos
 
-- **Frontend.** SPA servida por Nginx. Cualquier ruta que no sea del backend devuelve `index.html`, para que React Router resuelva las rutas.
-- **Backend.** API REST bajo `/api/v1/`. Los PDF del trámite son privados: solo se entregan por la API autenticada.
-- **Comunicación.** Mismo origen (`http://localhost:8000`). El frontend envía el JWT en `Authorization: Bearer`. La cookie de dispositivo de confianza es `HttpOnly` y solo viaja a `/api/v1/auth/`.
-- **Autenticación.** Ocurre en dos pasos y en ningún caso se emite un JWT sin el segundo factor; ver [§6](#6-guía-de-ingreso-al-sistema) y [`docs/autenticacion/flujo-autenticacion.md`](docs/autenticacion/flujo-autenticacion.md).
-- **Autorización.** Los roles se leen de la base de datos local (`UserRole`) y se evalúan en el servidor en cada operación. La interfaz solo decide a qué pantalla redirigir.
-- **Contenedores** (`docker-compose.yml`): `db` (PostgreSQL 16), `backend` (Django, `runserver` en desarrollo) y `nginx` (frontend compilado + proxy, puerto **8000**).
-
-### Estructura del repositorio (resumen)
-
-```
-.
-├── backend/
-│   ├── src/
-│   │   ├── config/            # settings (base, local, production, test), urls
-│   │   ├── core/              # adaptadores comunes: PDF, almacenamiento, IP, logging, errores
-│   │   └── apps/
-│   │       ├── authentication/   # usuarios, roles, RBAC, login, 2FA, recuperación
-│   │       ├── expedientes/      # expediente, estados, plazos, bandeja
-│   │       ├── peticiones/       # peticiones a dependencias y documentos PDF
-│   │       ├── verificacion/     # checklist, observaciones, subsanación
-│   │       ├── resoluciones/     # informe de aptitud y declaratoria
-│   │       └── notificaciones/   # notificaciones internas y auditoría
-│   ├── tests/                 # pruebas transversales
-│   ├── openapi.yaml           # contrato de la API (se valida en CI)
-│   └── .env.example           # variables del backend documentadas
-├── frontend/
-│   └── src/
-│       ├── app/               # router y proveedores
-│       ├── auth/              # contexto de sesión, guardas, redirección por rol
-│       ├── api/               # cliente HTTP y endpoints
-│       ├── components/        # UI kit y layout
-│       └── features/          # landing, auth, dashboard, solicitud, expediente, peticiones, bandeja…
-├── nginx/nginx.conf           # proxy y fallback de la SPA (desarrollo)
-├── docs/                      # documentación técnica (incluye docs/autenticacion/)
-├── SIAAF-KNOWLEDGE/           # bóveda de conocimiento del proyecto
-├── sgt-siaaf/specs/           # especificaciones
-├── scripts/                   # utilidades (versionado COSMOS, E2E de autenticación)
-├── Dockerfile                 # imagen del backend (development / production)
-├── docker-compose.yml         # entorno de desarrollo
-└── docker-compose.prod.yml    # entorno de producción
-```
-
----
-
-## 5. Instalación y ejecución local
-
-### 5.1 Requisitos previos
-
-- Docker y el plugin Docker Compose (`docker compose`).
 - Git.
-- Puerto **8000** libre en el equipo.
+- Docker con el plugin Docker Compose (`docker compose`).
+- Puerto **8000** libre.
 
-### 5.2 Clonar el repositorio
+### 4.2 Clonar el repositorio
 
 ```bash
 git clone git@github.com:R0yalCode/sistema-titulacion-unl.git
 cd sistema-titulacion-unl
 ```
 
-### 5.3 Variables de entorno
+### 4.3 Variables de entorno
 
-Docker Compose lee un archivo **`.env` en la raíz** del repositorio (no versionado). Créelo con estas variables, que son las que usa `docker-compose.yml`:
+Cree un archivo **`.env` en la raíz**. No lo versione.
 
 ```dotenv
-# Obligatorias: docker compose no arranca sin ellas
-POSTGRES_PASSWORD=<contraseña de la base de datos de desarrollo>
+# Obligatorias
+POSTGRES_PASSWORD=<contraseña de la base de desarrollo>
 SECRET_KEY=<cadena aleatoria larga>
 JWT_SIGNING_KEY=<otra cadena aleatoria, distinta de SECRET_KEY>
 
-# Opcionales (valor por defecto entre paréntesis)
-POSTGRES_DB=sgt_siaaf          # (sgt_siaaf)
-POSTGRES_USER=sgt_user         # (sgt_user)
-DEBUG=1                        # (1)
-# VITE_API_BASE_URL=http://localhost:8000   # URL de la API compilada en el frontend
+# Opcionales (se muestran los valores por defecto)
+POSTGRES_DB=sgt_siaaf
+POSTGRES_USER=sgt_user
+DEBUG=1
 ```
 
-Para generar valores aleatorios:
+Para generar cada valor aleatorio:
 
 ```bash
 python3 -c "import secrets; print(secrets.token_urlsafe(50))"
 ```
 
-> En desarrollo (`config.settings.local`), si no se define `MFA_ENCRYPTION_KEYS`, la clave de cifrado de los secretos TOTP se **deriva de `SECRET_KEY`**. Si cambia `SECRET_KEY`, los autenticadores ya registrados dejan de poder validarse y deben registrarse de nuevo. En producción esa clave es obligatoria e independiente ([§10](#10-configuración-y-seguridad)).
+> En desarrollo, la clave que cifra los secretos del 2FA se deriva de `SECRET_KEY`. Si cambia `SECRET_KEY`, cada usuario debe registrar de nuevo su autenticador.
 
-### 5.4 Construir y levantar los servicios
+### 4.4 Levantar los servicios y migrar
 
 ```bash
 docker compose up --build -d
-docker compose ps        # db (healthy), backend y nginx en ejecución
+docker compose ps
+docker compose exec backend python manage.py migrate
 ```
 
-`--build` recompila también el frontend dentro de la imagen de `nginx`: no se usa `frontend/dist` del equipo.
+`db` debe aparecer como `healthy`, y `backend` y `nginx` en ejecución. En desarrollo, las migraciones **no** se aplican solas.
 
-### 5.5 Aplicar las migraciones
-
-En desarrollo el contenedor `backend` arranca con `runserver` y **no** aplica migraciones automáticamente. Ejecútelas tras el primer arranque y después de cada actualización que incluya migraciones:
+### 4.5 Verificar
 
 ```bash
-docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py showmigrations authentication   # todas marcadas con [X]
+curl -s http://localhost:8000/health/                                # {"status": "ok"}
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8000/login # 200
 ```
-
-> La imagen de producción (`docker-compose.prod.yml`, `target: production`) sí ejecuta `migrate` al arrancar mediante `backend/entrypoint.sh`.
-
-### 5.6 Crear una cuenta para ingresar
-
-El acceso requiere una **cuenta habilitada con correo institucional y un rol asignado**. En un entorno nuevo:
-
-1. Cree un administrador de Django (le pedirá usuario, correo y contraseña):
-   ```bash
-   docker compose exec backend python manage.py createsuperuser
-   ```
-2. Entre en `http://localhost:8000/admin/` con ese usuario.
-3. Si la tabla de roles está vacía, cree los roles necesarios en **Roles**. Los nombres válidos son los de [§9](#9-roles-y-permisos).
-4. Cree o edite las cuentas en **Users**:
-   - correo **`@unl.edu.ec`** (es el dato de ingreso);
-   - rol en la sección de roles del usuario.
-   - Para el rol de estudiante o de carrera, registre también la carrera o facultad que corresponda.
-5. Defina **siempre** la contraseña desde la terminal, porque el formulario de usuarios del admin no la cifra:
-   ```bash
-   docker compose exec backend python manage.py changepassword <usuario>
-   ```
-
-> El correo de cada cuenta debe ser único. Una cuenta sin rol reconocido llega a la pantalla «No habilitado». El superusuario creado en el paso 1 también necesita un rol (por ejemplo `ADMINISTRADOR`) para usar la aplicación.
-
-### 5.7 Verificar que funciona
 
 | Recurso | URL |
 |---|---|
-| Página pública | http://localhost:8000/ |
+| Aplicación | http://localhost:8000/ |
 | Ingreso | http://localhost:8000/login |
-| Estado del backend | http://localhost:8000/health/ → `{"status": "ok"}` |
-| Documentación de la API (Swagger) | http://localhost:8000/api/v1/docs/ |
+| API (Swagger) | http://localhost:8000/api/v1/docs/ |
 | Administración de Django | http://localhost:8000/admin/ |
 
-```bash
-curl -s http://localhost:8000/health/                                    # {"status": "ok"}
-curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8000/login      # 200 (React)
-```
+> Use **`localhost`**, no `127.0.0.1`. El navegador los trata como orígenes distintos y las llamadas a la API pueden fallar.
 
-> Abra la aplicación en **http://localhost:8000**, no en `http://127.0.0.1:8000`: el navegador los trata como orígenes distintos y las llamadas a la API pueden fallar.
+> ⚠️ **Documentos en desarrollo:** los PDF se guardan en `backend/src/media`, fuera del volumen `media_data`. **Recrear el contenedor `backend` borra los documentos cargados** y deja sus registros sin archivo. `docker compose down -v` elimina además la base de datos.
 
-### 5.8 Operaciones habituales
-
-```bash
-docker compose up --build -d nginx      # recompilar solo el frontend (no toca la base de datos)
-docker compose up --build -d backend    # reconstruir el backend tras cambios de código
-docker compose logs -f backend          # ver el log del backend (incluye los correos en desarrollo)
-docker compose restart nginx            # tras editar nginx/nginx.conf (está montado desde el equipo)
-```
+Operaciones habituales y solución de problemas: [`TROUBLESHOOTING.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/TROUBLESHOOTING.md).
 
 ---
 
-## 6. Guía de ingreso al sistema
+## 5. Datos iniciales y cuentas de prueba
 
-### Paso 1 — Correo institucional
+> ⚠️ **Solo para el entorno de desarrollo local.**
+> - **No los ejecute contra producción.**
+> - Los datos académicos son **simulados** y no deben usarse como información real.
+> - Las cuentas demo **no son cuentas institucionales** y sus correos no son buzones reales.
+> - Use una contraseña exclusiva para la demo y no la escriba en la documentación.
 
-En `http://localhost:8000/login`, el campo se llama **«Nombre de usuario»**, igual que en el SAC de la UNL. Lo que debe escribir en él es su **correo institucional completo**:
+Las pruebas automatizadas no necesitan esta carga, porque crean su propia base temporal.
 
+El mecanismo recomendado son dos comandos de Django, que se ejecutan **en este orden** después de migrar:
+
+| Orden | Comando | Qué crea |
+|---|---|---|
+| 1 | `seed_initial_data` | 8 cuentas demo, una por rol, y sus roles |
+| 2 | `seed_mock_sga --asignar-ambito-personal` | Catálogo académico simulado (`MOCK-…`), perfil de `estudiante_1` y ámbito del personal demo |
+
+El catálogo de los 5 requisitos del Art. 235 no necesita carga: lo crea la migración.
+
+### 5.1 Ejecutar la carga
+
+`docker-compose.yml` no entrega `SEED_DEMO_PASSWORD` al backend, por lo que debe pasarse en el comando. Defina una contraseña propia:
+
+```bash
+read -rsp "Contraseña para las cuentas demo: " SEED_DEMO_PASSWORD; echo
+docker compose exec -e SEED_DEMO_PASSWORD="$SEED_DEMO_PASSWORD" backend python manage.py seed_initial_data
+unset SEED_DEMO_PASSWORD
+
+docker compose exec backend python manage.py seed_mock_sga --asignar-ambito-personal
 ```
-usuario@unl.edu.ec
+
+### 5.2 Cuentas generadas
+
+El correo de cada cuenta es `sgtdemo.<usuario>@unl.edu.ec`.
+
+| Usuario | Rol |
+|---|---|
+| `estudiante_1` | `ESTUDIANTE` |
+| `secretaria_carrera` | `SECRETARIA_CARRERA` |
+| `secretario_abogado` | `SECRETARIO_ABOGADO` |
+| `analista_apoyo` | `ANALISTA_APOYO` |
+| `decano_feirnnr` | `DECANO` |
+| `director_computacion` | `DIRECTOR_CARRERA` |
+| `responsable_practicas` | `RESPONSABLE_DEPENDENCIA` (sin permisos todavía) |
+| `admin_sys` | `ADMINISTRADOR` (sin acceso a `/admin/`) |
+
+Cada cuenta registra Google Authenticator en su primer ingreso.
+
+### 5.3 Verificar la carga
+
+```bash
+docker compose exec backend python manage.py shell -c "
+from apps.authentication.adapters.models import User
+from apps.academico.adapters.models import Carrera, Facultad, PerfilSGASimulado
+print('cuentas demo:', User.objects.filter(email__startswith='sgtdemo.').count())
+print('facultades:', Facultad.objects.filter(codigo__startswith='MOCK-').count())
+print('carreras:', Carrera.objects.filter(codigo__startswith='MOCK-').count())
+print('perfiles:', PerfilSGASimulado.objects.filter(codigo_carrera='MOCK-COMPUTACION').count())
+"
 ```
 
-- Solo se admite el dominio `@unl.edu.ec`. Se rechazan Gmail, Hotmail, `unl.edu`, subdominios u otros dominios, y se muestra «Ingrese un correo institucional válido (@unl.edu.ec).».
-- No importan las mayúsculas ni los espacios al inicio o al final.
-- Si deja el campo vacío, verá «El nombre de usuario es un campo requerido.».
+En una base nueva, el resultado esperado es 8 cuentas, 1 facultad, 2 carreras y 1 perfil.
 
-### Paso 2 — Contraseña
+### 5.4 Repetición y precauciones
 
-Escriba la contraseña de su cuenta. Si el campo está vacío verá «La contraseña es un campo requerido.».
+- Ambos comandos son **idempotentes**: al repetirlos no duplican datos.
+- Repetirlos **no restablece contraseñas** ni modifica el 2FA de las cuentas existentes.
+- `seed_initial_data` **vuelve a asignar** el rol demo si se retiró, y lo asigna a cualquier cuenta existente con uno de esos nombres de usuario.
+- Ambos comandos **se rechazan en producción** antes de acceder a la base, también con `--settings` dentro de la imagen de producción.
+- ⚠️ La protección no detecta la imagen de **desarrollo** conectada a una base real. Nunca le entregue credenciales de producción.
 
-Si el correo o la contraseña no son correctos, el sistema responde **«Usuario o contraseña incorrectos.»** sin indicar cuál de los dos falló. Tras **5 intentos por minuto** desde la misma red se muestra «Demasiados intentos…»; espere un momento.
+Para entrar a `/admin/`, cree una cuenta aparte con `createsuperuser`. Ese procedimiento, los datos exactos que crea cada comando y las operaciones que eliminan datos están en [`INITIAL_DATA.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/INITIAL_DATA.md).
 
-### Paso 3 — Primer ingreso: configurar el segundo factor
+---
 
-Si su cuenta aún no tiene segundo factor, aparece **«Configurar verificación en dos pasos»** con un **código QR**:
+## 6. Ingreso al sistema
 
-1. Abra **Google Authenticator** en su teléfono (instalación en [§7](#7-google-authenticator-instrucciones-para-el-usuario)).
-2. Toque **«+»** y elija **«Escanear un código QR»**.
-3. Escanee el QR que muestra SGT-SIAAF.
-4. La aplicación registra la cuenta **SGT-SIAAF UNL** con su usuario.
-5. Google Authenticator empieza a generar códigos de **6 dígitos**.
-6. Escriba en SGT-SIAAF el código que muestra la aplicación y pulse **«Verificar y activar»**.
-7. Si lo desea, marque **«Confiar en este dispositivo durante 5 días»** (no lo haga en equipos compartidos).
-8. Aparecen **10 códigos de recuperación**. **Guárdelos ahora**: no se volverán a mostrar. Marque «Guardé mis códigos…» y pulse **«Continuar al sistema»**.
+1. Abra http://localhost:8000/login.
+2. En **«Nombre de usuario»**, escriba su **correo institucional completo** (`usuario@unl.edu.ec`).
+3. Escriba su contraseña.
+4. Complete el segundo factor con Google Authenticator ([§7](#7-google-authenticator-instrucciones-para-el-usuario)).
+5. El sistema le dirige a su pantalla:
+   - **Estudiante:** `/estudiante`.
+   - **Roles operativos:** `/bandeja`.
+   - **Cuenta sin rol habilitado:** `/no-habilitado`.
 
-> ⚠️ **El código QR debe escanearse con Google Authenticator; no debe copiarse como si fuera una contraseña.** Contiene la clave secreta que vincula su cuenta con su teléfono: trátelo como información **confidencial**, no lo fotografíe ni lo comparta. Si no puede escanearlo, la opción «¿No puede escanear el código?» muestra una clave para introducirla a mano en la aplicación («Ingresar una clave de configuración», tipo *basada en el tiempo*). Esa clave es igual de confidencial.
+La sesión dura **30 minutos**. Al caducar, debe ingresar de nuevo.
 
-El QR solo vale para ese intento de ingreso: la verificación caduca a los **5 minutos**. Si caduca, vuelva a iniciar sesión y se mostrará un QR nuevo.
-
-### Paso 4 — Ingresos siguientes: código TOTP
-
-En cada ingreso posterior, tras la contraseña, aparece **«Verificación de seguridad (2FA)»**:
-
-1. Abra Google Authenticator.
-2. Busque la cuenta **SGT-SIAAF UNL**.
-3. Lea el código vigente de 6 dígitos.
-4. Escríbalo en SGT-SIAAF y pulse **«Verificar»**.
-
-Los códigos cambian cada **30 segundos** (`TOTP_INTERVAL = 30`). El servidor tolera un periodo de diferencia de reloj hacia cada lado (`MFA_TOTP_VALID_WINDOW = 1`). Cada código se acepta **una sola vez**.
-
-**Límites de intentos:**
-
-- Tras **5 códigos erróneos** en el mismo intento, debe volver a escribir la contraseña.
-- Tras **10 fallos en 15 minutos**, la cuenta queda bloqueada temporalmente para el segundo factor.
-
-Si marcó «Confiar en este dispositivo», durante **5 días** ese navegador no pedirá el código. **Cerrar sesión revoca esa confianza**; la caducidad de la sesión no la revoca.
-
-### Paso 5 — Acceso al panel
-
-Con los dos factores verificados:
-
-1. El backend emite la sesión (JWT, vigencia de **30 minutos**; luego debe volver a ingresar).
-2. Los permisos se obtienen de los **roles asignados en SGT-SIAAF**: base de datos local y matriz RBAC. **No** se consultan al SAC.
-3. El sistema le dirige a su pantalla:
-   - **Estudiante** → `/estudiante` (panel del estudiante).
-   - **Roles operativos** → `/bandeja` (bandeja de expedientes).
-   - **Cuenta sin rol habilitado** → `/no-habilitado`.
+Guía completa, incluida la recuperación de contraseña: [`USER_ACCESS_GUIDE.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/USER_ACCESS_GUIDE.md).
 
 ---
 
 ## 7. Google Authenticator: instrucciones para el usuario
 
-**Qué es.** Una aplicación gratuita de Google que genera códigos temporales de 6 dígitos. Es **externa** a SGT-SIAAF: el sistema no se comunica con Google. Ambos comparten un secreto al escanear el QR y calculan el mismo código con el estándar **TOTP (RFC 6238)**; el servidor de SGT-SIAAF valida el código.
+**Qué es.** Una aplicación gratuita que genera códigos temporales de 6 dígitos. Es el segundo factor de su cuenta: aunque alguien conozca su contraseña, no puede ingresar sin su teléfono.
 
-**Para qué se usa.** Es el segundo factor: aunque alguien conozca su contraseña, no puede ingresar sin su teléfono.
+SGT-SIAAF no se comunica con Google. La aplicación y el sistema comparten una clave secreta al escanear el QR y calculan el mismo código con el estándar TOTP.
 
-**Instalación** (solo desde las tiendas oficiales):
+### Instalar la aplicación
+
+Descárguela solo desde las tiendas oficiales:
 
 - Android: [Google Play — Google Authenticator](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2)
 - iPhone: [App Store — Google Authenticator](https://apps.apple.com/us/app/google-authenticator/id388497605)
 
-**Agregar la cuenta.** Abra la app, toque **«+»**, elija **«Escanear un código QR»** y apunte al QR de SGT-SIAAF ([§6, paso 3](#paso-3--primer-ingreso-configurar-el-segundo-factor)).
+### Activar la verificación en su primer ingreso
 
-**Consultar el código.** Abra la app y busque **SGT-SIAAF UNL**. El círculo junto al código indica el tiempo que le queda.
+Tras escribir su correo y contraseña, aparece **«Configurar verificación en dos pasos»** con un código QR.
 
-**Si el código no es aceptado:**
+1. Abra **Google Authenticator** en su teléfono.
+2. Toque **«+»** y elija **«Escanear un código QR»**.
+3. Escanee el QR que muestra SGT-SIAAF. Se agregará la cuenta **SGT-SIAAF UNL**.
+4. Escriba en SGT-SIAAF el código de **6 dígitos** que muestra la aplicación.
+5. Si es su equipo personal, puede marcar **«Confiar en este dispositivo durante 5 días»**. No lo haga en equipos compartidos.
+6. Pulse **«Verificar y activar»**.
+7. Aparecen **10 códigos de recuperación**. **Guárdelos en un lugar seguro**, porque no se volverán a mostrar.
+8. Marque **«Guardé mis códigos de recuperación en un lugar seguro»** y pulse **«Continuar al sistema»**.
+
+> ⚠️ **El QR es confidencial.** Contiene la clave que vincula su cuenta con su teléfono. No lo fotografíe ni lo comparta.
+
+**Si no puede escanearlo:** abra **«¿No puede escanear el código?»**. En la aplicación elija **«Ingresar una clave de configuración»**, use el nombre y la clave que muestra SGT-SIAAF, y seleccione el tipo **basada en el tiempo**. Esa clave es igual de confidencial.
+
+El QR vale para ese intento de ingreso y caduca a los **5 minutos**. Si caduca, inicie sesión de nuevo para obtener otro.
+
+### Ingresar con el código
+
+1. Escriba su correo y contraseña.
+2. Abra Google Authenticator y busque **SGT-SIAAF UNL**.
+3. Escriba el código actual de 6 dígitos y pulse **«Verificar»**.
+
+Los códigos cambian cada **30 segundos** y cada uno se acepta **una sola vez**.
+
+Si marcó «Confiar en este dispositivo», ese navegador no pedirá el código durante 5 días. **Cerrar sesión revoca esa confianza**, y también la revocan cambiar la contraseña o restablecer el 2FA.
+
+### Si el código no es aceptado
 
 - Use el código **actual**. Si está a punto de cambiar, espere al siguiente.
-- Active la **fecha y hora automáticas** del teléfono. Un reloj desfasado produce códigos inválidos.
-- Compruebe que usa la cuenta **SGT-SIAAF UNL** correcta. Si registró el sistema más de una vez, borre las entradas antiguas.
-- Si vuelve a la pantalla de ingreso con «La verificación caducó…», escriba de nuevo su contraseña.
+- Active la **fecha y hora automáticas** del teléfono.
+- Compruebe que usa la cuenta **SGT-SIAAF UNL** correcta y borre las entradas antiguas.
+- Si aparece «La verificación caducó…», vuelva a escribir su contraseña.
+- Tras **5 códigos erróneos** debe escribir de nuevo la contraseña.
+- Tras **10 fallos en 15 minutos**, el segundo factor se bloquea temporalmente. Espere antes de reintentar.
 
-**Si cambia o pierde el teléfono:**
+### Si cambia o pierde el teléfono
 
-- **Con un código de recuperación:** en la pantalla del código, elija «¿Perdió su teléfono? Use un código de recuperación». El autenticador anterior queda anulado y se le pide registrar uno nuevo.
-- **Sin códigos:** use el restablecimiento del doble factor ([§8](#82-restablecimiento-del-segundo-factor-2fa)).
-- **Al cambiar de teléfono teniendo el antiguo:** use un código de recuperación o el restablecimiento para registrar el nuevo.
+**Con un código de recuperación:**
 
----
+1. En la pantalla del código, elija **«¿Perdió su teléfono? Use un código de recuperación»**.
+2. Escriba uno de sus códigos y pulse **«Usar código de recuperación»**.
+3. El autenticador anterior y **todos sus códigos de recuperación** quedan anulados.
+4. Escanee el QR nuevo y borre la entrada antigua de la aplicación.
+5. Al terminar recibirá **10 códigos nuevos**. Guárdelos.
 
-## 8. Recuperación de contraseña y del segundo factor
+**Sin códigos de recuperación:**
 
-### 8.1 Recuperación de contraseña
+1. En `/login`, pulse **«Restablecer doble factor de autenticación (2FA)»**.
+2. Escriba su **correo institucional**, **número de cédula** y **contraseña actual**.
+3. Pulse **«Restablecer el doble factor de autenticación (2FA)»**.
+4. Si los datos son correctos, recibirá en su correo registrado un **enlace de un solo uso, válido 1 hora**. El mensaje en pantalla es siempre el mismo, para no revelar si los datos coinciden.
+5. Abra el enlace y pulse **«Confirmar restablecimiento»**.
+6. Inicie sesión, escanee el QR nuevo y borre la entrada antigua de la aplicación.
+7. Guarde los **10 códigos nuevos**.
 
-1. En `/login`, pulse **«Restablecer contraseña»** (ruta `/recuperar-contrasena`).
-2. Escriba el **correo registrado** en su cuenta.
-3. El sistema responde siempre con el mismo mensaje, exista o no la cuenta.
-4. Si la cuenta existe y está activa, se envía un enlace a `/restablecer-contrasena?uid=…&token=…`:
-   - es válido **1 hora** (`PASSWORD_RESET_TIMEOUT`);
-   - sirve **una sola vez**.
-5. Defina la nueva contraseña, que debe cumplir la política de Django.
-6. Al cambiar la contraseña se **revoca la confianza de todos sus dispositivos**: el siguiente ingreso pedirá el código TOTP.
+> Si restableció su **contraseña** por correo en las últimas **72 horas**, **no recibirá el enlace**, aunque la pantalla muestre el mensaje habitual. Espere a que pase ese plazo. Es una medida para que quien controle solo su buzón no pueda anular ambos factores.
 
-Límite: 10 solicitudes por hora desde la misma red.
-
-### 8.2 Restablecimiento del segundo factor (2FA)
-
-Para cuando no tiene el teléfono **ni** sus códigos de recuperación:
-
-1. En `/login`, pulse **«RESTABLECER DOBLE FACTOR DE AUTENTICACIÓN (2FA)»** (ruta `/restablecer-2fa`).
-2. Complete:
-   - **correo institucional** (solo `@unl.edu.ec`);
-   - **número de cédula** (10 dígitos);
-   - **contraseña actual**.
-3. Pulse «Restablecer el doble factor de autenticación (2FA)». La respuesta es **siempre la misma**, para no revelar si los datos coinciden.
-4. **Estos datos no retiran el 2FA por sí solos.** Si coinciden con una cuenta con 2FA activo, se envía al correo registrado un **enlace de un solo uso**. Es válido 1 hora y deja de valer si cambia la contraseña.
-5. Abra el enlace (`/restablecer-2fa/confirmar`) y pulse **«Confirmar restablecimiento»**. Se retiran:
-   - el autenticador anterior;
-   - los códigos de recuperación;
-   - la confianza de todos sus dispositivos.
-6. Inicie sesión de nuevo: el sistema mostrará un **QR nuevo** para registrar Google Authenticator. En la app, borre la entrada antigua de SGT-SIAAF.
-
-**Restricciones:**
-
-- **Espera de 72 horas tras restablecer la contraseña** (`MFA_RESET_COOLDOWN_HOURS`). Si restableció la contraseña por correo, durante 72 h no se acepta el restablecimiento del 2FA por el mismo canal. Así, quien solo controle el buzón no puede anular ambos factores.
-- Límite: 10 solicitudes por hora desde la misma red.
-- Todas las operaciones quedan auditadas, sin guardar correo, cédula, contraseña ni enlace.
-- Si tampoco tiene acceso a su correo, un administrador puede usar la acción **«Restablecer doble factor (2FA)»** en `/admin/` tras verificar su identidad por un canal institucional. El procedimiento formal está pendiente de definición por la UNL.
-
-### 8.3 Correos: desarrollo frente a producción
-
-- **Desarrollo (configuración actual de `docker-compose.yml`):** no se envían correos. El backend usa `django.core.mail.backends.console.EmailBackend`, así que **el mensaje, con su enlace, se escribe en el log del backend**:
-  ```bash
-  docker compose logs backend | grep -A20 "Subject:"
-  ```
-- **Producción:** configure un proveedor SMTP institucional con `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` y `DEFAULT_FROM_EMAIL`. Configure también `FRONTEND_BASE_URL` (origen público con el que se construyen los enlaces). **Sin SMTP configurado no se envía ningún correo.**
-- **Pendiente de la UNL:** la referencia del SAC envía el enlace del 2FA al «correo personal»; SGT-SIAAF solo almacena el correo institucional, que es a donde lo envía hoy.
+**Sin acceso a su correo:** solicite ayuda a un administrador. Puede restablecer su 2FA desde `/admin/` tras verificar su identidad por un canal institucional. El procedimiento formal aún debe definirlo la UNL.
 
 ---
 
-## 9. Roles y permisos
+## 8. Pruebas
 
-Roles definidos en `backend/src/apps/authentication/adapters/models.py`. Permisos según `RBAC_MATRIX` (`adapters/permissions.py`), con denegación por defecto:
+Estos comandos usan bases de prueba y no requieren el entorno Docker.
 
-| Rol | Pantalla | Puede (API) |
-|---|---|---|
-| `ESTUDIANTE` | `/estudiante` | Crear su expediente, verlo y enviarlo; crear peticiones y solicitar certificados; cargar y descargar sus documentos; subsanar requisitos observados; sus notificaciones |
-| `SECRETARIA_CARRERA` | `/bandeja` | Ver expedientes de su carrera; cargar y descargar documentos de peticiones asignadas; subsanar requisitos de su carrera; notificaciones de su carrera |
-| `SECRETARIO_ABOGADO` | `/bandeja` | Ver expedientes de su facultad; iniciar la verificación; ver y evaluar el checklist; observar expedientes; emitir el informe de aptitud; documentos asignados; notificaciones |
-| `ANALISTA_APOYO` | `/bandeja` | Ver expedientes de su facultad; ver el checklist y evaluarlo en borrador; preparar el informe en borrador; documentos asignados; notificaciones |
-| `DECANO` | `/bandeja` | Ver expedientes de su facultad; registrar la declaratoria de aptitud; notificaciones |
-| `DIRECTOR_CARRERA` | `/bandeja` | Ver expedientes de su carrera; documentos asignados; notificaciones |
-| `ADMINISTRADOR` | `/bandeja` | Acceso completo de lectura; crear expedientes y peticiones; checklist; catálogo de requisitos; notificaciones |
-| `RESPONSABLE_DEPENDENCIA` | `/no-habilitado` | **Aún sin acceso funcional:** el rol existe, pero la matriz RBAC no le concede ninguna operación (brecha conocida) |
-
-El backend comprueba el rol **en cada petición**. Ocultar un botón en la interfaz no concede ni retira permisos.
-
----
-
-## 10. Configuración y seguridad
-
-Todas las variables están documentadas, sin valores secretos, en [`backend/.env.example`](backend/.env.example). Nunca versione archivos `.env` ni copie en ellos valores reales de otros entornos.
-
-| Variable | Uso |
-|---|---|
-| `SECRET_KEY` | Firma de Django (sesiones, CSRF, enlaces de recuperación). Obligatoria. |
-| `JWT_SIGNING_KEY` | Firma de los JWT. Obligatoria y **distinta** de `SECRET_KEY`. |
-| `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | Base de datos en Compose (el backend las recibe como `DB_NAME`, `DB_USER` y `DB_PASSWORD`). |
-| `ALLOWED_HOSTS` | Hosts admitidos por Django (obligatoria en producción). |
-| `CORS_ALLOWED_ORIGINS`, `CSRF_TRUSTED_ORIGINS` | Orígenes permitidos. Solo se configuran en producción; en desarrollo todo es mismo origen. |
-| `TRUSTED_PROXIES` | Proxies de confianza para obtener la IP real (límites de intentos y auditoría). |
-| `MFA_ENCRYPTION_KEYS` | Claves Fernet para cifrar los secretos TOTP en reposo. Admite varias separadas por comas: la primera cifra y todas descifran. |
-| `MFA_TRUSTED_DEVICE_DAYS`, `MFA_CHALLENGE_*`, `MFA_USER_*`, `MFA_THROTTLE_RATE`, `MFA_RESET_COOLDOWN_HOURS` | Política del 2FA (valores por defecto en `.env.example` y `config/settings/base.py`). |
-| `AUTH_THROTTLE_RATE`, `PASSWORD_RESET_THROTTLE_RATE`, `PASSWORD_RESET_TIMEOUT` | Límites de intentos y vigencia de los enlaces. |
-| `EMAIL_*`, `DEFAULT_FROM_EMAIL`, `FRONTEND_BASE_URL` | Envío de correos ([§8.3](#83-correos-desarrollo-frente-a-producción)). |
-
-**Sesión.** JWT `access` de 30 minutos. No existe renovación automática: al expirar, se vuelve a ingresar. El cierre de sesión no invalida en el servidor un JWT ya emitido, que caduca por tiempo.
-
-**Clave de cifrado del 2FA en producción.** `docker-compose.prod.yml` exige `MFA_ENCRYPTION_KEYS`. Genere una clave **independiente** de `SECRET_KEY`:
-
-```bash
-python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-```
-
-Para rotarla:
-
-1. Anteponga la clave nueva: `MFA_ENCRYPTION_KEYS=<nueva>,<anterior>`.
-2. Reinicie el servicio.
-3. Ejecute `python manage.py rotate_mfa_keys`.
-4. Retire la clave anterior.
-
-Si se pierde una clave en uso, los autenticadores que cifraba deben registrarse de nuevo. Detalle en [`docs/autenticacion/politica-2fa.md`](docs/autenticacion/politica-2fa.md).
-
-**Desarrollo frente a producción:**
-
-| | Desarrollo (`docker-compose.yml`) | Producción (`docker-compose.prod.yml`) |
-|---|---|---|
-| Settings | `config.settings.local` (`DEBUG`) | `config.settings.production` |
-| Servidor | `runserver`, migraciones manuales | Gunicorn, `migrate` automático en el arranque |
-| HTTPS y cookies | HTTP local; cookie de confianza sin `Secure` | HTTPS obligatorio, HSTS, cookies `Secure` |
-| Clave del 2FA | Derivada de `SECRET_KEY` si falta | `MFA_ENCRYPTION_KEYS` obligatoria |
-| Correo | Consola (log del backend) | SMTP a configurar |
-
-**Controles implementados:**
-
-- Contraseñas con los hashers de Django.
-- Límites de intentos por IP y bloqueo del 2FA por cuenta.
-- Secretos TOTP cifrados.
-- Retos, tokens de confianza y códigos de recuperación guardados solo como hash.
-- Filtro que enmascara datos sensibles en los logs.
-- RBAC con filtrado por ámbito (evita accesos a expedientes ajenos).
-- PDF validados (cabecera `%PDF-`, SHA-256, ≤ 10 MB) y almacenados de forma privada.
-- Auditoría de eventos del trámite y de autenticación.
-- Escaneo de secretos con gitleaks en CI.
-
----
-
-## 11. Pruebas y calidad
-
-### Backend
-
-CI (`.github/workflows/ci.yml`) ejecuta las pruebas desde `backend/` con Python 3.12, SQLite en memoria (`config.settings.test`) y claves desechables:
+**Backend** (Python 3.12, SQLite en memoria):
 
 ```bash
 cd backend
@@ -489,102 +351,96 @@ python3.12 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt -r requirements-dev.txt
 export SECRET_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')
 export JWT_SIGNING_KEY=$(python -c 'import secrets; print(secrets.token_urlsafe(50))')
+export MFA_ENCRYPTION_KEYS=$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')
 export DB_PASSWORD=ci
 python -m pytest -ra src/apps src/core tests
 ```
 
-Cubren:
-
-- el dominio y los servicios de cada módulo;
-- el RBAC y el aislamiento por ámbito;
-- la máquina de estados y los plazos;
-- los documentos PDF;
-- la autenticación: correo institucional, TOTP, ventana temporal, reutilización de códigos, límites, cifrado, dispositivo de confianza, recuperación y restablecimiento del 2FA;
-- el flujo completo del trámite.
-
-> No ejecute `pytest` dentro del contenedor `backend` de desarrollo: la imagen no incluye `backend/conftest.py` ni `backend/tests/`, y su `DJANGO_SETTINGS_MODULE` apunta a PostgreSQL.
-
-### Frontend
-
-Con Node 24 (versión usada en `frontend/Dockerfile` y en CI):
+**Frontend** (Node 24):
 
 ```bash
 cd frontend
 npm ci
-npm run lint        # ESLint (incluye reglas de accesibilidad jsx-a11y)
-npm run typecheck   # TypeScript
-npm run test        # Vitest + Testing Library + MSW + vitest-axe
+npm run lint
+npm run typecheck
+npm run test
 npm run build
 ```
 
-Cubren:
-
-- formularios y mensajes de validación;
-- flujo de ingreso con 2FA y restablecimiento;
-- guardas de ruta y redirección por rol;
-- vistas del trámite;
-- accesibilidad automática con axe.
-
-### E2E de autenticación
-
-`scripts/e2e/e2e_mfa.py` recorre por HTTP el flujo completo contra un backend en ejecución. Calcula los códigos TOTP igual que Google Authenticator. Las instrucciones están en la cabecera del script.
-
-> **Referencia de una ejecución concreta (2026-11-18):** backend 889 aprobadas y 13 omitidas; frontend 475/475. Las cifras cambian con el proyecto: ejecute las pruebas para conocer el estado actual.
+La integración continua (`.github/workflows/`) añade pruebas con PostgreSQL 16, validación del contrato OpenAPI, Safety, Bandit y Gitleaks. Detalle: [`REGRESSION_TESTS.md`](SIAAF-KNOWLEDGE/05-EXECUTION/REGRESSION_TESTS.md).
 
 ---
 
-## 12. API
+## 9. Estructura del repositorio
 
-Documentación interactiva: http://localhost:8000/api/v1/docs/ (Swagger), http://localhost:8000/api/v1/redoc/ (ReDoc), esquema en http://localhost:8000/api/v1/schema/. El contrato versionado es [`backend/openapi.yaml`](backend/openapi.yaml).
+```
+.
+├── backend/
+│   ├── src/
+│   │   ├── config/          # settings y URLs
+│   │   ├── core/            # adaptadores comunes
+│   │   └── apps/            # academico, authentication, expedientes,
+│   │                        # notificaciones, peticiones, resoluciones, verificacion
+│   ├── tests/               # pruebas transversales
+│   └── openapi.yaml         # contrato de la API
+├── frontend/src/            # SPA en React
+├── nginx/                   # configuración de desarrollo y producción
+├── docs/                    # documentación técnica
+├── SIAAF-KNOWLEDGE/         # bóveda de conocimiento del proyecto
+├── sgt-siaaf/specs/         # especificaciones
+├── scripts/                 # versionado COSMOS y E2E de autenticación
+├── Dockerfile               # imagen del backend
+├── docker-compose.yml       # desarrollo
+└── docker-compose.prod.yml  # producción
+```
 
-| Grupo | Endpoints (prefijo `/api/v1/`) |
+---
+
+## 10. Documentación complementaria
+
+| Tema | Documento |
 |---|---|
-| Autenticación | `auth/login/`, `auth/mfa/setup/`, `auth/mfa/setup/confirm/`, `auth/mfa/verify/`, `auth/mfa/recovery/`, `auth/mfa/reset/`, `auth/mfa/reset/confirm/`, `auth/logout/`, `auth/password-reset/`, `auth/password-reset/validate/`, `auth/password-reset/confirm/` |
-| Expedientes | `expedientes/`, `expedientes/bandeja/`, `expedientes/{id}/`, `expedientes/{id}/enviar/`, `expedientes/{id}/iniciar-verificacion/`, `expedientes/{id}/observar/` |
-| Peticiones | `peticiones/{id}/solicitar-emision/`, `peticiones/{id}/documento/`, `peticiones/{id}/documento/{version}/` |
-| Verificación | `expedientes/{id}/checklist/`, `checklist/{id}/`, `checklist/{id}/subsanar/` |
-| Resoluciones | `informes/`, `declaratorias/` |
-| Notificaciones | `notificaciones/`, `notificaciones/{id}/marcar-leida/` |
-
-Fuera de la API: `/health/` (estado) y `/admin/` (administración de Django).
-
----
-
-## 13. Estado del proyecto y limitaciones
-
-- **Autenticación local.** SGT-SIAAF valida correo y contraseña contra su propia base de datos. La pantalla de ingreso reproduce la apariencia del SAC de la UNL, pero **no es el SAC ni está integrada con él**.
-- **Correo institucional validado en el backend**, no solo en la interfaz.
-- **Segundo factor TOTP** propio de SGT-SIAAF (Google Authenticator), con secretos cifrados.
-- **Autorización mediante RBAC local.** Los roles se asignan en SGT-SIAAF; no se obtienen del SAC.
-- **Integración con SAC/CAS: pendiente.** Requiere el registro de SGT-SIAAF como servicio y la autorización institucional. La arquitectura está preparada y documentada en [`docs/autenticacion/arquitectura-cas.md`](docs/autenticacion/arquitectura-cas.md).
-- **SMTP:** debe configurarse para que los correos se envíen en producción.
-- **`MFA_ENCRYPTION_KEYS`:** debe configurarse antes de cualquier despliegue productivo.
-- **Administración de Django (`/admin/`):** usa el inicio de sesión propio de Django (usuario y contraseña) y **no aplica el segundo factor**. Restrinja las cuentas `is_staff` y el acceso a esa ruta.
-- **Contraseñas en el admin:** el formulario de usuarios de `/admin/` no cifra la contraseña. Defínala con `manage.py changepassword`.
-- **Rol `RESPONSABLE_DEPENDENCIA`:** sin permisos en la matriz RBAC.
-- **Fases 2 y 3 del proceso de titulación:** no implementadas.
-- **Decisiones pendientes de la UNL:** canal del enlace de restablecimiento del 2FA, aceptación formal del procedimiento, alternativa presencial y uso de la identidad visual del SAC en un servicio aún no integrado.
+| Mapa general del conocimiento | [`MASTER_INDEX.md`](SIAAF-KNOWLEDGE/00-CORE/MASTER_INDEX.md) |
+| Estado del proyecto | [`CURRENT_STATE.md`](SIAAF-KNOWLEDGE/00-CORE/CURRENT_STATE.md) |
+| Arquitectura | [`GENERAL_ARCHITECTURE.md`](SIAAF-KNOWLEDGE/01-ARCHITECTURE/GENERAL_ARCHITECTURE.md) |
+| API | [`API_CONTRACTS.md`](SIAAF-KNOWLEDGE/01-ARCHITECTURE/API_CONTRACTS.md) · [`openapi.yaml`](backend/openapi.yaml) |
+| Roles y permisos | [`PERMISSIONS_ROLES.md`](SIAAF-KNOWLEDGE/02-BACKEND/PERMISSIONS_ROLES.md) |
+| Configuración y entornos | [`ENVIRONMENTS.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/ENVIRONMENTS.md) · [`backend/.env.example`](backend/.env.example) |
+| Docker y CI | [`DOCKER.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/DOCKER.md) |
+| Datos iniciales | [`INITIAL_DATA.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/INITIAL_DATA.md) |
+| Guía de acceso | [`USER_ACCESS_GUIDE.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/USER_ACCESS_GUIDE.md) |
+| Solución de problemas | [`TROUBLESHOOTING.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/TROUBLESHOOTING.md) |
+| Política del 2FA | [`politica-2fa.md`](docs/autenticacion/politica-2fa.md) · [`flujo-autenticacion.md`](docs/autenticacion/flujo-autenticacion.md) |
+| Arquitectura CAS (no implementada) | [`arquitectura-cas.md`](docs/autenticacion/arquitectura-cas.md) |
+| MockSGA | [`perfil-academico-mock-sga.md`](docs/academico/perfil-academico-mock-sga.md) |
+| Despliegue | [`despliegue.md`](docs/08-infraestructura/despliegue.md) |
 
 ---
 
-## 14. Solución de problemas
+## 11. Estado actual y limitaciones
 
-| Problema | Qué hacer |
-|---|---|
-| `POSTGRES_PASSWORD is required` / `SECRET_KEY is required` | Defina la variable en el `.env` de la raíz ([§5.3](#53-variables-de-entorno)). |
-| Errores de tablas inexistentes tras actualizar | `docker compose exec backend python manage.py migrate` |
-| El frontend no refleja los cambios | `docker compose up --build -d nginx` |
-| La API falla desde el navegador | Use `http://localhost:8000`, no `127.0.0.1`. |
-| «Ingrese un correo institucional válido» | Use su correo completo `@unl.edu.ec`, no el nombre de usuario. |
-| El código TOTP es rechazado | Hora automática en el teléfono, código vigente y cuenta correcta ([§7](#7-google-authenticator-instrucciones-para-el-usuario)). |
-| «La verificación caducó…» | El reto dura 5 minutos o se agotaron los 5 intentos: vuelva a iniciar sesión. |
-| No llega el correo de recuperación | En desarrollo no se envían correos: búsquelo con `docker compose logs backend`. |
-| Tras cambiar `SECRET_KEY` en desarrollo el código nunca es válido | La clave del 2FA se deriva de `SECRET_KEY`: restablezca el 2FA ([§8.2](#82-restablecimiento-del-segundo-factor-2fa)) y registre de nuevo el autenticador. |
-| La base de datos no arranca | `docker compose logs db` |
+El sistema es un prototipo funcional de la Fase 1. **No debe desplegarse como servicio real** hasta resolver estos puntos:
+
+**Bloquean producción:**
+
+- **SGA:** no existe conexión ni adaptador real. MockSGA es una simulación y está prohibida en producción. Sin proveedor, el perfil académico y la creación de expedientes responden 503.
+- **Infraestructura:** faltan certificados y dominio reales, y backups de base de datos y documentos.
+- **Correo:** la configuración SMTP se valida al arrancar y se probó con un servidor de ensayo, pero falta configurar y probar el **SMTP institucional**.
+- **Validación:** falta probar el flujo completo a través del Nginx de producción en un navegador real.
+
+**Limitaciones conocidas:**
+
+- **SAC/CAS:** la autenticación es local. La pantalla de ingreso se inspira en el SAC, pero **no está integrada con él**.
+- **`/admin/`:** usa el inicio de sesión de Django y **no aplica el segundo factor**. Su formulario no cifra contraseñas: defínalas con `manage.py changepassword`.
+- **`RESPONSABLE_DEPENDENCIA`:** el rol existe, pero no tiene permisos en la matriz RBAC.
+- **Subsanación:** el estudiante no dispone de un endpoint para descubrir el identificador del requisito observado.
+- **Sesión:** cerrar sesión no invalida en el servidor un JWT ya emitido; este caduca a los 30 minutos.
+- **Documentos en desarrollo:** no persisten al recrear el contenedor `backend` ([§4.5](#45-verificar)).
+- **Fases 2 y 3** del proceso de titulación: no implementadas.
 
 ---
 
-## 15. Licencia y autores
+## 12. Licencia y autores
 
 Distribuido bajo la licencia **MIT** (ver [`LICENSE`](LICENSE)).
 
@@ -593,5 +449,5 @@ Distribuido bajo la licencia **MIT** (ver [`LICENSE`](LICENSE)).
 - [Royel Jima](https://github.com/R0yalCode)
 - [Steeven Pardo](https://github.com/Dan1el17)
 - [Mark Gonzalez](https://github.com/7777-C)
-- [Juan Calopino](https://github.com/JuaaanCalopino)
+- [Juan Calopino](https://github.com/JuanCalopinoo)
 - [Jimmy Ontaneda](https://github.com/JJOC3S)
