@@ -224,7 +224,7 @@ El responsable autorizó expresamente el rediseño transversal el 2026-11-19, so
 - **Alcance:** `AppLayout` aplica `data-visual="siaaf-modern"` solo si el JWT incluye `ADMINISTRADOR`. Los demás roles conservan los tokens base.
 - **Tokens:** `siaaf-modern.css` redefine tokens semánticos dentro de ese atributo. Estructura `#25374a`, acción y enlaces `#3d5871` (7,41:1 sobre blanco), fondo `#f4f7fa`, acento `#e1ab1d` y estados verde, ámbar y rojo con texto o icono.
 - **Contraste:** `#6597c9` (3,08:1 con blanco) no se usa para texto ni botones con texto blanco.
-- **Fuente de la paleta:** las imágenes de `docs/paleta_colores_institucionales/` son material local del responsable y no están versionadas en esta integración. Los valores aplicados quedan en `siaaf-modern.css`.
+- **Fuente de la paleta:** `docs/paleta_colores_institucionales/` versiona las tres tablas de color (`palette-tints.png`, `palette-shades.png` y `palette-shades-login.png`). Los valores aplicados quedan en `siaaf-modern.css`.
 - **Navegación:** grupos «Menú principal» y «Gestión y control». La consola de administración enlaza a Django admin y exige una cuenta con `is_staff`.
 - **Búsqueda:** Ctrl/Cmd + K localiza secciones y expedientes de la bandeja; no usa endpoints nuevos.
 - **Panel (`/bandeja`):** indicadores, distribución por estado, atención prioritaria, actividad de la cuenta, accesos rápidos y listado. Con más de 50 expedientes no se muestran cifras parciales de plazos ni la distribución.

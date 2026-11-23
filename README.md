@@ -107,33 +107,41 @@ Esta guía prepara un entorno de **desarrollo local**. El despliegue de producci
 - Docker con el plugin Docker Compose (`docker compose`).
 - Puerto **8000** libre.
 
-### 4.2 Clonar el repositorio
+### 4.2 Clonar `develop`
+
+`main` es la rama predeterminada, pero la versión de trabajo está en **`develop`**. Indique siempre la rama:
 
 ```bash
-git clone git@github.com:R0yalCode/sistema-titulacion-unl.git
+git clone -b develop https://github.com/R0yalCode/sistema-titulacion-unl.git
 cd sistema-titulacion-unl
+git rev-parse --short HEAD
 ```
+
+Para actualizar un repositorio ya clonado:
+
+```bash
+git fetch origin
+git switch develop
+git pull --ff-only origin develop
+```
+
+Después de actualizar, ejecute `docker compose up --build -d`: el código se copia dentro de las imágenes. Guía completa: [`GUIA_COLABORADORES.md`](SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GUIA_COLABORADORES.md).
 
 ### 4.3 Variables de entorno
 
-Cree un archivo **`.env` en la raíz**. No lo versione.
-
-```dotenv
-# Obligatorias
-POSTGRES_PASSWORD=<contraseña de la base de desarrollo>
-SECRET_KEY=<cadena aleatoria larga>
-JWT_SIGNING_KEY=<otra cadena aleatoria, distinta de SECRET_KEY>
-
-# Opcionales (se muestran los valores por defecto)
-POSTGRES_DB=sgt_siaaf
-POSTGRES_USER=sgt_user
-DEBUG=1
-```
-
-Para generar cada valor aleatorio:
+Cree el archivo **`.env`** desde la plantilla y genere sus valores. No lo versione.
 
 ```bash
-python3 -c "import secrets; print(secrets.token_urlsafe(50))"
+cp .env.example .env
+python3 - <<'PY'
+import pathlib, secrets
+ruta = pathlib.Path(".env")
+texto = ruta.read_text()
+for clave in ("POSTGRES_PASSWORD", "SECRET_KEY", "JWT_SIGNING_KEY"):
+    texto = texto.replace(f"{clave}=\n", f"{clave}={secrets.token_urlsafe(48)}\n")
+ruta.write_text(texto)
+PY
+chmod 600 .env
 ```
 
 > En desarrollo, la clave que cifra los secretos del 2FA se deriva de `SECRET_KEY`. Si cambia `SECRET_KEY`, cada usuario debe registrar de nuevo su autenticador.
@@ -410,7 +418,9 @@ La integración continua (`.github/workflows/`) añade pruebas con PostgreSQL 16
 | Roles y permisos | [`PERMISSIONS_ROLES.md`](SIAAF-KNOWLEDGE/02-BACKEND/PERMISSIONS_ROLES.md) |
 | Configuración y entornos | [`ENVIRONMENTS.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/ENVIRONMENTS.md) · [`backend/.env.example`](backend/.env.example) |
 | Docker y CI | [`DOCKER.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/DOCKER.md) |
+| Clonar y ejecutar `develop` | [`GUIA_COLABORADORES.md`](SIAAF-KNOWLEDGE/15-GIT-AND-WORKFLOWS/GUIA_COLABORADORES.md) |
 | Datos iniciales | [`INITIAL_DATA.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/INITIAL_DATA.md) |
+| Dataset sintético | [`dataset-sgt-siaaf.md`](docs/entorno-pruebas/dataset-sgt-siaaf.md) |
 | Guía de acceso | [`USER_ACCESS_GUIDE.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/USER_ACCESS_GUIDE.md) |
 | Solución de problemas | [`TROUBLESHOOTING.md`](SIAAF-KNOWLEDGE/08-OPERATIONS/TROUBLESHOOTING.md) |
 | Política del 2FA | [`politica-2fa.md`](docs/autenticacion/politica-2fa.md) · [`flujo-autenticacion.md`](docs/autenticacion/flujo-autenticacion.md) |
