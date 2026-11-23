@@ -1,6 +1,7 @@
 import { createContext, useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/Button'
+import { AlertCircleIcon, CheckCircleIcon, CloseIcon, InfoIcon, XCircleIcon } from '@/components/ui/icons'
 import styles from './ToastProvider.module.css'
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'danger'
@@ -17,6 +18,13 @@ export type ToastContextValue = {
 }
 
 export const ToastContext = createContext<ToastContextValue | undefined>(undefined)
+
+const ICONO: Record<ToastVariant, ReactNode> = {
+  info: <InfoIcon size={20} />,
+  success: <CheckCircleIcon size={20} />,
+  warning: <AlertCircleIcon size={20} />,
+  danger: <XCircleIcon size={20} />,
+}
 
 const DEFAULT_AUTO_DISMISS_MS = 5000
 const CRITICAL_VARIANTS: ToastVariant[] = ['warning', 'danger']
@@ -74,14 +82,18 @@ export function ToastProvider({ children, autoDismissMs = DEFAULT_AUTO_DISMISS_M
               key={toast.id}
               role={CRITICAL_VARIANTS.includes(toast.variant) ? 'alert' : 'status'}
             >
-              <span>{toast.message}</span>
+              <span aria-hidden="true" className={styles.icon}>
+                {ICONO[toast.variant]}
+              </span>
+              <span className={styles.message}>{toast.message}</span>
               <Button
                 aria-label="Cerrar notificación"
                 onClick={() => dismissToast(toast.id)}
                 size="sm"
                 variant="ghost"
+                className={styles.close}
               >
-                ✕
+                <CloseIcon size={16} />
               </Button>
             </div>
           ))}

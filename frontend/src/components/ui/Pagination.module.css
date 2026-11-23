@@ -1,12 +1,16 @@
 .nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: var(--border-divider);
 }
 
 .status {
   margin: 0;
-  font-size: var(--font-size-label);
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
 }

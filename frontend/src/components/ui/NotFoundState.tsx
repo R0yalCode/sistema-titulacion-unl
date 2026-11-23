@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { SearchIcon } from './icons'
 import styles from './StateMessage.module.css'
 
 export type NotFoundStateProps = {
@@ -14,6 +15,9 @@ export function NotFoundState({
 }: NotFoundStateProps) {
   return (
     <div className={styles.wrapper} role="status">
+      <span aria-hidden="true" className={`${styles.icon} ${styles.iconNeutral}`}>
+        <SearchIcon size={24} />
+      </span>
       <h2 className={styles.title}>{title}</h2>
       <p className={styles.description}>{description}</p>
       {action}

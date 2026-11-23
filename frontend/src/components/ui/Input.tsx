@@ -31,7 +31,7 @@ export function Input({
     <div className={styles.field}>
       <label className={styles.label} htmlFor={inputId}>
         {label}
-        {required && <span aria-hidden="true"> *</span>}
+        {required && <span aria-hidden="true" className={styles.required}> *</span>}
       </label>
       {hint && (
         <p className={styles.hint} id={hintId}>

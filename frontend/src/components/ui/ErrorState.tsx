@@ -1,4 +1,5 @@
 import { Button } from './Button'
+import { AlertCircleIcon } from './icons'
 import styles from './StateMessage.module.css'
 
 export type ErrorStateProps = {
@@ -14,6 +15,9 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <div aria-live="assertive" className={styles.wrapper} role="alert">
+      <span aria-hidden="true" className={`${styles.icon} ${styles.iconDanger}`}>
+        <AlertCircleIcon size={24} />
+      </span>
       <h2 className={styles.title}>{title}</h2>
       <p className={styles.description}>{description}</p>
       {onRetry && (

@@ -1,23 +1,36 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  z-index: 100;
+  background: rgba(14, 31, 58, 0.55);
+  animation: sgt-overlay-in var(--duration-base) var(--ease-out);
 }
 
 .dialog {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  padding: var(--space-6);
-  max-width: 560px;
   width: 100%;
-  max-height: 90vh;
+  max-height: calc(100dvh - 2 * var(--space-4));
   overflow-y: auto;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--elevation-overlay);
+  animation: sgt-dialog-in var(--duration-slow) var(--ease-out);
+}
+
+.sm {
+  max-width: 440px;
+}
+
+.md {
+  max-width: 560px;
+}
+
+.lg {
+  max-width: 760px;
 }
 
 .dialog:focus-visible {
@@ -26,15 +39,60 @@
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
 }
 
+.heading {
+  min-width: 0;
+}
+
 .title {
   margin: 0;
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-h3);
-  color: var(--color-text-primary);
+  color: var(--color-text-strong);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.description {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.close {
+  flex-shrink: 0;
+  width: var(--control-height-sm);
+  padding: 0;
+  color: var(--color-text-muted);
+}
+
+/* Móvil: el diálogo se ancla abajo y ocupa el ancho (patrón hoja inferior). */
+@media (max-width: 480px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .dialog {
+    max-width: none;
+    max-height: 92dvh;
+    padding: var(--space-5) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+}
+
+@keyframes sgt-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes sgt-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
 }
