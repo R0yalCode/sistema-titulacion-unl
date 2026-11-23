@@ -200,7 +200,7 @@ el trámite se opera por la API, no desde el Admin.
 Comprobaciones de Swagger UI: agrupación de endpoints, métodos HTTP, descripciones,
 parámetros, esquemas de entrada/salida, códigos de error y esquema de seguridad JWT
 (candado *Authorize* en cada operación). Para ejecutar solicitudes de prueba autenticadas,
-obtenga el token en `POST /api/v1/auth/token/` y pulse *Authorize* con
+obtenga el token con `POST /api/v1/auth/login/` y el segundo factor, y pulse *Authorize* con
 `Bearer <access_token>`.
 
 ## 11. Identificación del esquema OpenAPI
@@ -357,7 +357,7 @@ curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8000/admin/login/   # 
 2. **`.env` nunca se versiona** (ya excluido por `.gitignore`); comparta la estructura, no los valores.
 3. **Django Admin (ADR-0009):** es consola interna de soporte; el trámite se opera por la API con RBAC server-side. No se eliminan controles de seguridad para facilitar el acceso.
 4. **PostgreSQL no está publicado** al anfitrión: no añada mapeos de puertos de la base de datos a redes públicas.
-5. **JWT:** los tokens se obtienen vía `POST /api/v1/auth/token/` (access 60 min, refresh 24 h); no los almacene en repositorios ni archivos de configuración.
+5. **JWT:** los tokens se obtienen con `POST /api/v1/auth/login/` y el segundo factor (access 30 min, refresh 24 h); no los almacene en repositorios ni archivos de configuración.
 6. **Grupo `docker`:** concede privilegios equivalentes a root (§3); conceda la membresía con criterio.
 7. **Passwords generadas dinámicamente:** al crear superusuarios, hágalo en su terminal interactiva (§8) — nunca en scripts ni parámetros de línea de comandos.
 8. **Producción:** cambie obligatoriamente `SECRET_KEY` y `POSTGRES_PASSWORD`, use HTTPS y gestion de secretos; `DEBUG=0`.

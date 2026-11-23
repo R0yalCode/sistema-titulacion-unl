@@ -43,7 +43,7 @@ Códigos HTTP usados: 200, 201, 400, 401, 403, 404, 422, 429 y 500 (integridad d
 
 | Ámbito | Tasa por defecto | Variable | Aplica a |
 |---|---|---|---|
-| `auth` (por IP real) | 5/minuto | `AUTH_THROTTLE_RATE` | `POST /auth/token/` |
+| `auth` (por IP real) | 5/minuto | `AUTH_THROTTLE_RATE` | `POST /auth/login/` |
 | `document_upload` (por usuario) | 10/hora | `DOCUMENT_UPLOAD_THROTTLE` | `POST /peticiones/{id}/documento/` |
 | `mutante` (por usuario, contador compartido) | 30/minuto (provisional, DT-03) | `MUTANT_THROTTLE_RATE` | `POST /expedientes/`, `enviar`, `observar`, `PUT /checklist/{id}/`, `subsanar`, `POST /informes/`, `POST /declaratorias/`, `solicitar-emision` |
 
