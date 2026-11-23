@@ -10,6 +10,9 @@ por defecto. Si falta o esta vacia, el comando se detiene sin crear nada.
 Su valor nunca se escribe en la salida. NINGUNA cuenta demo debe existir en
 produccion (C-012). Las cedulas son ficticias y validas para el validador de
 digitos.
+
+No se ejecuta fuera de desarrollo y pruebas: `exigir_entorno_de_demostracion`
+lo detiene antes de leer la contrasena o acceder a la base de datos.
 """
 
 import os
@@ -18,6 +21,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from apps.authentication.adapters.models import Role, User, UserRole
+from core.adapters.entorno_demo import exigir_entorno_de_demostracion
 
 CUENTAS_DEMO = [
     (
@@ -88,27 +92,28 @@ def _clave_demo() -> str:
 class Command(BaseCommand):
     help = "Crea las 8 cuentas demo para la demostracion academica del MVP."
 
-    @transaction.atomic
     def handle(self, *args, **options):
+        exigir_entorno_de_demostracion("seed_initial_data")
         clave_demo = _clave_demo()
         creadas = []
-        for username, cedula, rol in CUENTAS_DEMO:
-            email = correo_demo(username)
-            user, created = User.objects.get_or_create(
-                username=username,
-                defaults={"cedula": cedula, "email": email},
-            )
-            if created:
-                user.set_password(clave_demo)
-                user.save()
-                creadas.append(username)
-            elif not user.email:
-                # Acceso por correo institucional: completa el correo de las
-                # cuentas demo previas sin tocar su contraseña ni sus roles.
-                user.email = email
-                user.save(update_fields=["email"])
-            role, _ = Role.objects.get_or_create(name=rol)
-            UserRole.objects.get_or_create(user=user, role=role)
+        with transaction.atomic():
+            for username, cedula, rol in CUENTAS_DEMO:
+                email = correo_demo(username)
+                user, created = User.objects.get_or_create(
+                    username=username,
+                    defaults={"cedula": cedula, "email": email},
+                )
+                if created:
+                    user.set_password(clave_demo)
+                    user.save()
+                    creadas.append(username)
+                elif not user.email:
+                    # Acceso por correo institucional: completa el correo de las
+                    # cuentas demo previas sin tocar su contraseña ni sus roles.
+                    user.email = email
+                    user.save(update_fields=["email"])
+                role, _ = Role.objects.get_or_create(name=rol)
+                UserRole.objects.get_or_create(user=user, role=role)
         self.stdout.write(
             self.style.SUCCESS(
                 f"seed_initial_data completo: {len(creadas)} nuevas, "
