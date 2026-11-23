@@ -176,9 +176,12 @@ Ambos están en `backend/openapi.yaml` (regenerado con drf-spectacular).
 | Variable | Desarrollo (`local.py`) | Pruebas (`test.py`) | Producción (`production.py`) |
 |---|---|---|---|
 | `ACADEMIC_PROFILE_PROVIDER` | `mock_sga` | `mock_sga` | vacío (sin fuente → 503) |
-| `ACADEMIC_PROFILE_MOCK_ALLOWED` | `true` | `true` | `false` |
+| `ACADEMIC_PROFILE_MOCK_ALLOWED` | `true` | `true` | `false` (constante, no se lee del entorno) |
 
-El mock solo funciona si **ambas** variables lo permiten. Un nombre de
+En producción, `mock_sga` detiene el arranque con `ImproperlyConfigured`,
+sea cual sea el valor de `DEBUG` o de `ACADEMIC_PROFILE_MOCK_ALLOWED`.
+
+Fuera de producción, el mock solo funciona si **ambas** variables lo permiten. Un nombre de
 proveedor desconocido (p. ej. `sga` mientras no exista el adaptador) no
 degrada a otra fuente: responde 503. `seed_mock_sga` se niega a ejecutarse
 si `ACADEMIC_PROFILE_MOCK_ALLOWED` es falso.
@@ -212,10 +215,9 @@ Iniciar trámite → confirmar. Para mostrar un bloqueo, en el admin
 `MOCK-CARRERA-INACTIVA` o desmarcar `activo`, y volver a consultar en V-03.
 El cambio queda auditado; revertirlo después.
 
-Para demostrar con el despliegue de producción habría que fijar
-explícitamente `ACADEMIC_PROFILE_PROVIDER=mock_sga` y
-`ACADEMIC_PROFILE_MOCK_ALLOWED=true`. La interfaz seguirá mostrando que los
-datos son simulados.
+La demostración no puede ejecutarse con `config.settings.production`. Si se
+necesitara fuera del entorno de desarrollo, debe plantearse un módulo de
+settings independiente, sin añadir excepciones a producción.
 
 ## 10. Seguridad
 

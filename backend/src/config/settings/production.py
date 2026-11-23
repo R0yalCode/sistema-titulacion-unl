@@ -18,6 +18,8 @@ certificado real.
 
 import copy
 
+from django.core.exceptions import ImproperlyConfigured
+
 from .base import *  # noqa: F401,F403,F405
 
 # `from .base import *` liga estos nombres al MISMO objeto dict/list que
@@ -38,6 +40,22 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # docs/autenticacion/politica-2fa.md.
 MFA_ENCRYPTION_KEYS = env.list("MFA_ENCRYPTION_KEYS")
 MFA_TRUSTED_DEVICE_COOKIE_SECURE = True
+
+# --- Fuente académica ---------------------------------------------------
+# MockSGA está prohibido en producción: el permiso es una constante, no se
+# lee del entorno ni depende de DEBUG. base.py deriva sus valores por defecto
+# de la variable DEBUG, por lo que aquí se reasignan ambos. Una demostración
+# con datos simulados requeriría un módulo de settings propio.
+ACADEMIC_PROFILE_MOCK_ALLOWED = False
+ACADEMIC_PROFILE_PROVIDER = env(  # noqa: F405
+    "ACADEMIC_PROFILE_PROVIDER", default=""
+).strip()
+if ACADEMIC_PROFILE_PROVIDER.casefold() == "mock_sga":
+    raise ImproperlyConfigured(
+        "ACADEMIC_PROFILE_PROVIDER=mock_sga no está permitido en producción: "
+        "MockSGA es una simulación. Configure un proveedor académico real o "
+        "deje la variable vacía."
+    )
 
 # --- HTTPS / HSTS -----------------------------------------------------
 SECURE_SSL_REDIRECT = True
