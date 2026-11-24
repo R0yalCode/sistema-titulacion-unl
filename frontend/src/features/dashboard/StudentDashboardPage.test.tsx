@@ -36,13 +36,34 @@ function kpi(nombre: string): HTMLElement {
 }
 
 describe('StudentDashboardPage (dashboard del estudiante)', () => {
-  it('muestra el encabezado con el nombre real del estudiante y su expediente', async () => {
+  it('muestra el hero con el saludo real, el expediente y los datos del trámite', async () => {
     renderDashboard()
 
     expect(screen.getByRole('heading', { level: 1, name: 'Mi proceso de titulación' })).toBeInTheDocument()
     expect(screen.getByText('Consulta tu avance, pendientes y próximos pasos.')).toBeInTheDocument()
-    expect(await screen.findByText('Estudiante de Prueba')).toBeInTheDocument()
-    expect(screen.getByText('EXP-2026-0003')).toBeInTheDocument()
+    const hero = await screen.findByRole('region', { name: 'Hola, Estudiante de Prueba' })
+    expect(within(hero).getByText('EXP-2026-0003')).toBeInTheDocument()
+    expect(within(hero).getByText(/^Registrado el/)).toBeInTheDocument()
+    expect(within(hero).getByText('Etapa actual: Solicitud registrada')).toBeInTheDocument()
+    // BORRADOR: la fecha límite institucional aún no corre.
+    expect(within(hero).queryByText(/Atención institucional hasta/)).not.toBeInTheDocument()
+  })
+
+  it('la tarjeta prioritaria del hero lleva a la primera acción real sin marcar urgencia', async () => {
+    renderDashboard()
+
+    const hero = await screen.findByRole('region', { name: 'Hola, Estudiante de Prueba' })
+    const tarjeta = within(hero).getByRole('article')
+    expect(within(tarjeta).getByText('Acción prioritaria')).toBeInTheDocument()
+    expect(within(tarjeta).getByRole('heading', { level: 2, name: 'Completa el documento: Récord académico' })).toBeInTheDocument()
+    // Dos requisitos sin documento: contador estático («atención»), sin pulso.
+    const contador = within(tarjeta).getByText('2 pendientes').parentElement as HTMLElement
+    expect(contador).toHaveAttribute('data-pulse', 'false')
+    expect(within(tarjeta).getByRole('link', { name: /Gestionar documento/ })).toHaveAttribute(
+      'href',
+      `/expedientes/${fixtureMiTramite.expediente.id}/peticiones/${fixtureMiTramite.expediente.peticiones[0]?.id}`,
+    )
+    expect(within(tarjeta).getByRole('link', { name: 'Ver 1 acción más' })).toHaveAttribute('href', '#pendientes')
   })
 
   it('muestra un estado de carga accesible mientras llega el resumen', () => {
@@ -53,7 +74,7 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
 
   it('presenta los cuatro KPI con datos reales del backend (BORRADOR)', async () => {
     renderDashboard()
-    await screen.findByText('Estudiante de Prueba')
+    await screen.findByText('Hola, Estudiante de Prueba')
 
     expect(within(kpi('Estado actual')).getByText('En preparación')).toBeInTheDocument()
 
@@ -142,6 +163,12 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
     expect(within(pendientes).getByRole('link', { name: /Ver y corregir/ })).toBeInTheDocument()
     expect(within(kpi('Progreso general')).getByText('40')).toBeInTheDocument()
     expect(screen.getByText('En pausa: con observaciones')).toBeInTheDocument()
+
+    // Urgencia real: la observación pendiente pulsa en la tarjeta del hero.
+    const hero = screen.getByRole('region', { name: 'Hola, Estudiante de Prueba' })
+    expect(within(hero).getByText('Corrección requerida')).toBeInTheDocument()
+    expect(within(hero).getByText('1 observación').parentElement).toHaveAttribute('data-pulse', 'true')
+    expect(within(hero).getByText('El documento no tiene firma de responsabilidad.')).toBeInTheDocument()
   })
 
   it('trámite finalizado: sin acciones pendientes ni próximo hito', async () => {
@@ -163,6 +190,11 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
     expect(within(kpi('Progreso general')).getByText('100')).toBeInTheDocument()
     expect(within(kpi('Acciones pendientes')).getByText('No tienes acciones pendientes actualmente.')).toBeInTheDocument()
     expect(within(kpi('Próximo hito')).getByText('Tu trámite concluyó; no hay hitos pendientes.')).toBeInTheDocument()
+
+    const hero = screen.getByRole('region', { name: 'Hola, Estudiante de Prueba' })
+    expect(within(hero).getByRole('heading', { level: 2, name: 'No tienes acciones pendientes' })).toBeInTheDocument()
+    expect(hero.querySelector('[data-pulse]')).toBeNull()
+    expect(within(hero).getByRole('link', { name: /Ver mi trámite/ })).toBeInTheDocument()
   })
 
   it('en verificación muestra la fecha límite institucional real como próximo hito', async () => {
@@ -185,6 +217,7 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
     const tarjeta = hito.closest('article') as HTMLElement
     expect(within(tarjeta).getByText('Informe emitido')).toBeInTheDocument()
     expect(within(tarjeta).getByText(/Fecha límite de atención institucional/)).toBeInTheDocument()
+    expect(screen.getByText(/^Atención institucional hasta el/)).toBeInTheDocument()
   })
 
   it('estudiante sin trámite: estado vacío con acceso a crear la solicitud', async () => {
@@ -213,7 +246,7 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
 
     expect(await screen.findByRole('heading', { name: 'No pudimos cargar tu proceso de titulación' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Reintentar' }))
-    expect(await screen.findByText('Estudiante de Prueba')).toBeInTheDocument()
+    expect(await screen.findByText('Hola, Estudiante de Prueba')).toBeInTheDocument()
     expect(llamadas).toBe(2)
   })
 
@@ -227,7 +260,7 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
 
   it('no tiene violaciones de accesibilidad detectables (axe)', async () => {
     const { container } = renderDashboard()
-    await screen.findByText('Estudiante de Prueba')
+    await screen.findByText('Hola, Estudiante de Prueba')
     expect(await axe(container)).toHaveNoViolations()
   })
 })

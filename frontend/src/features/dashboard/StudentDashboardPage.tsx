@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
-import { ClockIcon, DocumentIcon, FlagIcon, FolderIcon, ListCheckIcon } from '@/components/ui/icons'
+import { HeroPanel, type HeroMetaItem } from '@/components/ui/HeroPanel'
+import { CalendarIcon, ClockIcon, DocumentIcon, FlagIcon, ListCheckIcon } from '@/components/ui/icons'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { formatFecha } from '@/lib/dates'
+import { AccionPrioritaria } from './AccionPrioritaria'
 import { KpiResumen } from './KpiResumen'
 import { Card } from '@/components/ui/Card'
 import { AccionesPendientes, DocumentosResumen, UltimosMovimientos } from './Secciones'
 import { SeguimientoTramite } from './SeguimientoTramite'
-import { calcularProximoHito, construirAccionesPendientes } from './presentacion'
+import type { ExpedienteResumen } from '@/api/endpoints/miTramite'
+import { calcularProximoHito, construirAccionesPendientes, type ProximoHito } from './presentacion'
 import { useMiTramite } from './queries'
 import styles from './StudentDashboardPage.module.css'
 
@@ -29,11 +32,32 @@ function DashboardSkeleton() {
   )
 }
 
+/** Chips del hero: solo fechas y etapas que devuelve el backend. */
+function metaDelTramite(expediente: ExpedienteResumen | null, hito: ProximoHito | null): HeroMetaItem[] {
+  if (!expediente) {
+    return []
+  }
+  const meta: HeroMetaItem[] = [
+    { id: 'registro', icon: <CalendarIcon size={14} />, label: `Registrado el ${formatFecha(expediente.fecha_creacion)}` },
+  ]
+  const actual = expediente.etapas.find((etapa) => etapa.situacion === 'actual')
+  if (actual && expediente.progreso) {
+    meta.push({ id: 'etapa', icon: <FlagIcon size={14} />, label: `Etapa actual: ${actual.nombre}` })
+  }
+  if (hito?.fecha) {
+    meta.push({ id: 'plazo', icon: <ClockIcon size={14} />, label: `Atención institucional hasta el ${formatFecha(hito.fecha)}` })
+  }
+  return meta
+}
+
 export default function StudentDashboardPage() {
   const query = useMiTramite()
   const datos = query.data
   const expediente = datos?.expediente ?? null
   const nombre = datos?.estudiante.nombre_completo ?? null
+  const acciones = expediente ? construirAccionesPendientes(expediente) : []
+  const hito = expediente ? calcularProximoHito(expediente) : null
+  const meta = metaDelTramite(expediente, hito)
 
   let contenido
   if (query.isLoading) {
@@ -53,28 +77,9 @@ export default function StudentDashboardPage() {
         </div>
       )
   } else if (!expediente) {
-    contenido = (
-      <section aria-labelledby="sin-tramite-titulo" className={styles.start}>
-        <span aria-hidden="true" className={styles.startIcon}>
-          <FolderIcon size={28} />
-        </span>
-        <div>
-          <h2 className={styles.startTitle} id="sin-tramite-titulo">
-            Aún no tienes un trámite de titulación
-          </h2>
-          <p className={styles.startText}>
-            Registra tu solicitud para iniciar el proceso. Después podrás gestionar tus documentos y seguir cada etapa
-            desde este panel.
-          </p>
-          <Link className={styles.primaryLink} to="/estudiante/solicitud/nueva">
-            Crear solicitud
-          </Link>
-        </div>
-      </section>
-    )
+    // La tarjeta del hero ofrece el primer paso (crear la solicitud).
+    contenido = null
   } else {
-    const acciones = construirAccionesPendientes(expediente)
-    const hito = calcularProximoHito(expediente)
     contenido = (
       <>
         <KpiResumen acciones={acciones} expediente={expediente} hito={hito} />
@@ -113,34 +118,21 @@ export default function StudentDashboardPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Mi proceso de titulación</h1>
-          <p className={styles.subtitle}>Consulta tu avance, pendientes y próximos pasos.</p>
-        </div>
-        {(nombre || expediente) && (
-          <dl className={styles.identity}>
-            {nombre && (
-              <div>
-                <dt>Estudiante</dt>
-                <dd>{nombre}</dd>
-              </div>
-            )}
-            {expediente && (
-              <div>
-                <dt>Expediente</dt>
-                <dd>{expediente.numero_expediente}</dd>
-              </div>
-            )}
-            {expediente && (
-              <div>
-                <dt>Registrado</dt>
-                <dd>{formatFecha(expediente.fecha_creacion)}</dd>
-              </div>
-            )}
-          </dl>
-        )}
-      </header>
+      <HeroPanel
+        aside={query.isSuccess ? <AccionPrioritaria acciones={acciones} expediente={expediente} /> : undefined}
+        description="Consulta tu avance, pendientes y próximos pasos."
+        eyebrow={
+          expediente ? (
+            <>
+              Expediente <strong>{expediente.numero_expediente}</strong>
+            </>
+          ) : (
+            'Portal del estudiante'
+          )
+        }
+        meta={meta}
+        title={nombre ? `Hola, ${nombre}` : 'Mi proceso de titulación'}
+      />
       {contenido}
     </div>
   )
