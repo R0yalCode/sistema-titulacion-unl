@@ -45,10 +45,13 @@ export function ActionCard({
           {icon}
         </span>
         <div className={styles.heading}>
-          <p className={styles.eyebrow}>{eyebrow}</p>
+          {/* El indicador comparte la fila de la categoría: el título conserva todo el ancho. */}
+          <div className={styles.eyebrowRow}>
+            <p className={styles.eyebrow}>{eyebrow}</p>
+            {badge && <div className={styles.badge}>{badge}</div>}
+          </div>
           <Heading className={styles.title}>{title}</Heading>
         </div>
-        {badge && <div className={styles.badge}>{badge}</div>}
       </header>
       {description && <div className={styles.description}>{description}</div>}
       {(meta || action) && (
