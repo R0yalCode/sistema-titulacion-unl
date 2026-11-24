@@ -151,6 +151,14 @@ describe('StudentLayout (portal del estudiante)', () => {
     expect(await screen.findByText('Pantalla de login')).toBeInTheDocument()
   })
 
+  it('activa la capa Liquid Glass del shell sin alterar la navegación', async () => {
+    renderLayout()
+
+    const menu = screen.getByRole('complementary', { name: 'Menú principal' })
+    expect(menu.closest('[data-glass]')).toHaveAttribute('data-glass', 'on')
+    expect(await within(nav()).findByRole('link', { name: 'Mi trámite' })).toBeInTheDocument()
+  })
+
   it('no tiene violaciones de accesibilidad detectables (axe)', async () => {
     const { container } = renderLayout()
     await within(nav()).findByRole('link', { name: 'Mi trámite' })

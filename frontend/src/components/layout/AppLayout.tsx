@@ -82,6 +82,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
     <AppShell
       navItems={navItems}
       notificationsTo={conNotificaciones ? '/notificaciones' : null}
+      glass
       portalLabel={esAdministrador ? `Administración · ${seccionAdministrador(pathname)}` : 'Gestión de titulación'}
       profileTo={roles.some((rol) => OPERATIONAL_ROLES.includes(rol)) ? '/perfil' : null}
       topbarSlot={esAdministrador ? <AdminSearch destinos={destinosBusqueda} /> : undefined}

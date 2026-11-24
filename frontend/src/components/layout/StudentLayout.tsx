@@ -39,6 +39,7 @@ export function StudentLayout({ children }: { children?: ReactNode }) {
     <AppShell
       navItems={buildNavItems(expedienteId, noLeidas)}
       notificationsTo="/estudiante/notificaciones"
+      glass
       portalLabel="Portal del estudiante"
       profileTo="/estudiante/perfil"
       unreadCount={noLeidas}

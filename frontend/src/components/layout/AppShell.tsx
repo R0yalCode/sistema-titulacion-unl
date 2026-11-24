@@ -36,6 +36,12 @@ export type AppShellProps = {
   userRole: string
   /** Variante visual con alcance propio (ver styles/siaaf-modern.css). */
   visual?: 'siaaf-modern'
+  /**
+   * Capa Liquid Glass (styles/glass.css): sidebar flotante translúcida, barra
+   * superior de vidrio y fondo institucional. Es independiente de `visual`
+   * (paleta), así que se combina con cualquier variante.
+   */
+  glass?: boolean
   /** Control adicional de la barra superior (p. ej. búsqueda). */
   topbarSlot?: ReactNode
   children?: ReactNode
@@ -81,6 +87,7 @@ export function AppShell({
   userName,
   userRole,
   visual,
+  glass = false,
   topbarSlot,
   children,
 }: AppShellProps) {
@@ -145,7 +152,7 @@ export function AppShell({
   const grupos = [...new Set(navItems.map((item) => item.group))]
 
   return (
-    <div className={styles.shell} data-visual={visual}>
+    <div className={styles.shell} data-glass={glass ? 'on' : undefined} data-visual={visual}>
       <SkipLink />
       <DemoBanner show={env.demoMode} />
       <div className={styles.frame}>

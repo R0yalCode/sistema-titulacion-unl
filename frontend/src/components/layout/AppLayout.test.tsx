@@ -147,6 +147,19 @@ describe('AppLayout (portal de funcionarios sobre AppShell)', () => {
     expect(within(nav()).getByRole('link', { name: 'Bandeja de trabajo' })).toBeInTheDocument()
   })
 
+  it('combina la capa Liquid Glass con la paleta del administrador', () => {
+    const { unmount } = renderLayout(mockAuthValue({ cedula: '1234567890', roles: ['ADMINISTRADOR'] }))
+    const shellAdmin = screen.getByRole('complementary', { name: 'Menú principal' }).closest('[data-glass]')
+    expect(shellAdmin).toHaveAttribute('data-glass', 'on')
+    expect(shellAdmin).toHaveAttribute('data-visual', 'siaaf-modern')
+    unmount()
+
+    renderLayout(mockAuthValue({ cedula: '1234567890', roles: ['DECANO'] }))
+    const shell = screen.getByRole('complementary', { name: 'Menú principal' }).closest('[data-glass]')
+    expect(shell).toHaveAttribute('data-glass', 'on')
+    expect(shell).not.toHaveAttribute('data-visual')
+  })
+
   it('no presenta violaciones de accesibilidad detectables por axe', async () => {
     const { container } = renderLayout(mockAuthValue({ cedula: '1234567890', roles: ['DECANO'] }))
     expect(await axe(container)).toHaveNoViolations()
