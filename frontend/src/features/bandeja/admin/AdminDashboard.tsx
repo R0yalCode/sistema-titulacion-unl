@@ -4,6 +4,7 @@ import { Badge, type BadgeVariant } from '@/components/ui/Badge'
 import { BarChart } from '@/components/ui/BarChart'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { HeroPanel } from '@/components/ui/HeroPanel'
 import { ErrorState } from '@/components/ui/ErrorState'
 import {
   AlertIcon,
@@ -22,6 +23,7 @@ import { useNotificaciones } from '@/features/dashboard'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { formatFecha, formatFechaHora } from '@/lib/dates'
 import { presentarEstado } from '@/lib/estados'
+import { AlertaPlazos } from '../AlertaPlazos'
 import { calcularVencimiento, type Vencimiento } from '../bandejaReglas'
 import { PanelAdministracion } from '../PanelesInicio'
 import { BANDEJA_OPERATIVA_QUERY_KEY, useResumenBandeja } from '../queries'
@@ -82,24 +84,25 @@ export function AdminDashboard({ apiBaseUrl, accionesRapidas, onFiltrarEstado }:
 
   return (
     <div className={styles.dashboard}>
-      <header className={styles.header}>
-        <div>
-          <p className={styles.eyebrow}>Supervisión del trámite</p>
-          <h1 className={styles.title}>Panel de administración</h1>
-          <p className={styles.subtitle}>Expedientes en curso, plazos y avisos de su cuenta.</p>
-        </div>
-        <div className={styles.headerActions}>
-          {query.dataUpdatedAt > 0 && (
-            <p className={styles.updated} role="status">
-              Actualizado: {formatFechaHora(ahora.toISOString())}
-            </p>
-          )}
-          <Button disabled={query.isFetching} size="sm" variant="secondary" onClick={actualizar}>
-            <RefreshIcon size={16} />
-            {query.isFetching ? 'Actualizando…' : 'Actualizar'}
-          </Button>
-        </div>
-      </header>
+      <HeroPanel
+        actions={
+          <>
+            <Button disabled={query.isFetching} size="sm" variant="secondary" onClick={actualizar}>
+              <RefreshIcon size={16} />
+              {query.isFetching ? 'Actualizando…' : 'Actualizar'}
+            </Button>
+            {query.dataUpdatedAt > 0 && (
+              <p className={styles.updated} role="status">
+                Actualizado: {formatFechaHora(ahora.toISOString())}
+              </p>
+            )}
+          </>
+        }
+        aside={<AlertaPlazos />}
+        description="Expedientes en curso, plazos y avisos de su cuenta."
+        eyebrow="Supervisión del trámite"
+        title="Panel de administración"
+      />
 
       {query.isLoading && <Skeleton count={1} height="132px" label="Cargando resumen…" variant="card" />}
       {error && error.kind !== 'forbidden' && (

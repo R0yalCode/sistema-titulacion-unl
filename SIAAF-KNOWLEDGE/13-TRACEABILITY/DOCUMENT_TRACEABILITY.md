@@ -58,3 +58,9 @@ No se resolvieron inventando: quedan como DP-xx en `REGISTRO_DECISIONES_TECNICAS
 - C-V03-03: la auditoría de V-03 del mismo día afirmó que la creación del expediente no se auditaba; es **incorrecto**: la señal `expediente_post_save` (`apps/notificaciones/adapters/signals.py`) ya registraba `EXPEDIENTE_CREADO`. Ahora incluye carrera, facultad y fuente del perfil.
 - C-V03-04: `CLAUDE.md` enlaza `specs/003-frontend-titulacion/…` en la raíz; la carpeta real es `sgt-siaaf/specs/`.
 - Evidencia: `docs/academico/perfil-academico-mock-sga.md`, `docs/adr/0010-perfil-academico-puerto-y-mocksga.md`.
+
+## Contradicciones registradas el 2026-11-24 (prototipos Liquid Glass)
+
+- C-LG-01: los prototipos `prototipos/vistas_liquid_glass/` (Google Stitch) muestran los roles «Tutor de Grado», «Coordinador de Carrera», «Tribunal Evaluador», «Secretaría Académica» y «Administrador DTI». El backend define solo ESTUDIANTE, SECRETARIA_CARRERA, SECRETARIO_ABOGADO, ANALISTA_APOYO, DECANO, DIRECTOR_CARRERA, RESPONSABLE_DEPENDENCIA y ADMINISTRADOR (`apps/authentication/adapters/models.py`). No existen DOCENTE ni TUTOR: los paneles de docente y tutor no se implementaron.
+- C-LG-02: los prototipos presentan datos sin fuente en la API: Turnitin, horas de tutoría, sesiones, integridad criptográfica, sincronización CAS, fases «1 a 5» con resoluciones y defensa. No se trasladaron (CA-G-01). Las etapas reales salen de `mi-tramite`.
+- Evidencia: `docs/frontend/PLAN_LIQUID_GLASS_DK010.md` (tabla prototipo ↔ rol real).

@@ -49,6 +49,7 @@ export function KpiResumen({ expediente, acciones, hito }: KpiResumenProps) {
       <KpiCard
         icon={<ChartIcon />}
         title="Progreso general"
+        variant="glass"
         unit={porcentaje !== null ? '%' : undefined}
         value={porcentaje !== null ? porcentaje : undefined}
       >

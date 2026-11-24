@@ -3,10 +3,14 @@ import styles from './KpiCard.module.css'
 
 export type KpiTone = 'default' | 'warning' | 'success' | 'danger'
 
+/** `glass`: superficie translúcida (capa Liquid Glass) para KPI destacados. */
+export type KpiVariant = 'solid' | 'glass'
+
 export type KpiCardProps = {
   title: string
   icon: ReactNode
   tone?: KpiTone
+  variant?: KpiVariant
   /** Cifra o valor principal (opcional: algunos KPI son textuales). */
   value?: ReactNode
   /** Unidad junto al valor (%, días…). */
@@ -26,6 +30,7 @@ export function KpiCard({
   title,
   icon,
   tone = 'default',
+  variant = 'solid',
   value,
   unit,
   children,
@@ -35,7 +40,12 @@ export function KpiCard({
 }: KpiCardProps) {
   const Heading = headingLevel === 2 ? 'h2' : 'h3'
   return (
-    <article className={[styles.kpi, styles[tone], className].filter(Boolean).join(' ')}>
+    <article
+      className={[styles.kpi, styles[tone], variant === 'glass' && `glass-panel ${styles.glass}`, className]
+        .filter(Boolean)
+        .join(' ')}
+      data-variant={variant}
+    >
       <header className={styles.header}>
         <span aria-hidden="true" className={styles.icon}>
           {icon}

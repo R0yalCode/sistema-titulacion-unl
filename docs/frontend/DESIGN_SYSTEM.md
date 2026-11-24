@@ -164,6 +164,9 @@ Validado sin scroll horizontal en 320, 360, 390, 768, 1024, 1280, 1440 y 1920 px
 | `Spinner` | Carga breve dentro de un control | Acompañado de texto o `aria-busy` |
 | `Table` | Tablas de datos que no usan `DataList` | Encabezados semánticos |
 | `icons.tsx` | Juego único de iconos (trazo 1,8, rejilla 24) | Siempre `aria-hidden`; el texto da el significado |
+| `HeroPanel` | Encabezado institucional de los paneles (degradado, chips de datos reales, contenido lateral) | Región nombrada por su título (`h1`/`h2`) |
+| `ActionCard` | Tarjeta flotante «qué hacer ahora» con CTA real | La tarjeta no es clicable; el CTA es un enlace o botón normal |
+| `UrgencyIndicator` | Punto + contador + texto para urgencias verificables | Solo con cantidad > 0; texto y forma además del color; pulso limitado y desactivado con `prefers-reduced-motion` |
 
 Estructura (`frontend/src/components/layout`):
 - `AppShell` es el único shell: sidebar institucional (contraíble en escritorio, con la preferencia guardada en `localStorage`), barra superior con notificaciones y perfil, y un único `<main>`. Admite `group` en cada enlace, `visual` para una variante con alcance propio y `topbarSlot` para un control adicional.
@@ -229,3 +232,17 @@ El responsable autorizó expresamente el rediseño transversal el 2026-11-19, so
 - **Búsqueda:** Ctrl/Cmd + K localiza secciones y expedientes de la bandeja; no usa endpoints nuevos.
 - **Panel (`/bandeja`):** indicadores, distribución por estado, atención prioritaria, actividad de la cuenta, accesos rápidos y listado. Con más de 50 expedientes no se muestran cifras parciales de plazos ni la distribución.
 - **Responsive:** KPI en 4, 2 y 2 columnas (escritorio, tablet y móvil); el sidebar pasa a panel lateral en ≤ 1024 px.
+
+## 12. Capa Liquid Glass (rediseño de paneles por rol, 2026-11-24)
+
+Referencia visual: `prototipos/vistas_liquid_glass/` (Google Stitch). Se tomó la composición (sidebar flotante, barra superior de vidrio, hero con tarjeta de acción, KPI y hoja de ruta), no su HTML, CSS, JavaScript ni sus datos. Reparto y commits: `docs/frontend/PLAN_LIQUID_GLASS_DK010.md`.
+
+- **Proporción orientativa:** superficies sólidas como base (~65 %), vidrio (~15 %), identidad institucional (~15 %) y movimiento (~5 %).
+- **Dónde va el vidrio:** sidebar, barra superior, chips del hero, `ActionCard` y KPI destacados (`KpiCard variant="glass"`). **Nunca** en tablas, formularios, documentos, listados densos ni textos largos.
+- **Tokens (`tokens.css`, sección «Capa Liquid Glass»):** `--gradient-brand` (azul marino `#13294b` → `#123d72` → `#2463a6`; blanco sobre `#2463a6` = 6,1:1), `--app-backdrop`, `--glass-blur-*`, `--glass-surface*`, `--glass-border*`, `--glass-highlight` y `--glass-shadow*`. La marca oficial (azul marino, azul de interacción `#004c7b` y dorado) no cambia.
+- **Utilidades (`styles/glass.css`):** `glass-surface`, `glass-panel`, `glass-floating`, `glass-on-brand` y `glass-interactive` (elevación de 2 px, 150–250 ms). Un módulo CSS que fije su propio fondo debe repetir el fondo de vidrio (ver `KpiCard.module.css`), porque los módulos se cargan después de la capa global.
+- **Shell:** `AppShell glass` → `data-glass="on"`. Es independiente de `visual` (paleta): el administrador combina «siaaf-modern» con el vidrio.
+- **Urgencia:** solo con datos verificables. Estudiante: observaciones pendientes (`mi-tramite`). Funcionarios y administrador: expedientes con plazo vencido calculados con la bandeja completa. «Vence hoy» y los pendientes sin urgencia usan el nivel `attention` (anillo estático). Un solo pulso por pantalla; cuatro repeticiones y queda fijo.
+- **Accesibilidad y rendimiento:** respaldo opaco sin `backdrop-filter` o con `prefers-reduced-transparency`; sin desplazamientos ni pulsos con `prefers-reduced-motion`; bordes reales con `forced-colors`; desenfoque solo en capas pequeñas o fijas.
+- **Fuera de alcance (sin datos reales):** los paneles «Docente» y «Tutor» de los prototipos (el sistema no tiene esos roles), indicadores de usuarios, sesiones, auditoría o integridad del prototipo de administración, y tendencias o series temporales.
+

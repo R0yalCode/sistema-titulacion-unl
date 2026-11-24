@@ -246,3 +246,60 @@ describe('BandejaPage (V-07)', () => {
     expect(llamadas).toBe(2)
   })
 })
+
+describe('Hero Liquid Glass y alerta de plazos (LG-E)', () => {
+  function finDeHoy(): string {
+    const fecha = new Date()
+    fecha.setHours(23, 59, 59, 0)
+    return fecha.toISOString()
+  }
+
+  async function hero(): Promise<HTMLElement> {
+    return screen.findByRole('region', { name: 'Bandeja de expedientes' })
+  }
+
+  it('con plazos vencidos reales la tarjeta del hero pulsa y enlaza al listado', async () => {
+    servirBandeja(() =>
+      pagina([
+        item(1, { fecha_limite_atencion: new Date(Date.now() - 3 * DIA).toISOString() }),
+        item(2, { fecha_limite_atencion: finDeHoy() }),
+        item(3),
+      ]),
+    )
+    renderAs(['SECRETARIO_ABOGADO'])
+
+    const region = await hero()
+    const tarjeta = await within(region).findByRole('article')
+    expect(within(tarjeta).getByRole('heading', { name: '1 expediente con el plazo vencido' })).toBeInTheDocument()
+    expect(within(tarjeta).getByText('1 vencido').parentElement).toHaveAttribute('data-pulse', 'true')
+    expect(within(tarjeta).getByText('1 expediente vence hoy')).toBeInTheDocument()
+    expect(within(tarjeta).getByRole('link', { name: /Ver en el listado/ })).toHaveAttribute('href', '#listado-bandeja')
+  })
+
+  it('si solo vencen hoy avisa sin pulso (nivel de atención)', async () => {
+    servirBandeja(() => pagina([item(1, { fecha_limite_atencion: finDeHoy() }), item(2)]))
+    renderAs(['SECRETARIO_ABOGADO'])
+
+    const tarjeta = await within(await hero()).findByRole('article')
+    expect(within(tarjeta).getByRole('heading', { name: '1 expediente por atender hoy' })).toBeInTheDocument()
+    expect(within(tarjeta).getByText('1 vence hoy').parentElement).toHaveAttribute('data-pulse', 'false')
+  })
+
+  it('sin plazos vencidos informa que están al día y no anima nada', async () => {
+    servirBandeja(() => pagina([item(1), item(2)]))
+    renderAs(['DECANO'])
+
+    const region = await hero()
+    const tarjeta = await within(region).findByRole('article')
+    expect(within(tarjeta).getByRole('heading', { name: 'Plazos al día' })).toBeInTheDocument()
+    expect(region.querySelector('[data-pulse]')).toBeNull()
+  })
+
+  it('con una bandeja mayor que la página de resumen no presenta una alerta parcial', async () => {
+    servirBandeja(() => pagina([item(1, { fecha_limite_atencion: new Date(Date.now() - DIA).toISOString() })], 120))
+    renderAs(['SECRETARIO_ABOGADO'])
+
+    expect(await screen.findByRole('heading', { name: 'Indicadores detallados' })).toBeInTheDocument()
+    expect(within(await hero()).queryByRole('article')).not.toBeInTheDocument()
+  })
+})

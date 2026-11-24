@@ -5,11 +5,14 @@ import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { ForbiddenState } from '@/components/ui/ForbiddenState'
-import { InboxIcon } from '@/components/ui/icons'
+import { HeroPanel } from '@/components/ui/HeroPanel'
+import { InboxIcon, ShieldIcon } from '@/components/ui/icons'
 import { Pagination } from '@/components/ui/Pagination'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { presentApiError } from '@/lib/apiErrorPresentation'
 import { getEnv } from '@/lib/env'
+import { nombreRol } from '@/lib/estados'
+import { AlertaPlazos } from './AlertaPlazos'
 import { BandejaFilters, aplicarFiltros, type FiltrosBandeja } from './BandejaFilters'
 import { BandejaTable } from './BandejaTable'
 import { estadosAtendidos, explicarBandejaVacia } from './bandejaReglas'
@@ -109,11 +112,13 @@ export default function BandejaPage() {
         />
       ) : (
         <>
-          <header className={styles.header}>
-            <p className={styles.eyebrow}>{contexto.titulo}</p>
-            <h1 className={styles.title}>Bandeja de expedientes</h1>
-            <p className={styles.subtitle}>{contexto.subtitulo}</p>
-          </header>
+          <HeroPanel
+            aside={sinBandeja ? undefined : <AlertaPlazos />}
+            description={contexto.subtitulo}
+            eyebrow={contexto.titulo}
+            meta={roles.map((rol) => ({ id: rol, icon: <ShieldIcon size={14} />, label: nombreRol(rol) }))}
+            title="Bandeja de expedientes"
+          />
 
           {sinBandeja ? (
             <PanelSinBandeja roles={roles} />

@@ -499,3 +499,121 @@ a.profileLink:hover {
     padding: var(--space-3) var(--space-3) var(--space-8);
   }
 }
+
+/* --- Capa Liquid Glass (data-glass="on"; tokens en tokens.css) -------------
+ * Va al final para combinarse con cualquier variante de paleta (data-visual).
+ * La sidebar conserva el azul marino institucional y el acento dorado; el
+ * vidrio aporta profundidad, borde translúcido y desenfoque moderado.
+ */
+.shell[data-glass='on'] {
+  background: var(--app-backdrop);
+  background-attachment: fixed;
+}
+
+.shell[data-glass='on'] .sidebar {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-brand) 94%, transparent) 0%,
+    color-mix(in srgb, var(--color-brand-strong) 97%, transparent) 100%
+  );
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-lg));
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-lg));
+}
+
+.shell[data-glass='on'] .navLink:hover,
+.shell[data-glass='on'] .footerButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Seleccionado: fondo, realce, peso y barra dorada (no solo color). */
+.shell[data-glass='on'] .navLinkActive {
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.shell[data-glass='on'] .navIcon {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.shell[data-glass='on'] .navLink:hover .navIcon {
+  transform: translateX(1px);
+}
+
+.shell[data-glass='on'] .topbar {
+  border-bottom: 1px solid var(--glass-border-subtle);
+  background: var(--glass-surface);
+  box-shadow: 0 1px 8px rgba(19, 41, 75, 0.04);
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
+}
+
+.shell[data-glass='on'] .iconButton:hover,
+.shell[data-glass='on'] a.profileLink:hover {
+  background: rgba(19, 41, 75, 0.06);
+}
+
+/* Escritorio: sidebar y barra superior flotantes. */
+@media (min-width: 1025px) {
+  .shell[data-glass='on'] .sidebar {
+    top: var(--space-3);
+    height: calc(100vh - 2 * var(--space-3));
+    height: calc(100dvh - 2 * var(--space-3));
+    margin: var(--space-3) 0 var(--space-3) var(--space-3);
+    border: 1px solid var(--glass-border-on-brand);
+    border-radius: var(--radius-xl);
+    box-shadow:
+      var(--glass-shadow-raised),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .shell[data-glass='on'] .topbar {
+    top: var(--space-3);
+    margin: var(--space-3) var(--space-3) 0 var(--space-4);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-highlight), var(--glass-shadow);
+  }
+}
+
+/* Panel lateral (≤1024 px): borde redondeado del lado abierto. */
+@media (max-width: 1024px) {
+  .shell[data-glass='on'] .sidebar {
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+  }
+
+  .shell[data-glass='on'] .backdrop {
+    background: rgba(14, 31, 58, 0.42);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .shell[data-glass='on'] .topbar {
+    background: rgba(255, 255, 255, 0.97);
+  }
+
+  .shell[data-glass='on'] .sidebar {
+    background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-brand-strong) 100%);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .shell[data-glass='on'] .topbar {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .shell[data-glass='on'] .sidebar {
+    background: linear-gradient(180deg, var(--color-brand) 0%, var(--color-brand-strong) 100%);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell[data-glass='on'] .navLink:hover .navIcon {
+    transform: none;
+  }
+}
