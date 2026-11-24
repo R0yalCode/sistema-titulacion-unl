@@ -171,6 +171,35 @@
   --z-modal: 40;
   --z-toast: 50;
 
+  /* --- Capa Liquid Glass (rediseño 2026-11-24; utilidades en glass.css) ---
+   * Referencia visual: prototipos/vistas_liquid_glass (solo estética). Se
+   * apoya en la marca oficial (azul marino, azul de interacción, dorado): los
+   * azules de referencia #123d72/#2463a6/#e8f1fa solo forman el degradado del
+   * hero y el fondo de la aplicación. Blanco sobre #2463a6 = 6,1:1 (AA). */
+  --navy-650: #123d72;
+  --blue-600: #2463a6;
+  --ice-100: #e8f1fa;
+  --color-bg-ice: var(--ice-100);
+  --gradient-brand: linear-gradient(118deg, var(--navy-800) 0%, var(--navy-650) 52%, var(--blue-600) 100%);
+  --glass-blur-sm: 8px;
+  --glass-blur-md: 16px;
+  --glass-blur-lg: 24px;
+  --glass-saturate: 1.5;
+  --glass-surface: rgba(255, 255, 255, 0.72);
+  --glass-surface-strong: rgba(255, 255, 255, 0.88);
+  --glass-surface-on-brand: rgba(255, 255, 255, 0.14);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-border-subtle: rgba(19, 41, 75, 0.08);
+  --glass-border-on-brand: rgba(255, 255, 255, 0.22);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 8px 32px rgba(19, 41, 75, 0.07), 0 1px 2px rgba(19, 41, 75, 0.05);
+  --glass-shadow-raised: 0 16px 40px rgba(19, 41, 75, 0.13), 0 2px 6px rgba(19, 41, 75, 0.06);
+  --app-backdrop:
+    radial-gradient(60rem 32rem at 100% -10%, rgba(36, 99, 166, 0.1), transparent 70%),
+    radial-gradient(40rem 28rem at -10% 110%, rgba(200, 163, 51, 0.07), transparent 70%),
+    linear-gradient(180deg, var(--color-bg-ice) 0%, var(--color-bg-main) 38%);
+  --lift-hover: translateY(-2px);
+
   /* --- Alias heredados (compatibilidad; no usar en código nuevo) --------- */
   --color-brand-red: var(--red-unl);
   --color-brand-green: #4f8e3a;

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './styles/tokens.css'
 import './styles/global.css'
 import './styles/utilities.css'
+import './styles/glass.css'
 import App from './app/App.tsx'
 import { EnvError, getEnv } from './lib/env'
 

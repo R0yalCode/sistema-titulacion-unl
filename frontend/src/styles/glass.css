@@ -1,0 +1,127 @@
+/*
+ * Capa Liquid Glass del Design System SGT-SIAAF (rediseño 2026-11-24).
+ * Tokens en tokens.css (sección «Capa Liquid Glass»); guía de uso en
+ * docs/frontend/DESIGN_SYSTEM.md §Liquid Glass.
+ *
+ * Uso selectivo (≈15 % de la interfaz): sidebar, barra superior, paneles
+ * flotantes, el hero y algún KPI destacado. Tablas, formularios, documentos y
+ * listados densos se quedan en superficie sólida (--color-surface).
+ *
+ * Accesibilidad y rendimiento:
+ *  - Sin `backdrop-filter` (o con prefers-reduced-transparency) la superficie
+ *    pasa a ser opaca: el contraste nunca depende del fondo.
+ *  - Con prefers-reduced-motion no hay desplazamientos ni pulsos.
+ *  - El desenfoque solo se aplica a capas pequeñas o fijas (no a listas).
+ */
+
+.glass-surface,
+.glass-panel,
+.glass-floating {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-surface);
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
+}
+
+/* Capa de lectura: más opaca, para KPI o paneles con texto. */
+.glass-panel {
+  background: var(--glass-surface-strong);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+}
+
+/* Elemento flotante sobre otra superficie (tarjeta de acción, popover). */
+.glass-floating {
+  background: var(--glass-surface-strong);
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-lg));
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-lg));
+  box-shadow: var(--glass-highlight), var(--glass-shadow-raised);
+}
+
+/* Chip o capa translúcida sobre el degradado institucional. */
+.glass-on-brand {
+  border: 1px solid var(--glass-border-on-brand);
+  background: var(--glass-surface-on-brand);
+  color: var(--color-text-inverse);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  backdrop-filter: blur(var(--glass-blur-sm));
+}
+
+/* Respuesta al puntero: elevación moderada, borde visible y foco accesible.
+   Solo para elementos que realmente son una acción (enlace o botón). */
+.glass-interactive {
+  transition:
+    transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.glass-interactive:hover {
+  border-color: var(--color-primary-muted);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-raised);
+  transform: var(--lift-hover);
+}
+
+.glass-interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.glass-interactive:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+/* Sin soporte de desenfoque: superficie opaca equivalente. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-surface,
+  .glass-panel,
+  .glass-floating {
+    background: var(--color-surface);
+  }
+
+  .glass-on-brand {
+    background: rgba(255, 255, 255, 0.18);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-surface,
+  .glass-panel,
+  .glass-floating {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-interactive,
+  .glass-interactive:hover,
+  .glass-interactive:active {
+    transform: none;
+  }
+}
+
+/* Alto contraste del sistema: bordes reales en lugar de translucidez. */
+@media (forced-colors: active) {
+  .glass-surface,
+  .glass-panel,
+  .glass-floating,
+  .glass-on-brand {
+    border-color: CanvasText;
+  }
+}
+
+/* Pulso discreto de urgencia real (UrgencyIndicator). Se repite pocas veces
+   y queda fijo: la alerta no parpadea de forma continua. */
+@keyframes sgt-pulse-ring {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
