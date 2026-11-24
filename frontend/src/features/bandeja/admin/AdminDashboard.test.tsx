@@ -78,6 +78,9 @@ describe('Panel de administración', () => {
     const prioridad = screen.getByRole('heading', { name: 'Atención prioritaria' }).closest('section') as HTMLElement
     expect(within(prioridad).getByText('Vencido hace 3 días')).toBeInTheDocument()
     expect(await screen.findByRole('link', { name: new RegExp(fixtureNotificacion.titulo) })).toBeInTheDocument()
+    const hero = screen.getByRole('region', { name: 'Panel de administración' })
+    expect(within(hero).getByRole('heading', { name: '1 expediente con el plazo vencido' })).toBeInTheDocument()
+    expect(within(hero).getByRole('button', { name: /Actualizar/ })).toBeInTheDocument()
     expect(await axe(container)).toHaveNoViolations()
   })
 
