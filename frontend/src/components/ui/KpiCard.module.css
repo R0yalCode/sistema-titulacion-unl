@@ -32,6 +32,18 @@
   box-shadow: var(--elevation-raised);
 }
 
+.glass {
+  /* Se repiten aquí los valores de .glass-panel: el módulo se carga después
+     de la capa global y su fondo sólido ganaría por orden. */
+  border-color: var(--glass-border);
+  background: var(--glass-surface-strong);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+}
+
+.glass:hover {
+  box-shadow: var(--glass-highlight), var(--glass-shadow-raised);
+}
+
 .warning {
   --kpi-accent: var(--color-warning-solid);
   --kpi-icon-bg: var(--color-warning-bg-soft);

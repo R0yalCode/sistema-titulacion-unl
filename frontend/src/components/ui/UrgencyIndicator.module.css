@@ -1,0 +1,68 @@
+.indicator {
+  --urgency-solid: var(--color-danger-solid);
+  --urgency-text: var(--color-danger-text);
+  --urgency-bg: var(--color-danger-bg-soft);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 24px;
+  padding: 2px var(--space-2) 2px var(--space-2);
+  border: 1px solid color-mix(in srgb, var(--urgency-solid) 28%, transparent);
+  border-radius: var(--radius-full);
+  background: var(--urgency-bg);
+  color: var(--urgency-text);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.attention {
+  --urgency-solid: var(--color-warning-solid);
+  --urgency-text: var(--color-warning-text);
+  --urgency-bg: var(--color-warning-bg-soft);
+}
+
+.dot {
+  position: relative;
+  display: inline-flex;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--urgency-solid);
+}
+
+/* Forma distinta para «atención»: anillo en lugar de punto sólido. */
+.attention .dot {
+  box-sizing: border-box;
+  border: 2px solid var(--urgency-solid);
+  background: transparent;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--urgency-solid);
+  animation: sgt-pulse-ring 1.8s var(--ease-out) 4;
+}
+
+.text {
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    display: none;
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .dot {
+    background: CanvasText;
+  }
+}
