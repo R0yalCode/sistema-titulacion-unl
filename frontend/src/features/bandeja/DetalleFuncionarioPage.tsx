@@ -8,8 +8,6 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { useConfirm } from '@/components/ui/ConfirmDialog'
 import { ArrowLeftIcon, ClipboardCheckIcon, DocumentIcon, SearchIcon } from '@/components/ui/icons'
-import { ErrorState } from '@/components/ui/ErrorState'
-import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import {
@@ -23,12 +21,12 @@ import {
   useExpedienteDetalle,
   useObservarExpediente,
 } from '@/features/expediente'
-import { presentApiError } from '@/lib/apiErrorPresentation'
 import { presentarEstado } from '@/lib/estados'
 import { esEstadoFinal, puedeIniciarVerificacion } from './accionesFuncionario'
 import { useIniciarVerificacion, useInvalidarTrasAccion } from './queries'
 import { ResolucionesSection } from './ResolucionesSection'
 import styles from './DetalleFuncionarioPage.module.css'
+import { QueryErrorView } from '@/components/errors/QueryErrorView'
 
 /**
  * V-08 — Detalle del funcionario. Bloque V-08a (FE-T801…FE-T803, FE-T806…FE-T809):
@@ -68,27 +66,13 @@ export default function DetalleFuncionarioPage() {
   }
 
   if (detalleQuery.isError) {
-    const presentation = presentApiError(detalleQuery.error)
-    if (presentation.kind === 'not-found') {
-      return (
-        <NotFoundState
-          action={volver}
-          description="El expediente no existe o está fuera del ámbito de su cuenta."
-          title="Expediente no encontrado"
-        />
-      )
-    }
-    if (presentation.kind === 'forbidden') {
-      return (
-        <ForbiddenState
-          action={<Link to="/no-habilitado?motivo=rol-no-autorizado">Más información</Link>}
-          description={presentation.description}
-          title={presentation.title}
-        />
-      )
-    }
     return (
-      <ErrorState description={presentation.description} title={presentation.title} onRetry={() => detalleQuery.refetch()} />
+      <QueryErrorView
+        error={detalleQuery.error}
+        notFoundMessage="El expediente no existe o está fuera del ámbito de su cuenta."
+        notFoundTitle="Expediente no encontrado"
+        onRetry={() => detalleQuery.refetch()}
+      />
     )
   }
 

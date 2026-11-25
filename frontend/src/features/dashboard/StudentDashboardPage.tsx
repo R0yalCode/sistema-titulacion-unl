@@ -1,9 +1,6 @@
 import { Link } from 'react-router-dom'
-import { ErrorState } from '@/components/ui/ErrorState'
-import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { HeroPanel, type HeroMetaItem } from '@/components/ui/HeroPanel'
 import { CalendarIcon, ClockIcon, DocumentIcon, FlagIcon, ListCheckIcon } from '@/components/ui/icons'
-import { presentApiError } from '@/lib/apiErrorPresentation'
 import { formatFecha } from '@/lib/dates'
 import { AccionPrioritaria } from './AccionPrioritaria'
 import { KpiResumen } from './KpiResumen'
@@ -14,6 +11,7 @@ import type { ExpedienteResumen } from '@/api/endpoints/miTramite'
 import { calcularProximoHito, construirAccionesPendientes, type ProximoHito } from './presentacion'
 import { useMiTramite } from './queries'
 import styles from './StudentDashboardPage.module.css'
+import { QueryErrorView } from '@/components/errors/QueryErrorView'
 
 function DashboardSkeleton() {
   return (
@@ -63,19 +61,7 @@ export default function StudentDashboardPage() {
   if (query.isLoading) {
     contenido = <DashboardSkeleton />
   } else if (query.isError) {
-    const presentation = presentApiError(query.error)
-    contenido =
-      presentation.kind === 'forbidden' ? (
-        <ForbiddenState description={presentation.description} title={presentation.title} />
-      ) : (
-        <div className={styles.errorBox}>
-          <ErrorState
-            description={presentation.description}
-            title="No pudimos cargar tu proceso de titulación"
-            onRetry={() => void query.refetch()}
-          />
-        </div>
-      )
+    contenido = <QueryErrorView error={query.error} onRetry={() => query.refetch()} />
   } else if (!expediente) {
     // La tarjeta del hero ofrece el primer paso (crear la solicitud).
     contenido = null

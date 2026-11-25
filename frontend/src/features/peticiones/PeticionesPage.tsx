@@ -5,8 +5,6 @@ import { AuthContext } from '@/auth/AuthContext'
 import { ToastContext } from '@/components/feedback/ToastProvider'
 import { Alert } from '@/components/ui/Alert'
 import { Card } from '@/components/ui/Card'
-import { ErrorState } from '@/components/ui/ErrorState'
-import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { StatusBadge } from '@/components/ui/StatusBadge'
@@ -14,12 +12,12 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { DocumentIcon } from '@/components/ui/icons'
 import { OPERATIONAL_ROLES } from '@/auth/roles'
 import { describeAccionError, useExpedienteDetalle } from '@/features/expediente'
-import { presentApiError } from '@/lib/apiErrorPresentation'
 import { CargarDocumentoDialog } from './CargarDocumentoDialog'
 import { PeticionesTabla } from './PeticionesTabla'
 import { SolicitarEmisionDialog } from './SolicitarEmisionDialog'
 import { useCargarDocumento, useSolicitarEmision } from './queries'
 import styles from './PeticionesPage.module.css'
+import { QueryErrorView } from '@/components/errors/QueryErrorView'
 
 /**
  * V-05 — Gestión de peticiones documentales (FE-T501…FE-T505).
@@ -51,22 +49,11 @@ export default function PeticionesPage() {
   }
 
   if (detalleQuery.isError) {
-    const presentation = presentApiError(detalleQuery.error)
-    if (presentation.kind === 'not-found') {
-      return (
-        <NotFoundState
-          description="El expediente no existe o no está disponible para su cuenta."
-          title="Expediente no encontrado"
-        />
-      )
-    }
-    if (presentation.kind === 'forbidden') {
-      return <ForbiddenState description={presentation.description} title={presentation.title} />
-    }
     return (
-      <ErrorState
-        description={presentation.description}
-        title={presentation.title}
+      <QueryErrorView
+        error={detalleQuery.error}
+        notFoundMessage="El expediente no existe o no está disponible para su cuenta."
+        notFoundTitle="Expediente no encontrado"
         onRetry={() => detalleQuery.refetch()}
       />
     )

@@ -231,7 +231,7 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
     expect(await screen.findByText('Crear solicitud (V-03)')).toBeInTheDocument()
   })
 
-  it('error 500: muestra ErrorState con reintento real', async () => {
+  it('error 500: muestra la vista 500 con reintento real de la consulta', async () => {
     const user = userEvent.setup()
     let llamadas = 0
     server.use(
@@ -244,18 +244,23 @@ describe('StudentDashboardPage (dashboard del estudiante)', () => {
     )
     renderDashboard()
 
-    expect(await screen.findByRole('heading', { name: 'No pudimos cargar tu proceso de titulación' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Reintentar' }))
+    expect(await screen.findByRole('heading', { level: 2, name: 'Algo salió mal' })).toBeInTheDocument()
+    // El backend dio un «detail» textual: se muestra (nunca trazas).
+    expect(screen.getByText('Error interno')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Intentar nuevamente' }))
     expect(await screen.findByText('Hola, Estudiante de Prueba')).toBeInTheDocument()
     expect(llamadas).toBe(2)
   })
 
-  it('error 403: muestra ForbiddenState dentro de la vista', async () => {
+  it('error 403: muestra la vista 403 dentro del panel, sin reintento ni cierre de sesión', async () => {
     server.use(http.get(MI_TRAMITE_URL, () => HttpResponse.json({ detail: 'Prohibido' }, { status: 403 })))
     renderDashboard()
 
-    expect(await screen.findByRole('heading', { name: 'Acceso restringido' })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Reintentar' })).not.toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'No tienes permisos para acceder' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Volver a mi panel' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /intentar|reintentar/i })).not.toBeInTheDocument()
+    // No se revela la regla del backend.
+    expect(screen.queryByText('Prohibido')).not.toBeInTheDocument()
   })
 
   it('no tiene violaciones de accesibilidad detectables (axe)', async () => {

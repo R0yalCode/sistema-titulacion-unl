@@ -235,12 +235,15 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     expect(within(checklist).queryByRole('button', { name: 'Verificar' })).not.toBeInTheDocument()
   })
 
-  it('un 404 muestra "no encontrado" con salida a la bandeja', async () => {
+  it('un 404 muestra "no encontrado" con salida a la bandeja (panel del rol)', async () => {
+    const user = userEvent.setup()
     server.use(http.get(DETALLE_URL, () => HttpResponse.json({ detail: 'No encontrado.' }, { status: 404 })))
     renderAs(['SECRETARIO_ABOGADO'])
 
-    expect(await screen.findByText('Expediente no encontrado')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Volver a la bandeja' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Expediente no encontrado' })).toBeInTheDocument()
+    expect(screen.getByText('El expediente no existe o está fuera del ámbito de su cuenta.')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Ir al inicio' }))
+    expect(await screen.findByText('Bandeja')).toBeInTheDocument()
   })
 
   it('un 403 muestra acceso restringido con enlace a V-09', async () => {
@@ -251,7 +254,8 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     )
     renderAs(['DIRECTOR_CARRERA'])
 
-    expect(await screen.findByRole('link', { name: 'Más información' })).toHaveAttribute(
+    expect(await screen.findByRole('heading', { name: 'No tienes permisos para acceder' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Más información/ })).toHaveAttribute(
       'href',
       '/no-habilitado?motivo=rol-no-autorizado',
     )
@@ -270,7 +274,7 @@ describe('DetalleFuncionarioPage (V-08a)', () => {
     )
     renderAs(['SECRETARIO_ABOGADO'])
 
-    await user.click(await screen.findByRole('button', { name: /reintentar/i }))
+    await user.click(await screen.findByRole('button', { name: 'Intentar nuevamente' }))
 
     expect(await screen.findByRole('heading', { level: 1, name: fixtureExpedienteDetalle.numero_expediente })).toBeInTheDocument()
     expect(llamadas).toBe(2)

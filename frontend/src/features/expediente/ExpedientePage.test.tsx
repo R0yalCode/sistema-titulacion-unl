@@ -83,11 +83,11 @@ describe('ExpedientePage (V-04)', () => {
     expect(await screen.findByText('Expediente no encontrado')).toBeInTheDocument()
   })
 
-  it('muestra ForbiddenState ante un 403 real en el detalle', async () => {
+  it('muestra la vista 403 ante un 403 real en el detalle', async () => {
     server.use(http.get(DETALLE_URL, () => HttpResponse.json({ detail: 'Prohibido.' }, { status: 403 })))
     renderPageAs(['SECRETARIO_ABOGADO'])
 
-    expect(await screen.findByText('Acceso restringido')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'No tienes permisos para acceder' })).toBeInTheDocument()
   })
 
   it('CA-V04-06: el checklist para ESTUDIANTE no ejecuta la query (sin 403 real) y muestra el panel informativo', async () => {
