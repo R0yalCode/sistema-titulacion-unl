@@ -166,6 +166,7 @@ Validado sin scroll horizontal en 320, 360, 390, 768, 1024, 1280, 1440 y 1920 px
 | `icons.tsx` | Juego único de iconos (trazo 1,8, rejilla 24) | Siempre `aria-hidden`; el texto da el significado |
 | `HeroPanel` | Encabezado institucional de los paneles (degradado, chips de datos reales, contenido lateral) | Región nombrada por su título (`h1`/`h2`) |
 | `ActionCard` | Tarjeta flotante «qué hacer ahora» con CTA real | La tarjeta no es clicable; el CTA es un enlace o botón normal |
+| `ErrorView` / `ErrorPage` / `QueryErrorView` (`components/errors`) | Las ocho vistas de error (404, 401, 403, 500, 503, sin conexión, tiempo agotado, datos) como configuraciones de un único componente | Página: `h1` enfocado; en línea: región viva; mascota decorativa (ver `ERROR_PAGES.md`) |
 | `UrgencyIndicator` | Punto + contador + texto para urgencias verificables | Solo con cantidad > 0; texto y forma además del color; pulso limitado y desactivado con `prefers-reduced-motion` |
 
 Estructura (`frontend/src/components/layout`):
@@ -246,3 +247,6 @@ Referencia visual: `prototipos/vistas_liquid_glass/` (Google Stitch). Se tomó l
 - **Accesibilidad y rendimiento:** respaldo opaco sin `backdrop-filter` o con `prefers-reduced-transparency`; sin desplazamientos ni pulsos con `prefers-reduced-motion`; bordes reales con `forced-colors`; desenfoque solo en capas pequeñas o fijas.
 - **Fuera de alcance (sin datos reales):** los paneles «Docente» y «Tutor» de los prototipos (el sistema no tiene esos roles), indicadores de usuarios, sesiones, auditoría o integridad del prototipo de administración, y tendencias o series temporales.
 
+## 13. Sistema de páginas de error (2026-11-24)
+
+Arquitectura, clasificación, recuperación, accesibilidad y limitaciones: `docs/frontend/ERROR_PAGES.md`. Reparto y commits: `docs/frontend/PLAN_ERRORES_DK010.md`. Usa la capa Liquid Glass de §12 sin estilos propios por código de error. El 401 tiene página propia (`/sesion-expirada`) desde DEC-17.

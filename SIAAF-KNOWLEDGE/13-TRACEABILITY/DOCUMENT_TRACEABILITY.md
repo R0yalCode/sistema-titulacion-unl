@@ -64,3 +64,9 @@ No se resolvieron inventando: quedan como DP-xx en `REGISTRO_DECISIONES_TECNICAS
 - C-LG-01: los prototipos `prototipos/vistas_liquid_glass/` (Google Stitch) muestran los roles «Tutor de Grado», «Coordinador de Carrera», «Tribunal Evaluador», «Secretaría Académica» y «Administrador DTI». El backend define solo ESTUDIANTE, SECRETARIA_CARRERA, SECRETARIO_ABOGADO, ANALISTA_APOYO, DECANO, DIRECTOR_CARRERA, RESPONSABLE_DEPENDENCIA y ADMINISTRADOR (`apps/authentication/adapters/models.py`). No existen DOCENTE ni TUTOR: los paneles de docente y tutor no se implementaron.
 - C-LG-02: los prototipos presentan datos sin fuente en la API: Turnitin, horas de tutoría, sesiones, integridad criptográfica, sincronización CAS, fases «1 a 5» con resoluciones y defensa. No se trasladaron (CA-G-01). Las etapas reales salen de `mi-tramite`.
 - Evidencia: `docs/frontend/PLAN_LIQUID_GLASS_DK010.md` (tabla prototipo ↔ rol real).
+
+## Contradicciones registradas el 2026-11-24 (páginas de error)
+
+- C-ERR-01: `08_UI_ERROR_STATES_SPEC.md` y la máxima 6 de `CLAUDE.md` decían «401 no es página (aviso + `/login`)». El responsable decidió una página `/sesion-expirada` (DEC-17 en `clarify.md`). Se actualizó `CLAUDE.md`; la spec 08 no se reescribió y prevalece DEC-17.
+- C-ERR-02: los prototipos `prototipos/vistas-errores-unl/` muestran datos sin fuente en la API: IDs de incidencia, nodos, latencias, «sesiones de 15 minutos», «TLS 1.3», «borrador en caché» y roles inexistentes. No se trasladaron (CA-G-01).
+- Evidencia: `docs/frontend/ERROR_PAGES.md` y `docs/frontend/PLAN_ERRORES_DK010.md`.
