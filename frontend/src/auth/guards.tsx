@@ -1,6 +1,7 @@
 import { useContext, type ReactNode } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { AuthContext } from './AuthContext'
+import { SESSION_EXPIRED_PATH, sesionExpiradaPendiente } from './sessionExpiry'
 
 type GuardProps = {
   children?: ReactNode
@@ -11,7 +12,9 @@ export function RequireAuth({ children }: GuardProps) {
   const location = useLocation()
 
   if (!auth?.isAuthenticated) {
-    return <Navigate replace state={{ returnTo: location.pathname }} to="/login" />
+    // Sesión cerrada por un 401 de la API → vista 401; si no, al login.
+    const destino = sesionExpiradaPendiente() ? SESSION_EXPIRED_PATH : '/login'
+    return <Navigate replace state={{ returnTo: location.pathname }} to={destino} />
   }
 
   return <>{children ?? <Outlet />}</>

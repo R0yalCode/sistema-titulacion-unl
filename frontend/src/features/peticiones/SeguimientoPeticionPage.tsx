@@ -3,19 +3,17 @@ import { Link, useParams } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
 import { Alert } from '@/components/ui/Alert'
 import { Card } from '@/components/ui/Card'
-import { ErrorState } from '@/components/ui/ErrorState'
-import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
 import { ArrowLeftIcon, DocumentIcon, InfoIcon } from '@/components/ui/icons'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { DescargaButton, puedeDescargar, useExpedienteDetalle } from '@/features/expediente'
-import { presentApiError } from '@/lib/apiErrorPresentation'
 import { formatFecha } from '@/lib/dates'
 import { nombreRol, presentarEstado } from '@/lib/estados'
 import { tieneDocumento } from './accionesPeticion'
 import { buscarPeticion, describirEstadoPeticion } from './seguimiento'
 import styles from './SeguimientoPeticionPage.module.css'
+import { QueryErrorView } from '@/components/errors/QueryErrorView'
 
 /**
  * V-06 — Seguimiento de petición (FE-T601…FE-T604).
@@ -50,22 +48,11 @@ export default function SeguimientoPeticionPage() {
   }
 
   if (detalleQuery.isError) {
-    const presentation = presentApiError(detalleQuery.error)
-    if (presentation.kind === 'not-found') {
-      return (
-        <NotFoundState
-          description="El expediente no existe o no está disponible para su cuenta."
-          title="Expediente no encontrado"
-        />
-      )
-    }
-    if (presentation.kind === 'forbidden') {
-      return <ForbiddenState description={presentation.description} title={presentation.title} />
-    }
     return (
-      <ErrorState
-        description={presentation.description}
-        title={presentation.title}
+      <QueryErrorView
+        error={detalleQuery.error}
+        notFoundMessage="El expediente no existe o no está disponible para su cuenta."
+        notFoundTitle="Expediente no encontrado"
         onRetry={() => detalleQuery.refetch()}
       />
     )

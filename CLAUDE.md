@@ -14,7 +14,7 @@ Lee primero `AGENTS.md` (raíz). Resumen operativo para ti:
 3. **Prototipos A/B**: solo referencia visual y de tono; prohibido copiar su HTML/CSS/JS. Escribe React desde cero con `tokens.css` (FE-T006) y los tokens de `especificaciones/01`.
 4. **Sin dependencias nuevas** sin autorización humana. **Git**: sigue obligatoriamente la sección "Flujo Git" de este archivo. Prohibido implementar tareas no autorizadas (las de BE-x nunca; FE-T1213 Bloqueada).
 5. **FE-T1213 (409/412/428) bloqueada** por BE-11: no la toques. El backend no ofrece renovación de sesión: no implementes refresh automático ni logout de servidor inventados (re-login al expirar; `plan.md` §6).
-6. Estados de error según `especificaciones/08` y `specify.md` §9.3: 401 no es página (aviso + `/login`); 403 en vista (`ForbiddenState`, destino V-09); 404 sí es página; 500/503 `ErrorState` con reintento real; formularios con `InlineAlert` (400/422; 409/412/428 solo si BE-11 se autoriza).
+6. Estados de error según `especificaciones/08`, `specify.md` §9.3 y `docs/frontend/ERROR_PAGES.md`: 401 es la página `/sesion-expirada` tras cerrar la sesión (DEC-17, 2026-11-24; enmienda la regla anterior «aviso + `/login`»); 403 en vista (`QueryErrorView`, enlace a V-09; ruta sin rol → V-09); 404 sí es página; 500/503/timeout/sin conexión/datos en vista con reintento real y controlado; formularios con `InlineAlert` (400/422; 409/412/428 solo si BE-11 se autoriza).
 
 ## Flujo de trabajo
 

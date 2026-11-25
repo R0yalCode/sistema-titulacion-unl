@@ -300,7 +300,7 @@ describe('PeticionesPage (V-05)', () => {
     )
     renderAs(['ESTUDIANTE'])
 
-    await user.click(await screen.findByRole('button', { name: /reintentar/i }))
+    await user.click(await screen.findByRole('button', { name: 'Intentar nuevamente' }))
 
     expect(await screen.findByRole('heading', { name: 'Peticiones documentales' })).toBeInTheDocument()
     expect(llamadas).toBe(2)

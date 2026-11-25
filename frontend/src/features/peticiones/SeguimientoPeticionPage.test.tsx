@@ -187,10 +187,11 @@ describe('SeguimientoPeticionPage (V-06)', () => {
     expect(await screen.findByRole('heading', { name: /acceso|permiso/i })).toBeInTheDocument()
   })
 
+  // Con red en el dispositivo, un fallo de red es «servicio no disponible» (503).
   it.each([
-    ['un 500', () => HttpResponse.json({ detail: 'Error interno.' }, { status: 500 })],
-    ['un error de red', () => HttpResponse.error()],
-  ])('FE-T604: ante %s ofrece reintentar y vuelve a consultar', async (_caso, fallo) => {
+    ['un 500', () => HttpResponse.json({ detail: 'Error interno.' }, { status: 500 }), 'Intentar nuevamente'],
+    ['un error de red', () => HttpResponse.error(), 'Reintentar'],
+  ])('FE-T604: ante %s ofrece reintentar y vuelve a consultar', async (_caso, fallo, boton) => {
     const user = userEvent.setup()
     let llamadas = 0
     server.use(
@@ -201,7 +202,7 @@ describe('SeguimientoPeticionPage (V-06)', () => {
     )
     renderAs(['ESTUDIANTE'], EXPEDIENTE_BORRADOR.id, PENDIENTE.id)
 
-    await user.click(await screen.findByRole('button', { name: /reintentar/i }))
+    await user.click(await screen.findByRole('button', { name: boton }))
 
     expect(await screen.findByRole('heading', { level: 1, name: PENDIENTE.requisito_nombre })).toBeInTheDocument()
     expect(llamadas).toBe(2)

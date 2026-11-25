@@ -7,12 +7,9 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { useConfirm } from '@/components/ui/ConfirmDialog'
 import { ArrowLeftIcon, ClipboardCheckIcon, DocumentIcon, SendIcon } from '@/components/ui/icons'
-import { ErrorState } from '@/components/ui/ErrorState'
-import { ForbiddenState } from '@/components/ui/ForbiddenState'
 import { NotFoundState } from '@/components/ui/NotFoundState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { OPERATIONAL_ROLES } from '@/auth/roles'
-import { presentApiError } from '@/lib/apiErrorPresentation'
 import { ChecklistSection } from './ChecklistSection'
 import { ExpedienteHeader } from './ExpedienteHeader'
 import { ObservarDialog } from './ObservarDialog'
@@ -21,6 +18,7 @@ import { puedeEnviar, puedeObservar } from './accionesPorRolEstado'
 import { describeAccionError } from './errors'
 import { useChecklist, useEnviarExpediente, useExpedienteDetalle, useObservarExpediente } from './queries'
 import styles from './ExpedientePage.module.css'
+import { QueryErrorView } from '@/components/errors/QueryErrorView'
 
 export default function ExpedientePage() {
   const { id } = useParams<{ id: string }>()
@@ -49,17 +47,11 @@ export default function ExpedientePage() {
   }
 
   if (detalleQuery.isError) {
-    const presentation = presentApiError(detalleQuery.error)
-    if (presentation.kind === 'not-found') {
-      return <NotFoundState description="El expediente no existe o no está disponible para su cuenta." title="Expediente no encontrado" />
-    }
-    if (presentation.kind === 'forbidden') {
-      return <ForbiddenState description={presentation.description} title={presentation.title} />
-    }
     return (
-      <ErrorState
-        description={presentation.description}
-        title={presentation.title}
+      <QueryErrorView
+        error={detalleQuery.error}
+        notFoundMessage="El expediente no existe o no está disponible para su cuenta."
+        notFoundTitle="Expediente no encontrado"
         onRetry={() => detalleQuery.refetch()}
       />
     )

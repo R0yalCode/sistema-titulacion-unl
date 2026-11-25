@@ -84,7 +84,7 @@ describe('AppRouter', () => {
   it('muestra 404 para rutas desconocidas sin exigir sesión', async () => {
     renderRouterAs(null, '/ruta-inexistente')
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'Error 404' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Página no encontrada' })).toBeInTheDocument()
   })
 
   describe('portal del estudiante', () => {
