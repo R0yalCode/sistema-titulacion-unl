@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { axe } from 'vitest-axe'
 import { describe, expect, it } from 'vitest'
 import SessionExpiredPage from './SessionExpiredPage'
-import { rutaDeRetorno } from '@/auth/sessionExpiry'
+import { marcarSesionExpirada, rutaDeRetorno, sesionExpiradaPendiente } from '@/auth/sessionExpiry'
 
 function LoginStub() {
   const location = useLocation()
@@ -62,5 +62,15 @@ describe('SessionExpiredPage (401)', () => {
     renderVista()
     await user.click(screen.getByRole('button', { name: 'Ir al inicio' }))
     expect(screen.getByText('Página pública')).toBeInTheDocument()
+  })
+
+  it('un 401 tardío con la vista abierta no deja la marca activa al salir', async () => {
+    const user = userEvent.setup()
+    renderVista()
+    marcarSesionExpirada()
+    expect(sesionExpiradaPendiente()).toBe(true)
+    await user.click(screen.getByRole('button', { name: 'Ir al inicio' }))
+    expect(screen.getByText('Página pública')).toBeInTheDocument()
+    expect(sesionExpiradaPendiente()).toBe(false)
   })
 })

@@ -15,9 +15,12 @@ export default function SessionExpiredPage() {
   const location = useLocation()
   const returnTo = rutaDeRetorno((location.state as { returnTo?: unknown } | null)?.returnTo)
 
-  // La marca ya cumplió su función: un cierre de sesión posterior vuelve al login.
+  // La marca ya cumplió su función: se limpia al llegar y también al salir,
+  // por si un 401 tardío la volvió a activar mientras la vista estaba abierta.
+  // Así, un cierre de sesión posterior vuelve al login.
   useEffect(() => {
     limpiarSesionExpirada()
+    return limpiarSesionExpirada
   }, [])
 
   return (
