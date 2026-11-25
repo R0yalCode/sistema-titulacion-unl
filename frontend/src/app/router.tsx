@@ -1,5 +1,5 @@
-import { lazy, Suspense, useContext, useLayoutEffect } from 'react'
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { lazy, Suspense, useContext, useEffect, useLayoutEffect } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { StudentLayout } from '@/components/layout/StudentLayout'
 import { AuthContext } from '@/auth/AuthContext'
@@ -7,8 +7,8 @@ import { RedirectIfAuthenticated, RequireAuth, RequireRole } from '@/auth/guards
 import { getHomeRouteForRoles } from '@/auth/redirect'
 import { OPERATIONAL_ROLES } from '@/auth/roles'
 import { setUnauthorizedHandler } from '@/api/client'
-import { ToastContext } from '@/components/feedback/ToastProvider'
 import { queryClient } from '@/lib/queryClient'
+import { SESSION_EXPIRED_PATH, limpiarSesionExpirada, marcarSesionExpirada } from '@/auth/sessionExpiry'
 
 const LandingPage = lazy(() => import('@/features/landing/LandingPage'))
 const LoginPage = lazy(() => import('@/features/auth/LoginPage'))
@@ -28,6 +28,7 @@ const BandejaPage = lazy(() => import('@/features/bandeja/BandejaPage'))
 const DetalleFuncionarioPage = lazy(() => import('@/features/bandeja/DetalleFuncionarioPage'))
 const NoHabilitadoPage = lazy(() => import('@/features/no-habilitado/NoHabilitadoPage'))
 const NotFoundPage = lazy(() => import('./NotFoundPage'))
+const SessionExpiredPage = lazy(() => import('./SessionExpiredPage'))
 
 function RouteLoadingFallback() {
   return (
@@ -73,22 +74,30 @@ function ExpedienteLayout() {
 
 function AuthExpiryBootstrap() {
   const auth = useContext(AuthContext)
-  const toast = useContext(ToastContext)
-  const navigate = useNavigate()
 
   // FE-T1001/FE-T1008: useLayoutEffect registra el manejador en el mismo commit
   // que pinta la interfaz, antes de cualquier efecto pasivo (donde se lanzan
   // las consultas), para que ningún 401 llegue sin manejador.
+  // DEC-17 (2026-11-24): el 401 marca la sesión como expirada y la cierra;
+  // RequireAuth lleva entonces a la vista 401 conservando la ruta. Varios 401
+  // simultáneos solo repiten operaciones idempotentes (sin bucles).
   useLayoutEffect(() => {
     setUnauthorizedHandler(() => {
+      marcarSesionExpirada()
       auth?.logout()
       queryClient.clear()
-      toast?.showToast('Su sesión ha expirado. Inicie sesión nuevamente.', 'warning')
-      navigate('/login', { replace: true })
     })
 
     return () => setUnauthorizedHandler(null)
-  }, [auth, toast, navigate])
+  }, [auth])
+
+  // Un nuevo ingreso descarta una marca que no llegó a usarse.
+  const autenticado = auth?.isAuthenticated ?? false
+  useEffect(() => {
+    if (autenticado) {
+      limpiarSesionExpirada()
+    }
+  }, [autenticado])
 
   return null
 }
@@ -109,6 +118,8 @@ export function AppRouter() {
           {/* Restablecimiento del 2FA (MFA-RST): públicas. */}
           <Route element={<MfaResetRequestPage />} path="/restablecer-2fa" />
           <Route element={<MfaResetConfirmPage />} path="/restablecer-2fa/confirmar" />
+          {/* 401: pública; la sesión ya se cerró al llegar (DEC-17). */}
+          <Route element={<SessionExpiredPage />} path={SESSION_EXPIRED_PATH} />
           <Route element={<RequireAuth />}>
             <Route element={<RequireRole roles={['ESTUDIANTE']} />}>
               <Route element={<StudentLayout />}>

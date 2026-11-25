@@ -5,6 +5,7 @@ import { request } from '@/api/client'
 import { server } from '@/test/server'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { getAccessToken } from '@/auth/storage'
 import { ToastProvider } from '@/components/feedback/ToastProvider'
 import { AppRouter } from './router'
@@ -26,7 +27,7 @@ describe('expiración de sesión (401 global)', () => {
     sessionStorage.clear()
   })
 
-  it('un 401 en cualquier petición limpia la sesión y redirige a /login', async () => {
+  it('un 401 en cualquier petición limpia la sesión y muestra la vista 401 (DEC-17)', async () => {
     sessionStorage.setItem(
       'sgt.access',
       buildToken({ cedula: '1104567890', roles: ['ESTUDIANTE'], exp: Math.floor(Date.now() / 1000) + 3600 }),
@@ -46,11 +47,15 @@ describe('expiración de sesión (401 global)', () => {
 
     await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
-    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Necesitas iniciar sesión' })).toBeInTheDocument()
     expect(getAccessToken()).toBeNull()
+
+    // «Iniciar sesión» lleva al login real.
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Iniciar sesión' }))
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
   })
 
-  it('muestra un aviso comprensible de sesión expirada', async () => {
+  it('varios 401 seguidos no provocan bucles ni salen de la vista 401', async () => {
     sessionStorage.setItem(
       'sgt.access',
       buildToken({ cedula: '1104567890', roles: ['ESTUDIANTE'], exp: Math.floor(Date.now() / 1000) + 3600 }),
@@ -68,9 +73,16 @@ describe('expiración de sesión (401 global)', () => {
 
     expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
 
-    await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
+    await Promise.all([
+      expect(request('/api/v1/test-expiry/')).rejects.toBeDefined(),
+      expect(request('/api/v1/test-expiry/')).rejects.toBeDefined(),
+    ])
+    expect(await screen.findByRole('heading', { level: 1, name: 'Necesitas iniciar sesión' })).toBeInTheDocument()
 
-    expect(await screen.findByText('Su sesión ha expirado. Inicie sesión nuevamente.')).toBeInTheDocument()
+    // Un 401 tardío estando ya en la vista no vuelve a navegar.
+    await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
+    expect(screen.getByRole('heading', { level: 1, name: 'Necesitas iniciar sesión' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 
   it('FE-T1001: un 401 justo después de pintar el dashboard nunca se pierde', async () => {
@@ -92,7 +104,7 @@ describe('expiración de sesión (401 global)', () => {
       await screen.findByRole('heading', { name: 'Mi proceso de titulación' })
       await expect(request('/api/v1/test-expiry/')).rejects.toBeDefined()
 
-      expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()
+      expect(await screen.findByRole('heading', { level: 1, name: 'Necesitas iniciar sesión' })).toBeInTheDocument()
       expect(getAccessToken()).toBeNull()
       unmount()
     }

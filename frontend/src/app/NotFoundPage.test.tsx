@@ -1,12 +1,14 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { axe } from 'vitest-axe'
 import { describe, expect, it, vi } from 'vitest'
 import { AuthContext, type AuthContextValue, type AuthUser } from '@/auth/AuthContext'
+import { recargarPagina } from '@/lib/recargar'
 import { renderWithProviders } from '@/test/renderWithProviders'
 import NotFoundPage from './NotFoundPage'
+
+vi.mock('@/lib/recargar', () => ({ recargarPagina: vi.fn() }))
 
 function authValue(user: AuthUser | null): AuthContextValue {
   return {
@@ -20,141 +22,69 @@ function authValue(user: AuthUser | null): AuthContextValue {
   }
 }
 
-describe('NotFoundPage', () => {
-  it('ofrece ir a iniciar sesión cuando no hay sesión', () => {
-    renderWithProviders(
-      <AuthContext.Provider value={authValue(null)}>
-        <NotFoundPage />
-      </AuthContext.Provider>,
-    )
+function renderNotFound(user: AuthUser | null) {
+  return renderWithProviders(
+    <AuthContext.Provider value={authValue(user)}>
+      <Routes>
+        <Route element={<NotFoundPage />} path="/ruta-inexistente" />
+        <Route element={<p>Página pública</p>} path="/" />
+        <Route element={<p>Bandeja del funcionario</p>} path="/bandeja" />
+      </Routes>
+    </AuthContext.Provider>,
+    { route: '/ruta-inexistente' },
+  )
+}
 
-    expect(screen.getByRole('button', { name: 'Ir a iniciar sesión' })).toBeInTheDocument()
+describe('NotFoundPage (404 del sistema de errores)', () => {
+  it('muestra la vista 404 con los textos aprobados y el título como h1 enfocado', () => {
+    renderNotFound(null)
+    const titulo = screen.getByRole('heading', { level: 1, name: 'Página no encontrada' })
+    expect(titulo).toHaveFocus()
+    expect(screen.getByText(/no encontramos la página que estás buscando/)).toBeInTheDocument()
   })
 
-  it('ofrece ir al inicio por rol cuando hay sesión', () => {
-    renderWithProviders(
-      <AuthContext.Provider value={authValue({ cedula: '1104567890', roles: ['DECANO'] })}>
-        <NotFoundPage />
-      </AuthContext.Provider>,
-    )
-
-    expect(screen.getByRole('button', { name: 'Ir a mi inicio' })).toBeInTheDocument()
-  })
-
-  it('ofrece una alternativa de navegación segura (volver atrás) en ambos contextos', () => {
-    renderWithProviders(
-      <AuthContext.Provider value={authValue(null)}>
-        <NotFoundPage />
-      </AuthContext.Provider>,
-    )
-
-    expect(screen.getByRole('button', { name: 'Volver atrás' })).toBeInTheDocument()
-  })
-
-  it('no revela si un recurso pertenece a otro usuario', () => {
-    renderWithProviders(<NotFoundPage />)
-
-    expect(document.body.textContent).not.toMatch(/pertenece a otro usuario|no le pertenece/i)
-  })
-
-  it('es operable por teclado', async () => {
+  it('sin sesión, «Ir al inicio» lleva a la página pública', async () => {
     const user = userEvent.setup()
-    renderWithProviders(
-      <AuthContext.Provider value={authValue(null)}>
-        <NotFoundPage />
-      </AuthContext.Provider>,
-    )
-
-    await user.tab()
-    expect(screen.getByRole('button', { name: 'Ir a iniciar sesión' })).toHaveFocus()
-    await user.tab()
-    expect(screen.getByRole('button', { name: 'Volver atrás' })).toHaveFocus()
+    renderNotFound(null)
+    await user.click(screen.getByRole('button', { name: 'Ir al inicio' }))
+    expect(screen.getByText('Página pública')).toBeInTheDocument()
   })
 
-  it('mantiene una jerarquía de encabezados válida (h1 → h2)', () => {
-    renderWithProviders(<NotFoundPage />)
-
-    const h1 = screen.getByRole('heading', { level: 1 })
-    const h2 = screen.getByRole('heading', { level: 2 })
-    expect(h1).toHaveTextContent('Error 404')
-    expect(h2).toHaveTextContent('Página no encontrada')
-  })
-
-  it('muestra la mascota 404 como imagen decorativa', () => {
-    const { container } = renderWithProviders(
-      <AuthContext.Provider value={authValue(null)}>
-        <NotFoundPage />
-      </AuthContext.Provider>,
-    )
-
-    const mascot = container.querySelector('img')
-    expect(mascot).toHaveAttribute('src', '/assets/mascotas/mascota-404.png')
-    expect(mascot).toHaveAttribute('alt', '')
-  })
-
-  it('el botón primario navega a /login cuando no hay sesión', async () => {
+  it('con sesión, «Ir al inicio» lleva al panel real del rol', async () => {
     const user = userEvent.setup()
-    renderWithProviders(
-      <AuthContext.Provider value={authValue(null)}>
-        <Routes>
-          <Route element={<NotFoundPage />} path="/ruta-inexistente" />
-          <Route element={<p>Pantalla de login</p>} path="/login" />
-        </Routes>
-      </AuthContext.Provider>,
-      { route: '/ruta-inexistente' },
-    )
-
-    await user.click(screen.getByRole('button', { name: 'Ir a iniciar sesión' }))
-
-    expect(screen.getByText('Pantalla de login')).toBeInTheDocument()
-  })
-
-  it('el botón primario navega al inicio por rol cuando hay sesión', async () => {
-    const user = userEvent.setup()
-    renderWithProviders(
-      <AuthContext.Provider value={authValue({ cedula: '1104567890', roles: ['DECANO'] })}>
-        <Routes>
-          <Route element={<NotFoundPage />} path="/ruta-inexistente" />
-          <Route element={<p>Bandeja del funcionario</p>} path="/bandeja" />
-        </Routes>
-      </AuthContext.Provider>,
-      { route: '/ruta-inexistente' },
-    )
-
-    await user.click(screen.getByRole('button', { name: 'Ir a mi inicio' }))
-
+    renderNotFound({ cedula: '1104567890', roles: ['DECANO'] })
+    expect(screen.getByRole('link', { name: 'Universidad Nacional de Loja' })).toHaveAttribute('href', '/bandeja')
+    await user.click(screen.getByRole('button', { name: 'Ir al inicio' }))
     expect(screen.getByText('Bandeja del funcionario')).toBeInTheDocument()
   })
 
-  it('"Volver atrás" usa el historial real (initialIndex con entrada previa)', async () => {
+  it('«Intentar nuevamente» vuelve a pedir la misma dirección (sin redirigir ni ocultar el 404)', async () => {
     const user = userEvent.setup()
-    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={['/origen', '/ruta-inexistente']} initialIndex={1}>
-          <AuthContext.Provider value={authValue(null)}>
-            <Routes>
-              <Route element={<p>Origen</p>} path="/origen" />
-              <Route element={<NotFoundPage />} path="/ruta-inexistente" />
-            </Routes>
-          </AuthContext.Provider>
-        </MemoryRouter>
-      </QueryClientProvider>,
-    )
-
-    await user.click(screen.getByRole('button', { name: 'Volver atrás' }))
-
-    expect(await screen.findByText('Origen')).toBeInTheDocument()
+    renderNotFound(null)
+    await user.click(screen.getByRole('button', { name: 'Intentar nuevamente' }))
+    expect(recargarPagina).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('heading', { level: 1, name: 'Página no encontrada' })).toBeInTheDocument()
   })
 
-  it('no presenta violaciones de accesibilidad', async () => {
-    const { container } = renderWithProviders(
-      <AuthContext.Provider value={authValue(null)}>
-        <NotFoundPage />
-      </AuthContext.Provider>,
-    )
+  it('es operable por teclado en orden lógico', async () => {
+    const user = userEvent.setup()
+    renderNotFound(null)
+    // El foco inicial está en el título (h1); el siguiente Tab llega a las acciones.
+    expect(screen.getByRole('heading', { level: 1 })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'Ir al inicio' })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'Intentar nuevamente' })).toHaveFocus()
+  })
 
+  it('no revela si un recurso pertenece a otra cuenta y no etiqueta a la mascota', () => {
+    const { container } = renderNotFound(null)
+    expect(document.body.textContent).not.toMatch(/pertenece a otro usuario|no le pertenece|mascota/i)
+    expect(container.querySelector('img[src="/assets/mascotas/mascota-404.png"]')).toHaveAttribute('alt', '')
+  })
+
+  it('no presenta violaciones de accesibilidad detectables por axe', async () => {
+    const { container } = renderNotFound(null)
     expect(await axe(container)).toHaveNoViolations()
   })
 })
