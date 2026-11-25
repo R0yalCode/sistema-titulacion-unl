@@ -21,16 +21,12 @@
 }
 
 .code {
-  position: absolute;
-  inset: auto 0 6% 0;
   color: var(--color-text-strong);
-  font-size: clamp(4rem, 10vw, 7.5rem);
+  font-size: clamp(3rem, 6vw, 4.5rem);
   font-weight: var(--font-weight-bold);
-  line-height: 1;
+  line-height: 0.9;
   letter-spacing: -0.04em;
-  text-align: center;
-  opacity: 0.08;
-  pointer-events: none;
+  font-variant-numeric: tabular-nums;
   user-select: none;
 }
 
@@ -135,6 +131,12 @@
   outline-offset: 2px;
 }
 
+.inline {
+  --error-halo: 210px;
+
+  grid-template-columns: minmax(160px, 240px) minmax(0, 1fr);
+}
+
 .inline .mascot {
   max-width: 200px;
 }
@@ -143,8 +145,15 @@
   font-size: var(--text-xl);
 }
 
+.inline .code {
+  font-size: clamp(2.25rem, 4vw, 3rem);
+}
+
 @media (max-width: 768px) {
-  .view {
+  .view,
+  .inline {
+    --error-halo: 210px;
+
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
     text-align: center;
@@ -176,5 +185,194 @@
   .action,
   .linkButton {
     width: 100%;
+  }
+}
+
+/* --- Capa Liquid Glass (ER-B) -----------------------------------------------
+ * Halo translúcido tras la mascota, código con el degradado institucional,
+ * categoría como chip de vidrio y microanimaciones con propósito: entrada
+ * del contenido y un balanceo breve de la mascota (dos ciclos, luego quieta).
+ */
+.art::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(92%, var(--error-halo, 320px));
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.9), transparent 55%),
+    radial-gradient(circle, rgba(36, 99, 166, 0.12), rgba(232, 241, 250, 0.4) 70%);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  content: '';
+}
+
+.code {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mascot {
+  /* Los PNG autorizados (DEC-15) traen fondo claro opaco: «multiply» funde el
+     blanco con el panel y la máscara radial difumina el borde rectangular,
+     sin modificar los archivos originales. */
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 72%, transparent 100%);
+  animation:
+    error-mascot-in 420ms var(--ease-out) both,
+    error-mascot-sway 3.2s ease-in-out 600ms 2;
+}
+
+/* El PNG del 404 trae un resto de texto en el borde izquierdo: se recorta. */
+.view[data-kind='not-found'] .mascot,
+.view[data-kind='data'] .mascot {
+  clip-path: inset(0 0 0 3%);
+}
+
+.eyebrow {
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+  border-radius: var(--radius-full);
+  /* Fondo aclarado: #8a6a12 sobre él ≈ 4,7:1 (AA en texto pequeño). */
+  background: color-mix(in srgb, var(--color-accent-subtle) 45%, var(--white));
+}
+
+.body > * {
+  animation: error-content-in var(--duration-slow) var(--ease-out) both;
+}
+
+.body > :nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.body > :nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.body > :nth-child(n + 4) {
+  animation-delay: 120ms;
+}
+
+.linkButton {
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.linkButton.primary:hover {
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.linkButton.secondary:hover {
+  background: var(--color-primary-subtle);
+}
+
+.linkButton:active {
+  transform: scale(0.97);
+}
+
+/* En línea (dentro de un layout): tarjeta de vidrio legible. */
+.inline {
+  padding: var(--space-8);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--glass-surface-strong);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  -webkit-backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
+  backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .inline {
+    background: var(--color-surface);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .inline {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@keyframes error-mascot-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes error-mascot-sway {
+  0%,
+  100% {
+    transform: none;
+  }
+
+  50% {
+    transform: translateY(-6px) rotate(-1.5deg);
+  }
+}
+
+@keyframes error-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .eyebrow {
+    align-self: center;
+  }
+
+  .inline {
+    padding: var(--space-6) var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot,
+  .body > *,
+  .linkButton {
+    transition: none;
+    animation: none;
+  }
+
+  .linkButton:active {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .mascot {
+    mix-blend-mode: normal;
+  }
+
+  .art::before {
+    border-color: CanvasText;
+  }
+
+  .code {
+    color: CanvasText;
+    background: none;
   }
 }

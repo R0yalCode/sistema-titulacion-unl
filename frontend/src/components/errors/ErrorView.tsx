@@ -93,10 +93,14 @@ export function ErrorView({
       role={role}
     >
       <div aria-hidden="true" className={styles.art}>
-        {copy.code && <span className={styles.code}>{copy.code}</span>}
         <img alt="" className={styles.mascot} decoding="async" src={copy.mascot} />
       </div>
       <div className={styles.body}>
+        {copy.code && (
+          <span aria-hidden="true" className={styles.code}>
+            {copy.code}
+          </span>
+        )}
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
         <Heading className={styles.title} id={titleId} ref={headingRef} tabIndex={variant === 'page' ? -1 : undefined}>
           {title ?? copy.title}
