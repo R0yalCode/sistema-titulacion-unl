@@ -4,7 +4,7 @@ type: execution
 area: blocked
 status: verified
 source: sgt-siaaf/specs/003-frontend-titulacion/tasks.md §2 + verified-code
-last_verified: 2026-11-22
+last_verified: 2026-11-26
 ---
 
 # Tareas bloqueadas y dependencias no autorizadas
@@ -24,6 +24,15 @@ last_verified: 2026-11-22
 | BE-09 | Bandeja para roles sin expedientes + filtros | V-07 | ✅ `MAPA_INTERVENCION_POR_ROL` vacío para SEC_CAR, DIR_CAR y RESP_DEP |
 | BE-10 | Catálogo de carreras `GET /carreras/` | V-03 | Catálogo interno `Carrera`/`Facultad` creado el 2026-11-22 (datos de demostración `MOCK-…`); sin endpoint público de listado: V-03 ya no lo necesita (la carrera sale de `GET /api/v1/perfil-academico/`) |
 | BE-11 | 409/412/428 con ETag/If-Match | Formularios | ✅ Ausente |
+
+## Incidencias abiertas de la fase AX (2026-11-26)
+
+| ID | Tarea | Incidencia | Estado |
+|---|---|---|---|
+| **INC-23** | AX-A | «Leer página» no reproduce voz en la revisión manual del responsable. Las pruebas usan `speechSynthesis` simulado; la reproducción real no se ha validado. | Abierta; sin cambios de código hasta una tarea específica. AX-A no se cierra del todo. |
+| **INC-24** | AX-A | En ≤480 px el botón de accesibilidad tapa el pie del login (vistas públicas sin `#main-content`). | Abierta |
+
+Detalle e hipótesis: `docs/frontend/PLAN_ACCESIBILIDAD_ASISTENTE_DK010.md`, `clarify.md` (INC-23, INC-24).
 
 ## Tareas bloqueadas
 
