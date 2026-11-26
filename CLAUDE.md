@@ -145,6 +145,8 @@ V-05 y fases posteriores (F3 restante, F4+) **sin iniciar**; requieren autorizac
 
 **Bóveda SIAAF-KNOWLEDGE (2026-11-11).** Construida en `SIAAF-KNOWLEDGE/` (informe: `00-CORE/BUILD_REPORT.md`). Hallazgos sin resolver que afectan a tareas futuras: no existe la transición `ENVIADA→EN_VERIFICACION` por API (GAP-STATE-01); `RESPONSABLE_DEPENDENCIA` no tiene celdas RBAC; la suite frontend mostró intermitencia (1 de 3 ejecuciones con 6 fallos).
 
+**Fase AX (2026-11-26, DK-010 centralizada).** AX-A (accesibilidad global) y AX-B (control del sidebar junto al logo) están en `develop` (`b1f4f10`) y aceptadas por el responsable, **salvo «Leer página» (INC-23, abierta: no reproduce voz; las pruebas solo usan un `speechSynthesis` simulado)**. No marques la lectura como funcional ni cierres AX-A hasta resolverla en una tarea específica. Merge en `develop` rama por rama, con autorización expresa. Plan, reparto e incidencias: `docs/frontend/PLAN_ACCESIBILIDAD_ASISTENTE_DK010.md`.
+
 ## Política de consulta del conocimiento SIAAF-KNOWLEDGE
 
 La bóveda `SIAAF-KNOWLEDGE/` (raíz del repo, bóveda Obsidian oficial) es la fuente central de conocimiento documental. Misma bóveda y mismas reglas para OpenCode (`AGENTS.md`).

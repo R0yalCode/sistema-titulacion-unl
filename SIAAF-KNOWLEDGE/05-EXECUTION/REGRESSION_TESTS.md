@@ -4,7 +4,7 @@ type: execution
 area: tests
 status: verified
 source: test-runs
-last_verified: 2026-11-23
+last_verified: 2026-11-26
 ---
 
 # Pruebas y regresión
@@ -13,6 +13,10 @@ last_verified: 2026-11-23
 
 | Fecha | Suite | Comando | Resultado | Duración | Contexto |
 |---|---|---|---|---|---|
+| 2026-11-26 | Frontend | `npm run lint`, `typecheck`, `build`, `test` ×3 | **633/633** ×3; lint, typecheck y build correctos | ~35 s c/u | Combinación AX-A + AX-B (`b1f4f10`) antes del push |
+| 2026-11-26 | CI GitHub (`ci.yml`, `security.yml`) | merges `925a962` y `b1f4f10` | Frontend 627/627 y 633/633; backend 1263 + 26 omitidas; PostgreSQL 51; OpenAPI; safety, bandit y gitleaks correctos | — | Integración AX-A y AX-B |
+| 2026-11-26 | Frontend | `npm run test` ×3 por rama | AX-A 627/627 ×3; AX-B 606/606 ×3 | — | Ramas AX-A y AX-B antes del commit |
+| 2026-11-26 | Revisión manual (responsable) | Navegador real en `http://localhost:8000` | AX-A y AX-B aceptadas **salvo «Leer página»: no reproduce voz (INC-23)** | — | La lectura solo estaba validada con `speechSynthesis` simulado |
 | 2026-11-23 | Backend (SQLite, contenedor desechable) | `python -m pytest -ra src/apps src/core tests` | **1226 aprobadas, 26 omitidas** | ~80 s | `develop` con los PR #27 y #28 |
 | 2026-11-23 | Backend (PostgreSQL 16 desechable) | `python -m pytest -ra tests` con `config.settings.test_postgres` | **51 aprobadas** | ~7 s | `develop` con los PR #27 y #28 |
 | 2026-11-11 | Frontend | `npm run test` (`vitest run`) | **6 fallidas / 322 aprobadas (328)**; 2 archivos con fallos de 58 | 139,7 s | Rama `docs/siaaf-knowledge`; sin cambios de código |
