@@ -117,7 +117,10 @@ describe('AppLayout (portal de funcionarios sobre AppShell)', () => {
     const clearSpy = vi.spyOn(queryClient, 'clear')
     renderLayout(authValue)
 
-    await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    // AX-C: el cierre de sesión está en el menú de usuario (sin nombre real del
+    // funcionario en la API, se muestra su rol y su cédula).
+    await user.click(screen.getByRole('button', { name: 'Menú de usuario: Decanato, C.I. 1234567890' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
     const dialogo = screen.getByRole('alertdialog', { name: '¿Cerrar sesión?' })
     await user.click(within(dialogo).getByRole('button', { name: 'Cerrar sesión' }))
 
@@ -131,7 +134,8 @@ describe('AppLayout (portal de funcionarios sobre AppShell)', () => {
     const authValue = mockAuthValue({ cedula: '1234567890', roles: ['DECANO'] })
     renderLayout(authValue)
 
-    await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    await user.click(screen.getByRole('button', { name: /^Menú de usuario/ }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
     await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Cancelar' }))
     expect(authValue.signOut).not.toHaveBeenCalled()
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()

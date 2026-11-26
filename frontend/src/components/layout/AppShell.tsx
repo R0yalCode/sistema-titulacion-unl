@@ -2,11 +2,12 @@ import { useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
 import { useConfirm } from '@/components/ui/ConfirmDialog'
-import { BellIcon, CloseIcon, ExternalLinkIcon, LogoutIcon, MenuIcon, UserIcon } from '@/components/ui/icons'
+import { BellIcon, CloseIcon, ExternalLinkIcon, MenuIcon } from '@/components/ui/icons'
 import { getEnv } from '@/lib/env'
 import { queryClient } from '@/lib/queryClient'
 import { BotonContraerMenu } from './BotonContraerMenu'
 import { DemoBanner } from './DemoBanner'
+import { MenuPerfil } from './MenuPerfil'
 import { SkipLink } from './SkipLink'
 import styles from './AppShell.module.css'
 
@@ -33,7 +34,9 @@ export type AppShellProps = {
   /** Ruta de notificaciones, si el rol tiene acceso real (RBAC). */
   notificationsTo: string | null
   unreadCount: number
+  /** Nombre visible real (primer nombre y primer apellido, o el rol): ver useNombreVisible. */
   userName: string
+  /** Texto secundario real del menú de usuario ("Estudiante", "C.I. …"). */
   userRole: string
   /** Variante visual con alcance propio (ver styles/siaaf-modern.css). */
   visual?: 'siaaf-modern'
@@ -66,17 +69,11 @@ function guardarPreferencia(valor: boolean) {
   }
 }
 
-function iniciales(nombre: string): string {
-  const partes = nombre.split(/\s+/).filter((parte) => /\p{L}/u.test(parte))
-  const primera = partes[0]?.[0] ?? ''
-  const ultima = partes.length > 1 ? (partes[partes.length - 1]?.[0] ?? '') : ''
-  return `${primera}${ultima}`.toUpperCase()
-}
-
 /**
  * Estructura común de la aplicación autenticada (Design System §Layout):
  * sidebar institucional (contraíble en escritorio, panel lateral en ≤1024 px),
- * barra superior con notificaciones y perfil, y un único `<main>`. Cada rol
+ * barra superior con notificaciones y menú de usuario (perfil, contraseña y
+ * cierre de sesión; AX-C), y un único `<main>`. Cada rol
  * la configura con su navegación autorizada (StudentLayout, AppLayout).
  */
 export function AppShell({
@@ -218,19 +215,7 @@ export function AppShell({
               </div>
             ))}
           </nav>
-          <div className={styles.sidebarFooter}>
-            <button
-              className={styles.footerButton}
-              title={collapsed ? 'Cerrar sesión' : undefined}
-              type="button"
-              onClick={() => void handleLogout()}
-            >
-              <span className={styles.navIcon}>
-                <LogoutIcon />
-              </span>
-              <span className={styles.navLabel}>Cerrar sesión</span>
-            </button>
-          </div>
+          {/* AX-C: "Cerrar sesión" se trasladó al menú de usuario de la barra superior. */}
         </aside>
 
         {drawerOpen && (
@@ -269,26 +254,12 @@ export function AppShell({
                   )}
                 </Link>
               )}
-              {profileTo ? (
-                <Link className={styles.profileLink} to={profileTo}>
-                  <span aria-hidden="true" className={styles.avatar}>
-                    {iniciales(userName) || <UserIcon size={18} />}
-                  </span>
-                  <span className={styles.profileText}>
-                    <span className={styles.profileName}>
-                      <span className="sr-only">Mi perfil: </span>
-                      {userName}
-                    </span>
-                    <span className={styles.profileRole}>{userRole}</span>
-                  </span>
-                </Link>
-              ) : (
-                <span className={styles.profileLink}>
-                  <span className={styles.profileText}>
-                    <span className={styles.profileName}>{userName}</span>
-                  </span>
-                </span>
-              )}
+              <MenuPerfil
+                detalle={userRole}
+                nombre={userName}
+                perfilTo={profileTo}
+                onCerrarSesion={() => void handleLogout()}
+              />
             </div>
           </header>
           <main className={styles.main} id="main-content" tabIndex={-1}>

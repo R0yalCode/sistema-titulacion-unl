@@ -211,7 +211,9 @@ describe('LoginPage (V-01, integración real)', () => {
     await fillAndSubmit('estudiante.demo', 'demo-valida')
     expect(await screen.findByRole('heading', { name: 'Mi proceso de titulación' })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    // AX-C: "Cerrar sesión" está en el menú de usuario de la barra superior.
+    await user.click(screen.getByRole('button', { name: /^Menú de usuario/ }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
     await confirmarDialogo(user)
 
     expect(await screen.findByRole('heading', { name: 'Iniciar sesión' })).toBeInTheDocument()

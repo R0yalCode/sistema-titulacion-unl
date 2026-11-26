@@ -1,8 +1,8 @@
-import { useContext, type ReactNode } from 'react'
-import { AuthContext } from '@/auth/AuthContext'
+import type { ReactNode } from 'react'
 import { BellIcon, DocumentIcon, FolderIcon, HomeIcon, UserIcon } from '@/components/ui/icons'
 import { useMiTramite, useNotificaciones } from '@/features/dashboard'
 import { AppShell, type ShellNavItem } from './AppShell'
+import { useNombreVisible } from './useNombreVisible'
 
 /**
  * Navegación del estudiante. Solo enlaza funcionalidades reales: "Mi trámite"
@@ -27,12 +27,12 @@ function buildNavItems(expedienteId: string | null, noLeidas: number): ShellNavI
 }
 
 export function StudentLayout({ children }: { children?: ReactNode }) {
-  const auth = useContext(AuthContext)
   const miTramite = useMiTramite()
   const notificaciones = useNotificaciones()
+  // AX-C: primer nombre y primer apellido de perfil-academico (o nombre_completo sin partir).
+  const usuario = useNombreVisible()
 
   const expedienteId = miTramite.data?.expediente?.id ?? null
-  const nombre = miTramite.data?.estudiante.nombre_completo ?? null
   const noLeidas = notificaciones.data?.results.filter((notificacion) => !notificacion.leida).length ?? 0
 
   return (
@@ -43,8 +43,8 @@ export function StudentLayout({ children }: { children?: ReactNode }) {
       portalLabel="Portal del estudiante"
       profileTo="/estudiante/perfil"
       unreadCount={noLeidas}
-      userName={nombre ?? auth?.user?.cedula ?? 'Estudiante'}
-      userRole="Estudiante"
+      userName={usuario.nombre}
+      userRole={usuario.detalle}
     >
       {children}
     </AppShell>
