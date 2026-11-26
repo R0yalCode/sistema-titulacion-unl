@@ -14,7 +14,7 @@ Ilustraciones gráficas complementarias de la identidad visual de SGT-SIAAF, int
 |---|---|---|---|---|---|---|
 | `mascota-401.png` | `public/assets/mascotas/mascota-401.png` | 246×242 | 96.9 KB | Copiado, **no integrado visualmente** | Ninguno: 401 no es página independiente (DEC-13, ERR-01) | — |
 | `mascota-403.png` | `public/assets/mascotas/mascota-403.png` | 237×248 | 95.6 KB | Integrado | `NoHabilitadoPage` (destino de guardas de rol, V-09) | Decorativa (`alt=""`) |
-| `mascota-404.png` | `public/assets/mascotas/mascota-404.png` | 693×664 | 634.3 KB | Integrado | `NotFoundPage` (FE-T1211) | Decorativa (`alt=""`) |
+| `mascota-404.png` | `public/assets/mascotas/mascota-404.png` | 693×664 | 634.3 KB | Integrado | `NotFoundPage` (FE-T1211) y, **provisionalmente**, el asistente institucional (AX-D, DEC-18) | Decorativa (`alt=""`) |
 | `mascota-500.png` | `public/assets/mascotas/mascota-500.png` | 240×271 | 105.0 KB | Copiado, **no integrado visualmente todavía** | Reservado para cuando exista una vista real que presente `ErrorState` de forma prominente (fuera de alcance F2.5: "no crear páginas independientes para 500") | — |
 | `mascota-503.png` | `public/assets/mascotas/mascota-503.png` | 227×277 | 104.6 KB | Copiado, **no integrado visualmente todavía** | Igual que 500 | — |
 
@@ -38,3 +38,9 @@ No se aplicó compresión destructiva (instrucción expresa de la autorización)
 - No se afirma licencia, derecho de autor o autorización institucional formal no documentada.
 - No se sustituyó `Spinner` por ninguna mascota (loading).
 - No se usó ninguna imagen genérica como reemplazo.
+
+## Uso provisional en el asistente institucional (AX-D, DEC-18, 2026-11-26)
+
+El responsable autorizó usar `mascota-404.png` como ilustración **provisional** del asistente (botón flotante y cabecera del chat), porque es la única mascota que ya incluye signos de interrogación. Se usa el **mismo archivo, sin copias ni ediciones**. El recorte circular se hace con CSS (`object-fit`/`object-position`), sin alterar el recurso. Siempre es decorativa (`alt=""`): el botón tiene su propio nombre accesible y un «?» visible.
+
+Para sustituirla por una mascota propia del asistente basta con cambiar `ASISTENTE.mascota` en `src/features/asistente/configuracion.ts`. La nueva ilustración deberá registrarse aquí con su procedencia y autorización.

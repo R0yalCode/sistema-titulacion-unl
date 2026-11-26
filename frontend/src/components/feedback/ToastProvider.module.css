@@ -1,7 +1,8 @@
 .viewport {
   position: fixed;
   right: var(--space-4);
-  bottom: var(--space-4);
+  /* Sobre el botón del asistente (AX-D), que ocupa la esquina inferior derecha. */
+  bottom: calc(var(--space-4) + var(--fab-clearance));
   z-index: var(--z-toast);
   display: flex;
   flex-direction: column;
