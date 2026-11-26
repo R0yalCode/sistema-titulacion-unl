@@ -2,9 +2,10 @@ import { useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { AuthContext } from '@/auth/AuthContext'
 import { useConfirm } from '@/components/ui/ConfirmDialog'
-import { BellIcon, CloseIcon, ExternalLinkIcon, LogoutIcon, MenuIcon, SidebarIcon, UserIcon } from '@/components/ui/icons'
+import { BellIcon, CloseIcon, ExternalLinkIcon, LogoutIcon, MenuIcon, UserIcon } from '@/components/ui/icons'
 import { getEnv } from '@/lib/env'
 import { queryClient } from '@/lib/queryClient'
+import { BotonContraerMenu } from './BotonContraerMenu'
 import { DemoBanner } from './DemoBanner'
 import { SkipLink } from './SkipLink'
 import styles from './AppShell.module.css'
@@ -158,13 +159,17 @@ export function AppShell({
       <div className={styles.frame}>
         <aside aria-label="Menú principal" className={sidebarClass} id="menu-principal">
           <div className={styles.brand}>
-            <img
-              alt="Universidad Nacional de Loja"
-              className={styles.logo}
-              height="138"
-              src="/assets/auth/logo-unl.png"
-              width="415"
-            />
+            {/* AX-B: el control de contraer/expandir va junto al logo (antes en el pie). */}
+            <div className={styles.brandRow}>
+              <img
+                alt="Universidad Nacional de Loja"
+                className={styles.logo}
+                height="138"
+                src="/assets/auth/logo-unl.png"
+                width="415"
+              />
+              <BotonContraerMenu contraido={collapsed} onAlternar={alternarContraido} />
+            </div>
             <p className={styles.system}>SGT-SIAAF · Titulación</p>
             <button aria-label="Cerrar menú" className={styles.closeButton} type="button" onClick={cerrarPanel}>
               <CloseIcon />
@@ -214,19 +219,6 @@ export function AppShell({
             ))}
           </nav>
           <div className={styles.sidebarFooter}>
-            <button
-              aria-expanded={!collapsed}
-              aria-label={collapsed ? 'Expandir menú lateral' : 'Contraer menú lateral'}
-              className={`${styles.footerButton} ${styles.collapseButton}`}
-              title={collapsed ? 'Expandir menú lateral' : undefined}
-              type="button"
-              onClick={alternarContraido}
-            >
-              <span className={styles.navIcon}>
-                <SidebarIcon />
-              </span>
-              <span className={styles.navLabel}>Contraer menú</span>
-            </button>
             <button
               className={styles.footerButton}
               title={collapsed ? 'Cerrar sesión' : undefined}
