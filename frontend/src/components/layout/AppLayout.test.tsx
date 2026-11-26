@@ -140,10 +140,10 @@ describe('AppLayout (portal de funcionarios sobre AppShell)', () => {
   it('el menú lateral se puede contraer y conserva el nombre accesible de cada enlace', async () => {
     const user = userEvent.setup()
     renderLayout(mockAuthValue({ cedula: '1234567890', roles: ['DECANO'] }))
-    const boton = screen.getByRole('button', { name: 'Contraer menú lateral' })
+    const boton = screen.getByRole('button', { name: 'Contraer menú' })
     expect(boton).toHaveAttribute('aria-expanded', 'true')
     await user.click(boton)
-    expect(screen.getByRole('button', { name: 'Expandir menú lateral' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: 'Expandir menú' })).toHaveAttribute('aria-expanded', 'false')
     expect(within(nav()).getByRole('link', { name: 'Bandeja de trabajo' })).toBeInTheDocument()
   })
 
