@@ -19,11 +19,14 @@ Las notas de la bóveda ya los citaban:
 | Ruta | Contenido | Usado en |
 |---|---|---|
 | `vistas-errores-unl/{401,403,404,500,503,data_error,sin_conexion,timeout}.html` | Ocho vistas de error de una página, generadas con Google Stitch. **No sustituyen** al kit B: las rutas `paginas/`, `assets/` y `capturas/` siguen vigentes, porque las citan la spec 08, `tasks.md` y `frontend/docs/assets-mascotas.md`. | Sistema de páginas de error ER-A…E (`docs/frontend/ERROR_PAGES.md`, bitácora 2026-11-24) |
+| `vistas_liquid_glass/Dasboard_*.html` | Cinco paneles por rol (admin, docente, estudiante, secretaría, tutor), generados con Google Stitch. **Saneados** antes de versionarse (ver abajo). | Rediseño Liquid Glass LG-A…E (bitácora 2026-11-24; C-LG-01) |
 
 Notas de estos prototipos:
 
 - **Dependencias externas.** A diferencia de A y B, cargan Tailwind (`cdn.tailwindcss.com`), Google Fonts e imágenes de `lh3.googleusercontent.com`. Sin conexión se ven sin estilos ni imágenes.
 - **Contactos inventados.** El correo `soporte.siaaf@unl.edu.ec` y el «anexo 1102» de las vistas de error son **inventados por el generador**. No son canales institucionales verificados y no deben copiarse a la aplicación.
+- **Saneamiento de `vistas_liquid_glass/`.** Los originales tenían nombres de personas (también en los textos `alt` de las fotos), correos `@unl.edu.ec` y cédulas de apariencia real. Al ser un repositorio público, se cambiaron por marcadores sintéticos: `Persona Ficticia NN`, `persona.ficticia.NN@sgt-siaaf.example` y `C.I. 0000000NNN`. Es el mismo criterio del dataset de pruebas. El maquetado, los títulos (Dr., Ing.…) y los demás datos ficticios no se tocaron. Los originales quedan solo en el respaldo local del responsable.
+- **Roles inexistentes.** Los paneles de docente y tutor muestran roles que el backend no tiene (C-LG-01). Son solo referencia visual y no autorizan a implementarlos.
 
 ## Reglas de uso
 

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-surface-variant":"#43474f","on-secondary-container":"#004681","secondary-fixed":"#d4e3ff","on-error":"#ffffff","primary-fixed":"#d6e3ff","primary-fixed-dim":"#a8c8ff","tertiary-container":"#800018","surface":"#f3faff","inverse-surface":"#253238","surface-container":"#e2f0f8","on-primary-fixed":"#001b3d","background":"#f3faff","on-secondary":"#ffffff","surface-dim":"#cedce4","error-container":"#ffdad6","secondary":"#1f60a3","primary-container":"#123d72","on-tertiary":"#ffffff","inverse-primary":"#a8c8ff","primary":"#002752","on-primary":"#ffffff","on-secondary-fixed-variant":"#004883","tertiary-fixed":"#ffdad8","on-secondary-fixed":"#001c39","on-background":"#101d23","on-primary-fixed-variant":"#1f477c","on-tertiary-fixed":"#410007","surface-tint":"#3a5f96","surface-bright":"#f3faff","secondary-container":"#80b6fe","surface-container-low":"#e8f6fe","surface-container-high":"#dceaf2","secondary-fixed-dim":"#a4c9ff","on-tertiary-fixed-variant":"#92001c","on-tertiary-container":"#ff8382","tertiary-fixed-dim":"#ffb3b1","outline":"#737780","error":"#ba1a1a","on-surface":"#101d23","surface-container-highest":"#d6e5ed","inverse-on-surface":"#e5f3fb","surface-variant":"#d6e5ed","on-primary-container":"#86a9e5","on-error-container":"#93000a","outline-variant":"#c3c6d1","tertiary":"#57000d","surface-container-lowest":"#ffffff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xl":"2.5rem","space-md":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1.5rem","gutter":"1.5rem","margin":"2rem","margin-mobile":"1rem","gutter-mobile":"1rem"},"fontFamily":{"headline-lg-mobile":["Space Grotesk"],"display":["Space Grotesk"],"headline-lg":["Space Grotesk"],"body-md":["Manrope"],"label-sm":["Manrope"],"label-md":["Manrope"],"body-sm":["Manrope"],"label-lg":["Manrope"],"headline-sm":["Space Grotesk"],"headline-md":["Space Grotesk"],"title-md":["Manrope"],"body-lg":["Manrope"]},"fontSize":{"headline-lg-mobile":["1.5rem",{"lineHeight":"1.3","letterSpacing":"-0.01em","fontWeight":"600"}],"display":["3rem",{"lineHeight":"1.15","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-lg":["2rem",{"lineHeight":"1.25","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["0.875rem",{"lineHeight":"1.5","fontWeight":"400"}],"label-sm":["0.6875rem",{"lineHeight":"1.2","letterSpacing":"0.04em","fontWeight":"700"}],"label-md":["0.75rem",{"lineHeight":"1.25","letterSpacing":"0.02em","fontWeight":"600"}],"body-sm":["0.75rem",{"lineHeight":"1.4","fontWeight":"400"}],"label-lg":["0.875rem",{"lineHeight":"1.25","letterSpacing":"0.01em","fontWeight":"600"}],"headline-sm":["1.25rem",{"lineHeight":"1.35","fontWeight":"600"}],"headline-md":["1.5rem",{"lineHeight":"1.3","letterSpacing":"-0.01em","fontWeight":"600"}],"title-md":["1rem",{"lineHeight":"1.4","fontWeight":"600"}],"body-lg":["1.125rem",{"lineHeight":"1.5","fontWeight":"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-space-md top-space-md bottom-space-md w-72 bg-surface-container-lowest/80 backdrop-blur-xl z-50 flex flex-col rounded-xl shadow-[0_8px_32px_0_rgba(18,61,114,0.06)]"><div class="p-space-md flex flex-col gap-space-sm"><div class="flex items-center gap-space-sm"><img alt="logo_unl.png" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrDWzvKxF-aTDEmvDg5no46zidyzwQaSapBx0u3_8lLO0MlQyMJUkrdnkO_gfQ075uQn_prbdsBEyAi1ylhYH_3rpf3awPWeeRcPJf8Ns_Jq2dlto53bHU3HpOjNobMFeew50jD3yKZvr0ELjbv0Mh2LBfyUlY-XCEnhPv8EHa0rOqlX2tPPnKpeJFBFJF7uAURyWemN_7eUdghjxXXvcZ9IHDsT-bz1HGj-i7_KYbKscPLjwxyieHWP09qW"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary leading-tight font-bold tracking-tight">SIAAF</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">UNL • Titulación</span></div></div><div class="mt-space-xs bg-surface-container-low/70 p-space-xs rounded-lg"><label class="block font-label-sm text-label-sm text-on-surface-variant px-space-xs mb-1 uppercase" for="role-select">Rol Operativo</label><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-2 text-secondary pointer-events-none text-[18px]">verified_user</span><select class="w-full pl-8 pr-6 py-1.5 bg-surface-container-lowest font-label-md text-label-md text-on-surface rounded-lg cursor-pointer focus:outline-none focus:ring-1 focus:ring-secondary" id="role-select"><option value="estudiante">Estudiante</option><option value="tutor">Tutor de Grado</option><option value="coordinador">Coordinador de Carrera</option><option value="tribunal">Tribunal Evaluador</option><option value="secretaria">Secretaría Académica</option><option value="administrador">Administrador DTI</option></select></div></div></div><nav class="flex-1 px-space-md py-space-xs space-y-4 overflow-y-auto" data-active-classes="bg-primary-container text-on-primary font-bold shadow-sm"><div class="space-y-1"><p class="px-space-sm font-label-sm text-label-sm text-outline uppercase tracking-wider">Gestión Principal</p><a class="flex items-center gap-3 px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label-lg text-label-lg" data-path="mi-titulacion" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Mi Titulación</span></a><a class="flex items-center gap-3 px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label-lg text-label-lg" data-path="expediente-academico" href="#"><span class="material-symbols-outlined text-[20px]">folder_shared</span><span>Expediente Digital</span></a></div><div class="space-y-1"><p class="px-space-sm font-label-sm text-label-sm text-outline uppercase tracking-wider">Seguimiento</p><a aria-current="page" class="flex items-center gap-3 px-space-sm py-2 rounded-lg transition-all bg-primary-container text-on-primary font-bold shadow-sm" data-path="revisiones-y-tribunales" href="#"><span class="material-symbols-outlined text-[20px]">rate_review</span><span>Revisiones y Dictámenes</span></a><a class="flex items-center gap-3 px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label-lg text-label-lg" data-path="tramites-y-solicitudes" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Trámites y Actas</span></a><a class="flex items-center gap-3 px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label-lg text-label-lg" data-path="calendario-academico" href="#"><span class="material-symbols-outlined text-[20px]">event_note</span><span>Calendario y Fechas</span></a></div><div class="space-y-1"><p class="px-space-sm font-label-sm text-label-sm text-outline uppercase tracking-wider">Institucional</p><a class="flex items-center gap-3 px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label-lg text-label-lg" data-path="soporte-dti" href="#"><span class="material-symbols-outlined text-[20px]">support_agent</span><span>Mesa de Ayuda DTI</span></a></div></nav><div class="p-space-md bg-surface-container-low/50 rounded-b-xl flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="h-2 w-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Servidor Central UNL</span></div><span class="font-label-sm text-label-sm text-outline">v3.4.1</span></div></aside><div class="pl-[20.5rem]"><header class="fixed top-0 right-0 left-[20.5rem] h-20 bg-surface/85 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)] px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span><input class="w-full pl-10 pr-space-md py-2 bg-surface-container-lowest font-body-sm text-body-sm text-on-surface placeholder:text-outline rounded-lg focus:outline-none focus:ring-1 focus:ring-secondary shadow-sm" placeholder="Buscar por cédula, código de trámite o título del proyecto..." type="text"/></div></div><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-2 px-space-sm py-1.5 bg-surface-container-low rounded-lg"><span class="material-symbols-outlined text-secondary text-[18px]">calendar_today</span><span class="font-label-md text-label-md text-primary font-medium">Período Ordinario 2024-S2</span></div><button class="relative p-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-error"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden md:flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Ing. Persona Ficticia 05</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Matrícula #2020-0491</span></div></div></div></header><main class="w-full pt-20 px-gutter min-h-screen pb-12"><div class="flex flex-col w-full gap-space-lg">
+<!-- TOP COMMAND & CONTEXT BAR -->
+<section class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">Comisión Académica</span>
+<span class="text-outline font-label-sm text-label-sm">•</span>
+<span class="text-secondary font-label-sm text-label-sm font-semibold uppercase tracking-wider">Facultad de la Energía, las Industrias y los Recursos Naturales No Renovables</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight font-bold">
+        Tablero de Coordinación y Dictámenes de Grado
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Supervisión reglamentaria, asignación de tribunales y control de vencimiento de plazos de titulación.
+      </p>
+</div>
+<!-- Carrera & Periodo Switchers -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-2 px-space-sm py-2 bg-surface-container-low rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">account_balance</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Carrera Académica</span>
+<select class="bg-transparent font-label-md text-label-md text-primary font-bold cursor-pointer focus:outline-none" id="careerSelect">
+<option selected="" value="sistemas">Ing. en Sistemas Computacionales</option>
+<option value="computacion">Ing. en Computación</option>
+<option value="telecom">Ing. en Telecomunicaciones</option>
+<option value="minas">Ing. en Minas</option>
+<option value="electromecanica">Ing. Electromecánica</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-2 px-space-sm py-2 bg-surface-container-low rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">event_repeat</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Ciclo Lectivo</span>
+<select class="bg-transparent font-label-md text-label-md text-primary font-bold cursor-pointer focus:outline-none">
+<option selected="">2024 - S2 (Oct 24 - Mar 25)</option>
+<option>2024 - S1 (Abr 24 - Ago 24)</option>
+<option>2023 - S2 (Oct 23 - Mar 24)</option>
+</select>
+</div>
+</div>
+<button class="px-space-md py-2.5 bg-primary hover:bg-primary-container text-on-primary rounded-lg font-label-md text-label-md transition-colors flex items-center gap-2 shadow-sm" onclick="triggerQuickAudit()">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Auditar Plazos</span>
+</button>
+</div>
+</section>
+<!-- EXECUTIVE KPIS TILES (Liquid Glass / Physical Solid hybrid) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed/30 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">Total Trámites Activos</span>
+<span class="p-2 rounded-lg bg-surface-container-low text-primary">
+<span class="material-symbols-outlined text-[20px]">assignment</span>
+</span>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-display text-display font-bold text-primary">148</span>
+<span class="font-label-md text-label-md text-secondary font-semibold">Tesistas</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1 text-secondary font-semibold">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +8 este ciclo
+        </span>
+<span class="text-outline">100% de la cohorte</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary-fixed/40 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">En Plazo Regular</span>
+<span class="p-2 rounded-lg bg-surface-container-low text-secondary">
+<span class="material-symbols-outlined text-[20px]">schedule_send</span>
+</span>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-display text-display font-bold text-on-secondary-container">126</span>
+<span class="font-label-md text-label-md text-on-secondary-container font-semibold">Expedientes</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 85.1%;"></div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm mt-2">
+<span class="text-secondary font-bold">85.1% de avance conforme</span>
+<span class="text-outline">Sin observaciones</span>
+</div>
+</div>
+<!-- KPI 3: Alerta en riesgo -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-error-container/40 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-error font-bold">En Riesgo / Prórroga</span>
+<span class="p-2 rounded-lg bg-error-container text-error">
+<span class="material-symbols-outlined text-[20px]">warning_amber</span>
+</span>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-display text-display font-bold text-error">14</span>
+<span class="font-label-md text-label-md text-error font-semibold">Críticos (&lt; 20d)</span>
+</div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<button class="text-error font-bold hover:underline flex items-center gap-1" onclick="filterTableByState('Alerta')">
+<span>Ver expedientes críticos</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">Urgente</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="relative overflow-hidden bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-fixed/40 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">Dictámenes este Mes</span>
+<span class="p-2 rounded-lg bg-surface-container-low text-primary">
+<span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+</span>
+</div>
+<div class="my-space-sm">
+<div class="flex items-baseline gap-2">
+<span class="font-display text-display font-bold text-primary">32</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Defensas Aprobadas</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1 text-primary font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> 100% Firma Quipux
+        </span>
+<span class="text-outline">Promedio: 9.38/10</span>
+</div>
+</div>
+</section>
+<!-- ANALYTICS SECTION & CARGA DOCENTE -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-stretch">
+<!-- Distribución de Estudiantes por Etapa (8 Cols) -->
+<div class="lg:col-span-8 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">stacked_bar_chart</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Distribución por Etapa de Titulación</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Monitoreo continuo de avance de la cohorte actual (148 expedientes)</p>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold shadow-sm">Gráfico</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-primary font-label-sm text-label-sm" onclick="toggleAnalyticsView()">Matriz</button>
+</div>
+</div>
+<!-- High-resolution inline SVG Pipeline Visualizer -->
+<div class="my-space-md">
+<!-- Visual bars progression -->
+<div class="grid grid-cols-1 sm:grid-cols-4 gap-space-md">
+<div class="p-space-sm bg-surface-container-low/60 rounded-xl flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Fase 1: Propuesta</span>
+<span class="font-bold text-primary">23.0%</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md font-bold text-primary">34</span>
+<span class="font-label-sm text-label-sm text-outline">alumnos</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mt-1">
+<div class="bg-primary-container h-full rounded-full" style="width: 60%"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1">Plan y pertinencia</span>
+</div>
+<div class="p-space-sm bg-surface-container-low/60 rounded-xl flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Fase 2: Desarrollo</span>
+<span class="font-bold text-secondary">39.2%</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md font-bold text-secondary">58</span>
+<span class="font-label-sm text-label-sm text-outline">alumnos</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mt-1">
+<div class="bg-secondary h-full rounded-full" style="width: 85%"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1">Capítulos y pruebas</span>
+</div>
+<div class="p-space-sm bg-surface-container-low/60 rounded-xl flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Fase 3: Tribunal</span>
+<span class="font-bold text-tertiary-container">18.9%</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md font-bold text-tertiary-container">28</span>
+<span class="font-label-sm text-label-sm text-outline">alumnos</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mt-1">
+<div class="bg-tertiary-container h-full rounded-full" style="width: 50%"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1">Revisión de pares</span>
+</div>
+<div class="p-space-sm bg-surface-container-low/60 rounded-xl flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Fase 4: Sustentación</span>
+<span class="font-bold text-primary">18.9%</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md font-bold text-primary">28</span>
+<span class="font-label-sm text-label-sm text-outline">alumnos</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mt-1">
+<div class="bg-primary h-full rounded-full" style="width: 45%"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1">Actas y defensa</span>
+</div>
+</div>
+<!-- Inline SVG Multi-stream Area Curve Chart -->
+<div class="mt-space-md p-space-sm bg-surface-container-low/30 rounded-xl flex flex-col">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-sm text-label-sm text-outline font-semibold uppercase">Ritmo de Dictámenes Quincenales vs Plazos Reglamentarios</span>
+<div class="flex items-center gap-3 font-label-sm text-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span> Dictámenes Finales</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-secondary inline-block"></span> Informes de Tribunal</span>
+</div>
+</div>
+<svg class="w-full h-28 overflow-visible" preserveaspectratio="none" viewbox="0 0 700 130">
+<defs>
+<lineargradient id="gradPrimary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#002752" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#002752" stop-opacity="0.0"></stop>
+</lineargradient>
+<lineargradient id="gradSecondary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#1f60a3" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#1f60a3" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Gridlines -->
+<line stroke="#d6e5ed" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="700" y1="20" y2="20"></line>
+<line stroke="#d6e5ed" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="700" y1="60" y2="60"></line>
+<line stroke="#d6e5ed" stroke-dasharray="3 3" stroke-width="1" x1="0" x2="700" y1="100" y2="100"></line>
+<!-- Area & Line 2 (Secondary) -->
+<path d="M 0,90 Q 70,60 140,75 T 280,45 T 420,55 T 560,25 T 700,30 L 700,120 L 0,120 Z" fill="url(#gradSecondary)"></path>
+<path d="M 0,90 Q 70,60 140,75 T 280,45 T 420,55 T 560,25 T 700,30" fill="none" stroke="#1f60a3" stroke-width="2.5"></path>
+<!-- Area & Line 1 (Primary) -->
+<path d="M 0,110 Q 70,95 140,85 T 280,70 T 420,40 T 560,45 T 700,15 L 700,120 L 0,120 Z" fill="url(#gradPrimary)"></path>
+<path d="M 0,110 Q 70,95 140,85 T 280,70 T 420,40 T 560,45 T 700,15" fill="none" stroke="#002752" stroke-width="2.5"></path>
+<!-- Points on curve -->
+<circle cx="280" cy="70" fill="#002752" r="3.5" stroke="#ffffff" stroke-width="1.5"></circle>
+<circle cx="420" cy="40" fill="#002752" r="3.5" stroke="#ffffff" stroke-width="1.5"></circle>
+<circle cx="560" cy="45" fill="#002752" r="3.5" stroke="#ffffff" stroke-width="1.5"></circle>
+<circle cx="700" cy="15" fill="#123d72" r="4.5" stroke="#ffffff" stroke-width="2"></circle>
+</svg>
+<div class="flex justify-between text-outline font-label-sm text-label-sm mt-1 px-1">
+<span>Sem 1-4 (Oct)</span>
+<span>Sem 5-8 (Nov)</span>
+<span>Sem 9-12 (Dic)</span>
+<span>Sem 13-16 (Ene)</span>
+<span>Sem 17-20 (Feb Actual)</span>
+</div>
+</div>
+</div>
+<!-- Quick footer insight -->
+<div class="pt-space-xs flex items-center justify-between text-on-surface-variant font-label-md text-label-md">
+<span class="flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+          Cumplimiento general de cronograma al 92.4%
+        </span>
+<button class="text-secondary hover:text-primary font-semibold flex items-center gap-1">
+<span>Descargar Matriz Consolidada</span>
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+</button>
+</div>
+</div>
+<!-- Carga de Tutorías por Docente (4 Cols) -->
+<div class="lg:col-span-4 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">badge</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Balance de Tutorías</h2>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm font-semibold">Máx: 6 / docente</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Control de sobreasignación directiva de proyectos</p>
+<!-- Docentes List -->
+<div class="mt-space-md space-y-space-sm">
+<!-- Docente 1 (En límite) -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/40 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-label-sm text-label-sm font-bold">
+                  MC
+                </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold leading-tight">Dra. Persona Ficticia 22</span>
+<span class="font-label-sm text-label-sm text-outline">IA y Visión por Computador</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">6/6 (Límite)</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<!-- Docente 2 (Disponible) -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/40 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-label-sm text-label-sm font-bold">
+                  JG
+                </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold leading-tight">Mgtr. Persona Ficticia 21</span>
+<span class="font-label-sm text-label-sm text-outline">Ciberseguridad y Redes</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-bold">4/6 (Disponible)</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 66%"></div>
+</div>
+</div>
+<!-- Docente 3 (Disponible óptimo) -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/40 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-primary flex items-center justify-center font-label-sm text-label-sm font-bold">
+                  EP
+                </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold leading-tight">Dr. Persona Ficticia 19</span>
+<span class="font-label-sm text-label-sm text-outline">Ingeniería de Software</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-bold">2/6 (Disponible)</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 33%"></div>
+</div>
+</div>
+<!-- Docente 4 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low/40 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary-fixed-dim text-primary flex items-center justify-center font-label-sm text-label-sm font-bold">
+                  LT
+                </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold leading-tight">Mgtr. Persona Ficticia 25</span>
+<span class="font-label-sm text-label-sm text-outline">Minería de Datos &amp; BI</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-bold">3/6 (Disponible)</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 50%"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-space-md">
+<button class="w-full py-2 bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md rounded-lg font-semibold transition-colors flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">group_add</span>
+<span>Ver Directorio Completo de Tutores</span>
+</button>
+</div>
+</div>
+</section>
+<!-- LIQUID GLASS FLOATING INSTITUTIONAL ALERTS (Inspired by Glass Floating Cards in image 1) -->
+<section class="relative overflow-hidden p-space-md rounded-xl bg-surface-container-low/80 backdrop-blur-md shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[20px]">notification_important</span>
+<h3 class="font-title-md text-title-md text-primary font-bold">
+          Alertas de Cumplimiento Reglamentario y Firmas Quipux
+        </h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Reglamento de Régimen Académico UNL (Art. 112 - 128)</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Glass Alert 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest/90 backdrop-blur-md shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-error font-bold uppercase tracking-wider">Prórroga &gt; 15 Días sin Dictamen</span>
+<h4 class="font-label-lg text-label-lg font-bold text-primary mt-1">TR-2024-0712 • Persona Ficticia 17</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+              Solicitud de prórroga extraordinaria de 60 días remitida a Consejo de Facultad sin resolución.
+            </p>
+</div>
+<span class="material-symbols-outlined text-error text-[20px]">alarm_on</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-error font-bold">17 días en espera</span>
+<button class="px-2.5 py-1 bg-surface-container text-primary hover:bg-primary hover:text-on-primary rounded font-label-sm text-label-sm font-bold transition-all" onclick="openResolutionModal('TR-2024-0712')">
+            Remitir Oficio
+          </button>
+</div>
+</div>
+<!-- Glass Alert 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest/90 backdrop-blur-md shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Vencimiento Próximo (&lt; 10 días)</span>
+<h4 class="font-label-lg text-label-lg font-bold text-primary mt-1">TR-2024-0844 • Persona Ficticia 28</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+              Plazo de entrega de correcciones de Tribunal Calificador expira el 28 de Febrero.
+            </p>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">timer</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary font-bold">8 días restantes</span>
+<button class="px-2.5 py-1 bg-secondary text-on-secondary rounded font-label-sm text-label-sm font-bold transition-all hover:bg-primary" onclick="notifyStudent('TR-2024-0844')">
+            Notificar Tesista
+          </button>
+</div>
+</div>
+<!-- Glass Alert 3 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest/90 backdrop-blur-md shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-tertiary-container font-bold uppercase tracking-wider">Actas Pendientes de Firma Quipux</span>
+<h4 class="font-label-lg text-label-lg font-bold text-primary mt-1">4 Actas de Sustentación</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+              Docentes del tribunal de la sesión del 18 de Febrero aún no firman electrónicamente el acta de grado.
+            </p>
+</div>
+<span class="material-symbols-outlined text-tertiary-container text-[20px]">draw</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">Plazo límite: 72 horas</span>
+<button class="px-2.5 py-1 bg-surface-container-highest text-primary hover:bg-primary-container hover:text-on-primary rounded font-label-sm text-label-sm font-bold transition-all" onclick="syncQuipuxSignatures()">
+            Requerir Quipux
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- MESA DE CONTROL: TABLA DE TRÁMITES Y SOLICITUDES -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md">
+<!-- Table Header & Multi-tier Search Filters -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pb-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">table_chart</span>
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold">Mesa de Control de Solicitudes y Trámites</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Gestión directa de expedientes de grado, designación de comisiones y dictámenes</p>
+</div>
+<!-- Action buttons -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="px-space-md py-2 bg-secondary hover:bg-primary text-on-secondary rounded-lg font-label-md text-label-md transition-colors flex items-center gap-1.5 shadow-sm" onclick="openMassAssignmentModal()">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Designar Tribunales</span>
+</button>
+<button class="px-space-md py-2 bg-surface-container-low hover:bg-surface-container text-primary rounded-lg font-label-md text-label-md transition-colors flex items-center gap-1.5" onclick="exportAuditReport()">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Exportar Padrón</span>
+</button>
+</div>
+</div>
+<!-- Filter chips bar -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-low/40 p-space-sm rounded-lg">
+<div class="flex flex-wrap items-center gap-2">
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold pl-1">Filtrar:</span>
+<button class="filter-tab px-3 py-1 bg-primary text-on-primary rounded font-label-sm text-label-sm font-semibold transition-all" onclick="applyTableFilter('all', this)">Todos (148)</button>
+<button class="filter-tab px-3 py-1 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded font-label-sm text-label-sm transition-all" onclick="applyTableFilter('Tribunal Requerido', this)">Requiere Tribunal (8)</button>
+<button class="filter-tab px-3 py-1 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded font-label-sm text-label-sm transition-all" onclick="applyTableFilter('Pendiente Plan', this)">Pendiente Plan (12)</button>
+<button class="filter-tab px-3 py-1 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded font-label-sm text-label-sm transition-all" onclick="applyTableFilter('Convocatoria Defensa', this)">Listo Defensa (6)</button>
+</div>
+<!-- Modalidad Dropdown inside bar -->
+<div class="flex items-center gap-2">
+<label class="font-label-sm text-label-sm text-outline uppercase" for="modalitySelect">Modalidad:</label>
+<select class="bg-surface-container-lowest px-2.5 py-1 rounded text-primary font-label-sm text-label-sm font-bold focus:outline-none" id="modalitySelect" onchange="filterByModality(this.value)">
+<option value="all">Todas las modalidades</option>
+<option value="investigacion">Proyecto de Investigación</option>
+<option value="complexivo">Examen Complexivo</option>
+<option value="articulo">Artículo Científico</option>
+</select>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left" id="dossierTable">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md">Código Trámite</th>
+<th class="py-3 px-space-md">Estudiante</th>
+<th class="py-3 px-space-md">Tutor / Director</th>
+<th class="py-3 px-space-md">Modalidad</th>
+<th class="py-3 px-space-md">Tribunal Evaluador</th>
+<th class="py-3 px-space-md">Estado del Trámite</th>
+<th class="py-3 px-space-md text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-sm text-body-sm">
+<!-- Row 1: Tribunal Requerido -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-bold text-primary">
+<span class="material-symbols-outlined text-[16px] text-secondary">description</span>
+<span>TR-2024-0891</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Ingresado 12/Ene/2024</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-primary">Persona Ficticia 04</span>
+<span class="font-label-sm text-label-sm text-outline">C.I. 0000000010 • Prom. 9.12</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary font-bold">JG</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Mgtr. Persona Ficticia 21</span>
+<span class="font-label-sm text-label-sm text-outline">Ciberseguridad</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">
+                Proyecto de Investigación
+              </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[14px]">person_off</span>
+                Sin Asignar (3 requeridos)
+              </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="status-badge px-2 py-0.5 rounded bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+                Asignación de Tribunal Requerida
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-3 py-1.5 bg-primary hover:bg-secondary text-on-primary rounded font-label-sm text-label-sm font-bold transition-all shadow-sm" onclick="openAssignTribunalModal('TR-2024-0891', 'Persona Ficticia 04')">
+                Designar Tribunal
+              </button>
+</td>
+</tr>
+<!-- Row 2: Pendiente Aprobación de Plan -->
+<tr class="bg-surface-container-low/20 hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-bold text-primary">
+<span class="material-symbols-outlined text-[16px] text-secondary">description</span>
+<span>TR-2024-0904</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Ingresado 05/Feb/2024</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-primary">Persona Ficticia 27</span>
+<span class="font-label-sm text-label-sm text-outline">C.I. 0000000011 • Prom. 9.45</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary font-bold">MC</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Dra. Persona Ficticia 22</span>
+<span class="font-label-sm text-label-sm text-outline">Inteligencia Artificial</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">
+                Artículo Científico
+              </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="text-outline font-label-sm text-label-sm">Fase previa a tribunal</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="status-badge px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-sm text-label-sm font-bold">
+                Pendiente Aprobación de Plan
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-3 py-1.5 bg-surface-container hover:bg-primary hover:text-on-primary text-primary rounded font-label-sm text-label-sm font-bold transition-all" onclick="approveResolutionModal('TR-2024-0904')">
+                Aprobar Resolución
+              </button>
+</td>
+</tr>
+<!-- Row 3: Convocatoria a Defensa (Listo) -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-bold text-primary">
+<span class="material-symbols-outlined text-[16px] text-secondary">description</span>
+<span>TR-2024-0688</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Ingresado 18/Nov/2023</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-primary">Persona Ficticia 26</span>
+<span class="font-label-sm text-label-sm text-outline">C.I. 0000000012 • Prom. 8.90</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary font-bold">EP</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Dr. Persona Ficticia 19</span>
+<span class="font-label-sm text-label-sm text-outline">Sistemas Distribuidos</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">
+                Proyecto de Investigación
+              </span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-1">
+<span class="font-label-sm text-label-sm font-bold text-primary">Tribunal #3:</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate max-w-[130px]" title="Mgtr. Ficticia 21, Dr. Ficticia 20, Dra. Ficticia 22">Ficticia 21, Ficticia 20, Ficticia 22</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="status-badge px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[14px]">event_available</span>
+                Convocatoria a Defensa
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-3 py-1.5 bg-primary hover:bg-secondary text-on-primary rounded font-label-sm text-label-sm font-bold transition-all shadow-sm" onclick="scheduleDefense('TR-2024-0688', 'Persona Ficticia 26')">
+                Fijar Fecha y Hora
+              </button>
+</td>
+</tr>
+<!-- Row 4: En Alerta / Prórroga -->
+<tr class="bg-surface-container-low/20 hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-bold text-error">
+<span class="material-symbols-outlined text-[16px] text-error">warning</span>
+<span>TR-2024-0712</span>
+</div>
+<span class="font-label-sm text-label-sm text-error font-semibold">Plazo Vencido (+17d)</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-primary">Persona Ficticia 17</span>
+<span class="font-label-sm text-label-sm text-outline">C.I. 0000000013 • Prom. 8.65</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary font-bold">LT</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Mgtr. Persona Ficticia 25</span>
+<span class="font-label-sm text-label-sm text-outline">Minería de Datos</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">
+                Examen Complexivo
+              </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tribunal Asignado (Espera Informe)</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="status-badge px-2 py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[14px]">history</span>
+                Prórroga en Revisión
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-3 py-1.5 bg-error text-on-error hover:bg-error-container hover:text-on-error-container rounded font-label-sm text-label-sm font-bold transition-all shadow-sm" onclick="openResolutionModal('TR-2024-0712')">
+                Dictamen Consejo
+              </button>
+</td>
+</tr>
+<!-- Row 5: Examen Complexivo Regular -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/40 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-bold text-primary">
+<span class="material-symbols-outlined text-[16px] text-secondary">description</span>
+<span>TR-2024-0810</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Ingresado 10/Dic/2023</span>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-primary">Persona Ficticia 18</span>
+<span class="font-label-sm text-label-sm text-outline">C.I. 0000000014 • Prom. 9.30</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary font-bold">JG</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Mgtr. Persona Ficticia 21</span>
+<span class="font-label-sm text-label-sm text-outline">Redes Definidas por Software</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="px-2 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">
+                Examen Complexivo
+              </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Calificador Completo</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="status-badge px-2 py-0.5 rounded bg-surface-container text-secondary font-label-sm text-label-sm font-bold">
+                Fase de Reactivos Teóricos
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="px-3 py-1.5 bg-surface-container-low hover:bg-surface-container text-primary rounded font-label-sm text-label-sm font-bold transition-all" onclick="viewDossierDetail('TR-2024-0810')">
+                Ver Expediente
+              </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Count -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-space-xs text-on-surface-variant font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span>Mostrando registros 1 al 5 de 148 tesistas activos</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded bg-surface-container-low hover:bg-surface-container text-outline hover:text-on-surface disabled:opacity-40">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<span class="px-3 py-1 rounded bg-primary text-on-primary font-bold font-label-sm text-label-sm">1</span>
+<button class="px-3 py-1 rounded hover:bg-surface-container text-on-surface font-label-sm text-label-sm">2</button>
+<button class="px-3 py-1 rounded hover:bg-surface-container text-on-surface font-label-sm text-label-sm">3</button>
+<span class="px-1 text-outline">...</span>
+<button class="px-3 py-1 rounded hover:bg-surface-container text-on-surface font-label-sm text-label-sm">15</button>
+<button class="p-1.5 rounded bg-surface-container-low hover:bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- MODAL: DESIGNACIÓN RÁPIDA DE TRIBUNAL (Hidden by default, triggered by JS) -->
+<div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm hidden flex items-center justify-center p-space-md" id="assignTribunalModal">
+<div class="bg-surface-container-lowest max-w-xl w-full rounded-xl shadow-2xl p-space-lg flex flex-col gap-space-md animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<div class="p-2 rounded bg-primary-container text-on-primary">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">Designación de Tribunal Evaluador</h3>
+<p class="font-label-sm text-label-sm text-outline">Conforme al Art. 118 del Reglamento General de Grado UNL</p>
+</div>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded-lg" onclick="closeAssignModal()">
+<span class="material-symbols-outlined text-[22px]">close</span>
+</button>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span>Trámite: <strong class="text-primary" id="modalTramiteCode">TR-2024-0891</strong></span>
+<span class="text-secondary font-semibold">Plazo de Dictamen: 15 días hábiles</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-bold" id="modalStudentName">Persona Ficticia 04</span>
+</div>
+<!-- Selection Fields -->
+<form class="space-y-space-sm" id="tribunalForm" onsubmit="confirmTribunalAssignment(event)">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold mb-1">Presidente del Tribunal</label>
+<select class="w-full p-2 bg-surface-container-lowest rounded-lg font-label-md text-label-md text-on-surface shadow-sm focus:outline-none" required="">
+<option value="">Seleccione Docente...</option>
+<option value="1">Dr. Persona Ficticia 19 (Sistemas Distribuidos - 2 tutorías)</option>
+<option value="2">Mgtr. Persona Ficticia 25 (Minería de Datos - 3 tutorías)</option>
+<option value="3">Dr. Persona Ficticia 20 (Arquitectura TI - 1 tutoría)</option>
+</select>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold mb-1">Miembro Calificador 1 (Principal)</label>
+<select class="w-full p-2 bg-surface-container-lowest rounded-lg font-label-md text-label-md text-on-surface shadow-sm focus:outline-none" required="">
+<option value="">Seleccione Docente...</option>
+<option value="1">Mgtr. Persona Ficticia 21 (Redes - 4 tutorías)</option>
+<option value="2">Dra. Persona Ficticia 22 (IA - 6 tutorías / Solo Tribunal)</option>
+<option value="3">Ing. Persona Ficticia 24 (Seguridad de la Info - 2 tutorías)</option>
+</select>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold mb-1">Miembro Calificador 2 (Suplente Reglamentario)</label>
+<select class="w-full p-2 bg-surface-container-lowest rounded-lg font-label-md text-label-md text-on-surface shadow-sm focus:outline-none" required="">
+<option value="">Seleccione Docente...</option>
+<option value="1">Ing. Persona Ficticia 23 (Bases de Datos)</option>
+<option value="2">Dr. Persona Ficticia 20 (Arquitectura TI)</option>
+<option value="3">Mgtr. Persona Ficticia 29 (Metodologías Ágiles)</option>
+</select>
+</div>
+<div class="pt-space-sm flex items-center justify-end gap-space-sm">
+<button class="px-space-md py-2 bg-surface-container hover:bg-surface-container-high text-primary rounded-lg font-label-md text-label-md font-semibold transition-all" onclick="closeAssignModal()" type="button">
+            Cancelar
+          </button>
+<button class="px-space-md py-2 bg-primary hover:bg-primary-container text-on-primary rounded-lg font-label-md text-label-md font-bold transition-all shadow-sm flex items-center gap-1.5" type="submit">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Emitir Resolución Quipux</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- INTERACTION SCRIPTS -->
+<script>
+    function triggerQuickAudit() {
+      const btn = event.currentTarget;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">refresh</span><span>Auditando...</span>';
+      setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">done_all</span><span>Padrón Verificado</span>';
+        setTimeout(() => {
+          btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">verified</span><span>Auditar Plazos</span>';
+        }, 3000);
+      }, 800);
+    }
+
+    function applyTableFilter(filterVal, element) {
+      document.querySelectorAll('.filter-tab').forEach(el => {
+        el.className = 'filter-tab px-3 py-1 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded font-label-sm text-label-sm transition-all';
+      });
+      element.className = 'filter-tab px-3 py-1 bg-primary text-on-primary rounded font-label-sm text-label-sm font-semibold transition-all';
+
+      const rows = document.querySelectorAll('#dossierTable tbody tr');
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (filterVal === 'all') {
+          row.style.display = '';
+        } else if (text.includes(filterVal.toLowerCase())) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function filterTableByState(keyword) {
+      const rows = document.querySelectorAll('#dossierTable tbody tr');
+      rows.forEach(row => {
+        if (row.textContent.toLowerCase().includes(keyword.toLowerCase()) || row.textContent.toLowerCase().includes('prórroga')) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function filterByModality(val) {
+      const rows = document.querySelectorAll('#dossierTable tbody tr');
+      rows.forEach(row => {
+        if (val === 'all') {
+          row.style.display = '';
+        } else if (val === 'investigacion' && row.textContent.includes('Investigación')) {
+          row.style.display = '';
+        } else if (val === 'complexivo' && row.textContent.includes('Complexivo')) {
+          row.style.display = '';
+        } else if (val === 'articulo' && row.textContent.includes('Artículo')) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function openAssignTribunalModal(code, name) {
+      document.getElementById('modalTramiteCode').innerText = code;
+      document.getElementById('modalStudentName').innerText = name;
+      document.getElementById('assignTribunalModal').classList.remove('hidden');
+    }
+
+    function closeAssignModal() {
+      document.getElementById('assignTribunalModal').classList.add('hidden');
+    }
+
+    function confirmTribunalAssignment(e) {
+      e.preventDefault();
+      closeAssignModal();
+      alert('Resolución de designación de tribunal generada con éxito y encolada para firma Quipux de Decanato.');
+    }
+
+    function openResolutionModal(code) {
+      alert('Remitiendo expediente ' + code + ' a la Secretaría General para tratamiento en la próxima Sesión Ordinaria de Consejo de Facultad.');
+    }
+
+    function notifyStudent(code) {
+      alert('Notificación reglamentaria y recordatorio de plazo enviada por correo institucional al tesista del trámite ' + code + '.');
+    }
+
+    function syncQuipuxSignatures() {
+      alert('Sincronizando estado de firmas digitales con el servidor central de Quipux UNL...');
+    }
+
+    function scheduleDefense(code, name) {
+      alert('Abriendo agenda de salas telemáticas y Auditorio de la Facultad para ' + name + ' (' + code + ').');
+    }
+
+    function exportAuditReport() {
+      alert('Generando reporte PDF/Excel institucional con firma de coordinación...');
+    }
+
+    function openMassAssignmentModal() {
+      alert('Iniciando asistente masivo de designación equilibrada de tribunales docentes.');
+    }
+
+    function viewDossierDetail(code) {
+      alert('Cargando expediente digital completo y repositorio de anexos para ' + code);
+    }
+
+    function toggleAnalyticsView() {
+      alert('Alternando a vista tabular desagregada por subcarreras.');
+    }
+  </script>
+</div></main><footer class="w-full py-space-md px-gutter bg-surface-container-lowest/60 text-on-surface-variant"><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-md text-label-md"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[16px]">corporate_fare</span><span>Universidad Nacional de Loja • Dirección de Tecnologías de la Información (DTI)</span></div><div class="flex items-center gap-space-md"><a class="hover:text-primary transition-colors" data-path="soporte-dti" href="#">Mesa de Servicios</a><span class="text-outline-variant">•</span><span>Reglamento General de Grado</span><span class="text-outline-variant">•</span><span>© 2024 UNL</span></div></div></footer></div></body></html>
