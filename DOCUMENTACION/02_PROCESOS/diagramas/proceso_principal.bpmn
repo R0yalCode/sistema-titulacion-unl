@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                   id="Definitions_SGT_SIAAF"
+                   targetNamespace="http://sgt-siaaf.unl.edu.ec/bpmn/aptitud-legal"
+                   exporter="SGT-SIAAF Documentacion" exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_1">
+    <bpmn2:participant id="Participant_1" name="Declaratoria de Aptitud Legal (Art. 235 RRA-UNL) — SGT-SIAAF" processRef="Process_AptitudLegal"/>
+  </bpmn2:collaboration>
+
+  <bpmn2:process id="Process_AptitudLegal" name="Declaratoria de Aptitud Legal" isExecutable="false">
+
+    <bpmn2:laneSet id="LaneSet_1">
+      <bpmn2:lane id="Lane_Estudiante" name="Estudiante">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_3</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Gateway_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_7</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_14</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_Dependencia" name="Dependencia emisora (Secretaría de Carrera / Director de Carrera / Responsable de Dependencia)">
+        <bpmn2:flowNodeRef>Task_5</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_Sistema" name="Sistema SGT-SIAAF (motor de estados y notificaciones)">
+        <bpmn2:flowNodeRef>Task_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_4</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_8</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_9</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_13</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_16</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_18</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_Secretario" name="Secretario/a-Abogado/a y Analista de Apoyo">
+        <bpmn2:flowNodeRef>Task_10</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Gateway_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_12</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_15</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_Decano" name="Decano/a">
+        <bpmn2:flowNodeRef>Task_17</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+
+    <bpmn2:startEvent id="StartEvent_1" name="Iniciar trámite de aptitud legal">
+      <bpmn2:outgoing>SF1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:task id="Task_1" name="Crear expediente de aptitud legal">
+      <bpmn2:documentation>RF-001, HU-001. POST /api/v1/expedientes/</bpmn2:documentation>
+      <bpmn2:incoming>SF1</bpmn2:incoming>
+      <bpmn2:outgoing>SF2</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_2" name="Inicializar cinco peticiones documentales base">
+      <bpmn2:documentation>RF-001. Automático al crear el expediente.</bpmn2:documentation>
+      <bpmn2:incoming>SF2</bpmn2:incoming>
+      <bpmn2:outgoing>SF3</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_3" name="Solicitar emisión de certificados a la dependencia">
+      <bpmn2:documentation>RF-004, HU-002. POST /api/v1/peticiones/{id}/solicitar-emision/</bpmn2:documentation>
+      <bpmn2:incoming>SF3</bpmn2:incoming>
+      <bpmn2:incoming>SF7</bpmn2:incoming>
+      <bpmn2:outgoing>SF4</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_4" name="Notificar petición a la dependencia emisora">
+      <bpmn2:documentation>RF-012. NotificacionInterna al rol emisor correspondiente.</bpmn2:documentation>
+      <bpmn2:incoming>SF4</bpmn2:incoming>
+      <bpmn2:outgoing>SF5</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_5" name="Atender petición y cargar certificado">
+      <bpmn2:documentation>RF-005, HU-003. POST /api/v1/peticiones/{id}/documento/. Variante: el propio estudiante puede cargar el certificado (DEC-02, Opción A); no se modela como rama aparte.</bpmn2:documentation>
+      <bpmn2:incoming>SF5</bpmn2:incoming>
+      <bpmn2:outgoing>SF6</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:exclusiveGateway id="Gateway_1" name="¿Los cinco documentos están vigentes?">
+      <bpmn2:incoming>SF6</bpmn2:incoming>
+      <bpmn2:outgoing>SF7</bpmn2:outgoing>
+      <bpmn2:outgoing>SF8</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:task id="Task_7" name="Enviar solicitud formalmente">
+      <bpmn2:documentation>RF-002, HU-004. POST /api/v1/expedientes/{id}/enviar/</bpmn2:documentation>
+      <bpmn2:incoming>SF8</bpmn2:incoming>
+      <bpmn2:outgoing>SF9</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_8" name="Registrar recepción, asignar providencia y calcular plazo de ocho días laborables">
+      <bpmn2:documentation>RF-002, RF-003, RN-002, RN-010. Automático al confirmar el envío.</bpmn2:documentation>
+      <bpmn2:incoming>SF9</bpmn2:incoming>
+      <bpmn2:outgoing>SF10</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_9" name="Notificar inicio de verificación a Secretaría-Abogacía">
+      <bpmn2:documentation>RF-012. NotificacionInterna a SECRETARIO_ABOGADO / ANALISTA_APOYO.</bpmn2:documentation>
+      <bpmn2:incoming>SF10</bpmn2:incoming>
+      <bpmn2:outgoing>SF11</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_10" name="Evaluar checklist de cinco requisitos">
+      <bpmn2:documentation>RF-006, HU-006. GET .../checklist/, PUT /api/v1/checklist/{id}/</bpmn2:documentation>
+      <bpmn2:incoming>SF11</bpmn2:incoming>
+      <bpmn2:incoming>SF17</bpmn2:incoming>
+      <bpmn2:outgoing>SF12</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:exclusiveGateway id="Gateway_2" name="¿Todos los requisitos están verificados?">
+      <bpmn2:incoming>SF12</bpmn2:incoming>
+      <bpmn2:outgoing>SF13</bpmn2:outgoing>
+      <bpmn2:outgoing>SF14</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:task id="Task_12" name="Registrar observación accionable">
+      <bpmn2:documentation>RF-007, HU-007, RN-003, EX-007. POST /api/v1/expedientes/{id}/observar/</bpmn2:documentation>
+      <bpmn2:incoming>SF13</bpmn2:incoming>
+      <bpmn2:outgoing>SF15</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_13" name="Notificar observación al estudiante">
+      <bpmn2:documentation>RF-012. NotificacionInterna al ESTUDIANTE.</bpmn2:documentation>
+      <bpmn2:incoming>SF15</bpmn2:incoming>
+      <bpmn2:outgoing>SF16</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_14" name="Subsanar documento observado">
+      <bpmn2:documentation>RF-008, HU-008, RN-011. POST /api/v1/peticiones/{id}/documento/ (versión N+1).</bpmn2:documentation>
+      <bpmn2:incoming>SF16</bpmn2:incoming>
+      <bpmn2:outgoing>SF17</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_15" name="Emitir informe legal de aptitud">
+      <bpmn2:documentation>RF-009, RF-010, HU-009. POST /api/v1/informes/</bpmn2:documentation>
+      <bpmn2:incoming>SF14</bpmn2:incoming>
+      <bpmn2:outgoing>SF18</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_16" name="Notificar informe emitido al Decanato">
+      <bpmn2:documentation>RF-012. NotificacionInterna al DECANO.</bpmn2:documentation>
+      <bpmn2:incoming>SF18</bpmn2:incoming>
+      <bpmn2:outgoing>SF19</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_17" name="Registrar declaratoria de aptitud con memorando firmado">
+      <bpmn2:documentation>RF-011, HU-010, RN-004. POST /api/v1/declaratorias/</bpmn2:documentation>
+      <bpmn2:incoming>SF19</bpmn2:incoming>
+      <bpmn2:outgoing>SF20</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_18" name="Notificar declaratoria a Secretaría-Abogacía, Director de Carrera y estudiante">
+      <bpmn2:documentation>RF-012, FL-05 postcondición.</bpmn2:documentation>
+      <bpmn2:incoming>SF20</bpmn2:incoming>
+      <bpmn2:outgoing>SF21</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:endEvent id="EndEvent_1" name="Aptitud legal declarada">
+      <bpmn2:incoming>SF21</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SF1"  sourceRef="StartEvent_1" targetRef="Task_1"/>
+    <bpmn2:sequenceFlow id="SF2"  sourceRef="Task_1" targetRef="Task_2"/>
+    <bpmn2:sequenceFlow id="SF3"  sourceRef="Task_2" targetRef="Task_3"/>
+    <bpmn2:sequenceFlow id="SF4"  sourceRef="Task_3" targetRef="Task_4"/>
+    <bpmn2:sequenceFlow id="SF5"  sourceRef="Task_4" targetRef="Task_5"/>
+    <bpmn2:sequenceFlow id="SF6"  sourceRef="Task_5" targetRef="Gateway_1"/>
+    <bpmn2:sequenceFlow id="SF7"  name="No"  sourceRef="Gateway_1" targetRef="Task_3"/>
+    <bpmn2:sequenceFlow id="SF8"  name="Sí"  sourceRef="Gateway_1" targetRef="Task_7"/>
+    <bpmn2:sequenceFlow id="SF9"  sourceRef="Task_7" targetRef="Task_8"/>
+    <bpmn2:sequenceFlow id="SF10" sourceRef="Task_8" targetRef="Task_9"/>
+    <bpmn2:sequenceFlow id="SF11" sourceRef="Task_9" targetRef="Task_10"/>
+    <bpmn2:sequenceFlow id="SF12" sourceRef="Task_10" targetRef="Gateway_2"/>
+    <bpmn2:sequenceFlow id="SF13" name="No"  sourceRef="Gateway_2" targetRef="Task_12"/>
+    <bpmn2:sequenceFlow id="SF14" name="Sí"  sourceRef="Gateway_2" targetRef="Task_15"/>
+    <bpmn2:sequenceFlow id="SF15" sourceRef="Task_12" targetRef="Task_13"/>
+    <bpmn2:sequenceFlow id="SF16" sourceRef="Task_13" targetRef="Task_14"/>
+    <bpmn2:sequenceFlow id="SF17" sourceRef="Task_14" targetRef="Task_10"/>
+    <bpmn2:sequenceFlow id="SF18" sourceRef="Task_15" targetRef="Task_16"/>
+    <bpmn2:sequenceFlow id="SF19" sourceRef="Task_16" targetRef="Task_17"/>
+    <bpmn2:sequenceFlow id="SF20" sourceRef="Task_17" targetRef="Task_18"/>
+    <bpmn2:sequenceFlow id="SF21" sourceRef="Task_18" targetRef="EndEvent_1"/>
+
+  </bpmn2:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+
+      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="3920" height="780"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Estudiante_di" bpmnElement="Lane_Estudiante" isHorizontal="true">
+        <dc:Bounds x="170" y="40" width="3750" height="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Dependencia_di" bpmnElement="Lane_Dependencia" isHorizontal="true">
+        <dc:Bounds x="170" y="180" width="3750" height="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Sistema_di" bpmnElement="Lane_Sistema" isHorizontal="true">
+        <dc:Bounds x="170" y="320" width="3750" height="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Secretario_di" bpmnElement="Lane_Secretario" isHorizontal="true">
+        <dc:Bounds x="170" y="460" width="3750" height="140"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Decano_di" bpmnElement="Lane_Decano" isHorizontal="true">
+        <dc:Bounds x="170" y="600" width="3750" height="140"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="232" y="92" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
+        <dc:Bounds x="360" y="70" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_2_di" bpmnElement="Task_2">
+        <dc:Bounds x="540" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_3_di" bpmnElement="Task_3">
+        <dc:Bounds x="720" y="70" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_4_di" bpmnElement="Task_4">
+        <dc:Bounds x="900" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_5_di" bpmnElement="Task_5">
+        <dc:Bounds x="1080" y="210" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1_di" bpmnElement="Gateway_1">
+        <dc:Bounds x="1305" y="85" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_7_di" bpmnElement="Task_7">
+        <dc:Bounds x="1440" y="70" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_8_di" bpmnElement="Task_8">
+        <dc:Bounds x="1620" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_9_di" bpmnElement="Task_9">
+        <dc:Bounds x="1800" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_10_di" bpmnElement="Task_10">
+        <dc:Bounds x="1980" y="490" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_2_di" bpmnElement="Gateway_2">
+        <dc:Bounds x="2205" y="505" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_12_di" bpmnElement="Task_12">
+        <dc:Bounds x="2340" y="490" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_13_di" bpmnElement="Task_13">
+        <dc:Bounds x="2520" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_14_di" bpmnElement="Task_14">
+        <dc:Bounds x="2700" y="70" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_15_di" bpmnElement="Task_15">
+        <dc:Bounds x="2880" y="490" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_16_di" bpmnElement="Task_16">
+        <dc:Bounds x="3060" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_17_di" bpmnElement="Task_17">
+        <dc:Bounds x="3240" y="630" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_18_di" bpmnElement="Task_18">
+        <dc:Bounds x="3420" y="350" width="140" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
+        <dc:Bounds x="3652" y="372" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="SF1_di" bpmnElement="SF1">
+        <di:waypoint x="268" y="110"/><di:waypoint x="360" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF2_di" bpmnElement="SF2">
+        <di:waypoint x="500" y="110"/><di:waypoint x="500" y="390"/><di:waypoint x="540" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF3_di" bpmnElement="SF3">
+        <di:waypoint x="680" y="390"/><di:waypoint x="680" y="110"/><di:waypoint x="720" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF4_di" bpmnElement="SF4">
+        <di:waypoint x="860" y="110"/><di:waypoint x="860" y="390"/><di:waypoint x="900" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF5_di" bpmnElement="SF5">
+        <di:waypoint x="1040" y="390"/><di:waypoint x="1040" y="250"/><di:waypoint x="1080" y="250"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF6_di" bpmnElement="SF6">
+        <di:waypoint x="1220" y="250"/><di:waypoint x="1220" y="110"/><di:waypoint x="1305" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF7_di" bpmnElement="SF7">
+        <di:waypoint x="1330" y="135"/><di:waypoint x="1330" y="760"/><di:waypoint x="790" y="760"/><di:waypoint x="790" y="150"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF8_di" bpmnElement="SF8">
+        <di:waypoint x="1355" y="110"/><di:waypoint x="1440" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF9_di" bpmnElement="SF9">
+        <di:waypoint x="1580" y="110"/><di:waypoint x="1580" y="390"/><di:waypoint x="1620" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF10_di" bpmnElement="SF10">
+        <di:waypoint x="1760" y="390"/><di:waypoint x="1800" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF11_di" bpmnElement="SF11">
+        <di:waypoint x="1940" y="390"/><di:waypoint x="1940" y="530"/><di:waypoint x="1980" y="530"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF12_di" bpmnElement="SF12">
+        <di:waypoint x="2120" y="530"/><di:waypoint x="2205" y="530"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF13_di" bpmnElement="SF13">
+        <di:waypoint x="2255" y="520"/><di:waypoint x="2340" y="520"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF14_di" bpmnElement="SF14">
+        <di:waypoint x="2230" y="505"/><di:waypoint x="2230" y="440"/><di:waypoint x="2950" y="440"/><di:waypoint x="2950" y="490"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF15_di" bpmnElement="SF15">
+        <di:waypoint x="2480" y="530"/><di:waypoint x="2480" y="390"/><di:waypoint x="2520" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF16_di" bpmnElement="SF16">
+        <di:waypoint x="2660" y="390"/><di:waypoint x="2660" y="110"/><di:waypoint x="2700" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF17_di" bpmnElement="SF17">
+        <di:waypoint x="2770" y="150"/><di:waypoint x="2770" y="760"/><di:waypoint x="2050" y="760"/><di:waypoint x="2050" y="575"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF18_di" bpmnElement="SF18">
+        <di:waypoint x="3020" y="530"/><di:waypoint x="3020" y="390"/><di:waypoint x="3060" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF19_di" bpmnElement="SF19">
+        <di:waypoint x="3200" y="390"/><di:waypoint x="3200" y="670"/><di:waypoint x="3240" y="670"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF20_di" bpmnElement="SF20">
+        <di:waypoint x="3380" y="670"/><di:waypoint x="3380" y="390"/><di:waypoint x="3420" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF21_di" bpmnElement="SF21">
+        <di:waypoint x="3560" y="390"/><di:waypoint x="3652" y="390"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn2:definitions>

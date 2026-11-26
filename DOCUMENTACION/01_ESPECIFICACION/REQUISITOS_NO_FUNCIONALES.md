@@ -1,0 +1,28 @@
+# Requisitos no funcionales — SGT-SIAAF (backend)
+
+**Fuente única de los requisitos:** `sgt-siaaf/specs/001-tramite-titulacion/specify.md` §11 (RNF-001 a RNF-018). El estado de verificación marcado aquí es **conservador**: donde la Fase 0 de este trabajo no confirmó directamente contra código/ejecución, se marca ISV y se remite a la fase posterior que lo verificará, en vez de asumir que el documento previo (`auditoria/` o `docs/`) basta como evidencia definitiva.
+
+| ID | Categoría | Descripción (resumida) | Método de verificación declarado | Estado | Fase que lo verifica en profundidad |
+|---|---|---|---|---|---|
+| RNF-001 | Seguridad | Autenticación stateless JWT | Pruebas `pytest` | **ISV** — JWT (SimpleJWT) confirmado en dependencias; comportamiento end-to-end no reverificado en esta sesión | Fase 6 |
+| RNF-002 | Seguridad | Autorización server-side RBAC (403 ante no autorizados) | Suite de permisos `pytest` | **IV** — `RBAC_MATRIX` de mundo cerrado confirmada por lectura directa del código (Fase 0) | Fase 6 (profundizar) |
+| RNF-003 | Seguridad | Aislamiento por ámbito / protección IDOR | Tests de intromisión de ID | **IV** — `ScopeFilterMixin` y verificación manual en descargas confirmados por auditorías previas y coherentes con el código inspeccionado | Fase 6 |
+| RNF-004 | Seguridad | Validación de magic bytes / MIME en PDF | Carga de ejecutables en tests | **IV** — `core/adapters/pdf_validation.py` confirmado | Fase 6 |
+| RNF-005 | Rendimiento | p95 < 500 ms con 50 usuarios concurrentes | Pruebas de carga con Locust | **P** — no hay evidencia de que se haya ejecutado una prueba de carga; no se localizó script ni informe de Locust en el repositorio | Fase 7 (declarar explícitamente como no ejecutada si sigue sin evidencia) |
+| RNF-006 | Disponibilidad | 99.5 % de disponibilidad, healthcheck | Endpoint `/health/` | **ISV** — healthcheck existe en el `Dockerfile` (confirmado); cifra de disponibilidad no medida | Fase 9 |
+| RNF-007 | Interoperabilidad | REST versionado `/api/v1/`, OpenAPI v3 | Validación de esquema | **IV** — `backend/openapi.yaml` existe (1224 líneas), generado con drf-spectacular | Fase 5 |
+| RNF-008 | Interoperabilidad | Adapters/mocks para sistemas externos | Inspección de `adapters/` | **IV** — `core/adapters/mock_sga.py` confirmado | Fase 4 |
+| RNF-009 | Mantenibilidad | Monolito modular por dominio | Auditoría de arquitectura | **IV** — 6 apps + core confirmadas por estructura de directorios | Fase 4 |
+| RNF-010 | DevOps | Reproducibilidad con `docker-compose up --build` | Despliegue en entorno limpio | **ISV** — archivos existen (`docker-compose.yml`, `Dockerfile`); no se ejecutó `docker compose up` en esta sesión | Fase 8 |
+| RNF-011 | Calidad de código | PEP 8 + type hints, verificado con flake8 | Linter en CI | **ISV** — `.flake8` existe; `auditoria/01` reporta "flake8 sin errores" en una ejecución previa (05-nov); no reejecutado en esta sesión | Fase 7/8 |
+| RNF-012 | Calidad | Cobertura de pruebas >70 % | `pytest-cov` | **PI** — cifras inconsistentes entre fuentes del mismo periodo (93 % en `docs/RESUMEN_EJECUTIVO.md`, ~90 % "sin `--cov` medido" en `docs/auditoria-backend/INFORME_FINAL_VALIDACION.md`, 88 % en `auditoria/01`); **requiere re-ejecución real en Fase 7** antes de declarar una cifra definitiva | Fase 7 |
+| RNF-013 | Usabilidad | Accesibilidad WCAG 2.1 AA | Auditoría Lighthouse | **NA para el backend** — es un requisito de los clientes web/móvil, no del backend; el frontend declara axe + AA por componente (`CLAUDE.md`) | Fuera del alcance de este incremento |
+| RNF-014 | Seguridad | Gestión de secretos por entorno, sin hardcodes | Escaneo `gitleaks` | **IV** — `base.py` sin `SECRET_KEY` por defecto, `DEBUG` por defecto `False`, confirmado por lectura directa; existe `backend/gitleaks.exe` comiteado (binario, señalado como problema de higiene por `auditoria/01`, no de la regla en sí) | Fase 6 |
+| RNF-015 | Mantenibilidad | Logging centralizado, sin stacktraces en producción | Provocación de excepciones en tests | **ISV** — pendiente de verificación directa; `auditoria/01` reporta `print()` con datos de usuario en `evaluar_checklist.py` (posible incumplimiento parcial) | Fase 9 |
+| RNF-016 | Seguridad | HTTPS/TLS 1.3, rutas privadas autenticadas para PDF | Pruebas de acceso directo a URL | **IV (almacenamiento)** / **P (TLS)** — `PrivateMediaStorage` sin URL pública confirmado; TLS depende de la configuración de despliegue real (nginx), no verificada en esta sesión | Fase 6/8 |
+| RNF-017 | Gobernanza | Trazabilidad de código generado con IA | Revisión de PR y Git | **NA** — el control de versiones/PR está explícitamente excluido de esta auditoría (sección 2.4 del encargo); se documenta el uso de IA en la Fase 10 (declaratoria), no aquí | Fase 10 |
+| RNF-018 | Gobernanza | Registro de decisiones en ADR | Inspección de `docs/adr/` | **PI** — existen ADR, pero en dos ubicaciones no reconciliadas (`docs/adr/` y `specs/001/adr/`); ver hallazgo en `00_AUDITORIA/AUDITORIA_DOCUMENTAL.md` §2.5 | Fase 3 |
+
+## Conclusión de esta consolidación
+
+De los 18 RNF, **6 están verificados (IV)** con evidencia directa de código obtenida en la Fase 0, **7 quedan como ISV** (implementados pero sin verificación propia suficiente en esta pasada), **2 son parciales (PI)** por inconsistencias de cifras o de ubicación documental ya detectadas, **1 está pendiente sin evidencia de ejecución (P, RNF-005)**, y **2 se marcan NA** para el alcance de este incremento backend (accesibilidad de cliente, gobernanza de Git). Ninguno se declara cumplido solo porque un documento anterior lo afirmaba sin que esta auditoría lo haya podido corroborar.
