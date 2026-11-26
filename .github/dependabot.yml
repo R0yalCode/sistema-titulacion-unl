@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    # Flujo Git (DK-008): los PR van a develop, nunca directamente a main.
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: "direct"
+    labels:
+      - "dependencies"
+      - "security"

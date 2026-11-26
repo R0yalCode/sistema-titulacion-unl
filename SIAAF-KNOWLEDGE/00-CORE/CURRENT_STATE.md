@@ -38,7 +38,7 @@ Frontend: 328/328 en la 3.ª ejecución; **1 de 3 ejecuciones falló (6 pruebas)
 4. Validación normativa de los Arts. 39, 40, 212, 216 y 233 para las modalidades.
 5. Autorización para iniciar V-05 (siguiente lote del frontend) o INC-01 (seguridad P0).
 6. ~~Confirmar la política Git~~ → **confirmada** (DK-008): flujo `main` → `develop` → ramas; preguntar siempre antes de fusionar en `main`.
-7. Versionar `DOCUMENTACION/` y `.github/workflows/` (hoy sin seguimiento Git).
+7. ~~Versionar `DOCUMENTACION/` y `.github/workflows/`~~ → **resuelto** (2026-11-26): `.github/workflows/` ya estaba versionado; `DOCUMENTACION/` se versiona como archivo histórico no vigente en la rama `docs/rescate-arbol-principal` ([[2026-11-26-rescate-arbol-principal]]).
 
 ## Próximo paso recomendado por el plan
 
