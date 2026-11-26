@@ -12,6 +12,7 @@ import { StudentLayout } from './StudentLayout'
 
 const MI_TRAMITE_URL = '*/api/v1/expedientes/mi-tramite/'
 const NOTIFICACIONES_URL = '*/api/v1/notificaciones/'
+const PERFIL_ACADEMICO_URL = '*/api/v1/perfil-academico/'
 const EXPEDIENTE_ID = fixtureMiTramite.expediente.id
 
 function authValue(signOut = vi.fn()): AuthContextValue {
@@ -100,11 +101,24 @@ describe('StudentLayout (portal del estudiante)', () => {
       'href',
       '/estudiante/notificaciones',
     )
-    const perfil = await screen.findByRole('link', { name: /^Mi perfil:/ })
-    expect(perfil).toHaveAttribute('href', '/estudiante/perfil')
-    expect(perfil).toHaveTextContent('Mi perfil: Estudiante de Prueba')
+    // AX-C: primer nombre y primer apellido de perfil-academico (nombres
+    // "Estudiante", apellidos "De Prueba": la partícula forma parte del apellido).
+    const usuario = await screen.findByRole('button', { name: 'Menú de usuario: Estudiante De Prueba, Estudiante' })
     // Iniciales del primer y último nombre.
-    expect(within(perfil).getByText('EP')).toBeInTheDocument()
+    expect(within(usuario).getByText('EP')).toBeInTheDocument()
+
+    const user = userEvent.setup()
+    await user.click(usuario)
+    expect(screen.getByRole('menuitem', { name: 'Mi perfil' })).toHaveAttribute('href', '/estudiante/perfil')
+  })
+
+  it('sin perfil académico usa el nombre completo de mi-tramite, sin partirlo', async () => {
+    server.use(http.get(PERFIL_ACADEMICO_URL, () => HttpResponse.json({ detail: 'Sin fuente académica.' }, { status: 503 })))
+    renderLayout()
+
+    expect(
+      await screen.findByRole('button', { name: 'Menú de usuario: Estudiante de Prueba, Estudiante' }),
+    ).toBeInTheDocument()
   })
 
   it('abre y cierra el menú móvil con el botón y con Escape, devolviendo el foco', async () => {
@@ -141,11 +155,14 @@ describe('StudentLayout (portal del estudiante)', () => {
     const signOut = vi.fn()
     renderLayout('/estudiante', signOut)
 
-    await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    // AX-C: "Cerrar sesión" está en el menú de usuario, con la misma confirmación.
+    await user.click(screen.getByRole('button', { name: /^Menú de usuario/ }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
     await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Cancelar' }))
     expect(signOut).not.toHaveBeenCalled()
 
-    await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+    await user.click(screen.getByRole('button', { name: /^Menú de usuario/ }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
     await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Cerrar sesión' }))
     expect(signOut).toHaveBeenCalledTimes(1)
     expect(await screen.findByText('Pantalla de login')).toBeInTheDocument()

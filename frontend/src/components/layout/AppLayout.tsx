@@ -6,9 +6,9 @@ import { BellIcon, InboxIcon, InfoIcon, SettingsShieldIcon, UserIcon } from '@/c
 import { AdminSearch, enlacesConsola, type DestinoBusqueda } from '@/features/bandeja'
 import { useNotificaciones } from '@/features/dashboard'
 import { getEnv } from '@/lib/env'
-import { nombreRol } from '@/lib/estados'
 import '@/styles/siaaf-modern.css'
 import { AppShell, type ShellNavItem } from './AppShell'
+import { useNombreVisible } from './useNombreVisible'
 
 /**
  * Portal de funcionarios. La navegación se construye con las capacidades
@@ -61,7 +61,8 @@ export function AppLayout({ children }: { children?: ReactNode }) {
   const conNotificaciones = roles.some((rol) => ROLES_CON_NOTIFICACIONES.includes(rol))
   const notificaciones = useNotificaciones({ enabled: conNotificaciones })
   const noLeidas = notificaciones.data?.results.filter((notificacion) => !notificacion.leida).length ?? 0
-  const rolPrincipal = roles.find((rol) => rol !== 'ESTUDIANTE') ?? roles[0]
+  // AX-C: sin endpoint con el nombre del funcionario (BE-01) se muestra su rol y su cédula.
+  const usuario = useNombreVisible()
   const esAdministrador = roles.includes('ADMINISTRADOR')
   const navItems = buildNavItems(roles, noLeidas, env.apiBaseUrl)
   const destinosBusqueda: DestinoBusqueda[] = esAdministrador
@@ -88,8 +89,8 @@ export function AppLayout({ children }: { children?: ReactNode }) {
       topbarSlot={esAdministrador ? <AdminSearch destinos={destinosBusqueda} /> : undefined}
       unreadCount={noLeidas}
       visual={esAdministrador ? 'siaaf-modern' : undefined}
-      userName={rolPrincipal ? nombreRol(rolPrincipal) : 'Usuario'}
-      userRole={auth?.user?.cedula ? `C.I. ${auth.user.cedula}` : ''}
+      userName={usuario.nombre}
+      userRole={usuario.detalle}
     >
       {children}
     </AppShell>

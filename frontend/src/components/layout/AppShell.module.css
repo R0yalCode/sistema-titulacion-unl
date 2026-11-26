@@ -82,8 +82,7 @@
   list-style: none;
 }
 
-.navLink,
-.footerButton {
+.navLink {
   position: relative;
   display: flex;
   align-items: center;
@@ -106,14 +105,12 @@
     color var(--duration-fast) var(--ease-standard);
 }
 
-.navLink:hover,
-.footerButton:hover {
+.navLink:hover {
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-text-inverse);
 }
 
 .navLink:focus-visible,
-.footerButton:focus-visible,
 .closeButton:focus-visible {
   outline: 2px solid var(--focus-ring-on-dark);
   outline-offset: 2px;
@@ -201,14 +198,6 @@
   text-align: center;
 }
 
-.sidebarFooter {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-3);
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
-}
-
 /* --- Sidebar contraída (solo escritorio) ----------------------------------- */
 @media (min-width: 1025px) {
   .collapsed {
@@ -239,8 +228,7 @@
     display: none;
   }
 
-  .collapsed .navLink,
-  .collapsed .footerButton {
+  .collapsed .navLink {
     justify-content: center;
     padding-inline: 0;
   }
@@ -332,8 +320,7 @@
 }
 
 .iconButton:hover,
-.menuButton:hover,
-a.profileLink:hover {
+.menuButton:hover {
   background: var(--color-surface-sunken);
 }
 
@@ -351,53 +338,6 @@ a.profileLink:hover {
   font-weight: var(--font-weight-bold);
   line-height: 14px;
   text-align: center;
-}
-
-.profileLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: var(--touch-target);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  text-decoration: none;
-}
-
-.avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border: 2px solid var(--color-accent);
-  border-radius: var(--radius-full);
-  background: var(--color-brand);
-  color: var(--color-text-inverse);
-  font-size: var(--text-xs);
-  font-weight: var(--font-weight-bold);
-}
-
-.profileText {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.2;
-}
-
-.profileName {
-  max-width: 220px;
-  overflow: hidden;
-  font-weight: var(--font-weight-semibold);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profileRole {
-  color: var(--color-text-secondary);
-  font-size: var(--text-xs);
-  white-space: nowrap;
 }
 
 .main {
@@ -485,15 +425,10 @@ a.profileLink:hover {
   .main {
     padding: var(--space-4) var(--space-4) var(--space-8);
   }
-
-  .profileRole {
-    display: none;
-  }
 }
 
 @media (max-width: 480px) {
-  .topbarTitle,
-  .profileText {
+  .topbarTitle {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -527,8 +462,7 @@ a.profileLink:hover {
   backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-lg));
 }
 
-.shell[data-glass='on'] .navLink:hover,
-.shell[data-glass='on'] .footerButton:hover {
+.shell[data-glass='on'] .navLink:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -554,8 +488,7 @@ a.profileLink:hover {
   backdrop-filter: saturate(var(--glass-saturate)) blur(var(--glass-blur-md));
 }
 
-.shell[data-glass='on'] .iconButton:hover,
-.shell[data-glass='on'] a.profileLink:hover {
+.shell[data-glass='on'] .iconButton:hover {
   background: rgba(19, 41, 75, 0.06);
 }
 

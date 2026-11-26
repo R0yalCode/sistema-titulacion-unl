@@ -1,0 +1,233 @@
+/*
+ * Menú desplegable del usuario (AX-C). Hereda el aspecto del antiguo enlace
+ * de perfil de la barra superior (avatar azul marino con aro dorado).
+ *
+ * El desplegable usa superficie OPACA, no .glass-floating: vive dentro de la
+ * barra superior, que ya aplica backdrop-filter, y Chrome la trata como raíz
+ * del fondo, así que un segundo desenfoque no alcanzaría la página y el
+ * contenido se leería a través del menú. Paneles con texto → superficie
+ * sólida (Design System §Liquid Glass); conserva el borde y la sombra de vidrio.
+ */
+.raiz {
+  position: relative;
+}
+
+/* --- Botón ---------------------------------------------------------------- */
+.disparador {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.disparador:hover,
+.disparador[aria-expanded='true'] {
+  background: rgba(19, 41, 75, 0.06);
+}
+
+.disparador:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: 2px;
+}
+
+.avatar,
+.avatarGrande {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-full);
+  background: var(--color-brand);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-bold);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  font-size: var(--text-xs);
+}
+
+.avatarGrande {
+  width: 44px;
+  height: 44px;
+  font-size: var(--text-sm);
+}
+
+.texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.nombre {
+  max-width: 220px;
+  overflow: hidden;
+  font-weight: var(--font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detalle {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+.flecha {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.disparador[aria-expanded='true'] .flecha {
+  transform: rotate(180deg);
+}
+
+/* --- Desplegable --------------------------------------------------------- */
+.desplegable {
+  position: absolute;
+  z-index: var(--z-drawer);
+  top: calc(100% + var(--space-2));
+  right: 0;
+  width: min(18rem, calc(100vw - 2 * var(--space-3)));
+  padding: var(--space-2);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-raised);
+  color: var(--color-text-primary);
+  animation: aparecer var(--duration-fast) var(--ease-out);
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.identidad {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.nombreCabecera {
+  overflow-wrap: anywhere;
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-semibold);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: var(--space-1) 0 0;
+  border-top: var(--border-divider);
+  list-style: none;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.opcion:hover,
+.opcion:focus-visible {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-hover);
+}
+
+.opcion:focus-visible {
+  outline: 2px solid var(--focus-ring-color);
+  outline-offset: -2px;
+}
+
+.salir {
+  color: var(--color-danger-text);
+}
+
+.salir:hover,
+.salir:focus-visible {
+  background: var(--color-danger-bg-soft);
+  color: var(--color-danger-text);
+}
+
+.separador {
+  height: 1px;
+  margin: var(--space-1) var(--space-2);
+  background: var(--color-divider);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Responsive (mismo comportamiento que el antiguo enlace de perfil) ---- */
+@media (max-width: 768px) {
+  .detalle {
+    display: none;
+  }
+
+  .identidad .detalle {
+    display: inline;
+  }
+}
+
+@media (max-width: 480px) {
+  .texto,
+  .flecha {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desplegable {
+    animation: none;
+  }
+
+  .flecha {
+    transition: none;
+  }
+}
