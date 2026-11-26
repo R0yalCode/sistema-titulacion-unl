@@ -171,6 +171,17 @@
   --z-modal: 40;
   --z-toast: 50;
 
+  /* --- Capa flotante (AX-A, 2026-11-26) ----------------------------------
+   * Botones flotantes globales: accesibilidad (inferior izquierdo) y, más
+   * adelante, el asistente (inferior derecho). Por encima del panel lateral
+   * móvil y por debajo de los diálogos modales y los avisos. --fab-left se
+   * reajusta en styles/a11y.css para no tapar el sidebar de escritorio. */
+  --z-fab: 35;
+  --fab-size: 48px; /* ≥ --touch-target */
+  --fab-inset: var(--space-4);
+  --fab-left: var(--fab-inset);
+  --fab-clearance: calc(var(--fab-size) + 2 * var(--fab-inset));
+
   /* --- Capa Liquid Glass (rediseño 2026-11-24; utilidades en glass.css) ---
    * Referencia visual: prototipos/vistas_liquid_glass (solo estética). Se
    * apoya en la marca oficial (azul marino, azul de interacción, dorado): los

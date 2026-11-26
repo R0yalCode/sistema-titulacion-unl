@@ -60,9 +60,11 @@
 }
 
 @media (max-width: 480px) {
+  /* A todo el ancho, los avisos se apilan sobre la fila de botones flotantes
+   * (accesibilidad y asistente, --fab-clearance) en lugar de taparlos. */
   .viewport {
     right: var(--space-3);
-    bottom: var(--space-3);
+    bottom: calc(var(--space-3) + var(--fab-clearance));
     left: var(--space-3);
     width: auto;
   }

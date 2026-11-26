@@ -4,6 +4,7 @@ import './styles/tokens.css'
 import './styles/global.css'
 import './styles/utilities.css'
 import './styles/glass.css'
+import './styles/a11y.css'
 import App from './app/App.tsx'
 import { EnvError, getEnv } from './lib/env'
 

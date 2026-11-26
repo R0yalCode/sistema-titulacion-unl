@@ -1,0 +1,143 @@
+/*
+ * Preferencias globales de accesibilidad (AX-A, DK-010).
+ *
+ * El proveedor `AccesibilidadProvider` refleja las preferencias del usuario
+ * en <html> (atributos data-a11y-* y --a11y-escala-texto); estas reglas las
+ * aplican a toda la aplicación sin que ninguna página las implemente. Se
+ * importa después de tokens/global/glass para poder redefinir sus tokens.
+ *
+ * - Los modos de color son excluyentes (un solo data-a11y-color).
+ * - Los filtros (grises, contraste negativo) van en <html>: en el elemento
+ *   raíz no rompen `position: fixed` (excepción de la especificación).
+ * - Alto contraste y fondo claro redefinen tokens y vuelven opacas las
+ *   superficies Liquid Glass: el contraste nunca depende del fondo.
+ * - Las preferencias del usuario ganan a los estilos de componente, por eso
+ *   algunas reglas usan !important de forma deliberada.
+ */
+
+/* --- Tamaño del texto ---------------------------------------------------- *
+ * Los tamaños del Design System están en rem: escalar el font-size raíz
+ * amplía todo el texto respetando el tamaño base elegido en el navegador. */
+html[data-a11y-texto='escalado'] {
+  font-size: calc(100% * var(--a11y-escala-texto, 1));
+}
+
+/* --- Enlaces subrayados -------------------------------------------------- */
+html[data-a11y-enlaces='subrayados'] a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 3px;
+}
+
+/* --- Fuente legible (WCAG 1.4.12: espaciado de texto) --------------------- *
+ * Fuentes del sistema de formas abiertas: no se descargan recursos nuevos. */
+html[data-a11y-fuente='legible'] {
+  --font-family-base: Verdana, Tahoma, 'DejaVu Sans', 'Segoe UI', Arial, sans-serif;
+}
+
+html[data-a11y-fuente='legible'] body :not(code, pre, kbd, samp) {
+  font-family: var(--font-family-base) !important;
+  letter-spacing: 0.03em;
+  word-spacing: 0.08em;
+}
+
+html[data-a11y-fuente='legible'] body :is(p, li, dd, td, label, blockquote) {
+  line-height: 1.6;
+}
+
+/* --- Escala de grises ---------------------------------------------------- */
+html[data-a11y-color='grises'] {
+  filter: grayscale(100%);
+}
+
+/* --- Contraste negativo -------------------------------------------------- *
+ * Inversión con giro de tono (conserva el matiz de los estados); las
+ * imágenes y vídeos se invierten de nuevo para verse con sus colores. */
+html[data-a11y-color='contraste-negativo'] {
+  background-color: #fff;
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+html[data-a11y-color='contraste-negativo'] :is(img, picture, video, canvas, iframe) {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+/* --- Alto contraste ------------------------------------------------------ *
+ * Texto negro sobre blanco (21:1), bordes negros, interacción azul oscuro
+ * (#002b4d sobre blanco ≈ 14,6:1) y sin translucidez. La sidebar conserva el
+ * azul marino institucional con texto blanco (≥ 13:1). */
+html[data-a11y-color='alto-contraste'] {
+  --color-bg-main: #fff;
+  --color-bg-ice: #fff;
+  --color-surface: #fff;
+  --color-surface-muted: #fff;
+  --color-surface-sunken: #f0f0f0;
+  --color-text-primary: #000;
+  --color-text-strong: #000;
+  --color-text-secondary: #000;
+  --color-text-muted: #000;
+  --color-divider: #000;
+  --color-border-control: #000;
+  --color-border-strong: #000;
+  --color-primary: #002b4d;
+  --color-primary-hover: #001426;
+  --color-primary-subtle: #e6eef5;
+  --focus-ring-color: #000;
+  --app-backdrop: linear-gradient(#fff, #fff);
+  --glass-surface: #fff;
+  --glass-surface-strong: #fff;
+  --glass-border: #000;
+  --glass-border-subtle: #000;
+  --glass-highlight: 0 0 0 transparent;
+  --glass-shadow: 0 0 0 transparent;
+  --glass-shadow-raised: 0 0 0 transparent;
+}
+
+html[data-a11y-color='alto-contraste'] a {
+  text-decoration: underline;
+}
+
+html[data-a11y-color='alto-contraste'] :focus-visible {
+  outline: 3px solid #000 !important;
+  outline-offset: 2px;
+}
+
+/* --- Fondo claro --------------------------------------------------------- *
+ * Fondos de página y superficies translúcidas pasan a blanco opaco; los
+ * elementos de marca (sidebar, hero) conservan la identidad institucional. */
+html[data-a11y-color='fondo-claro'] {
+  --color-bg-main: #fff;
+  --color-bg-ice: #fff;
+  --color-surface-muted: #fff;
+  --app-backdrop: linear-gradient(#fff, #fff);
+  --glass-surface: #fff;
+  --glass-surface-strong: #fff;
+}
+
+html:is([data-a11y-color='alto-contraste'], [data-a11y-color='fondo-claro']) :is(.glass-surface, .glass-panel, .glass-floating) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* --- Capa flotante -------------------------------------------------------- *
+ * En escritorio el sidebar flotante ocupa el borde izquierdo: el botón de
+ * accesibilidad se desplaza a la derecha de su ancho expandido para no tapar
+ * la navegación. En ≤1024 px el sidebar es un panel lateral y no hay choque. */
+@media (min-width: 1025px) {
+  html:has(#menu-principal) {
+    --fab-left: calc(var(--space-3) + var(--layout-sidebar-width) + var(--fab-inset));
+  }
+}
+
+/* Que el foco y el final del contenido no queden bajo los botones flotantes. */
+html {
+  scroll-padding-bottom: var(--fab-clearance);
+}
+
+@media (max-width: 1024px) {
+  #main-content::after {
+    display: block;
+    height: var(--fab-clearance);
+    content: '';
+  }
+}
