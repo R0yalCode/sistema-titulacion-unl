@@ -10,6 +10,7 @@ import {
 import { ASISTENTE } from './configuracion'
 import { MENSAJE_CANALES_OFICIALES, MENSAJE_NO_DISPONIBLE, esConsultaNormativa } from './consultaNormativa'
 import { preguntasPara, type EnlacePregunta, type PreguntaFrecuente } from './preguntasFrecuentes'
+import { useViewportVisible } from './useViewportVisible'
 import styles from './AsistenteFlotante.module.css'
 
 type Mensaje = {
@@ -67,6 +68,10 @@ export function AsistenteFlotante() {
   const campoRef = useRef<HTMLInputElement>(null)
   const finRef = useRef<HTMLDivElement>(null)
   const siguienteId = useRef(1)
+  // En móvil el lanzador se oculta con el panel abierto: el foco se devuelve
+  // después de volver a pintarlo, no en el mismo evento de cierre.
+  const devolverFoco = useRef(false)
+  const viewport = useViewportVisible(abierta)
   const idPanel = useId()
   const idTitulo = useId()
   const idCampo = useId()
@@ -78,12 +83,19 @@ export function AsistenteFlotante() {
     campoRef.current?.focus()
     function alPulsarTecla(evento: KeyboardEvent) {
       if (evento.key === 'Escape') {
+        devolverFoco.current = true
         setAbiertaEn(null)
-        botonRef.current?.focus()
       }
     }
     document.addEventListener('keydown', alPulsarTecla)
     return () => document.removeEventListener('keydown', alPulsarTecla)
+  }, [abierta])
+
+  useEffect(() => {
+    if (!abierta && devolverFoco.current) {
+      devolverFoco.current = false
+      botonRef.current?.focus()
+    }
   }, [abierta])
 
   useEffect(() => {
@@ -96,8 +108,8 @@ export function AsistenteFlotante() {
   }
 
   function cerrar() {
+    devolverFoco.current = true
     setAbiertaEn(null)
-    botonRef.current?.focus()
   }
 
   function agregar(...nuevos: Omit<Mensaje, 'id'>[]) {
@@ -142,7 +154,13 @@ export function AsistenteFlotante() {
 
   return (
     // `data-a11y-omitir`: «Leer página» (AX-A) no lee el asistente.
-    <aside aria-label="Asistente de ayuda" className={styles.raiz} data-a11y-omitir="">
+    <aside
+      aria-label="Asistente de ayuda"
+      className={styles.raiz}
+      data-a11y-omitir=""
+      data-abierta={abierta ? 'true' : 'false'}
+      style={viewport}
+    >
       {abierta && (
         <section aria-labelledby={idTitulo} className={styles.panel} id={idPanel} role="dialog">
           <header className={styles.cabecera}>
@@ -282,14 +300,20 @@ export function AsistenteFlotante() {
         type="button"
         onClick={() => (abierta ? cerrar() : abrir())}
       >
-        <img
-          alt=""
-          className={styles.mascota}
-          decoding="async"
-          height={ASISTENTE.mascota.alto}
-          src={ASISTENTE.mascota.src}
-          width={ASISTENTE.mascota.ancho}
-        />
+        {/* Recorte circular fijo; dentro, la mascota da un pequeño salto
+            periódico (solo con el panel cerrado y sin movimiento reducido). */}
+        <span aria-hidden="true" className={styles.recorte}>
+          <span className={styles.salto} data-animacion={abierta ? 'pausada' : 'activa'}>
+            <img
+              alt=""
+              className={styles.mascota}
+              decoding="async"
+              height={ASISTENTE.mascota.alto}
+              src={ASISTENTE.mascota.src}
+              width={ASISTENTE.mascota.ancho}
+            />
+          </span>
+        </span>
         <span aria-hidden="true" className={styles.interrogacion}>
           ?
         </span>
