@@ -180,7 +180,10 @@
   --fab-size: 48px; /* ≥ --touch-target */
   --fab-inset: var(--space-4);
   --fab-left: var(--fab-inset);
-  --fab-clearance: calc(var(--fab-size) + 2 * var(--fab-inset));
+  /* Lanzador del asistente (AX-D, mejora 2026-11-26): mayor para que la
+   * mascota se distinga; la reserva de espacio usa el más alto de los dos. */
+  --fab-size-asistente: 64px;
+  --fab-clearance: calc(max(var(--fab-size), var(--fab-size-asistente)) + 2 * var(--fab-inset));
 
   /* --- Capa Liquid Glass (rediseño 2026-11-24; utilidades en glass.css) ---
    * Referencia visual: prototipos/vistas_liquid_glass (solo estética). Se
