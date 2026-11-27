@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { dividirEnEnunciados, extraerTextoLegible, leerEnVozAlta, lecturaDisponible, raizDeLectura } from './lectorPagina'
+import { afterEach, describe, expect, it } from 'vitest'
+import { dividirEnEnunciados, extraerTextoLegible, lecturaDisponible, raizDeLectura } from './lectorPagina'
 
 afterEach(() => {
   document.body.innerHTML = ''
@@ -8,29 +8,6 @@ afterEach(() => {
 function montar(html: string): HTMLElement {
   document.body.innerHTML = html
   return document.body
-}
-
-/** Ventana simulada con SpeechSynthesis (jsdom no la implementa). */
-function ventanaConVoz() {
-  const hablados: { text: string; rate: number; lang: string; onend: (() => void) | null }[] = []
-  class Enunciado {
-    text: string
-    rate = 1
-    lang = ''
-    voice: unknown = null
-    onend: (() => void) | null = null
-    onerror: (() => void) | null = null
-    constructor(text: string) {
-      this.text = text
-    }
-  }
-  const speechSynthesis = {
-    cancel: vi.fn(),
-    speak: vi.fn((enunciado: Enunciado) => hablados.push(enunciado)),
-    getVoices: () => [{ lang: 'es-MX' }, { lang: 'en-US' }],
-  }
-  const ventana = { speechSynthesis, SpeechSynthesisUtterance: Enunciado } as unknown as Window & typeof globalThis
-  return { ventana, speechSynthesis, hablados }
 }
 
 describe('extraerTextoLegible', () => {
@@ -96,29 +73,9 @@ describe('dividirEnEnunciados', () => {
   })
 })
 
-describe('leerEnVozAlta', () => {
-  it('detecta la ausencia de SpeechSynthesis (jsdom) y no hace nada', () => {
+describe('lecturaDisponible', () => {
+  it('detecta la ausencia de SpeechSynthesis (jsdom no la implementa)', () => {
     expect(lecturaDisponible(window)).toBe(false)
-    expect(leerEnVozAlta(['Hola'], 0.7, () => undefined, window)).toBe(false)
-  })
-
-  it('encola los enunciados con la velocidad elegida y una voz en español', () => {
-    const { ventana, speechSynthesis, hablados } = ventanaConVoz()
-    const alTerminar = vi.fn()
-    expect(leerEnVozAlta(['Hola.', 'Adiós.'], 0.7, alTerminar, ventana)).toBe(true)
-
-    expect(speechSynthesis.cancel).toHaveBeenCalledOnce()
-    expect(hablados.map((enunciado) => [enunciado.text, enunciado.rate, enunciado.lang])).toEqual([
-      ['Hola.', 0.7, 'es-MX'],
-      ['Adiós.', 0.7, 'es-MX'],
-    ])
-    hablados[1]?.onend?.()
-    expect(alTerminar).toHaveBeenCalledOnce()
-  })
-
-  it('no inicia la lectura sin contenido', () => {
-    const { ventana, speechSynthesis } = ventanaConVoz()
-    expect(leerEnVozAlta([], 1, () => undefined, ventana)).toBe(false)
-    expect(speechSynthesis.speak).not.toHaveBeenCalled()
   })
 })
+// La reproducción se prueba en motorLectura.test.ts (INC-23).
