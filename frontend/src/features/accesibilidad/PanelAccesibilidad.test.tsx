@@ -21,6 +21,8 @@ function Vista({ titulo, destino }: { titulo: string; destino: string }) {
       <h1>{titulo}</h1>
       <p>Contenido de la vista.</p>
       <Link to={destino}>Ir a la otra vista</Link>
+      {/* Contenido flotante marcado (como el asistente): no debe leerse. */}
+      <aside data-a11y-omitir="">Asistente flotante</aside>
     </main>
   )
 }
@@ -45,15 +47,64 @@ async function abrirPanel() {
   return { user, panel: screen.getByRole('dialog', { name: 'Accesibilidad' }) }
 }
 
-/** SpeechSynthesis simulado: jsdom no lo implementa. */
-function simularVoz() {
-  const speechSynthesis = { cancel: vi.fn(), speak: vi.fn(), getVoices: () => [] }
+/**
+ * SpeechSynthesis SIMULADO (jsdom no lo implementa), con eventos asíncronos
+ * como Chrome y Brave reales: start → end por fragmento, y cancel() que emite
+ * «interrupted»/«canceled» después. Verifica estados y llamadas: NO prueba
+ * que se oiga audio.
+ */
+function simularVoz({
+  voces = [{ name: 'Spanish (Latin America) espeak-ng', lang: 'es-419', localService: true }] as object[],
+  error = null as string | null,
+} = {}) {
+  type F = { text: string; rate: number; lang: string; onstart?: () => void; onend?: () => void; onerror?: (e: { error: string }) => void }
+  let actual: F | null = null
+  let cola: F[] = []
+  const siguiente = () => {
+    actual = cola.shift() ?? null
+    const f = actual
+    if (!f) return
+    setTimeout(() => {
+      if (actual !== f) return
+      if (error) {
+        actual = null
+        f.onerror?.({ error })
+        if (!actual) siguiente()
+        return
+      }
+      f.onstart?.()
+      setTimeout(() => {
+        if (actual !== f) return
+        actual = null
+        f.onend?.()
+        if (!actual) siguiente()
+      }, 30)
+    }, 5)
+  }
+  const speechSynthesis = {
+    getVoices: () => voces,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    speak: vi.fn((f: F) => {
+      cola.push(f)
+      if (!actual) siguiente()
+    }),
+    cancel: vi.fn(() => {
+      const interrumpido = actual
+      const pendientes = cola
+      actual = null
+      cola = []
+      setTimeout(() => {
+        interrumpido?.onerror?.({ error: 'interrupted' })
+        pendientes.forEach((f) => f.onerror?.({ error: 'canceled' }))
+      }, 0)
+    }),
+  }
   class Enunciado {
     text: string
     rate = 1
     lang = ''
-    onend: (() => void) | null = null
-    onerror: (() => void) | null = null
+    voice: unknown = null
     constructor(text: string) {
       this.text = text
     }
@@ -183,36 +234,90 @@ describe('PanelAccesibilidad (AX-A)', () => {
     expect(within(panel).queryByRole('button', { name: /Leer página/ })).not.toBeInTheDocument()
   })
 
-  it('lee el contenido principal a 0,7x por defecto, permite detener y se detiene al navegar', async () => {
+  it('lee el contenido principal a 0,7x con voz española y solo anuncia «leyendo» tras el inicio real', async () => {
     const voz = simularVoz()
     renderPanel()
     const { user, panel } = await abrirPanel()
     expect(within(panel).getByRole('slider', { name: /Velocidad de lectura/ })).toHaveValue('0.7')
 
     await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
-    const leidos = voz.speak.mock.calls.map(([enunciado]) => enunciado as { text: string; rate: number })
-    expect(leidos.map((enunciado) => enunciado.text)).toEqual(['Vista uno', 'Contenido de la vista.', 'Ir a la otra vista'])
-    expect(leidos.every((enunciado) => enunciado.rate === 0.7)).toBe(true)
-    // El propio panel (data-a11y-omitir) no se lee.
-    expect(leidos.some((enunciado) => enunciado.text.includes('Accesibilidad'))).toBe(false)
+    expect(await within(panel).findByText('Leyendo el contenido principal de la página.')).toHaveAttribute('role', 'status')
+    expect(await within(panel).findByText('Lectura finalizada.')).toBeInTheDocument()
 
-    const detener = within(panel).getByRole('button', { name: /Detener lectura/ })
-    expect(detener).toBeEnabled()
-    voz.cancel.mockClear()
-    await user.click(detener)
-    expect(voz.cancel).toHaveBeenCalled()
-    expect(within(panel).getByRole('button', { name: /Detener lectura/ })).toBeDisabled()
+    const leidos = voz.speak.mock.calls.map(([f]) => f as { text: string; rate: number; lang: string })
+    expect(leidos.map((f) => f.text)).toEqual(['Vista uno', 'Contenido de la vista.', 'Ir a la otra vista'])
+    expect(leidos.every((f) => f.rate === 0.7 && f.lang === 'es-419')).toBe(true)
+    // Ni el panel ni el contenido flotante marcado (data-a11y-omitir) se leen.
+    expect(leidos.some((f) => /Accesibilidad|Asistente flotante/.test(f.text))).toBe(false)
+    expect(within(panel).getByRole('button', { name: /Leer página/ })).toBeEnabled()
+  })
 
+  it('detener corta la lectura, lo anuncia y permite volver a leer', async () => {
+    const voz = simularVoz()
+    renderPanel()
+    const { user, panel } = await abrirPanel()
     await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
+    await within(panel).findByText('Leyendo el contenido principal de la página.')
+
+    voz.cancel.mockClear()
+    await user.click(within(panel).getByRole('button', { name: /Detener lectura/ }))
+    expect(voz.cancel).toHaveBeenCalled()
+    expect(within(panel).getByText('Lectura detenida.')).toBeInTheDocument()
+    expect(within(panel).getByRole('button', { name: /Detener lectura/ })).toBeDisabled()
+    // Los errores tardíos de la cancelación no cambian el estado.
+    await new Promise((ok) => setTimeout(ok, 20))
+    expect(within(panel).getByText('Lectura detenida.')).toBeInTheDocument()
+
+    voz.speak.mockClear()
+    await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
+    expect(await within(panel).findByText('Lectura finalizada.')).toBeInTheDocument()
+    expect(voz.speak).toHaveBeenCalledTimes(3)
+  })
+
+  it('sin voces en el navegador (caso Brave en Linux) lo explica y no simula que lee', async () => {
+    simularVoz({ voces: [], error: 'synthesis-failed' })
+    renderPanel()
+    const { user, panel } = await abrirPanel()
+    await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
+    expect(await within(panel).findByText(/este navegador no tiene voces de síntesis disponibles/, undefined, { timeout: 3000 })).toBeInTheDocument()
+    expect(within(panel).queryByText('Leyendo el contenido principal de la página.')).not.toBeInTheDocument()
+    expect(within(panel).getByRole('button', { name: /Leer página/ })).toBeEnabled()
+    expect(within(panel).getByRole('button', { name: /Detener lectura/ })).toBeDisabled()
+  })
+
+  it('al cambiar de vista detiene la lectura sin anunciar «Lectura detenida»', async () => {
+    const voz = simularVoz()
+    renderPanel()
+    const { user, panel } = await abrirPanel()
+    await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
+    await within(panel).findByText('Leyendo el contenido principal de la página.')
     voz.cancel.mockClear()
     await user.click(screen.getByRole('link', { name: 'Ir a la otra vista' }))
     expect(voz.cancel).toHaveBeenCalled()
+    expect(screen.getByRole('heading', { level: 1, name: 'Vista dos' })).toBeInTheDocument()
+    await abrirPanel()
+    expect(screen.queryByText('Lectura detenida.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Leyendo el contenido principal de la página.')).not.toBeInTheDocument()
   })
 
-  it('no presenta violaciones de accesibilidad con el panel abierto', async () => {
-    simularVoz()
+  it('al desmontar la aplicación no queda voz sonando', async () => {
+    const voz = simularVoz()
+    const { unmount } = renderPanel()
+    const { user, panel } = await abrirPanel()
+    await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
+    await within(panel).findByText('Leyendo el contenido principal de la página.')
+    voz.cancel.mockClear()
+    unmount()
+    expect(voz.cancel).toHaveBeenCalled()
+  })
+
+  it('no presenta violaciones de accesibilidad con el panel abierto, también con un mensaje de lectura', async () => {
+    simularVoz({ voces: [], error: 'synthesis-failed' })
     const { container } = renderPanel()
-    await abrirPanel()
+    const { user, panel } = await abrirPanel()
+    expect(await axe(container)).toHaveNoViolations()
+    await user.click(within(panel).getByRole('button', { name: /Leer página/ }))
+    await within(panel).findByText(/no tiene voces de síntesis/, undefined, { timeout: 3000 })
     expect(await axe(container)).toHaveNoViolations()
   })
 })

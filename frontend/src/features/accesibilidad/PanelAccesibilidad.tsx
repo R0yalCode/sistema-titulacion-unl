@@ -10,6 +10,7 @@ import {
   sonIniciales,
   type ModoColor,
 } from './preferencias'
+import type { CausaErrorLectura, EstadoLectura } from './motorLectura'
 import { useAccesibilidad } from './useAccesibilidad'
 import styles from './PanelAccesibilidad.module.css'
 
@@ -19,6 +20,42 @@ const MODOS: { modo: Exclude<ModoColor, 'ninguno'>; etiqueta: string }[] = [
   { modo: 'contraste-negativo', etiqueta: 'Contraste negativo' },
   { modo: 'fondo-claro', etiqueta: 'Fondo claro' },
 ]
+
+/**
+ * Texto del estado de lectura. Solo describe lo que el navegador confirmó:
+ * nunca anuncia «leyendo» sin un inicio real (INC-23).
+ */
+export function mensajeLectura(estado: EstadoLectura, causa?: CausaErrorLectura, codigo?: string): string {
+  switch (estado) {
+    case 'preparando':
+      return 'Preparando la lectura…'
+    case 'leyendo':
+      return 'Leyendo el contenido principal de la página.'
+    case 'finalizada':
+      return 'Lectura finalizada.'
+    case 'detenida':
+      return 'Lectura detenida.'
+    case 'error':
+      switch (causa) {
+        case 'sin-contenido':
+          return 'No hay contenido que leer en esta vista.'
+        case 'sin-voces':
+          return 'No se pudo leer en voz alta: este navegador no tiene voces de síntesis disponibles. Prueba con otro navegador o usa el lector de pantalla de tu sistema.'
+        case 'no-permitida':
+          return 'El navegador bloqueó la lectura en voz alta. Vuelve a pulsar «Leer página».'
+        case 'sin-inicio':
+          return 'El navegador no inició la lectura en voz alta. Comprueba el sonido del equipo o prueba con otro navegador.'
+        case 'interrumpida':
+          return 'La lectura fue interrumpida por el navegador o por otra aplicación.'
+        case 'no-soportada':
+          return 'Este navegador no permite la lectura en voz alta.'
+        default:
+          return `No se pudo reproducir la voz${codigo ? ` (código del navegador: ${codigo})` : ''}. Inténtalo de nuevo o usa otro navegador.`
+      }
+    default:
+      return ''
+  }
+}
 
 /**
  * Botón flotante (cuadrante inferior izquierdo) y panel de herramientas de
@@ -40,9 +77,10 @@ export function PanelAccesibilidad() {
   const idVelocidad = useId()
   const { detener } = lectura
 
-  // La lectura pertenece a la vista en la que se pidió: al navegar se detiene.
+  // La lectura pertenece a la vista en la que se pidió: al navegar se detiene
+  // (sin anunciarlo: la nueva vista no debe empezar con «Lectura detenida»).
   useEffect(() => {
-    detener()
+    detener({ silencioso: true })
   }, [pathname, detener])
 
   useEffect(() => {
@@ -74,13 +112,14 @@ export function PanelAccesibilidad() {
     botonRef.current?.focus()
   }
 
+  // Los mensajes de lectura salen del estado REAL del motor (INC-23), no de
+  // haber pulsado el botón.
   function leer() {
-    setAviso(lectura.leerPagina() ? 'Leyendo el contenido principal de la página.' : 'No hay contenido que leer en esta vista.')
+    lectura.leerPagina()
   }
 
   function detenerLectura() {
     lectura.detener()
-    setAviso('Lectura detenida.')
   }
 
   function restablecer() {
@@ -205,6 +244,14 @@ export function PanelAccesibilidad() {
                     Detener lectura
                   </button>
                 </div>
+                {/* Una sola región de estado, visible y cortés: un anuncio por cambio. */}
+                <p
+                  className={styles.estadoLectura}
+                  data-estado={lectura.estado}
+                  role="status"
+                >
+                  {mensajeLectura(lectura.estado, lectura.causa, lectura.codigo)}
+                </p>
               </>
             ) : (
               <p className={styles.ayuda}>

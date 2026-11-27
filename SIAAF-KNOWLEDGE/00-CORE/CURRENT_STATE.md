@@ -12,7 +12,7 @@ last_verified: 2026-11-26
 
 ## Fase AX del 2026-11-26 (DK-010, modalidad centralizada)
 
-AX-A (accesibilidad global, JuanCalopinoo, `8caa4b4`, merge `925a962`) y AX-B (control superior del sidebar, R0yalCode, `62240de`, merge `b1f4f10`) están en `develop`, con CI y Security correctos tras cada merge (frontend 633/633). El responsable las aceptó en revisión manual **salvo «Leer página» (INC-23, abierta)**: la lectura en voz alta no se considera funcional. INC-24 sigue abierta (solapamiento en ≤480 px). AX-C y AX-D están preparadas; AX-E (diseño RAG) y AX-F, pendientes. En remoto solo quedan `main` y `develop` → [[2026-11-26-fase-ax-accesibilidad-sidebar]].
+AX-A (accesibilidad global, JuanCalopinoo, `8caa4b4`, merge `925a962`) y AX-B (control superior del sidebar, R0yalCode, `62240de`, merge `b1f4f10`) están en `develop`, con CI y Security correctos tras cada merge (frontend 633/633). El responsable las aceptó en revisión manual. «Leer página» falló en esa revisión (INC-23); se corrigió y se **cerró el 2026-11-26** tras la confirmación manual del responsable (`7df33f2`). INC-24 sigue abierta (solapamiento en ≤480 px). AX-C y AX-D están preparadas; AX-E (diseño RAG) y AX-F, pendientes. En remoto solo quedan `main` y `develop` → [[2026-11-26-fase-ax-accesibilidad-sidebar]].
 
 ## Integración del 2026-11-22
 

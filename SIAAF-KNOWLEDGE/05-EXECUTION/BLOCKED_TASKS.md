@@ -29,10 +29,10 @@ last_verified: 2026-11-26
 
 | ID | Tarea | Incidencia | Estado |
 |---|---|---|---|
-| **INC-23** | AX-A | «Leer página» no reproduce voz en la revisión manual del responsable. Las pruebas usan `speechSynthesis` simulado; la reproducción real no se ha validado. | Abierta; sin cambios de código hasta una tarea específica. AX-A no se cierra del todo. |
+| ~~INC-23~~ | AX-A | «Leer página» no reproducía voz: Brave en Linux sin `--enable-speech-dispatcher` no tiene voces, y la aplicación ocultaba el fallo (estado «leyendo» sin inicio real, errores descartados). | **Cerrada el 2026-11-26** (`7df33f2`, integrada en `develop`); el responsable lo confirmó manualmente en Chrome y Brave. Ver `clarify.md`. |
 | **INC-24** | AX-A | En ≤480 px el botón de accesibilidad tapa el pie del login (vistas públicas sin `#main-content`). | Abierta |
 
-Detalle e hipótesis: `docs/frontend/PLAN_ACCESIBILIDAD_ASISTENTE_DK010.md`, `clarify.md` (INC-23, INC-24).
+Detalle: `clarify.md` (INC-23, cerrada; INC-24, abierta) y `docs/frontend/PLAN_ACCESIBILIDAD_ASISTENTE_DK010.md`.
 
 ## Tareas bloqueadas
 

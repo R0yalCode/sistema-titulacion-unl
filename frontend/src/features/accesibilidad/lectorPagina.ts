@@ -1,7 +1,7 @@
 /**
- * Lectura en voz alta del contenido principal con la API SpeechSynthesis del
- * navegador (AX-A). Sin dependencias ni servicios externos: si el navegador no
- * la ofrece, la interfaz lo indica y deshabilita la acción.
+ * Texto legible del contenido principal para la lectura en voz alta (AX-A):
+ * extracción, fragmentación y detección de compatibilidad. Sin dependencias
+ * ni servicios externos; la reproducción está en `motorLectura.ts`.
  */
 
 /** Elementos cuyo contenido nunca se lee: ocultos, decorativos o técnicos. */
@@ -170,47 +170,4 @@ export function lecturaDisponible(ventana: Ventana = window): boolean {
   return 'speechSynthesis' in ventana && typeof ventana.SpeechSynthesisUtterance === 'function'
 }
 
-function vozEnEspanol(sintesis: SpeechSynthesis): SpeechSynthesisVoice | undefined {
-  const voces = sintesis.getVoices()
-  return voces.find((voz) => voz.lang.toLowerCase().startsWith('es-ec')) ?? voces.find((voz) => voz.lang.toLowerCase().startsWith('es'))
-}
-
-/**
- * Encola la lectura de `enunciados` y llama a `alTerminar` cuando acaba, se
- * detiene o falla. Cancela cualquier lectura previa. Devuelve `false` si no
- * había nada que leer o el navegador no ofrece síntesis de voz.
- */
-export function leerEnVozAlta(
-  enunciados: string[],
-  velocidad: number,
-  alTerminar: () => void,
-  ventana: Ventana = window,
-): boolean {
-  if (!lecturaDisponible(ventana) || enunciados.length === 0) {
-    return false
-  }
-  const sintesis = ventana.speechSynthesis
-  sintesis.cancel()
-  const voz = vozEnEspanol(sintesis)
-  enunciados.forEach((texto, indice) => {
-    const enunciado = new ventana.SpeechSynthesisUtterance(texto)
-    enunciado.rate = velocidad
-    enunciado.lang = voz?.lang ?? 'es-ES'
-    if (voz) {
-      enunciado.voice = voz
-    }
-    if (indice === enunciados.length - 1) {
-      enunciado.onend = alTerminar
-    }
-    // Una cancelación ("interrupted"/"canceled") también termina la lectura.
-    enunciado.onerror = alTerminar
-    sintesis.speak(enunciado)
-  })
-  return true
-}
-
-export function detenerLectura(ventana: Ventana = window): void {
-  if (lecturaDisponible(ventana)) {
-    ventana.speechSynthesis.cancel()
-  }
-}
+// La reproducción (voces, sesiones, eventos y errores) vive en motorLectura.ts (INC-23).

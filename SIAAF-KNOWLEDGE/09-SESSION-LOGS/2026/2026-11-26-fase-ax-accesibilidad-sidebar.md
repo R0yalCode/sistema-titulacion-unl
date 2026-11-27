@@ -63,3 +63,20 @@ commits: [8caa4b4, 62240de, 925a962, b1f4f10]
 3. AX-C y AX-D: preparadas. Ramas actualizadas a `b1f4f10` por avance rápido, sin commits previos. El plan de ejecución está pendiente de aprobación.
 4. AX-E (diseño) y AX-F (regresión final).
 5. Fusionar en `develop` la rama de AX-F que contiene esta bitácora (requiere autorización).
+
+## Cierre de INC-23 (2026-11-26, añadido sin modificar lo anterior)
+
+- **Diagnóstico** con CDP y la API nativa sobre `:8000`:
+  - Brave 155 (navegador predeterminado del responsable) en Linux tiene 0 voces y da `synthesis-failed`.
+  - Con `--enable-speech-dispatcher` tiene 14 806 voces locales y lee.
+  - Chrome 156 lee con 19 voces de red.
+  - La aplicación ocultaba el fallo.
+- **Corrección:** `fix/inc-23-lectura-voz` (`7df33f2`, autor JuanCalopinoo, DK-010 centralizada), con el nuevo `motorLectura.ts` y el estado de lectura real en el panel.
+- **Confirmación manual del responsable:**
+  - voz audible en Chrome;
+  - «Detener lectura» corta al instante;
+  - se puede iniciar una nueva lectura;
+  - aviso correcto en Brave sin voces;
+  - se respeta la velocidad.
+- INC-23 **cerrada**. INC-24 sigue abierta. AX-F sigue sin integrar: su plan (`PLAN_ACCESIBILIDAD_ASISTENTE_DK010.md`) y `REGRESSION_TESTS` se actualizarán en su cierre para reflejar este cierre.
+
